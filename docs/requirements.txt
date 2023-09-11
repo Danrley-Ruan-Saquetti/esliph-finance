@@ -37,3 +37,5 @@ Ocorrências do tipo Programática são ocorrência que pode repetir uma vez por
 O envio de notificação deve ser feito toda vez que uma Transação Financeira fique com o status de Atrasado
 
 O envio lembrete deve ser feito 24h antes do status da Transação Financeira ficar como Atrasado
+
+O relatório deve conter: cada valor de entrada e saída movimentado, junto a data e hora da movimentação e ao final deve mostrar o valor total de entrada, total de saída e lucro total
