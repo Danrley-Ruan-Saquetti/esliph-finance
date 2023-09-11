@@ -2,9 +2,9 @@
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
 O sistema deve gerenciar e permitir que o usuário mantenha os status das suas transações financeiras
 O sistema deve permitir o controle de mídias anexadas
-O sistema deve permitir o envio de notifições
+O sistema deve permitir o envio de notificações
 O sistema deve permitir o envio de lembretes
-O sistema deve permitir a emissão de relatórias mensais
+O sistema deve permitir a emissão de relatórios mensais
 
 # Requisitos Não Funcionais
 O sistema deve ser feito em ambiente mobile
