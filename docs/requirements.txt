@@ -1,8 +1,7 @@
 # Requisitos Funcionais
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
-O sistema deve permitir que o usuário mantenha as suas despesa
-O sistema deve permitir que o usuário mantenha as suas rendas
-O sistema deve permitir o controle de mídias
+O sistema deve gerenciar e permitir que o usuário mantenha os status das suas transações financeiras
+O sistema deve permitir o controle de mídias anexadas
 
 # Requisitos Não Funcionais
 
@@ -11,8 +10,14 @@ As Transações Financeiras podem ser do tipo: Despesa ou Renda
 
 As Transações Financeiras podem ter ocorrência do tipo: Única ou Programática
 
-O estatus de uma Transação Financeira pode ser: Pendente; Atrasado; Cancelado; Realizado
+O status de uma Transação Financeira pode ser: Pendente; Atrasado; Cancelado; Realizado
 
-Para cadastrar uma transação financeira, é necessário: o título da transação; descrição; data da transação; o valor; seu tipo (Despesa ou Renda); tipo de ocorrência; estatus; mídias
+Para cadastrar uma transação financeira, é necessário: o título da transação; descrição; data da transação; o valor; seu tipo (Despesa ou Renda); tipo de ocorrência; status; anexos de mídias
 
 Para cadastrar uma transação do tipo Despesa, é necessário: nome do remetente; nome do recebedor; data limite (opcional)
+
+Toda Transação Financeira do tipo Despesa, cuja a data atual ultrapasse a data limite (se houver) então o seu status fica como Atrasado
+
+Toda Transação Financeira do tipo Despesa, que não esteja com o status de Pendente então o seu status fica como Pendente
+
+O usuário pode definir o status das Transações Financeiras para Cancelado e Realizado a qualquer momento
