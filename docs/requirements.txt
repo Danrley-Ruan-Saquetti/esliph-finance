@@ -2,8 +2,16 @@
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
 O sistema deve gerenciar e permitir que o usuário mantenha os status das suas transações financeiras
 O sistema deve permitir o controle de mídias anexadas
+O sistema deve permitir o envio de notifições
+O sistema deve permitir o envio de lembretes
+O sistema deve permitir a emissão de relatórias mensais
 
 # Requisitos Não Funcionais
+O sistema deve ser feito em ambiente mobile
+O sistema deve rodar em segundo plano para controle de data e hora das transações
+O repositório de dados deve ser mantido no dispositivo do usuário
+O sistema não deve ter dependência com a internet
+A emissão de relatório pode ser feito em PDJ ou JPG
 
 # Regras de Negócio
 As Transações Financeiras podem ser do tipo: Despesa ou Renda
@@ -25,3 +33,7 @@ O usuário pode definir o status das Transações Financeiras para Cancelado e R
 Ocorrências do tipo Única são ocorrências que ocorre apenas uma única vez
 
 Ocorrências do tipo Programática são ocorrência que pode repetir uma vez por: semana; mês; ano
+
+O envio de notificação deve ser feito toda vez que uma Transação Financeira fique com o status de Atrasado
+
+O envio lembrete deve ser feito 24h antes do status da Transação Financeira ficar como Atrasado
