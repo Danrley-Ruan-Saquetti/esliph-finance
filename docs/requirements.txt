@@ -1,4 +1,6 @@
-# Requisitos Funcionais
+# Levantamento de Requisitos (V1.0.1)
+## Requisitos Funcionais
+O sistema deve permitir que o usuário mantenha as categorias
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
 O sistema deve gerenciar e permitir que o usuário mantenha os status das suas transações financeiras
 O sistema deve permitir o controle de mídias anexadas
@@ -11,24 +13,26 @@ O sistema deve ser feito em ambiente mobile
 O sistema deve rodar em segundo plano para controle de data e hora das transações
 O repositório de dados deve ser mantido no dispositivo do usuário
 O sistema não deve ter dependência com a internet
-A emissão de relatório pode ser feito em PDJ ou JPG
+A emissão de relatório pode ser feito em PDF ou JPG
 
-# Regras de Negócio
+## Regras de Negócio
+O cadastro da Categoria deve conter: o nome
+
 As Transações Financeiras podem ser do tipo: Despesa ou Renda
 
 As Transações Financeiras podem ter ocorrência do tipo: Única ou Programática
 
 O status de uma Transação Financeira pode ser: Pendente; Atrasado; Cancelado; Realizado
 
-Para cadastrar uma transação financeira, é necessário: o título da transação; descrição; data e hora da transação; o valor; seu tipo (Despesa ou Renda); tipo de ocorrência; status; anexos de mídias
+Para cadastrar uma Transação Financeira, é necessário: o título da transação; descrição; data e hora limite da transação; o valor; seu tipo (Despesa ou Renda); as categorias; tipo de ocorrência; status; anexos de mídias; grau de prioridade
 
-Para cadastrar uma transação do tipo Despesa, é necessário: nome do remetente; nome do recebedor; data e hora limite (opcional)
+Para cadastrar uma transação do tipo Despesa, é necessário: nome do recebedor
 
-Toda Transação Financeira do tipo Despesa, cuja a data atual ultrapasse a data limite (se houver) então o seu status fica como Atrasado
+Para cadastrar uma transação do tipo Renda, é necessário: nome do remetente
 
-Toda Transação Financeira do tipo Despesa, que não esteja com o status de Pendente então o seu status fica como Pendente
+Toda Transação Financeira do tipo Despesa, cuja a data atual ultrapasse a data da transação então o seu status fica como Atrasado, caso contrário o seu status fica como Pendente
 
-O usuário pode definir o status das Transações Financeiras para Cancelado e Realizado a qualquer momento
+O usuário pode definir o status das Transações Financeiras para Cancelado ou Realizado a qualquer momento
 
 Ocorrências do tipo Única são ocorrências que ocorre apenas uma única vez
 
