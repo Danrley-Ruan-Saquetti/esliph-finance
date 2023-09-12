@@ -1,11 +1,10 @@
-# Levantamento de Requisitos (V1.0.1)
+# Levantamento de Requisitos (V1.0.2)
 ## Requisitos Funcionais
 O sistema deve permitir que o usuário mantenha as categorias
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
 O sistema deve gerenciar e permitir que o usuário mantenha os status das suas transações financeiras
 O sistema deve permitir o controle de mídias anexadas
 O sistema deve permitir o envio de notificações
-O sistema deve permitir o envio de lembretes
 O sistema deve permitir a emissão de relatórios mensais
 
 # Requisitos Não Funcionais
@@ -40,6 +39,6 @@ Ocorrências do tipo Programática são ocorrência que pode repetir uma vez por
 
 O envio de notificação deve ser feito toda vez que uma Transação Financeira fique com o status de Atrasado
 
-O envio lembrete deve ser feito 24h antes do status da Transação Financeira ficar como Atrasado
+Deve ser enviado uma notificação 24h antes do status da Transação Financeira ficar como Atrasado
 
 O relatório deve conter: cada valor de entrada e saída movimentado, junto a data e hora da movimentação e ao final deve mostrar o valor total de entrada, total de saída e lucro total
