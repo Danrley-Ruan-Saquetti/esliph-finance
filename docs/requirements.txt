@@ -1,5 +1,6 @@
-# Levantamento de Requisitos (V1.0.2)
+# Levantamento de Requisitos (V1.0.3)
 ## Requisitos Funcionais
+O sistema deve permitir que o usuário faça login
 O sistema deve permitir que o usuário mantenha as categorias
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
 O sistema deve gerenciar e permitir que o usuário mantenha os status das suas transações financeiras
@@ -13,6 +14,13 @@ O sistema deve rodar em segundo plano para controle de data e hora das transaç�
 O repositório de dados deve ser mantido no dispositivo do usuário
 O sistema não deve ter dependência com a internet
 A emissão de relatório pode ser feito em PDF ou JPG
+O sistema de login para se autenticar deve ser por Digital, PIN ou Facial
+Os dados confidenciais devem ser armazenados e transmitidos de forma criptografada
+O aplicativo deve proteger-se contra ataques de injeção de SQL, validando e sanitizando todas as entradas de dados do usuário
+O aplicativo deve bloquear toda vez que perder o foco
+Estabeleça alertas para atividades suspeitas
+Implemente um sistema de controle de acesso para garantir que os usuários tenham acesso apenas ao que é necessário para suas funções
+Mantenha cópias de backup dos dados críticos e estabeleça um plano de recuperação de desastres
 
 ## Regras de Negócio
 O cadastro da Categoria deve conter: o nome
