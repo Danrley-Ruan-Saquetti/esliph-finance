@@ -1,21 +1,35 @@
-# Levantamento de Requisitos (V1.0.1)
+# Levantamento de Requisitos (V1.0.4)
 ## Requisitos Funcionais
+O sistema deve permitir que o usuário mantenha as suas contas
+O sistema deve permitir que o usuário faça login
 O sistema deve permitir que o usuário mantenha as categorias
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
 O sistema deve gerenciar e permitir que o usuário mantenha os status das suas transações financeiras
 O sistema deve permitir o controle de mídias anexadas
 O sistema deve permitir o envio de notificações
-O sistema deve permitir o envio de lembretes
 O sistema deve permitir a emissão de relatórios mensais
 
 # Requisitos Não Funcionais
 O sistema deve ser feito em ambiente mobile
+O sistema deve ser feito usando React Native
 O sistema deve rodar em segundo plano para controle de data e hora das transações
 O repositório de dados deve ser mantido no dispositivo do usuário
 O sistema não deve ter dependência com a internet
 A emissão de relatório pode ser feito em PDF ou JPG
+O sistema de login para se autenticar deve ser por Login e Senha, Digital ou Facial
+Em um disponsitivo pode haver várias contas
+Os dados confidenciais devem ser armazenados e transmitidos de forma criptografada
+O aplicativo deve proteger-se contra ataques de injeção de SQL, validando e sanitizando todas as entradas de dados do usuário
+O aplicativo deve bloquear toda vez que perder o foco
+Estabeleça alertas para atividades suspeitas
+Implemente um sistema de controle de acesso para garantir que os usuários tenham acesso apenas ao que é necessário para suas funções
+Mantenha cópias de backup dos dados críticos e estabeleça um plano de recuperação de desastres
 
 ## Regras de Negócio
+O cadastro de conta deve conter: Nome, login e senha
+
+O usuário só pode estar logado em uma conta por vez
+
 O cadastro da Categoria deve conter: o nome
 
 As Transações Financeiras podem ser do tipo: Despesa ou Renda
@@ -24,7 +38,7 @@ As Transações Financeiras podem ter ocorrência do tipo: Única ou Programáti
 
 O status de uma Transação Financeira pode ser: Pendente; Atrasado; Cancelado; Realizado
 
-Para cadastrar uma Transação Financeira, é necessário: o título da transação; descrição; data e hora limite da transação; o valor; seu tipo (Despesa ou Renda); as categorias; tipo de ocorrência; status; anexos de mídias; grau de prioridade
+Para cadastrar uma Transação Financeira é necessário: o título da transação; descrição; data e hora limite da transação; o valor; seu tipo (Despesa ou Renda); as categorias; tipo de ocorrência; status; anexos de mídias; grau de prioridade; se deseja enviar uma notificação de alerta
 
 Para cadastrar uma transação do tipo Despesa, é necessário: nome do recebedor
 
@@ -40,6 +54,10 @@ Ocorrências do tipo Programática são ocorrência que pode repetir uma vez por
 
 O envio de notificação deve ser feito toda vez que uma Transação Financeira fique com o status de Atrasado
 
-O envio lembrete deve ser feito 24h antes do status da Transação Financeira ficar como Atrasado
+Deve ser enviado uma notificação 24h antes do status da Transação Financeira ficar como Atrasado
 
 O relatório deve conter: cada valor de entrada e saída movimentado, junto a data e hora da movimentação e ao final deve mostrar o valor total de entrada, total de saída e lucro total
+
+Todos os dados: categorias, transações financeiras e mídias devem ser vinculadas a uma única conta
+
+A exclusão de contas devem excluir juntos todos os dados vinculados a conta, como: categorias, transações financeiras e mídias
