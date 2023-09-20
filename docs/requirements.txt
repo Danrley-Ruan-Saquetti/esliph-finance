@@ -1,10 +1,11 @@
-# Levantamento de Requisitos (V1.0.4)
+# Levantamento de Requisitos (V1.0.5)
 ## Requisitos Funcionais
 O sistema deve permitir que o usuário mantenha as suas contas
 O sistema deve permitir que o usuário faça login
 O sistema deve permitir que o usuário mantenha as categorias
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
 O sistema deve gerenciar e permitir que o usuário mantenha os status das suas transações financeiras
+O sistema deve permitir que o usuário mantenha as notas das transações financeiras
 O sistema deve permitir o controle de mídias anexadas
 O sistema deve permitir o envio de notificações
 O sistema deve permitir a emissão de relatórios mensais
@@ -43,6 +44,8 @@ Para cadastrar uma Transação Financeira é necessário: o título da transaç�
 Para cadastrar uma transação do tipo Despesa, é necessário: nome do recebedor
 
 Para cadastrar uma transação do tipo Renda, é necessário: nome do remetente
+
+Para adicionar uma nota numa Transação Financeira, deve-se informar: a descrição da nota
 
 Toda Transação Financeira do tipo Despesa, cuja a data atual ultrapasse a data da transação então o seu status fica como Atrasado, caso contrário o seu status fica como Pendente
 
