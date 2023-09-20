@@ -1,4 +1,4 @@
-# Levantamento de Requisitos (V1.0.5)
+# Levantamento de Requisitos (V1.0.6)
 ## Requisitos Funcionais
 O sistema deve permitir que o usuário mantenha as suas contas
 O sistema deve permitir que o usuário faça login
@@ -31,7 +31,7 @@ O cadastro de conta deve conter: Nome, login e senha
 
 O usuário só pode estar logado em uma conta por vez
 
-O cadastro da Categoria deve conter: o nome
+O cadastro da Categoria deve conter: o nome, a ordem
 
 As Transações Financeiras podem ser do tipo: Despesa ou Renda
 
