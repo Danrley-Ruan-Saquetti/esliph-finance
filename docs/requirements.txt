@@ -21,7 +21,7 @@ O repositório de dados deve ser mantido no dispositivo do usuário
 O sistema não deve ter dependência com a internet
 A emissão de relatório pode ser feito em PDF ou JPG
 O sistema de login para se autenticar deve ser por Login e Senha, Digital ou Facial
-Em um disponsitivo pode haver várias contas
+Em um dispositivo pode haver várias contas
 Os dados confidenciais devem ser armazenados e transmitidos de forma criptografada
 O aplicativo deve proteger-se contra ataques de injeção de SQL, validando e sanitizando todas as entradas de dados do usuário
 O aplicativo deve bloquear toda vez que perder o foco
@@ -32,7 +32,7 @@ Mantenha cópias de backup dos dados críticos e estabeleça um plano de recuper
 ## Regras de Negócio
 O cadastro de conta deve conter: Nome, login e senha
 
-O usuário só pode estar logado em uma conta por vez
+O usuário só pode estar autenticado em uma conta por vez
 
 O cadastro da Categoria deve conter: o nome, a ordem
 

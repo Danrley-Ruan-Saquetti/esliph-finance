@@ -4,7 +4,28 @@
     "strict": true,
     "types": [
       "nativewind/types"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@router/*": [
+        "./app/*"
+      ],
+      "@assets/*": [
+        "./assets/*"
+      ],
+      "@server/*": [
+        "./server/*"
+      ],
+      "@components/*": [
+        "./components/*"
+      ],
+      "@services/*": [
+        "./services"
+      ],
+      "@util/*": [
+        "./util/*"
+      ],
+    }
   },
   "extends": "expo/tsconfig.base"
 }
