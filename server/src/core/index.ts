@@ -4,6 +4,8 @@ export class Factory {
     private static app: Application
 
     static createFactory(module: new () => any) {
-        return new Application(module)
+        this.app = new Application(module)
+
+        return this.app
     }
 }
