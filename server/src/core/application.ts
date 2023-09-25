@@ -1,1 +1,3 @@
-export class Application {}
+export class Application {
+    constructor(private readonly module: new () => any) {}
+}

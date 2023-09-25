@@ -1,4 +1,8 @@
 import { AppModule } from './app/app.module'
 import { Factory } from './core'
 
-Factory.createFactory(AppModule)
+function bootstrap() {
+    const app = Factory.createFactory(AppModule)
+}
+
+bootstrap()

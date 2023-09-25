@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start:dev": "tsx watch src/index.ts"
+        "start:dev": "tsx watch src/index.ts",
+        "dev:metadata": "tsx watch test/metadata.ts"
     },
     "keywords": [],
     "author": "",
@@ -16,6 +17,7 @@
     },
     "dependencies": {
         "@esliph/util-node": "^1.0.44",
+        "reflect-metadata": "^0.1.13",
         "tslib": "^2.6.2"
     }
 }
