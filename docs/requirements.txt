@@ -1,11 +1,11 @@
-# Levantamento de Requisitos (V1.0.7)
+# Levantamento de Requisitos (V1.0.8)
 ## Requisitos Funcionais
 O sistema deve permitir que o usuário mantenha as suas contas
 O sistema deve permitir que o usuário faça login
 O sistema deve permitir que o usuário mantenha as categorias
 O sistema deve permitir que o usuário marque uma categoria como favorita
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
-O sistema deve permitir que o usuário marque uma transação financeira como favorita
+O sistema deve permitir que o usuário marque para observar uma transação financeira
 O sistema deve permitir que o usuário duplique uma transação financeira
 O sistema deve gerenciar e permitir que o usuário mantenha as situações das suas transações financeiras
 O sistema deve permitir que o usuário mantenha as notas das transações financeiras
@@ -30,11 +30,11 @@ Implemente um sistema de controle de acesso para garantir que os usuários tenha
 Mantenha cópias de backup dos dados críticos e estabeleça um plano de recuperação de desastres
 
 ## Regras de Negócio
-O cadastro de conta deve conter: Nome, login e senha
+O cadastro de conta deve conter: Nome; login e senha
 
 O usuário só pode estar autenticado em uma conta por vez
 
-O cadastro da Categoria deve conter: o nome, a ordem
+O cadastro da Categoria deve conter: o nome; a ordem; é favorito; cor de destaque
 
 As Transações Financeiras podem ser do tipo: Despesa ou Renda
 
@@ -42,7 +42,7 @@ As Transações Financeiras podem ter ocorrência do tipo: Única ou Programáti
 
 A situação de uma Transação Financeira pode ser: Pendente; Atrasado; Cancelado; Feito
 
-Para cadastrar uma Transação Financeira é necessário: o título da transação; descrição; data e hora limite da transação; o valor; seu tipo (Despesa ou Renda); as categorias; tipo de ocorrência; situação; anexos de mídias; grau de prioridade; se deseja enviar uma notificação de alerta
+Para cadastrar uma Transação Financeira é necessário: o título da transação; descrição; data e hora limite da transação; o valor; seu tipo (Despesa ou Renda); as categorias; tipo de ocorrência; situação; anexos de mídias; grau de prioridade; se deseja enviar uma notificação de alerta; se deseja observa-la
 
 Para cadastrar uma transação do tipo Despesa, é necessário: nome do recebedor
 
@@ -54,7 +54,7 @@ Toda Transação Financeira do tipo Despesa, cuja a data atual ultrapasse a data
 
 O usuário pode definir a situação das Transações Financeiras para Cancelado ou Feito a qualquer momento
 
-A duplicação de uma Transação Financeira pode ser feito escolhendo uma Transação Financeira já cadastrada, podendo alterar qualquer dado antes de confirma-la
+A duplicação de uma Transação Financeira pode ser feito escolhendo uma Transação Financeira já cadastrada, podendo alterar qualquer dado antes de confirmar a duplicação
 
 Ocorrências do tipo Única são ocorrências que ocorre apenas uma única vez
 
