@@ -40,7 +40,7 @@ As Transações Financeiras podem ser do tipo: Despesa ou Renda
 
 As Transações Financeiras podem ter ocorrência do tipo: Única ou Programática
 
-O status de uma Transação Financeira pode ser: Pendente; Atrasado; Cancelado; Realizado
+O status de uma Transação Financeira pode ser: Pendente; Atrasado; Cancelado; Feito
 
 Para cadastrar uma Transação Financeira é necessário: o título da transação; descrição; data e hora limite da transação; o valor; seu tipo (Despesa ou Renda); as categorias; tipo de ocorrência; status; anexos de mídias; grau de prioridade; se deseja enviar uma notificação de alerta
 
@@ -52,7 +52,7 @@ Para adicionar uma nota numa Transação Financeira, deve-se informar: a descri�
 
 Toda Transação Financeira do tipo Despesa, cuja a data atual ultrapasse a data da transação então o seu status fica como Atrasado, caso contrário o seu status fica como Pendente
 
-O usuário pode definir o status das Transações Financeiras para Cancelado ou Realizado a qualquer momento
+O usuário pode definir o status das Transações Financeiras para Cancelado ou Feito a qualquer momento
 
 A duplicação de uma Transação Financeira pode ser feito escolhendo uma Transação Financeira já cadastrada, podendo alterar qualquer dado antes de confirma-la
 
