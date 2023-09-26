@@ -7,7 +7,7 @@ O sistema deve permitir que o usuário marque uma categoria como favorita
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
 O sistema deve permitir que o usuário marque uma transação financeira como favorita
 O sistema deve permitir que o usuário duplique uma transação financeira
-O sistema deve gerenciar e permitir que o usuário mantenha os status das suas transações financeiras
+O sistema deve gerenciar e permitir que o usuário mantenha as situações das suas transações financeiras
 O sistema deve permitir que o usuário mantenha as notas das transações financeiras
 O sistema deve permitir o controle de mídias anexadas
 O sistema deve permitir o envio de notificações
@@ -40,9 +40,9 @@ As Transações Financeiras podem ser do tipo: Despesa ou Renda
 
 As Transações Financeiras podem ter ocorrência do tipo: Única ou Programática
 
-O status de uma Transação Financeira pode ser: Pendente; Atrasado; Cancelado; Feito
+A situação de uma Transação Financeira pode ser: Pendente; Atrasado; Cancelado; Feito
 
-Para cadastrar uma Transação Financeira é necessário: o título da transação; descrição; data e hora limite da transação; o valor; seu tipo (Despesa ou Renda); as categorias; tipo de ocorrência; status; anexos de mídias; grau de prioridade; se deseja enviar uma notificação de alerta
+Para cadastrar uma Transação Financeira é necessário: o título da transação; descrição; data e hora limite da transação; o valor; seu tipo (Despesa ou Renda); as categorias; tipo de ocorrência; situação; anexos de mídias; grau de prioridade; se deseja enviar uma notificação de alerta
 
 Para cadastrar uma transação do tipo Despesa, é necessário: nome do recebedor
 
@@ -50,9 +50,9 @@ Para cadastrar uma transação do tipo Renda, é necessário: nome do remetente
 
 Para adicionar uma nota numa Transação Financeira, deve-se informar: a descrição da nota
 
-Toda Transação Financeira do tipo Despesa, cuja a data atual ultrapasse a data da transação então o seu status fica como Atrasado, caso contrário o seu status fica como Pendente
+Toda Transação Financeira do tipo Despesa, cuja a data atual ultrapasse a data da transação então a sua situação fica como Atrasado, caso contrário a sua situação fica como Pendente
 
-O usuário pode definir o status das Transações Financeiras para Cancelado ou Feito a qualquer momento
+O usuário pode definir a situação das Transações Financeiras para Cancelado ou Feito a qualquer momento
 
 A duplicação de uma Transação Financeira pode ser feito escolhendo uma Transação Financeira já cadastrada, podendo alterar qualquer dado antes de confirma-la
 
@@ -60,13 +60,13 @@ Ocorrências do tipo Única são ocorrências que ocorre apenas uma única vez
 
 Ocorrências do tipo Programática são ocorrência que pode repetir uma vez por: semana; mês; ano
 
-O envio de notificação deve ser feito toda vez que uma Transação Financeira fique com o status de Atrasado
+O envio de notificação deve ser feito toda vez que uma Transação Financeira fique com a situação de Atrasado
 
-Deve ser enviado uma notificação 24h antes do status da Transação Financeira ficar como Atrasado
+Deve ser enviado uma notificação 24h antes da situação da Transação Financeira ficar como Atrasado
 
 A consulta de Categorias pode ser feito pelos dados: seu nome, se é favorito
 
-A consulta de Transações Financeiras pode ser feito pelos dados: o título da transação; data e hora limite da transação; o valor; seu tipo (Despesa ou Renda); as categorias; tipo de ocorrência; status; grau de prioridade; possui uma notificação de alerta
+A consulta de Transações Financeiras pode ser feito pelos dados: o título da transação; data e hora limite da transação; o valor; seu tipo (Despesa ou Renda); as categorias; tipo de ocorrência; situação; grau de prioridade; possui uma notificação de alerta
 
 O relatório deve conter: cada valor de entrada e saída movimentado, junto a data e hora da movimentação e ao final deve mostrar o valor total de entrada, total de saída e lucro total
 
