@@ -1,9 +1,13 @@
-import { ModelSchemaArgs } from '../../../common/model.schema'
+import { RepositoryEsliph } from '@esliph/util-node'
 
-export type AccountModelArgs = {
+export interface AccountArgs {
     name: string
     login: string
     password: string
 }
 
-export type AccountModel = ModelSchemaArgs & AccountModelArgs
+export interface AccountModel extends RepositoryEsliph.Document {
+    name: string
+    login: string
+    password: string
+}
