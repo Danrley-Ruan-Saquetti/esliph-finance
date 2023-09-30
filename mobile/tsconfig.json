@@ -8,22 +8,22 @@
     "baseUrl": ".",
     "paths": {
       "@router/*": [
-        "./app/*"
+        "./src/app/*"
       ],
       "@assets/*": [
-        "./assets/*"
+        "./src/assets/*"
       ],
       "@server/*": [
-        "./server/*"
+        "./src/server/*"
       ],
       "@components/*": [
-        "./components/*"
+        "./src/components/*"
       ],
       "@services/*": [
-        "./services"
+        "./src/services"
       ],
       "@util/*": [
-        "./util/*"
+        "./src/util/*"
       ],
     }
   },
