@@ -1,8 +1,13 @@
 {
+    "extends": "../../tsconfig.json",
     "compilerOptions": {
         "module": "commonjs",
-        "lib": ["ES6"],
-        "types": ["node"],
+        "lib": [
+            "ES6"
+        ],
+        "types": [
+            "node"
+        ],
         "declaration": false,
         "removeComments": true,
         "emitDecoratorMetadata": true,
@@ -30,5 +35,7 @@
         "resolveJsonModule": true,
         "paths": {}
     },
-    "exclude": ["node_modules"]
+    "exclude": [
+        "node_modules"
+    ]
 }

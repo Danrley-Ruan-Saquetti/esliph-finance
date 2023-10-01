@@ -14,7 +14,7 @@
         "./src/assets/*"
       ],
       "@server/*": [
-        "./src/server/*"
+        "./src/server/src/*"
       ],
       "@components/*": [
         "./src/components/*"

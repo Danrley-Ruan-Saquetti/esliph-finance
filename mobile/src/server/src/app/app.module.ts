@@ -1,14 +1,8 @@
-import { Controller } from '../common/controller'
+import { Module } from '../common/module'
 import { AccountController } from './modules/account/account.controller'
 
-export class AppModule {
-    private controllers: (new () => Controller)[]
-
+export class AppModule extends Module {
     constructor() {
-        this.controllers = [AccountController]
-    }
-
-    public getController() {
-        return this.controllers
+        super({ controllers: [AccountController] })
     }
 }
