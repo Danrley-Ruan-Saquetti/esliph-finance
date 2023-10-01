@@ -1,9 +1,11 @@
 import { Controller } from '../../../common/controller'
 
+export const ACCOUNT_REPOSITORY_PREFIX = '@db:accounts/'
+
 export class AccountRepository extends Controller {
     constructor() {
-        super()
+        super(ACCOUNT_REPOSITORY_PREFIX)
     }
 
-    initComponents(): void { }
+    initComponents() { }
 }

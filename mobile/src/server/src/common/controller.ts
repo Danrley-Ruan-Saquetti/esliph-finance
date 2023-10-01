@@ -5,7 +5,7 @@ export abstract class ControllerAbstract {
 }
 
 export class Controller implements ControllerAbstract {
-    protected observer: ApplicationServer
+    protected readonly observer: ApplicationServer
 
     constructor(prefix?: string) {
         this.observer = new ApplicationServer(prefix)

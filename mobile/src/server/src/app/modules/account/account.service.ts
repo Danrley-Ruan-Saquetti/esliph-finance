@@ -6,4 +6,8 @@ export class AccountService extends Service {
     }
 
     initComponents() { }
+
+    hello() {
+        return 'Hello World'
+    }
 }

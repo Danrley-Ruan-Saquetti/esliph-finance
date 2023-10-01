@@ -1,10 +1,3 @@
-import { AppModule } from './app/app.module'
-import { Application } from './core'
+import Bootstrap from './core/bootstrap'
 
-function bootstrap() {
-    const app = new Application(AppModule)
-
-    app.initComponents()
-}
-
-bootstrap()
+Bootstrap()
