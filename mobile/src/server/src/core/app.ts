@@ -10,8 +10,7 @@ export class Application {
     }
 
     initComponents() {
-        this.module.getControllers().map(controller => this.initController(controller))
-        this.module.getServices().map(service => this.initService(service))
+        this.module.initComponents()
     }
 
     useController(...controllers: (new () => Controller)[]) {

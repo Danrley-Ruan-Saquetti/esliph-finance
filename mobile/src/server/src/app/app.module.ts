@@ -1,8 +1,8 @@
 import { Module } from '../common/module'
-import { AccountController } from './modules/account/account.controller'
+import { AccountModule } from './modules/account/account.module'
 
 export class AppModule extends Module {
     constructor() {
-        super({ controllers: [AccountController] })
+        super({ imports: [AccountModule] })
     }
 }
