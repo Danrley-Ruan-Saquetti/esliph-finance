@@ -1,12 +1,10 @@
-import { ApplicationClient } from './services/http/client'
-import './services/database/index'
+import { AccountController } from './app/modules/account/account.controller'
+import { Application } from './core'
 
-const repository = new ApplicationClient('@db:')
+function bootstrap() {
+    const app = new Application()
 
-async function App() {
-    const response = await repository.get('users')
-
-    console.log(response)
+    app.initComponents([AccountController])
 }
 
-App()
+bootstrap()
