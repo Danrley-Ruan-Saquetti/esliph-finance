@@ -6,6 +6,5 @@ export class AccountController extends Controller {
     }
 
     initComponents() {
-        console.log('!')
     }
 }
