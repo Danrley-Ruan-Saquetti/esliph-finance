@@ -1,5 +1,5 @@
 {
-    "name": "mobile",
+    "name": "portal-finance",
     "version": "1.0.0",
     "main": "expo-router/entry",
     "scripts": {
@@ -7,7 +7,10 @@
         "start:clean": "expo start --clear",
         "android": "expo start --android",
         "ios": "expo start --ios",
-        "web": "expo start --web"
+        "web": "expo start --web",
+        "build:ios": "eas build --platform ios",
+        "build:android": "eas build --platform android",
+        "build:all": "eas build --platform all"
     },
     "dependencies": {
         "@types/react": "~18.2.14",
