@@ -4,6 +4,6 @@ import { AccountRepository } from './account.repository'
 
 export class AccountModule extends Module {
     constructor() {
-        super({ controllers: [AccountController], services: [AccountRepository] })
+        super({ imports: [], controllers: [AccountController, AccountRepository], services: [] })
     }
 }
