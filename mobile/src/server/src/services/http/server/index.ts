@@ -1,7 +1,4 @@
-import { ObserverEsliph } from '@esliph/util-node'
+import { Server } from '@esliph/util-node'
+import { ApplicationEvents } from '../events'
 
-export class ApplicationServer extends ObserverEsliph.ObserverServer {
-    constructor(prefix = '') {
-        super(prefix)
-    }
-}
+export class ApplicationServer<Context extends keyof ApplicationEvents> extends Server<ApplicationEvents, Context> {}
