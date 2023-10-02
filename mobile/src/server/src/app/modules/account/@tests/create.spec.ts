@@ -5,10 +5,16 @@ import bootstrap from '../../../../core/bootstrap'
 bootstrap()
 
 describe('Create Account', () => {
-    const applicationClient = new ListenerPublicClient()
+    const listenerClient = new ListenerPublicClient()
 
     it('Create base', async () => {
-        const response = await applicationClient.get('accounts/create', {})
+        const user = {
+            name: 'Dan Ruan',
+            login: 'dan@gmail.com',
+            password: '123'
+        }
+
+        const response = await listenerClient.get('accounts/create', user)
 
         console.log(response)
 

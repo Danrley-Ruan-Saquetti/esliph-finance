@@ -11,8 +11,10 @@ export class AccountController extends Controller {
     }
 
     initComponents() {
-        this.observer.get('accounts/create', ({ }, res) => {
-            res.send(this.service.hello())
+        this.observer.get('accounts/create', async (req, res) => {
+            const response = await this.service.create(req.body)
+
+            res.send(response)
         })
     }
 }
