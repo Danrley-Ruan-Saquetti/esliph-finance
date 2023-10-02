@@ -1,15 +1,15 @@
 import { it, expect, describe } from 'vitest'
 import { ApplicationClient } from '../../../../services/http/client'
+import { EVENT_CONTEXT } from 'src/server/src/services/http/events'
 import bootstrap from '../../../../core/bootstrap'
-import { CONTEXT_TYPE } from 'src/server/src/services/http/events'
 
 bootstrap()
 
 describe('Create Account', () => {
-    const applicationClient = new ApplicationClient<CONTEXT_TYPE['PUBLIC']>({context: 'PUBLIC'})
+    const applicationClient = new ApplicationClient<typeof EVENT_CONTEXT.PUBLIC>({})
 
     it('Create base', async () => {
-        const response = await applicationClient.get('accounts/hello')
+        const response = await applicationClient.get('accounts/create', {})
 
         console.log(response)
 
