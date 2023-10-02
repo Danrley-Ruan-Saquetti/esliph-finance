@@ -3,4 +3,4 @@ export type ApplicationEvents = {
     'DATABASE': {}
 }
 
-export type CONTEXT_TYPE = { PUBLIC: 'PUBLIC'; DATABASE: 'DATABASE' }
+export type EVENT_CONTEXT = { PUBLIC: 'PUBLIC'; DATABASE: 'DATABASE' }
