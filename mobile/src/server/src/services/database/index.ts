@@ -1,20 +1,19 @@
-import { ApplicationServer } from '../http'
+import { Service } from '../../common/service'
+import { ListenerRepositoryServer } from '../http'
 
-class Database {
-    private readonly observer: ApplicationServer
+class Database implements Service {
+    private readonly observer: ListenerRepositoryServer
 
     constructor() {
-        this.observer = new ApplicationServer('@db:')
+        this.observer = new ListenerRepositoryServer()
 
         this.initComponents()
     }
 
-    private initComponents() {
-        this.observer.get('users', (req, res) => {
-            console.log(req)
-            return []
-        })
+    initComponents() {
+
+        return this
     }
 }
 
-export const database = new Database()
+export const database = new Database().initComponents()

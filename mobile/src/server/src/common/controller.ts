@@ -1,15 +1,14 @@
-import { ApplicationServer } from '../services/http'
-import { EVENT_CONTEXT } from '../services/http/events'
+import { ListenerPublicServer } from '../services/http'
 
 export abstract class ControllerAbstract {
     abstract initComponents(): void
 }
 
-export class Controller<Context extends keyof typeof EVENT_CONTEXT = typeof EVENT_CONTEXT.PUBLIC> implements ControllerAbstract {
-    protected readonly observer: ApplicationServer<Context>
+export class Controller implements ControllerAbstract {
+    protected readonly observer: ListenerPublicServer
 
-    constructor({ prefix = '', context = EVENT_CONTEXT.PUBLIC }: { prefix?: string; context?: EVENT_CONTEXT }) {
-        this.observer = new ApplicationServer<Context>({ prefix, context: context as any })
+    constructor() {
+        this.observer = new ListenerPublicServer()
     }
 
     initComponents() {

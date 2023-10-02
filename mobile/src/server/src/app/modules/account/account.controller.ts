@@ -5,13 +5,13 @@ export class AccountController extends Controller {
     private readonly service: AccountService
 
     constructor() {
-        super({})
+        super()
 
         this.service = new AccountService()
     }
 
     initComponents() {
-        this.observer.get('accounts/create', ({}, res) => {
+        this.observer.get('accounts/create', ({ }, res) => {
             res.send(this.service.hello())
         })
     }

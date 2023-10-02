@@ -1,4 +1,20 @@
 import { Server } from '@esliph/util-node'
-import { ApplicationEvents } from '../events'
+import { ApplicationEvents, EVENT_CONTEXT } from '../events'
 
-export class ApplicationServer<Context extends keyof ApplicationEvents> extends Server<ApplicationEvents, Context> {}
+class ApplicationServer<Context extends keyof ApplicationEvents> extends Server<ApplicationEvents, Context> {
+    constructor(context: Context) {
+        super({ context })
+    }
+}
+
+export class ListenerPublicServer extends ApplicationServer<typeof EVENT_CONTEXT.PUBLIC> {
+    constructor() {
+        super(EVENT_CONTEXT.PUBLIC)
+    }
+}
+export class ListenerRepositoryServer extends ApplicationServer<typeof EVENT_CONTEXT.DATABASE> {
+    constructor() {
+        super(EVENT_CONTEXT.DATABASE)
+    }
+}
+
