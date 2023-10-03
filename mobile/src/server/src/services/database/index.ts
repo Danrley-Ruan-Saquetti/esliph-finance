@@ -11,7 +11,6 @@ class Database implements Service {
     }
 
     initComponents() {
-
         return this
     }
 }

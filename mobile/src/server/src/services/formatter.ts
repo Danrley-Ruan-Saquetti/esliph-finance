@@ -20,8 +20,8 @@ export class ZodValidateService {
         }
 
         return Result.failure<z.output<ZodSchema>>({
-            title: 'Data Formatting and Validation',
-            message: 'Invalid data',
+            title: 'Formatação e Validação de Dados',
+            message: 'Dados inválidos',
             causes: [{ message: err, origin: 'FormatData' }],
         })
     }
@@ -31,7 +31,7 @@ export class ZodValidateService {
             return { message: _err.message, origin: _err.path.join(';') }
         })
 
-        return Result.failure<z.output<ZodSchema>>({ title: 'Data Formatting and Validation', message: 'Invalid data', causes: dataErrors })
+        return Result.failure<z.output<ZodSchema>>({ title: 'Formatação e Validação de Dados', message: 'Dados inválidos', causes: dataErrors })
     }
 
     public static defaultSchemaModelTable() {

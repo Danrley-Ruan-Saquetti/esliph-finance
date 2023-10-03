@@ -5,12 +5,17 @@ import { AccountCreateRepository } from '../../repository/create'
 import { AccountQueryRepository } from '../../repository/query'
 
 const AccountCreateSchema = z.object({
-    name: z.string().trim().min(3, { message: '"Name" need min 3 characters' }).nonempty({ message: '"Name" is required' }),
-    login: z.string().trim().nonempty({ message: '"Login" is required' }),
-    password: z.string().trim().nonempty({ message: '"Password" is required' }),
+    name: z.string().trim().nonempty({ message: '"Nome" é obrigatório' }).default(''),
+    login: z.string().trim().nonempty({ message: '"Login" é obrigatório' }).default(''),
+    password: z
+        .string()
+        .trim()
+        .nonempty({ message: '"Password" é obrigatório' })
+        .min(6, { message: 'A "Senha" precisa ter no mínimo 6 caracteres' })
+        .default(''),
 })
 
-type AccountCreateArgs = z.output<typeof AccountCreateSchema>
+export type AccountCreateArgs = z.output<typeof AccountCreateSchema>
 
 export class AccountCreateUseCase {
     private readonly createRepository: AccountCreateRepository
@@ -33,11 +38,15 @@ export class AccountCreateUseCase {
         const accountWithLogin = await this.queryRepository.findByLogin(login)
 
         if (accountWithLogin) {
-            throw Result.failure({ title: 'Create Account', message: `Already exists account with login "${login}"` }, HttpStatusCodes.BAD_REQUEST)
+            throw Result.failure({ title: 'Criar Conta', message: `Já existe uma conta com o login "${login}"` }, HttpStatusCodes.BAD_REQUEST)
         }
 
         const response = await this.createRepository.perform({ name, login, password })
 
-        return response
+        if (!response.isSuccess()) {
+            return Result.failure({ title: 'Registrar Conta', message: 'Não foi possível registrar a conta', causes: response.getError().causes })
+        }
+
+        return Result.success({ message: 'Conta criada com sucesso' })
     }
 }

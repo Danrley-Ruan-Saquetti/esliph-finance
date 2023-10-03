@@ -11,7 +11,7 @@ describe('Create Account', () => {
         const user = {
             name: 'Dan Ruan',
             login: 'dan@gmail.com',
-            password: '123'
+            password: '123456'
         }
 
         const response = await listenerClient.get('accounts/create', user)
@@ -22,17 +22,17 @@ describe('Create Account', () => {
     it('Try create with data empty', async () => {
         const user = {
             login: 'dan@gmail.com',
-            password: '123'
+            password: '123456'
         }
 
         const response = await listenerClient.get('accounts/create', user)
+
 
         expect(response.isSuccess()).toBe(false)
     })
 
     it('Try create with data invalid', async () => {
         const user = {
-            name: 'Dan',
             login: 'dan@gmail.com',
             password: '123'
         }
@@ -40,5 +40,6 @@ describe('Create Account', () => {
         const response = await listenerClient.get('accounts/create', user)
 
         expect(response.isSuccess()).toBe(false)
+        expect(response.getError().causes.length).toBe(2)
     })
 })

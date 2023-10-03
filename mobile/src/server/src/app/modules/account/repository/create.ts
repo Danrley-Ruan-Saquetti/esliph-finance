@@ -1,5 +1,6 @@
 import { AccountSchema } from './../account.schema'
 import { AccountRepository } from '.'
+import { Result } from '@esliph/util-node'
 
 export class AccountCreateRepository {
     private readonly createRepository: AccountRepository
@@ -9,6 +10,6 @@ export class AccountCreateRepository {
     }
 
     async perform(args: AccountSchema) {
-        return this.createRepository.create({ data: args })
+        return Result.success(this.createRepository.create({ data: args }))
     }
 }
