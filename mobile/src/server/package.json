@@ -16,10 +16,11 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "@esliph/util-node": "^1.0.51",
+        "@esliph/util-node": "^1.0.52",
         "reflect-metadata": "^0.1.13",
         "sqlite3": "^5.1.6",
         "tslib": "^2.6.2",
-        "vitest": "^0.34.5"
+        "vitest": "^0.34.5",
+        "zod": "^3.22.2"
     }
 }
