@@ -1,8 +1,8 @@
 import { HttpStatusCodes, Result } from '@esliph/util-node'
 import { z } from 'zod'
 import { ZodValidateService } from '../../../../../services/formatter'
-import { AccountCreateRepository } from '../../repository/create'
 import { AccountQueryRepository } from '../../repository/query'
+import { ListenerRepositoryClient } from '../../../../../services/http'
 
 const AccountCreateSchema = z.object({
     name: z.string().trim().nonempty({ message: '"Nome" é obrigatório' }).default(''),
@@ -16,17 +16,18 @@ const AccountCreateSchema = z.object({
 })
 
 export type AccountCreateArgs = z.output<typeof AccountCreateSchema>
+export type AccountCreateResponse = Result<{ message: string }>
 
 export class AccountCreateUseCase {
-    private readonly createRepository: AccountCreateRepository
     private readonly queryRepository: AccountQueryRepository
+    private readonly observerRepository: ListenerRepositoryClient
 
     constructor() {
-        this.createRepository = new AccountCreateRepository()
         this.queryRepository = new AccountQueryRepository()
+        this.observerRepository = new ListenerRepositoryClient()
     }
 
-    async perform(args: AccountCreateArgs) {
+    async perform(args: AccountCreateArgs): Promise<AccountCreateResponse> {
         const argsValidate = ZodValidateService.performParse(args, AccountCreateSchema)
 
         if (!argsValidate.isSuccess()) {
@@ -41,7 +42,7 @@ export class AccountCreateUseCase {
             throw Result.failure({ title: 'Criar Conta', message: `Já existe uma conta com o login "${login}"` }, HttpStatusCodes.BAD_REQUEST)
         }
 
-        const response = await this.createRepository.perform({ name, login, password })
+        const response = await this.observerRepository.post('accounts/create', { login, name, password })
 
         if (!response.isSuccess()) {
             return Result.failure({ title: 'Registrar Conta', message: 'Não foi possível registrar a conta', causes: response.getError().causes })
