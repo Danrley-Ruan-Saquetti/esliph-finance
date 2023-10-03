@@ -1,14 +1,14 @@
-import { ApplicationServer } from '../services/http'
+import { ListenerPublicServer } from '../services/http'
 
 export abstract class ControllerAbstract {
     abstract initComponents(): void
 }
 
 export class Controller implements ControllerAbstract {
-    protected readonly observer: ApplicationServer
+    protected readonly observer: ListenerPublicServer
 
-    constructor(prefix?: string) {
-        this.observer = new ApplicationServer(prefix)
+    constructor() {
+        this.observer = new ListenerPublicServer()
     }
 
     initComponents() {

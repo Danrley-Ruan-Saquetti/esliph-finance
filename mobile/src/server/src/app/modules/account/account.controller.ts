@@ -1,18 +1,20 @@
 import { Controller } from '../../../common/controller'
 import { AccountService } from './account.service'
 
-export const ACCOUNT_CONTROLLER_PREFIX = 'accounts'
-
 export class AccountController extends Controller {
     private readonly service: AccountService
 
     constructor() {
-        super(ACCOUNT_CONTROLLER_PREFIX)
+        super()
 
         this.service = new AccountService()
     }
 
     initComponents() {
-        this.observer.get('/hello', () => this.service.hello())
+        this.observer.get('accounts/create', async (req, res) => {
+            const response = await this.service.create(req.body)
+
+            res.send(response)
+        })
     }
 }

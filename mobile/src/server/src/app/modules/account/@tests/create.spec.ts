@@ -1,15 +1,22 @@
 import { it, expect, describe } from 'vitest'
-import { ApplicationClient } from '../../../../services/http/client'
+import { ListenerPublicClient } from '../../../../services/http/client'
 import bootstrap from '../../../../core/bootstrap'
-import { CONTEXT_TYPE } from 'src/server/src/services/http/events'
 
 bootstrap()
 
 describe('Create Account', () => {
-    const applicationClient = new ApplicationClient<CONTEXT_TYPE['PUBLIC']>({context: 'PUBLIC'})
+    const listenerClient = new ListenerPublicClient()
 
     it('Create base', async () => {
-        const response = await applicationClient.get('accounts/hello')
+        const user = {
+            name: 'Dan Ruan',
+            login: 'dan@gmail.com',
+            password: '123'
+        }
+
+        await listenerClient.get('accounts/create', user)
+
+        const response = await listenerClient.get('accounts/create', user)
 
         console.log(response)
 
