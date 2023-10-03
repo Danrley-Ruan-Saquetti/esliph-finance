@@ -14,6 +14,8 @@ describe('Create Account', () => {
             password: '123'
         }
 
+        await listenerClient.get('accounts/create', user)
+
         const response = await listenerClient.get('accounts/create', user)
 
         console.log(response)
