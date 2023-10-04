@@ -1,13 +1,20 @@
 import { AccountSchema } from './account.schema'
 import { AccountCreateArgs, AccountCreateResponse } from './use-case/create'
+import { AccountQueryArgs, AccountQueryResponse } from './use-case/query/find-first'
 import { AccountCreateRepositoryResponse } from './repository/create'
-import { AccountQueryRepositoryByName, AccountQueryRepositoryByLogin, AccountQueryRepositoryResponse } from './repository/query'
+import { AccountQueryRepositoryByName, AccountQueryRepositoryByLogin, AccountQueryRepositoryResponse, AccountQueryRepositoryById } from './repository/query'
 
 export type AccountPublicEvents = {
     'POST': {
         'accounts/create': {
             body: AccountCreateArgs
             response: AccountCreateResponse
+        }
+    }
+    'GET': {
+        'accounts/find?id': {
+            body: AccountQueryArgs
+            response: AccountQueryResponse
         }
     }
 }
@@ -25,6 +32,10 @@ export type AccountDatabaseEvents = {
         }
         'accounts/find?login': {
             body: AccountQueryRepositoryByLogin
+            response: AccountQueryRepositoryResponse
+        }
+        'accounts/find?id': {
+            body: AccountQueryRepositoryById
             response: AccountQueryRepositoryResponse
         }
     }

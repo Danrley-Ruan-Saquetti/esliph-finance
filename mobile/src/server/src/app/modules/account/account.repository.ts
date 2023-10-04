@@ -20,8 +20,10 @@ export class AccountRepository extends Controller {
         this.observer.post('accounts/create', async (req, res) => {
             const response = await this.createRepository.perform(req.body)
 
+            res.status(response.getStatus())
+
             if (!response.isSuccess()) {
-                return res.status(response.getStatus()).error(response.getError())
+                return res.error(response.getError())
             }
 
             return res.send(response.getValue())
@@ -30,8 +32,10 @@ export class AccountRepository extends Controller {
         this.observer.get('accounts/find?name', async (req, res) => {
             const response = await this.queryRepository.findByName(req.body)
 
+            res.status(response.getStatus())
+
             if (!response.isSuccess()) {
-                return res.status(response.getStatus()).error(response.getError())
+                return res.error(response.getError())
             }
 
             return res.send(response.getValue())
@@ -40,8 +44,22 @@ export class AccountRepository extends Controller {
         this.observer.get('accounts/find?login', async (req, res) => {
             const response = await this.queryRepository.findByLogin(req.body)
 
+            res.status(response.getStatus())
+
             if (!response.isSuccess()) {
-                return res.status(response.getStatus()).error(response.getError())
+                return res.error(response.getError())
+            }
+
+            return res.send(response.getValue())
+        })
+
+        this.observer.get('accounts/find?id', async (req, res) => {
+            const response = await this.queryRepository.findById(req.body)
+
+            res.status(response.getStatus())
+
+            if (!response.isSuccess()) {
+                return res.error(response.getError())
             }
 
             return res.send(response.getValue())

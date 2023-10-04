@@ -17,6 +17,24 @@ export class AccountController extends Controller {
         this.observer.post('accounts/create', async (req, res) => {
             const response = await this.service.create(req.body)
 
+            res.status(response.getStatus())
+
+            if (!response.isSuccess()) {
+                return res.error(response.getError())
+            }
+
+            res.send(response.getValue())
+        })
+
+        this.observer.get('accounts/find?id', async (req, res) => {
+            const response = await this.service.query(req.body)
+
+            res.status(response.getStatus())
+
+            if (!response.isSuccess()) {
+                return res.error(response.getError())
+            }
+
             res.send(response.getValue())
         })
     }

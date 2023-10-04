@@ -8,35 +8,35 @@ describe('Create Account', () => {
     const listenerClient = new ListenerPublicClient()
 
     it('Create base', async () => {
-        const user = {
+        const account = {
             name: 'Dan Ruan',
             login: 'dan@gmail.com',
             password: '123456'
         }
 
-        const response = await listenerClient.post('accounts/create', user)
+        const response = await listenerClient.post('accounts/create', account)
 
         expect(response.isSuccess()).toBe(true)
     })
 
     it('Try create with data empty', async () => {
-        const user = {
+        const account = {
             login: 'dan@gmail.com',
             password: '123456'
         }
 
-        const response = await listenerClient.post('accounts/create', user)
+        const response = await listenerClient.post('accounts/create', account)
 
         expect(response.isSuccess()).toBe(false)
     })
 
     it('Try create with data invalid', async () => {
-        const user = {
+        const account = {
             login: 'dan@gmail.com',
             password: '123'
         }
 
-        const response = await listenerClient.post('accounts/create', user)
+        const response = await listenerClient.post('accounts/create', account)
 
         expect(response.isSuccess()).toBe(false)
         expect(response.getError().causes.length).toBe(2)
