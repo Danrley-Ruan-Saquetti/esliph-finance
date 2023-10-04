@@ -17,7 +17,7 @@ export class AccountController extends Controller {
         this.observer.post('accounts/create', async (req, res) => {
             const response = await this.service.create(req.body)
 
-            res.send(response)
+            res.send(response.getValue())
         })
     }
 }

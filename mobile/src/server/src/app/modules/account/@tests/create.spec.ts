@@ -27,7 +27,6 @@ describe('Create Account', () => {
 
         const response = await listenerClient.post('accounts/create', user)
 
-
         expect(response.isSuccess()).toBe(false)
     })
 

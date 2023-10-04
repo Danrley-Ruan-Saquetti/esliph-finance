@@ -1,8 +1,8 @@
 import { HttpStatusCodes, Result } from '@esliph/util-node'
 import { z } from 'zod'
 import { ZodValidateService } from '../../../../../services/formatter'
-import { AccountQueryRepository } from '../../repository/query'
 import { ListenerRepositoryClient } from '../../../../../services/http'
+import { UseCase } from '../../../../../common/use-case'
 
 const AccountCreateSchema = z.object({
     name: z.string().trim().nonempty({ message: '"Nome" é obrigatório' }).default(''),
@@ -16,18 +16,17 @@ const AccountCreateSchema = z.object({
 })
 
 export type AccountCreateArgs = z.output<typeof AccountCreateSchema>
-export type AccountCreateResponse = Result<{ message: string }>
+export type AccountCreateResponse = { message: string }
 
-export class AccountCreateUseCase {
-    private readonly queryRepository: AccountQueryRepository
+export class AccountCreateUseCase extends UseCase<AccountCreateResponse, AccountCreateArgs> {
     private readonly observerRepository: ListenerRepositoryClient
 
     constructor() {
-        this.queryRepository = new AccountQueryRepository()
+        super()
         this.observerRepository = new ListenerRepositoryClient()
     }
 
-    async perform(args: AccountCreateArgs): Promise<AccountCreateResponse> {
+    async perform(args: AccountCreateArgs) {
         const argsValidate = ZodValidateService.performParse(args, AccountCreateSchema)
 
         if (!argsValidate.isSuccess()) {
@@ -36,10 +35,13 @@ export class AccountCreateUseCase {
 
         const { login, name, password } = argsValidate.getValue()
 
-        const accountWithLogin = await this.queryRepository.findByLogin(login)
+        const accountWithLogin = await this.observerRepository.get('accounts/find?login', { login })
 
-        if (accountWithLogin) {
-            throw Result.failure({ title: 'Criar Conta', message: `Já existe uma conta com o login "${login}"` }, HttpStatusCodes.BAD_REQUEST)
+        if (accountWithLogin.isSuccess()) {
+            throw Result.failure(
+                { title: 'Criar Conta', message: `Já existe uma conta com o login "${login}". Por Favor, escolha outro login` },
+                HttpStatusCodes.BAD_REQUEST,
+            )
         }
 
         const response = await this.observerRepository.post('accounts/create', { login, name, password })

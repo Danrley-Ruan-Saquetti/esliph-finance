@@ -1,4 +1,4 @@
-import { ApplicationModulesEventsPublic, ApplicationModulesEventsDatabase } from '../../app/events'
+import { ApplicationModulesEventsPublic, ApplicationModulesEventsDatabase } from '../../app/app.events'
 
 export type ApplicationEvents = {
     'PUBLIC': ApplicationModulesEventsPublic
