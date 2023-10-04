@@ -64,5 +64,17 @@ export class AccountRepository extends Controller {
 
             return res.send(response.getValue())
         })
+
+        this.observer.get('accounts/find-all', async (req, res) => {
+            const response = await this.queryRepository.findAll()
+
+            res.status(response.getStatus())
+
+            if (!response.isSuccess()) {
+                return res.error(response.getError())
+            }
+
+            return res.send(response.getValue())
+        })
     }
 }

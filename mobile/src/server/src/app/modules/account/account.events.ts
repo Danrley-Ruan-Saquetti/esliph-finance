@@ -1,8 +1,16 @@
 import { AccountSchema } from './account.schema'
 import { AccountCreateArgs, AccountCreateResponse } from './use-case/create'
-import { AccountQueryArgs, AccountQueryResponse } from './use-case/query/find-first'
+import { AccountFindFirstArgs, AccountFindFirstResponse } from './use-case/query/find-first'
+import { AccountFindManyArgs, AccountFindManyResponse } from './use-case/query/find-many'
 import { AccountCreateRepositoryResponse } from './repository/create'
-import { AccountQueryRepositoryByName, AccountQueryRepositoryByLogin, AccountQueryRepositoryResponse, AccountQueryRepositoryById } from './repository/query'
+import {
+    AccountQueryByNameRepository,
+    AccountQueryByLoginRepository,
+    AccountQueryOneRepositoryResponse,
+    AccountQueryByIdRepository,
+    AccountQueryAllRepository,
+    AccountQueryAllRepositoryResponse,
+} from './repository/query'
 
 export type AccountPublicEvents = {
     'POST': {
@@ -13,8 +21,16 @@ export type AccountPublicEvents = {
     }
     'GET': {
         'accounts/find?id': {
-            body: AccountQueryArgs
-            response: AccountQueryResponse
+            body: { id: number }
+            response: AccountFindFirstResponse
+        }
+        'accounts/find?login': {
+            body: { login: string }
+            response: AccountFindFirstResponse
+        }
+        'accounts/find-all': {
+            body: AccountFindManyArgs
+            response: AccountFindManyResponse
         }
     }
 }
@@ -27,16 +43,20 @@ export type AccountDatabaseEvents = {
     }
     'GET': {
         'accounts/find?name': {
-            body: AccountQueryRepositoryByName
-            response: AccountQueryRepositoryResponse
+            body: AccountQueryByNameRepository
+            response: AccountQueryOneRepositoryResponse
         }
         'accounts/find?login': {
-            body: AccountQueryRepositoryByLogin
-            response: AccountQueryRepositoryResponse
+            body: AccountQueryByLoginRepository
+            response: AccountQueryOneRepositoryResponse
         }
         'accounts/find?id': {
-            body: AccountQueryRepositoryById
-            response: AccountQueryRepositoryResponse
+            body: AccountQueryByIdRepository
+            response: AccountQueryOneRepositoryResponse
+        }
+        'accounts/find-all': {
+            body: AccountQueryAllRepository
+            response: AccountQueryAllRepositoryResponse
         }
     }
 }

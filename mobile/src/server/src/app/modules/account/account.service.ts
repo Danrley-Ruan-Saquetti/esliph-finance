@@ -1,17 +1,20 @@
 import { AccountCreateArgs } from './use-case/create/index'
 import { Service } from '../../../common/service'
 import { AccountCreateUseCase } from './use-case/create'
-import { AccountQueryArgs, AccountQueryUseCase } from './use-case/query/find-first'
+import { AccountFindFirstArgs, AccountFindFirstUseCase } from './use-case/query/find-first'
+import { AccountFindManyUseCase } from './use-case/query/find-many'
 
 export class AccountService extends Service {
     private readonly createUseCase: AccountCreateUseCase
-    private readonly queryUseCase: AccountQueryUseCase
+    private readonly queryFindOndeUseCase: AccountFindFirstUseCase
+    private readonly queryAllUseCase: AccountFindManyUseCase
 
     constructor() {
         super()
 
         this.createUseCase = new AccountCreateUseCase()
-        this.queryUseCase = new AccountQueryUseCase()
+        this.queryFindOndeUseCase = new AccountFindFirstUseCase()
+        this.queryAllUseCase = new AccountFindManyUseCase()
     }
 
     initComponents() {}
@@ -22,8 +25,20 @@ export class AccountService extends Service {
         return response
     }
 
-    async query(args: AccountQueryArgs) {
-        const response = await this.queryUseCase.perform(args)
+    async queryById({ id }: AccountFindFirstArgs) {
+        const response = await this.queryFindOndeUseCase.perform({ id })
+
+        return response
+    }
+
+    async queryByLogin({ login }: AccountFindFirstArgs) {
+        const response = await this.queryFindOndeUseCase.perform({ login })
+
+        return response
+    }
+
+    async queryAll() {
+        const response = await this.queryAllUseCase.perform()
 
         return response
     }

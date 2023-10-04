@@ -3,21 +3,21 @@ import { z } from 'zod'
 import { ZodValidateService } from '../../../../../services/formatter'
 import { ListenerRepositoryClient } from '../../../../../services/http'
 import { UseCase } from '../../../../../common/use-case'
-import { AccountQueryRepositoryResponse } from '../../repository/query'
+import { AccountQueryOneRepositoryResponse } from '../../repository/query'
 import { FindFirstResponse } from '@esliph/util-node/dist/lib/repository-memory'
 import { AccountSchemaWithoutPassword } from '../../account.schema'
 
-const AccountQuerySchema = z
+const AccountFindFirstSchema = z
     .object({
         id: z.number().optional(),
         login: z.string().trim().optional(),
     })
     .refine(({ id, login }) => !!id || !!login, { message: 'Informe ao menos o "Identificador" ou o "Login" da conta para fazer a busca' })
 
-export type AccountQueryArgs = z.output<typeof AccountQuerySchema>
-export type AccountQueryResponse = { account: FindFirstResponse<AccountSchemaWithoutPassword> }
+export type AccountFindFirstArgs = z.output<typeof AccountFindFirstSchema>
+export type AccountFindFirstResponse = { account: AccountSchemaWithoutPassword }
 
-export class AccountQueryUseCase extends UseCase<AccountQueryResponse, AccountQueryArgs> {
+export class AccountFindFirstUseCase extends UseCase<AccountFindFirstResponse, AccountFindFirstArgs> {
     private readonly observerRepository: ListenerRepositoryClient
 
     constructor() {
@@ -25,8 +25,8 @@ export class AccountQueryUseCase extends UseCase<AccountQueryResponse, AccountQu
         this.observerRepository = new ListenerRepositoryClient()
     }
 
-    async perform(args: AccountQueryArgs) {
-        const argsValidate = ZodValidateService.performParse(args, AccountQuerySchema)
+    async perform(args: AccountFindFirstArgs) {
+        const argsValidate = ZodValidateService.performParse(args, AccountFindFirstSchema)
 
         if (!argsValidate.isSuccess()) {
             return Result.failure(argsValidate.getError(), argsValidate.getStatus())
@@ -34,10 +34,11 @@ export class AccountQueryUseCase extends UseCase<AccountQueryResponse, AccountQu
 
         const { id, login } = argsValidate.getValue()
 
-        let response: Result<AccountQueryRepositoryResponse> = Result.failure({
+        let response: Result<AccountQueryOneRepositoryResponse> = Result.failure({
             title: 'Consulta de Conta',
             message: 'Informe ao menos o "Identificador" ou o "Login" da conta para fazer a busca',
         })
+
         if (id) {
             response = await this.observerRepository.get('accounts/find?id', { id })
         } else if (login) {
@@ -48,12 +49,14 @@ export class AccountQueryUseCase extends UseCase<AccountQueryResponse, AccountQu
             return Result.failure(response.getError(), response.getStatus())
         }
 
-        return Result.success<AccountQueryResponse>({ account: {
-            id: response.getValue().id,
-            createAt: response.getValue().createAt,
-            login: response.getValue().login,
-            name: response.getValue().name,
-            updateAt: response.getValue().updateAt,
-        } })
+        return Result.success<AccountFindFirstResponse>({
+            account: {
+                id: response.getValue().id,
+                createAt: response.getValue().createAt,
+                login: response.getValue().login,
+                name: response.getValue().name,
+                updateAt: response.getValue().updateAt,
+            },
+        })
     }
 }

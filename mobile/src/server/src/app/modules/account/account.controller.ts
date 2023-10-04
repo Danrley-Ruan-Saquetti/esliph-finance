@@ -27,7 +27,31 @@ export class AccountController extends Controller {
         })
 
         this.observer.get('accounts/find?id', async (req, res) => {
-            const response = await this.service.query(req.body)
+            const response = await this.service.queryById(req.body)
+
+            res.status(response.getStatus())
+
+            if (!response.isSuccess()) {
+                return res.error(response.getError())
+            }
+
+            res.send(response.getValue())
+        })
+
+        this.observer.get('accounts/find?login', async (req, res) => {
+            const response = await this.service.queryByLogin(req.body)
+
+            res.status(response.getStatus())
+
+            if (!response.isSuccess()) {
+                return res.error(response.getError())
+            }
+
+            res.send(response.getValue())
+        })
+
+        this.observer.get('accounts/find-all', async (req, res) => {
+            const response = await this.service.queryAll()
 
             res.status(response.getStatus())
 
