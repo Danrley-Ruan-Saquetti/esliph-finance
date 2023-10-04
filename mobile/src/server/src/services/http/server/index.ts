@@ -3,7 +3,7 @@ import { ApplicationEvents, EVENT_CONTEXT } from '../events'
 
 class ApplicationServer<Context extends keyof ApplicationEvents> extends Server<ApplicationEvents, Context> {
     constructor(context: Context) {
-        super({ context })
+        super(context)
     }
 }
 
@@ -17,4 +17,3 @@ export class ListenerRepositoryServer extends ApplicationServer<typeof EVENT_CON
         super(EVENT_CONTEXT.DATABASE)
     }
 }
-

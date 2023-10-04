@@ -3,14 +3,18 @@ import { AccountSchema } from './account.schema'
 import { AccountCreateArgs, AccountCreateResponse } from './use-case/create'
 
 export type AccountPublicEvents = {
-    'accounts/create': {
-        body: AccountCreateArgs
-        response: AccountCreateResponse
+    'POST': {
+        'accounts/create': {
+            body: AccountCreateArgs
+            response: AccountCreateResponse
+        }
     }
 }
 export type AccountDatabaseEvents = {
-    'accounts/create': {
-        body: AccountSchema
-        response: Document<AccountSchema>
+    'POST': {
+        'accounts/create': {
+            body: AccountSchema
+            response: Document<AccountSchema>
+        }
     }
 }
