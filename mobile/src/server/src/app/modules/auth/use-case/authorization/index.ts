@@ -4,12 +4,12 @@ import { z } from 'zod'
 import { ListenerRepositoryClient } from '../../../../../services/http'
 import { ZodValidateService } from '../../../../../services/formatter'
 
-const AuthAuthenticationSchema = z.object({})
+const AuthAuthorizationSchema = z.object({})
 
-export type AuthAuthenticationArgs = z.output<typeof AuthAuthenticationSchema>
-export type AuthAuthenticationResponse = {}
+export type AuthAuthorizationArgs = z.output<typeof AuthAuthorizationSchema>
+export type AuthAuthorizationResponse = {}
 
-export class AuthAuthenticationUseCase extends UseCase<AuthAuthenticationResponse, AuthAuthenticationArgs> {
+export class AuthAuthorizationUseCase extends UseCase<AuthAuthorizationResponse, AuthAuthorizationArgs> {
     private readonly observerRepository: ListenerRepositoryClient
 
     constructor() {
@@ -18,13 +18,13 @@ export class AuthAuthenticationUseCase extends UseCase<AuthAuthenticationRespons
         this.observerRepository = new ListenerRepositoryClient()
     }
 
-    async perform(args: AuthAuthenticationArgs) {
-        const argsValidate = ZodValidateService.performParse(args, AuthAuthenticationSchema)
+    async perform(args: AuthAuthorizationArgs) {
+        const argsValidate = ZodValidateService.performParse(args, AuthAuthorizationSchema)
 
         if (!argsValidate.isSuccess()) {
             return Result.failure(argsValidate.getError(), argsValidate.getStatus())
         }
 
-        return Result.success<AuthAuthenticationResponse>({})
+        return Result.success<AuthAuthorizationResponse>({})
     }
 }

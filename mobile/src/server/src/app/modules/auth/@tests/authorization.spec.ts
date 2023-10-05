@@ -4,7 +4,7 @@ import bootstrap from '../../../../core/bootstrap'
 
 bootstrap()
 
-describe('Authentication Login', async () => {
+describe('Authorization Login', async () => {
     const listenerClient = new ListenerPublicClient()
 
     const accountArgs = {
@@ -15,7 +15,7 @@ describe('Authentication Login', async () => {
 
     await listenerClient.post('accounts/create', accountArgs)
 
-    it('Authentication base', async () => {
+    it('Authorization base', async () => {
         const response = await listenerClient.post('accounts/teste', {})
 
         expect(response.isSuccess()).toBe(true)

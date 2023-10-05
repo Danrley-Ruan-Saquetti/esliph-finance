@@ -1,7 +1,7 @@
 import { ListenerPrivateClient, ListenerPublicServer } from '../../../services/http'
 import { Controller } from '../../../common/controller'
 import { AccountService } from './account.service'
-import { AuthenticationGuard } from '../auth/guards/authentication.guard'
+import { AuthorizationGuard } from '../auth/guards/authorization.guard'
 
 export class AccountController extends Controller {
     protected readonly observer: ListenerPublicServer
@@ -41,7 +41,7 @@ export class AccountController extends Controller {
             this.response(response, res)
         })
 
-        this.observer.post('accounts/teste', AuthenticationGuard, async (req, res) => {
+        this.observer.post('accounts/teste', AuthorizationGuard, async (req, res) => {
             return res.send('hello')
         })
     }

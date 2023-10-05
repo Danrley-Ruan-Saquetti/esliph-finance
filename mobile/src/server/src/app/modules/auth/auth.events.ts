@@ -1,5 +1,5 @@
 import { AuthLoginArgs, AuthLoginResponse } from './use-case/login'
-import { AuthAuthenticationArgs, AuthAuthenticationResponse } from './use-case/authentication'
+import { AuthAuthorizationArgs, AuthAuthorizationResponse } from './use-case/authorization'
 
 export type AuthPublicEvents = {
     'POST': {
@@ -11,9 +11,9 @@ export type AuthPublicEvents = {
 }
 export type AuthPrivateEvents = {
     'POST': {
-        'auth/authentication': {
-            body: AuthAuthenticationArgs
-            response: AuthAuthenticationResponse
+        'auth/authorization': {
+            body: AuthAuthorizationArgs
+            response: AuthAuthorizationResponse
         }
     }
 }

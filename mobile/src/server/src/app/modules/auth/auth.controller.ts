@@ -23,8 +23,8 @@ export class AuthController extends Controller {
             this.response(response, res)
         })
 
-        this.observerPrivate.post('auth/authentication', async (req, res) => {
-            const response = await this.service.authentication(req.body)
+        this.observerPrivate.post('auth/authorization', async (req, res) => {
+            const response = await this.service.authorization(req.body)
 
             this.response(response, res)
         })

@@ -1,16 +1,16 @@
 import { Service } from '../../../common/service'
-import { AuthAuthenticationUseCase, AuthAuthenticationArgs } from './use-case/authentication'
+import { AuthAuthorizationUseCase, AuthAuthorizationArgs } from './use-case/authorization'
 import { AuthLoginArgs, AuthLoginUseCase } from './use-case/login'
 
 export class AuthService extends Service {
     private readonly authLoginUseCase: AuthLoginUseCase
-    private readonly authAuthenticationUseCase: AuthAuthenticationUseCase
+    private readonly authAuthorizationUseCase: AuthAuthorizationUseCase
 
     constructor() {
         super()
 
         this.authLoginUseCase = new AuthLoginUseCase()
-        this.authAuthenticationUseCase = new AuthAuthenticationUseCase()
+        this.authAuthorizationUseCase = new AuthAuthorizationUseCase()
     }
 
     initComponents() {}
@@ -21,8 +21,8 @@ export class AuthService extends Service {
         return response
     }
 
-    async authentication(args: AuthAuthenticationArgs) {
-        const response = await this.authAuthenticationUseCase.perform(args)
+    async authorization(args: AuthAuthorizationArgs) {
+        const response = await this.authAuthorizationUseCase.perform(args)
 
         return response
     }
