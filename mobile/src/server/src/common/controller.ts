@@ -1,9 +1,9 @@
-import { Result } from '@esliph/util-node'
+import { HttpStatusCodes, Result } from '@esliph/util-node'
 import { Response } from '@esliph/util-node/dist/lib/http/server/handler/response'
 
 export class Controller {
     initComponents() {
-        throw new Error('Method not implemented.')
+        throw Result.failure({ title: `Guard ${Controller.name}`, message: 'Method not implemented' }, HttpStatusCodes.NOT_IMPLEMENTED)
     }
 
     protected response<T>(result: Result<T>, res: Response<T>) {

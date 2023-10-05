@@ -12,6 +12,11 @@ export class ListenerPublicClient extends ApplicationClient<typeof EVENT_CONTEXT
         super(EVENT_CONTEXT.PUBLIC)
     }
 }
+export class ListenerPrivateClient extends ApplicationClient<typeof EVENT_CONTEXT.PRIVATE> {
+    constructor() {
+        super(EVENT_CONTEXT.PRIVATE)
+    }
+}
 export class ListenerRepositoryClient extends ApplicationClient<typeof EVENT_CONTEXT.DATABASE> {
     constructor() {
         super(EVENT_CONTEXT.DATABASE)

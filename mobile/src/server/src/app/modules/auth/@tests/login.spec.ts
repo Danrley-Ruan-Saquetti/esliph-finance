@@ -4,7 +4,7 @@ import bootstrap from '../../../../core/bootstrap'
 
 bootstrap()
 
-describe('Create Account', async () => {
+describe('Login account', async () => {
     const listenerClient = new ListenerPublicClient()
 
     const accountArgs = {
