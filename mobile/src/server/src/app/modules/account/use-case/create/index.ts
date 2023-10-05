@@ -1,4 +1,4 @@
-import { HttpStatusCodes, Result } from '@esliph/util-node'
+import { HashEsliph, HttpStatusCodes, Result } from '@esliph/util-node'
 import { z } from 'zod'
 import { ZodValidateService } from '../../../../../services/formatter'
 import { ListenerRepositoryClient } from '../../../../../services/http'
@@ -44,7 +44,9 @@ export class AccountCreateUseCase extends UseCase<AccountCreateResponse, Account
             )
         }
 
-        const response = await this.observerRepository.post('accounts/create', { login, name, password })
+        const passwordHash = await HashEsliph.generateHash(password)
+
+        const response = await this.observerRepository.post('accounts/create', { login, name, password: passwordHash })
 
         if (!response.isSuccess()) {
             return Result.failure({ title: 'Registrar Conta', message: 'Não foi possível registrar a conta', causes: response.getError().causes })

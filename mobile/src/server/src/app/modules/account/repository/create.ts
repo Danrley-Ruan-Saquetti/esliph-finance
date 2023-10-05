@@ -13,6 +13,8 @@ export class AccountCreateRepository {
     }
 
     async perform(args: AccountSchema) {
-        return Result.success<AccountCreateRepositoryResponse>(this.createRepository.create({ data: args }))
+        const account = Result.success<AccountCreateRepositoryResponse>(this.createRepository.create({ data: args }))
+
+        return account
     }
 }
