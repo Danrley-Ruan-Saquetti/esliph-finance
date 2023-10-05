@@ -1,10 +1,10 @@
-export interface AuthenticationSchema {
+export interface AuthSchema {
     name: string
     login: string
     password: string
 }
 
-export interface AuthenticationSchemaWithoutPassword {
+export interface AuthSchemaWithoutPassword {
     name: string
     login: string
 }

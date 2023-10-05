@@ -37,5 +37,9 @@ export class AccountController extends Controller {
 
             this.response(response, res)
         })
+
+        this.observer.post('accounts/teste', async (req, res) => {
+            return res.send('hello')
+        })
     }
 }

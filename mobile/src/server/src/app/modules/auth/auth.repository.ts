@@ -1,7 +1,7 @@
 import { ListenerRepositoryServer } from '../../../services/http'
 import { Controller } from '../../../common/controller'
 
-export class AuthenticationRepository extends Controller {
+export class AuthRepository extends Controller {
     protected readonly observer: ListenerRepositoryServer
 
     constructor() {
@@ -10,5 +10,5 @@ export class AuthenticationRepository extends Controller {
         this.observer = new ListenerRepositoryServer()
     }
 
-    initComponents() { }
+    initComponents() {}
 }

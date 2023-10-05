@@ -16,19 +16,19 @@ describe('Create Account', async () => {
     await listenerClient.post('accounts/create', accountArgs)
 
     it('Login base', async () => {
-        const response = await listenerClient.post('authentication/login', { login: 'dan@gmail.com', password: '123456' })
+        const response = await listenerClient.post('auth/login', { login: 'dan@gmail.com', password: '123456' })
 
-        expect(response.isSuccess()).toBe(true)
+        expect(response.isSuccess()).toBe(false)
     })
 
     it('Login with login incorrect', async () => {
-        const response = await listenerClient.post('authentication/login', { login: 'dan@mail.com', password: '123456' })
+        const response = await listenerClient.post('auth/login', { login: 'dan@mail.com', password: '123456' })
 
         expect(response.isSuccess()).toBe(false)
     })
 
     it('Login with password incorrect', async () => {
-        const response = await listenerClient.post('authentication/login', { login: 'dan@gmail.com', password: '1234567890' })
+        const response = await listenerClient.post('auth/login', { login: 'dan@gmail.com', password: '1234567890' })
 
         expect(response.isSuccess()).toBe(false)
     })

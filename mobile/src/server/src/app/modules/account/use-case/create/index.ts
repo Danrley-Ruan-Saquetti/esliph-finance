@@ -5,14 +5,9 @@ import { ListenerRepositoryClient } from '../../../../../services/http'
 import { UseCase } from '../../../../../common/use-case'
 
 const AccountCreateSchema = z.object({
-    name: z.string().trim().nonempty({ message: '"Nome" é obrigatório' }).default(''),
-    login: z.string().trim().nonempty({ message: '"Login" é obrigatório' }).default(''),
-    password: z
-        .string()
-        .trim()
-        .nonempty({ message: '"Password" é obrigatório' })
-        .min(6, { message: 'A "Senha" precisa ter no mínimo 6 caracteres' })
-        .default(''),
+    name: z.string().trim().min(1, { message: '"Nome" é obrigatório' }).default(''),
+    login: z.string().trim().min(1, { message: '"Login" é obrigatório' }).default(''),
+    password: z.string().trim().min(1, { message: '"Password" é obrigatório' }).min(6, { message: 'A "Senha" precisa ter no mínimo 6 caracteres' }).default(''),
 })
 
 export type AccountCreateArgs = z.output<typeof AccountCreateSchema>

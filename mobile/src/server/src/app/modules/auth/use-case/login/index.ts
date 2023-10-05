@@ -4,19 +4,15 @@ import { z } from 'zod'
 import { ListenerRepositoryClient } from '../../../../../services/http'
 import { ZodValidateService } from '../../../../../services/formatter'
 
-const AuthenticationLoginSchema = z.object({
-    login: z.string().trim().nonempty({ message: '"Login" é obrigatório' }).default(''),
-    password: z
-        .string()
-        .trim()
-        .nonempty({ message: '"Password" é obrigatório' })
-        .default(''),
+const AuthLoginSchema = z.object({
+    login: z.string().trim().min(1, { message: '"Login" é obrigatório' }).default(''),
+    password: z.string().trim().min(1, { message: '"Password" é obrigatório' }).default(''),
 })
 
-export type AuthenticationLoginArgs = z.output<typeof AuthenticationLoginSchema>
-export type AuthenticationLoginResponse = { token: string }
+export type AuthLoginArgs = z.output<typeof AuthLoginSchema>
+export type AuthLoginResponse = { token: string }
 
-export class AuthenticationLoginUseCase extends UseCase<AuthenticationLoginResponse, AuthenticationLoginArgs> {
+export class AuthLoginUseCase extends UseCase<AuthLoginResponse, AuthLoginArgs> {
     private readonly observerRepository: ListenerRepositoryClient
 
     constructor() {
@@ -24,8 +20,8 @@ export class AuthenticationLoginUseCase extends UseCase<AuthenticationLoginRespo
         this.observerRepository = new ListenerRepositoryClient()
     }
 
-    async perform(args: AuthenticationLoginArgs) {
-        const argsValidate = ZodValidateService.performParse(args, AuthenticationLoginSchema)
+    async perform(args: AuthLoginArgs) {
+        const argsValidate = ZodValidateService.performParse(args, AuthLoginSchema)
 
         if (!argsValidate.isSuccess()) {
             return Result.failure(argsValidate.getError(), argsValidate.getStatus())
@@ -45,6 +41,6 @@ export class AuthenticationLoginUseCase extends UseCase<AuthenticationLoginRespo
             return Result.failure({ title: 'login de Autenticação', message: 'Senha inválida' })
         }
 
-        return Result.success<AuthenticationLoginResponse>({ token: 'BEARER' })
+        return Result.success<AuthLoginResponse>({ token: 'BEARER' })
     }
 }

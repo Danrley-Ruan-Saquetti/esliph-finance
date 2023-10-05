@@ -5,22 +5,23 @@
     "main": "index.js",
     "scripts": {
         "start:dev": "tsx watch src/index.ts",
-        "test": "vitest"
+        "test": "vitest",
+        "build": "tsc"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
         "@types/node": "^20.6.5",
+        "@vitest/ui": "^0.34.6",
+        "tslib": "^2.6.2",
         "tsx": "^3.13.0",
-        "typescript": "^5.2.2"
+        "typescript": "^5.2.2",
+        "vitest": "^0.34.6"
     },
     "dependencies": {
         "@esliph/util-node": "^1.0.57",
-        "reflect-metadata": "^0.1.13",
         "sqlite3": "^5.1.6",
-        "tslib": "^2.6.2",
-        "vitest": "^0.34.5",
         "zod": "^3.22.2"
     }
 }
