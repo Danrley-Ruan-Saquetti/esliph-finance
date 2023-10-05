@@ -18,7 +18,7 @@ describe('Create Account', async () => {
     it('Login base', async () => {
         const response = await listenerClient.post('auth/login', { login: 'dan@gmail.com', password: '123456' })
 
-        expect(response.isSuccess()).toBe(false)
+        expect(response.isSuccess()).toBe(true)
     })
 
     it('Login with login incorrect', async () => {
