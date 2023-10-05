@@ -10,7 +10,7 @@ export class Guard {
     }
 
     protected static async validate(req: Request): Promise<Result> {
-        return Result.success({ title: `Guard ${Guard.name}`, message: 'Method not implemented' }, HttpStatusCodes.NOT_IMPLEMENTED)
+        return Result.failure({ title: `Guard ${Guard.name}`, message: 'Method not implemented' }, HttpStatusCodes.NOT_IMPLEMENTED)
     }
 
     private static response<T>(result: Result<T>, res: Response<T>) {
