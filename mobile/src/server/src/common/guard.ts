@@ -4,16 +4,12 @@ import { Response } from '@esliph/util-node/dist/lib/http/server/handler/respons
 
 export class Guard {
     static async perform(req: Request, res: Response) {
-        const response = await Guard.validate(req)
+        const response = Result.failure({ title: 'Guard Request', message: 'Method not implemented' }, HttpStatusCodes.NOT_IMPLEMENTED)
 
         Guard.response(response, res)
     }
 
-    protected static async validate(req: Request): Promise<Result> {
-        return Result.failure({ title: `Guard ${Guard.name}`, message: 'Method not implemented' }, HttpStatusCodes.NOT_IMPLEMENTED)
-    }
-
-    private static response<T>(result: Result<T>, res: Response<T>) {
+    protected static response<T>(result: Result<T>, res: Response<T>) {
         res.status(result.getStatus())
 
         if (!result.isSuccess()) {

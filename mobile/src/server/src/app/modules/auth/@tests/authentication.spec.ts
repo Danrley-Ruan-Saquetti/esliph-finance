@@ -18,7 +18,6 @@ describe('Authentication Login', async () => {
     it('Authentication base', async () => {
         const response = await listenerClient.post('accounts/teste', {})
 
-        console.log(response.getError())
-        console.log(response.getValue())
+        expect(response.isSuccess()).toBe(true)
     })
 })
