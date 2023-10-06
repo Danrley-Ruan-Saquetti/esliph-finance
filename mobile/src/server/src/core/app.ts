@@ -1,4 +1,5 @@
 import { EventsRouter } from '@esliph/util-node/dist/lib/http/server/events'
+import { LoggerService } from '../services/logger'
 import { Controller } from '../common/controller'
 import { Module } from '../common/module'
 import { Service } from '../common/service'
@@ -6,15 +7,21 @@ import { ListenerPublicClient } from '../services/http'
 
 export class Application {
     private module: Module
+    private logger: LoggerService
 
     constructor(module: new () => Module) {
         this.module = new module()
+        this.logger = new LoggerService()
     }
 
     initComponents() {
         this.module.initComponents()
-        ListenerPublicClient.on<EventsRouter, 'error'>('error', (args) => {
-            console.log(args)
+        this.initEvents()
+    }
+
+    private initEvents() {
+        ListenerPublicClient.on<EventsRouter, 'error'>('error', args => {
+            this.logger.error(args, null, { context: `[${args.request.context}]` })
         })
     }
 
