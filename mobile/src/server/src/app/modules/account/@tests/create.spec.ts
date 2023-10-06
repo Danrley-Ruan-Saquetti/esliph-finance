@@ -5,7 +5,7 @@ import bootstrap from '../../../../core/bootstrap'
 bootstrap()
 
 describe('Create Account', () => {
-    const listenerClient = new ListenerPublicClient()
+    const listenerClient = new ListenerPublicClient({origem: 'TESTE'})
 
     it('Create base', async () => {
         const account = {
