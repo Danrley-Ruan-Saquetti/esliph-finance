@@ -5,7 +5,7 @@ import bootstrap from '../../../../core/bootstrap'
 bootstrap()
 
 describe('Query Account', async() => {
-    const listenerClient = new ListenerPublicClient({origem: 'TESTE'})
+    const listenerClient = new ListenerPublicClient('TESTE')
 
     const accountArgs = {
         name: 'Dan Ruan',
