@@ -1,5 +1,5 @@
 import { Result } from '@esliph/util-node'
-import { Document } from '@esliph/util-node/dist/lib/repository-memory'
+import { RepositoryEsliph } from '@esliph/util-node'
 import { AccountRepository } from '.'
 import { AccountSchema } from '../account.schema'
 
@@ -7,8 +7,8 @@ export type AccountQueryByNameRepository = { name: string }
 export type AccountQueryByLoginRepository = { login: string }
 export type AccountQueryByIdRepository = { id: number }
 export type AccountQueryAllRepository = undefined
-export type AccountQueryOneRepositoryResponse = Document<AccountSchema>
-export type AccountQueryAllRepositoryResponse = Document<AccountSchema>[]
+export type AccountQueryOneRepositoryResponse = RepositoryEsliph.Document<AccountSchema>
+export type AccountQueryAllRepositoryResponse = RepositoryEsliph.Document<AccountSchema>[]
 
 export class AccountQueryRepository {
     protected readonly repository: AccountRepository

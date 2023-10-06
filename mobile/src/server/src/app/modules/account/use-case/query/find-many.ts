@@ -2,13 +2,13 @@ import { Result } from '@esliph/util-node'
 import { z } from 'zod'
 import { ListenerRepositoryClient } from '../../../../../services/http'
 import { UseCase } from '../../../../../common/use-case'
-import { FindFirstResponse } from '@esliph/util-node/dist/lib/repository-memory'
+import { RepositoryEsliph } from '@esliph/util-node'
 import { AccountSchemaWithoutPassword } from '../../account.schema'
 
 const AccountFindManySchema = z.object({})
 
 export type AccountFindManyArgs = z.output<typeof AccountFindManySchema>
-export type AccountFindManyResponse = { accounts: FindFirstResponse<AccountSchemaWithoutPassword>[] }
+export type AccountFindManyResponse = { accounts: RepositoryEsliph.FindFirstResponse<AccountSchemaWithoutPassword>[] }
 
 export class AccountFindManyUseCase extends UseCase<AccountFindManyResponse, AccountFindManyArgs> {
     private readonly observerRepository: ListenerRepositoryClient

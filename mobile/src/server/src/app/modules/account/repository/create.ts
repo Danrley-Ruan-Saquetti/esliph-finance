@@ -1,9 +1,9 @@
 import { AccountSchema } from './../account.schema'
 import { AccountRepository } from '.'
 import { Result } from '@esliph/util-node'
-import { CreateResponse } from '@esliph/util-node/dist/lib/repository-memory'
+import { RepositoryEsliph } from '@esliph/util-node'
 
-export type AccountCreateRepositoryResponse = CreateResponse<AccountSchema>
+export type AccountCreateRepositoryResponse = RepositoryEsliph.CreateResponse<AccountSchema>
 
 export class AccountCreateRepository {
     private readonly createRepository: AccountRepository

@@ -1,9 +1,9 @@
-import { EventsRouter } from '@esliph/util-node/dist/lib/http/server/events'
 import { LoggerService } from '../services/logger'
 import { Controller } from '../common/controller'
 import { Module } from '../common/module'
 import { Service } from '../common/service'
 import { ListenerPublicClient } from '../services/http'
+import { HttpEsliph } from '@esliph/util-node'
 
 export class Application {
     private module: Module
@@ -20,7 +20,7 @@ export class Application {
     }
 
     private initEvents() {
-        ListenerPublicClient.on<EventsRouter, 'error'>('error', args => {
+        ListenerPublicClient.on<HttpEsliph.EventsRouter, 'error'>('error', args => {
             this.logger.error(args, null, { context: `[${args.request.context}]` })
         })
     }

@@ -4,7 +4,6 @@ import { ZodValidateService } from '../../../../../services/formatter'
 import { ListenerRepositoryClient } from '../../../../../services/http'
 import { UseCase } from '../../../../../common/use-case'
 import { AccountQueryOneRepositoryResponse } from '../../repository/query'
-import { FindFirstResponse } from '@esliph/util-node/dist/lib/repository-memory'
 import { AccountSchemaWithoutPassword } from '../../account.schema'
 
 const AccountFindFirstSchema = z
