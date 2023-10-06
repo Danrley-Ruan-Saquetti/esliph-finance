@@ -1,6 +1,8 @@
+import { EventsRouter } from '@esliph/util-node/dist/lib/http/server/events'
 import { Controller } from '../common/controller'
 import { Module } from '../common/module'
 import { Service } from '../common/service'
+import { ListenerPublicClient } from '../services/http'
 
 export class Application {
     private module: Module
@@ -11,6 +13,9 @@ export class Application {
 
     initComponents() {
         this.module.initComponents()
+        ListenerPublicClient.on<EventsRouter, 'error'>('error', (args) => {
+            console.log(args)
+        })
     }
 
     useController(...controllers: (new () => Controller)[]) {
