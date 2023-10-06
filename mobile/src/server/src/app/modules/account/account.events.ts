@@ -37,6 +37,11 @@ export type AccountPublicEvents = {
             response: AccountFindManyResponse
         }
     }
+    'PUT': {}
+    'PATCH': {}
+    'DELETE': {}
+    'HEAD': {}
+    'OPTIONS': {}
 }
 export type AccountDatabaseEvents = {
     'POST': {
@@ -63,4 +68,9 @@ export type AccountDatabaseEvents = {
             response: AccountQueryAllRepositoryResponse
         }
     }
+    'PUT': {}
+    'PATCH': {}
+    'DELETE': {}
+    'HEAD': {}
+    'OPTIONS': {}
 }

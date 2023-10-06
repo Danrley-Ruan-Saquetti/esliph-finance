@@ -25,7 +25,7 @@ export class Application {
                 return
             }
 
-            this.logger.error(args, null, { context: `[${args.request.context}]` })
+            // this.logger.error(args, null, { context: `[${args.request.context}]` })
         })
     }
 

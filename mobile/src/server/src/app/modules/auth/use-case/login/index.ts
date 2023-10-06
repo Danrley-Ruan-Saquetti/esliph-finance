@@ -3,6 +3,7 @@ import { UseCase } from '../../../../../common/use-case'
 import { z } from 'zod'
 import { ListenerRepositoryClient } from '../../../../../services/http'
 import { ZodValidateService } from '../../../../../services/formatter'
+import jwt from 'jsonwebtoken'
 
 const AuthLoginSchema = z.object({
     login: z.string().trim().min(1, { message: '"Login" é obrigatório' }).default(''),
@@ -39,6 +40,10 @@ export class AuthLoginUseCase extends UseCase<AuthLoginResponse, AuthLoginArgs> 
 
         if (!isValidPassword) {
             return Result.failure({ title: 'login de Autenticação', message: 'Senha inválida' })
+        }
+
+        const paylod = {
+            name: response.getValue(),
         }
 
         return Result.success<AuthLoginResponse>({ token: 'BEARER' })

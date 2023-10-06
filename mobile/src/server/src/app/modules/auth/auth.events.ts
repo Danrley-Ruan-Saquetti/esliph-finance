@@ -8,6 +8,12 @@ export type AuthPublicEvents = {
             response: AuthLoginResponse
         }
     }
+    'GET': {}
+    'PUT': {}
+    'PATCH': {}
+    'DELETE': {}
+    'HEAD': {}
+    'OPTIONS': {}
 }
 export type AuthPrivateEvents = {
     'POST': {
@@ -16,5 +22,19 @@ export type AuthPrivateEvents = {
             response: AuthAuthorizationResponse
         }
     }
+    'GET': {}
+    'PUT': {}
+    'PATCH': {}
+    'DELETE': {}
+    'HEAD': {}
+    'OPTIONS': {}
 }
-export type AuthDatabaseEvents = {}
+export type AuthDatabaseEvents = {
+    'GET': {}
+    'POST': {}
+    'PUT': {}
+    'PATCH': {}
+    'DELETE': {}
+    'HEAD': {}
+    'OPTIONS': {}
+}
