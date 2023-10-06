@@ -42,10 +42,18 @@ export class AuthLoginUseCase extends UseCase<AuthLoginResponse, AuthLoginArgs> 
             return Result.failure({ title: 'login de Autenticação', message: 'Senha inválida' })
         }
 
-        const paylod = {
-            name: response.getValue(),
+        const payloadBase = {
+            sub: response.getValue().id,
+            name: response.getValue().name,
+            login: response.getValue().login,
         }
 
-        return Result.success<AuthLoginResponse>({ token: 'BEARER' })
+        const token = jwt.sign(payloadBase, 'safdfgd dg dfgefra', {
+            expiresIn: '24h',
+        })
+
+        console.log(token)
+
+        return Result.success<AuthLoginResponse>({ token: `Bearer ${token}` })
     }
 }

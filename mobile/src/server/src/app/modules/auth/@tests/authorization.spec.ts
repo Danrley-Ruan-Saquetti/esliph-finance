@@ -5,7 +5,7 @@ import bootstrap from '../../../../core/bootstrap'
 bootstrap()
 
 describe('Authorization Login', async () => {
-    const listenerClient = new ListenerPublicClient({origem: 'TESTE'})
+    const listenerClient = new ListenerPublicClient()
 
     const accountArgs = {
         name: 'Dan Ruan',

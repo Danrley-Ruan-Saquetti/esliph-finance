@@ -21,7 +21,7 @@
         "vitest": "^0.34.5"
     },
     "dependencies": {
-        "@esliph/util-node": "^1.1.6",
+        "@esliph/util-node": "^1.1.7",
         "jsonwebtoken": "^9.0.2",
         "sqlite3": "^5.1.6",
         "zod": "^3.22.2"

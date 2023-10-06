@@ -5,7 +5,7 @@ import bootstrap from '../../../../core/bootstrap'
 bootstrap()
 
 describe('Login account', async () => {
-    const listenerClient = new ListenerPublicClient({origem: 'TESTE'})
+    const listenerClient = new ListenerPublicClient()
 
     const accountArgs = {
         name: 'Dan Ruan',
@@ -29,8 +29,6 @@ describe('Login account', async () => {
     })
 
     it('Login base', async () => {
-        listenerClient.on('router/end', (args) => console.log(args))
-
         const response = await listenerClient.post('auth/login', { login: 'dan@gmail.com', password: '123456' })
 
         expect(response.isSuccess()).toBe(true)
