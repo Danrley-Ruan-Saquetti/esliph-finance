@@ -39,6 +39,16 @@ export type AccountPublicEvents = {
     'HEAD': {}
     'OPTIONS': {}
 }
+
+export type AccountPrivateEvents = {
+    'POST': {}
+    'GET': {}
+    'PUT': {}
+    'PATCH': {}
+    'DELETE': {}
+    'HEAD': {}
+    'OPTIONS': {}
+}
 export type AccountDatabaseEvents = {
     'POST': {
         'accounts/create': {

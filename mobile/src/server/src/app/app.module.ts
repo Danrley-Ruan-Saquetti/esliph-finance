@@ -1,9 +1,10 @@
 import { Module } from '../common/module'
-import { AccountModule } from './modules/account/account.module'
 import { AuthModule } from './modules/auth/auth.module'
+import { AccountModule } from './modules/account/account.module'
+import { CategoryModule } from './modules/category/category.module'
 
 export class AppModule extends Module {
     constructor() {
-        super({ imports: [AccountModule, AuthModule] })
+        super({ imports: [AuthModule, AccountModule, CategoryModule] })
     }
 }
