@@ -1,8 +1,12 @@
+import { CategorySchema } from './category.schema'
+import { CategoryCreateRepositoryResponse } from './repository/create'
+import { CategoryCreateArgs, CategoryCreateResponse } from './use-case/create'
+
 export type CategoryPublicEvents = {
     'POST': {
         'categories/create': {
-            body: any
-            response: any
+            body: CategoryCreateArgs
+            response: CategoryCreateResponse
         }
     }
     'GET': {}
@@ -22,7 +26,12 @@ export type CategoryPrivateEvents = {
     'OPTIONS': {}
 }
 export type CategoryDatabaseEvents = {
-    'POST': {}
+    'POST': {
+        'categories/create': {
+            body: CategorySchema,
+            response: CategoryCreateRepositoryResponse
+        }
+    }
     'GET': {}
     'PUT': {}
     'PATCH': {}

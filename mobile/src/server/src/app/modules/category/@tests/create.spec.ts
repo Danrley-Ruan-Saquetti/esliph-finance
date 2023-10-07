@@ -12,9 +12,11 @@ describe('Create Category', async () => {
     await GenerateLogin(listenerClient)
 
     test('Create base', async () => {
-        const categoryArgs = {}
+        const categoryArgs = { name: 'Categoria de Exemplo', isFavorite: true }
 
         const response = await listenerClient.post('categories/create', categoryArgs)
+
+        console.log(response.getError() || response.getValue())
 
         expect(response.isSuccess()).toBe(true)
     })

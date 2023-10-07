@@ -21,12 +21,12 @@ export class Application {
     }
 
     initComponents() {
-        this.logger.log('Initialization components...')
+        // this.logger.log('Initialization components...')
 
         this.module.initComponents()
         this.initEvents()
 
-        this.logger.log('Server started')
+        // this.logger.log('Server started')
     }
 
     private initEvents() {
