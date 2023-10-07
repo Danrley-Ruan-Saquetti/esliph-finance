@@ -1,24 +1,18 @@
-import { Server } from '@esliph/util-node'
-import { ApplicationEvents, EVENT_CONTEXT } from '../events'
+import { Server, HttpEsliph } from '@esliph/util-node'
+import { EVENT_CONTEXT, ApplicationEventsDatabase, ApplicationEventsPrivate, ApplicationEventsPublic } from '../events'
 
-class ApplicationServer<Context extends keyof ApplicationEvents> extends Server<ApplicationEvents, Context> {
-    constructor(context: Context) {
-        super(context)
+export class ListenerPublicServer extends Server<ApplicationEventsPublic> {
+    constructor(options?: Partial<Omit<HttpEsliph.ServerOption, 'access'>>) {
+        super({ access: EVENT_CONTEXT.PUBLIC, ...options })
     }
 }
-
-export class ListenerPublicServer extends ApplicationServer<typeof EVENT_CONTEXT.PUBLIC> {
-    constructor() {
-        super(EVENT_CONTEXT.PUBLIC)
+export class ListenerPrivateServer extends Server<ApplicationEventsPrivate> {
+    constructor(options?: Partial<Omit<HttpEsliph.ServerOption, 'access'>>) {
+        super({ access: EVENT_CONTEXT.PRIVATE, ...options })
     }
 }
-export class ListenerPrivateServer extends ApplicationServer<typeof EVENT_CONTEXT.PRIVATE> {
-    constructor() {
-        super(EVENT_CONTEXT.PRIVATE)
-    }
-}
-export class ListenerRepositoryServer extends ApplicationServer<typeof EVENT_CONTEXT.DATABASE> {
-    constructor() {
-        super(EVENT_CONTEXT.DATABASE)
+export class ListenerRepositoryServer extends Server<ApplicationEventsDatabase> {
+    constructor(options?: Partial<Omit<HttpEsliph.ServerOption, 'access'>>) {
+        super({ access: EVENT_CONTEXT.DATABASE, ...options })
     }
 }

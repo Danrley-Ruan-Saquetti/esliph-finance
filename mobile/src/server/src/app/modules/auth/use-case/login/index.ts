@@ -3,6 +3,7 @@ import { UseCase } from '../../../../../common/use-case'
 import { z } from 'zod'
 import { ListenerRepositoryClient } from '../../../../../services/http'
 import { ZodValidateService } from '../../../../../services/formatter'
+import jwt from 'jsonwebtoken'
 
 const AuthLoginSchema = z.object({
     login: z.string().trim().min(1, { message: '"Login" é obrigatório' }).default(''),
@@ -41,6 +42,16 @@ export class AuthLoginUseCase extends UseCase<AuthLoginResponse, AuthLoginArgs> 
             return Result.failure({ title: 'login de Autenticação', message: 'Senha inválida' })
         }
 
-        return Result.success<AuthLoginResponse>({ token: 'BEARER' })
+        const payloadBase = {
+            sub: response.getValue().id,
+            name: response.getValue().name,
+            login: response.getValue().login,
+        }
+
+        const token = jwt.sign(payloadBase, 'safdfgd dg dfgefra', {
+            expiresIn: '24h',
+        })
+
+        return Result.success<AuthLoginResponse>({ token: `${token}` })
     }
 }

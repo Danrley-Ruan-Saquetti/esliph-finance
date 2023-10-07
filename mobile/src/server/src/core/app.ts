@@ -11,20 +11,20 @@ export class Application {
 
     constructor(module: new () => Module) {
         this.module = new module()
-        this.logger = new LoggerService()
+        this.logger = new LoggerService('[Server]')
     }
 
     initComponents() {
+        this.logger.log('Initialization components...')
+
         this.module.initComponents()
         this.initEvents()
+
+        this.logger.log('Server started')
     }
 
     private initEvents() {
-        ListenerPublicClient.on<HttpEsliph.EventsRouter, 'error'>('error', args => {
-            if (args.request.origem == 'TESTE') {
-                return
-            }
-
+        ListenerPublicClient.on<HttpEsliph.EventsRouter, 'request/error'>('request/error', args => {
             this.logger.error(args, null, { context: `[${args.request.context}]` })
         })
     }

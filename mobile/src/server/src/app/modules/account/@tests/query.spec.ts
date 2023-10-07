@@ -4,8 +4,8 @@ import bootstrap from '../../../../core/bootstrap'
 
 bootstrap()
 
-describe('Query Account', async() => {
-    const listenerClient = new ListenerPublicClient({origem: 'TESTE'})
+describe('Query Account', async () => {
+    const listenerClient = new ListenerPublicClient()
 
     const accountArgs = {
         name: 'Dan Ruan',
@@ -16,14 +16,14 @@ describe('Query Account', async() => {
     await listenerClient.post('accounts/create', accountArgs)
 
     it('Query base by id', async () => {
-        const account = await listenerClient.get('accounts/find?id', {id: 1})
+        const account = await listenerClient.get('accounts/find?id', { id: 1 })
 
         expect(account.isSuccess()).toBe(true)
         expect(account.getValue().account.login).toBe(accountArgs.login)
     })
 
     it('Query base by login', async () => {
-        const account = await listenerClient.get('accounts/find?login', {login: accountArgs.login})
+        const account = await listenerClient.get('accounts/find?login', { login: accountArgs.login })
 
         expect(account.isSuccess()).toBe(true)
         expect(account.getValue().account.login).toBe(accountArgs.login)

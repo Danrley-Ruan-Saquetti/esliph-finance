@@ -1,10 +1,8 @@
 import { ApplicationModulesEventsPublic, ApplicationModulesEventsDatabase, ApplicationModulesEventsPrivate } from '../../app/app.events'
 
-export type ApplicationEvents = {
-    'PUBLIC': ApplicationModulesEventsPublic
-    'PRIVATE': ApplicationModulesEventsPrivate
-    'DATABASE': ApplicationModulesEventsDatabase
-}
+export type ApplicationEventsPublic = ApplicationModulesEventsPublic
+export type ApplicationEventsPrivate = ApplicationModulesEventsPrivate
+export type ApplicationEventsDatabase = ApplicationModulesEventsDatabase
 
 export const EVENT_CONTEXT = {
     PUBLIC: 'PUBLIC',
