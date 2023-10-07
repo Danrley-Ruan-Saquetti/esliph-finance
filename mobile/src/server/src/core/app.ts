@@ -5,11 +5,17 @@ import { Service } from '../common/service'
 import { ListenerPublicClient } from '../services/http'
 import { HttpEsliph } from '@esliph/util-node'
 
+export enum ENV {
+    Production = 'Production',
+    Development = 'Development',
+    Test = 'Test'
+}
+
 export class Application {
     private module: Module
     private logger: LoggerService
 
-    constructor(module: new () => Module) {
+    constructor(module: new () => Module, private readonly env = ENV.Production) {
         this.module = new module()
         this.logger = new LoggerService('[Server]')
     }

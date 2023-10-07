@@ -1,8 +1,9 @@
-import { it, expect, describe } from 'vitest'
+import { test, expect, describe } from 'vitest'
 import { ListenerPublicClient } from '../../../../services/http/client'
-import bootstrap from '../../../../core/bootstrap'
+import Bootstrap from '../../../../core/bootstrap'
+import { ENV } from '../../../../core'
 
-bootstrap()
+Bootstrap(ENV.Test)
 
 describe('Login account', async () => {
     const listenerClient = new ListenerPublicClient()
@@ -15,20 +16,20 @@ describe('Login account', async () => {
 
     await listenerClient.post('accounts/create', accountArgs)
 
-    it('Login base', async () => {
+    test('Login base', async () => {
         const response = await listenerClient.post('auth/login', { login: 'dan@gmail.com', password: '123456' })
 
         expect(response.isSuccess()).toBe(true)
     })
 
-    it('Login with login incorrect', async () => {
+    test('Login with login incorrect', async () => {
         const response = await listenerClient.post('auth/login', { login: 'dan@mail.com', password: '123456' })
 
 
         expect(response.isSuccess()).toBe(false)
     })
 
-    it('Login with password incorrect', async () => {
+    test('Login with password incorrect', async () => {
         const response = await listenerClient.post('auth/login', { login: 'dan@gmail.com', password: '1234567890' })
 
         expect(response.isSuccess()).toBe(false)

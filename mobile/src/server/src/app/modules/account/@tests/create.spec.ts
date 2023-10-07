@@ -1,13 +1,14 @@
-import { it, expect, describe } from 'vitest'
+import { test, expect, describe } from 'vitest'
 import { ListenerPublicClient } from '../../../../services/http/client'
-import bootstrap from '../../../../core/bootstrap'
+import Bootstrap from '../../../../core/bootstrap'
+import { ENV } from '../../../../core'
 
-bootstrap()
+Bootstrap(ENV.Test)
 
 describe('Create Account', () => {
     const listenerClient = new ListenerPublicClient()
 
-    it('Create base', async () => {
+    test('Create base', async () => {
         const account = {
             name: 'Dan Ruan',
             login: 'dan@gmail.com',
@@ -19,7 +20,7 @@ describe('Create Account', () => {
         expect(response.isSuccess()).toBe(true)
     })
 
-    it('Try create with data empty', async () => {
+    test('Try create with data empty', async () => {
         const account = {
             login: 'dan@gmail.com',
             password: '123456'
@@ -31,7 +32,7 @@ describe('Create Account', () => {
         expect(response.isSuccess()).toBe(false)
     })
 
-    it('Try create with data invalid', async () => {
+    test('Try create with data invalid', async () => {
         const account = {
             login: 'dan@gmail.com',
             password: '123'

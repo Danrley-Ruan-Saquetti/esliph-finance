@@ -1,8 +1,9 @@
-import { it, expect, describe } from 'vitest'
+import { test, expect, describe } from 'vitest'
 import { ListenerPublicClient } from '../../../../services/http/client'
-import bootstrap from '../../../../core/bootstrap'
+import Bootstrap from '../../../../core/bootstrap'
+import { ENV } from '../../../../core'
 
-bootstrap()
+Bootstrap(ENV.Test)
 
 describe('Query Account', async () => {
     const listenerClient = new ListenerPublicClient()
@@ -15,21 +16,21 @@ describe('Query Account', async () => {
 
     await listenerClient.post('accounts/create', accountArgs)
 
-    it('Query base by id', async () => {
+    test('Query base by id', async () => {
         const account = await listenerClient.get('accounts/find?id', { id: 1 })
 
         expect(account.isSuccess()).toBe(true)
         expect(account.getValue().account.login).toBe(accountArgs.login)
     })
 
-    it('Query base by login', async () => {
+    test('Query base by login', async () => {
         const account = await listenerClient.get('accounts/find?login', { login: accountArgs.login })
 
         expect(account.isSuccess()).toBe(true)
         expect(account.getValue().account.login).toBe(accountArgs.login)
     })
 
-    it('Query All', async () => {
+    test('Query All', async () => {
         const account = await listenerClient.get('accounts/find-all', {})
 
         expect(account.isSuccess()).toBe(true)
