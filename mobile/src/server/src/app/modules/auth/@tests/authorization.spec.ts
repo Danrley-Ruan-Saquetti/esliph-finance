@@ -7,7 +7,6 @@ bootstrap()
 describe('Authorization Login', async () => {
     const listenerClient = new ListenerPublicClient()
 
-
     const accountArgs = {
         name: 'Dan Ruan',
         login: 'dan@gmail.com',
@@ -23,13 +22,13 @@ describe('Authorization Login', async () => {
     listenerClient.use({ headers: { Authorization: `Bearer ${token}` } })
 
     it('Authorization base', async () => {
-        const response = await listenerClient.post('accounts/teste', {})
+        const response = await listenerClient.post('auth/valid-authorization')
 
         expect(response.isSuccess()).toBe(true)
     })
 
     it('Authorization without Authorization', async () => {
-        const response = await listenerClient.post('accounts/teste', {}, { headers: { Authorization: 'Bearer asfsdfdgfd' } })
+        const response = await listenerClient.post('auth/valid-authorization', null, { headers: { Authorization: 'Bearer asfsdfdgfd' } })
 
         expect(response.isSuccess()).toBe(false)
     })

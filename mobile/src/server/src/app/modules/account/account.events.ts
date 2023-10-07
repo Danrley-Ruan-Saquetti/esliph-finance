@@ -18,10 +18,6 @@ export type AccountPublicEvents = {
             body: AccountCreateArgs
             response: AccountCreateResponse
         }
-        'accounts/teste': {
-            body: any
-            response: any
-        }
     }
     'GET': {
         'accounts/find?id': {

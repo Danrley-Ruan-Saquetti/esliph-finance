@@ -40,9 +40,5 @@ export class AccountController extends Controller {
 
             this.response(response, res)
         })
-
-        this.observer.post('accounts/teste', AuthorizationGuard, async (req, res) => {
-            return res.send('hello')
-        })
     }
 }

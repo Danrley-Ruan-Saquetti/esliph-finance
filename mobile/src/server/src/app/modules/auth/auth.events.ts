@@ -7,6 +7,10 @@ export type AuthPublicEvents = {
             body: AuthLoginArgs
             response: AuthLoginResponse
         }
+        'auth/valid-authorization': {
+            body: any
+            response: AuthAuthorizationResponse
+        }
     }
     'GET': {}
     'PUT': {}
@@ -18,7 +22,7 @@ export type AuthPublicEvents = {
 export type AuthPrivateEvents = {
     'POST': {
         'auth/authorization': {
-            body: AuthAuthorizationArgs
+            body: any
             response: AuthAuthorizationResponse
         }
     }

@@ -1,7 +1,6 @@
 import { Result } from '@esliph/util-node'
 import { UseCase } from '../../../../../common/use-case'
 import { z } from 'zod'
-import { ListenerRepositoryClient } from '../../../../../services/http'
 import { ZodValidateService } from '../../../../../services/formatter'
 import { UnauthorizedException } from '../../../../../common/exception'
 import jwt from 'jsonwebtoken'
@@ -14,12 +13,9 @@ export type AuthAuthorizationArgs = z.output<typeof AuthAuthorizationSchema>
 export type AuthAuthorizationResponse = {}
 
 export class AuthAuthorizationUseCase extends UseCase<AuthAuthorizationResponse, AuthAuthorizationArgs> {
-    private readonly observerRepository: ListenerRepositoryClient
 
     constructor() {
         super()
-
-        this.observerRepository = new ListenerRepositoryClient()
     }
 
     async perform(args: AuthAuthorizationArgs) {

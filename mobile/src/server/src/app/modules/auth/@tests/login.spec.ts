@@ -18,8 +18,6 @@ describe('Login account', async () => {
     it('Login base', async () => {
         const response = await listenerClient.post('auth/login', { login: 'dan@gmail.com', password: '123456' })
 
-        console.log(response)
-
         expect(response.isSuccess()).toBe(true)
     })
 
