@@ -52,8 +52,6 @@ export class AuthLoginUseCase extends UseCase<AuthLoginResponse, AuthLoginArgs> 
             expiresIn: '24h',
         })
 
-        console.log(token)
-
         return Result.success<AuthLoginResponse>({ token: `Bearer ${token}` })
     }
 }

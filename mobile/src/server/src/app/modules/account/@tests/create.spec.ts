@@ -11,7 +11,6 @@ describe('Create Account', () => {
         const account = {
             name: 'Dan Ruan',
             login: 'dan@gmail.com',
-
             password: '123456'
         }
 

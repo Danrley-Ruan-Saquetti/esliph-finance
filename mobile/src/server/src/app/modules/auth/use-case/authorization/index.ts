@@ -4,7 +4,9 @@ import { z } from 'zod'
 import { ListenerRepositoryClient } from '../../../../../services/http'
 import { ZodValidateService } from '../../../../../services/formatter'
 
-const AuthAuthorizationSchema = z.object({})
+const AuthAuthorizationSchema = z.object({
+    Authorization: z.string().optional().default('')
+})
 
 export type AuthAuthorizationArgs = z.output<typeof AuthAuthorizationSchema>
 export type AuthAuthorizationResponse = {}
@@ -24,6 +26,10 @@ export class AuthAuthorizationUseCase extends UseCase<AuthAuthorizationResponse,
         if (!argsValidate.isSuccess()) {
             return Result.failure(argsValidate.getError(), argsValidate.getStatus())
         }
+
+        const { Authorization } = argsValidate.getValue()
+
+        console.log(Authorization)
 
         return Result.success<AuthAuthorizationResponse>({})
     }

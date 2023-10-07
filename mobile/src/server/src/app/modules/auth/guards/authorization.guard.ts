@@ -12,7 +12,7 @@ class AuthorizationGuardImplementation extends Guard {
     }
 
     protected static async validate(req: HttpEsliph.Request) {
-        const response = await this.service.authorization(req.body)
+        const response = await this.service.authorization({ Authorization: req.headers.Authorization })
 
         return response
     }
