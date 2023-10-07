@@ -14,14 +14,13 @@
     "devDependencies": {
         "@types/jsonwebtoken": "^9.0.3",
         "@types/node": "^20.6.5",
-        "@vitest/ui": "^0.34.6",
         "tslib": "^2.6.2",
         "tsx": "^3.13.0",
         "typescript": "^5.2.2",
         "vitest": "^0.34.5"
     },
     "dependencies": {
-        "@esliph/util-node": "^1.1.7",
+        "@esliph/util-node": "file:../../../../util/node",
         "jsonwebtoken": "^9.0.2",
         "sqlite3": "^5.1.6",
         "zod": "^3.22.2"

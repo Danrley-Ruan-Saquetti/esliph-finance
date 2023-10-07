@@ -11,12 +11,16 @@ export class Application {
 
     constructor(module: new () => Module) {
         this.module = new module()
-        this.logger = new LoggerService()
+        this.logger = new LoggerService('[Server]')
     }
 
     initComponents() {
+        this.logger.log('Initialization components...')
+
         this.module.initComponents()
         this.initEvents()
+
+        this.logger.log('Server started')
     }
 
     private initEvents() {
