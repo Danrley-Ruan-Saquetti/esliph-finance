@@ -1,6 +1,6 @@
 import { ListenerPublicClient } from '../services/http'
 
-export async function Login(listenerClient = new ListenerPublicClient(), accountArgs = {
+export async function GenerateLogin(listenerClient = new ListenerPublicClient(), accountArgs = {
     name: 'Dan Ruan',
     login: 'dan@gmail.com',
     password: '123456'

@@ -1,18 +1,20 @@
 import { describe, expect, test } from 'vitest'
 import Bootstrap from '../../../../core/bootstrap'
 import { ENV } from '../../../../core'
-import { ListenerPublicClient } from '../../../../services/http'
-import { Login } from '../../../../@tests/login'
+import { GenerateLogin } from '../../../../@tests/login'
+import { GenerateListenerClient } from '../../../../@tests/listener-client-public'
 
 Bootstrap(ENV.Test)
 
 describe('Create Category', async () => {
-    const listenerClient = new ListenerPublicClient()
+    const listenerClient = GenerateListenerClient()
 
-    await Login(listenerClient)
+    await GenerateLogin(listenerClient)
 
     test('Create base', async () => {
-        const response = await listenerClient.post('categories/create')
+        const categoryArgs = {}
+
+        const response = await listenerClient.post('categories/create', categoryArgs)
 
         expect(response.isSuccess()).toBe(true)
     })

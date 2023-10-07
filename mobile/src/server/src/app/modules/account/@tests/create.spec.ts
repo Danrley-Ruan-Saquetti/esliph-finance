@@ -2,11 +2,12 @@ import { test, expect, describe } from 'vitest'
 import { ListenerPublicClient } from '../../../../services/http/client'
 import Bootstrap from '../../../../core/bootstrap'
 import { ENV } from '../../../../core'
+import { GenerateListenerClient } from '../../../../@tests/listener-client-public'
 
 Bootstrap(ENV.Test)
 
 describe('Create Account', () => {
-    const listenerClient = new ListenerPublicClient()
+    const listenerClient = GenerateListenerClient()
 
     test('Create base', async () => {
         const account = {

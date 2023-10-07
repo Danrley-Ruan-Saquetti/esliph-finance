@@ -1,15 +1,15 @@
 import { test, expect, describe } from 'vitest'
-import { ListenerPublicClient } from '../../../../services/http/client'
 import Bootstrap from '../../../../core/bootstrap'
 import { ENV } from '../../../../core'
-import { Login } from '../../../../@tests/login'
+import { GenerateLogin } from '../../../../@tests/login'
+import { GenerateListenerClient } from '../../../../@tests/listener-client-public'
 
 Bootstrap(ENV.Test)
 
 describe('Authorization Login', async () => {
-    const listenerClient = new ListenerPublicClient()
+    const listenerClient = GenerateListenerClient()
 
-    await Login(listenerClient)
+    await GenerateLogin(listenerClient)
 
     test('Authorization base', async () => {
         const response = await listenerClient.post('auth/valid-authorization')

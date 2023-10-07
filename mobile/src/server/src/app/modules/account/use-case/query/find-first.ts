@@ -1,4 +1,4 @@
-import { Result } from '@esliph/util-node'
+import { RepositoryEsliph, Result } from '@esliph/util-node'
 import { z } from 'zod'
 import { ZodValidateService } from '../../../../../services/formatter'
 import { ListenerRepositoryClient } from '../../../../../services/http'
@@ -14,7 +14,7 @@ const AccountFindFirstSchema = z
     .refine(({ id, login }) => !!id || !!login, { message: 'Informe ao menos o "Identificador" ou o "Login" da conta para fazer a busca' })
 
 export type AccountFindFirstArgs = z.output<typeof AccountFindFirstSchema>
-export type AccountFindFirstResponse = { account: AccountSchemaWithoutPassword }
+export type AccountFindFirstResponse = { account: RepositoryEsliph.Document<AccountSchemaWithoutPassword> }
 
 export class AccountFindFirstUseCase extends UseCase<AccountFindFirstResponse, AccountFindFirstArgs> {
     private readonly observerRepository: ListenerRepositoryClient
