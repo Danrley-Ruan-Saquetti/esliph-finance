@@ -31,7 +31,10 @@ export class Application {
 
     private initEvents() {
         ListenerPublicClient.on<HttpEsliph.EventsRouter, 'request/error'>('request/error', args => {
-            this.logger.error(args, null, { context: `[${args.request.context}]` })
+            // this.logger.error(args, null, { context: args.request.context ? `[${args.request.context}]` : '' })
+        })
+        ListenerPublicClient.on<HttpEsliph.EventsRouter, 'request/end'>('request/end', args => {
+            // this.logger.log(args, null, { context: args.request.context ? `[${args.request.context}]` : '' })
         })
     }
 

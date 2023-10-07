@@ -17,6 +17,8 @@ export class CategoryController extends Controller {
     }
 
     initComponents() {
-        this.observer.post('categories/create', AuthorizationGuard, (req) => { return req.body })
+        this.observer.post('categories/create', AuthorizationGuard, (req) => {
+            return req.body
+        })
     }
 }

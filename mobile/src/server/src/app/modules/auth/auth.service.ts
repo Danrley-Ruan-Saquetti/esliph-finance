@@ -13,7 +13,7 @@ export class AuthService extends Service {
         this.authAuthorizationUseCase = new AuthAuthorizationUseCase()
     }
 
-    initComponents() {}
+    initComponents() { }
 
     async login(args: AuthLoginArgs) {
         const response = await this.authLoginUseCase.perform(args)

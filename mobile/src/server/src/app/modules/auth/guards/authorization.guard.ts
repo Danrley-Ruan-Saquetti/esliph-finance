@@ -14,6 +14,10 @@ class AuthorizationGuardImplementation extends Guard {
     protected static async validate(req: HttpEsliph.Request) {
         const response = await this.service.authorization({ Authorization: req.headers.Authorization })
 
+        if (response.isSuccess()) {
+            req.headers.account = response.getValue().sub
+        }
+
         return response
     }
 }

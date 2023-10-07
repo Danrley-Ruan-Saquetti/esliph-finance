@@ -4,13 +4,14 @@ import { z } from 'zod'
 import { ZodValidateService } from '../../../../../services/formatter'
 import { UnauthorizedException } from '../../../../../common/exception'
 import jwt from 'jsonwebtoken'
+import { PayloadAuthorization } from '../../../../../@types/payload-authorization'
 
 const AuthAuthorizationSchema = z.object({
     Authorization: z.string().optional().default('')
 })
 
 export type AuthAuthorizationArgs = z.output<typeof AuthAuthorizationSchema>
-export type AuthAuthorizationResponse = {}
+export type AuthAuthorizationResponse = PayloadAuthorization
 
 export class AuthAuthorizationUseCase extends UseCase<AuthAuthorizationResponse, AuthAuthorizationArgs> {
 
@@ -41,12 +42,13 @@ export class AuthAuthorizationUseCase extends UseCase<AuthAuthorizationResponse,
             throw new UnauthorizedException({ description: 'Formato do Token de autorização inválido' })
         }
 
+        let payload: PayloadAuthorization
         try {
-            jwt.verify(token, 'safdfgd dg dfgefra')
+            payload = jwt.verify(token, 'safdfgd dg dfgefra') as any
         } catch (err) {
             throw new UnauthorizedException({ description: 'Token de autorização inválido' })
         }
 
-        return Result.success<AuthAuthorizationResponse>({})
+        return Result.success<AuthAuthorizationResponse>(payload)
     }
 }
