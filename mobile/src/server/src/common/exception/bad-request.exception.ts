@@ -3,13 +3,13 @@ import { HttpException } from './http.exception'
 import { ExceptionModelArgs } from './model'
 
 const ERROR_INFO_DEFAULT = {
-    title: 'Não Autorizado',
-    message: 'Requisição não autorizada',
-    description: 'Você não tem permissão para acessar este recurso',
+    title: 'Requisição',
+    message: 'Falha na requisição',
+    description: 'Houve um erro ao solicitar esse recurso. por favor, tente novamente',
     causes: []
 }
 
-export class UnauthorizedException extends HttpException {
+export class BadRequestException extends HttpException {
     constructor(errorInfo?: ExceptionModelArgs) {
         super(
             {
@@ -19,7 +19,7 @@ export class UnauthorizedException extends HttpException {
                 title: errorInfo?.title || ERROR_INFO_DEFAULT.title,
                 stack: errorInfo?.stack || ''
             },
-            HttpStatusCodes.UNAUTHORIZED
+            HttpStatusCodes.BAD_REQUEST
         )
     }
 }
