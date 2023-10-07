@@ -1,5 +1,10 @@
 export type CategoryPublicEvents = {
-    'POST': {}
+    'POST': {
+        'categories/create': {
+            body: any
+            response: any
+        }
+    }
     'GET': {}
     'PUT': {}
     'PATCH': {}

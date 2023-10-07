@@ -1,6 +1,7 @@
 import { ListenerPrivateClient, ListenerPublicServer } from '../../../services/http'
 import { Controller } from '../../../common/controller'
 import { CategoryService } from './category.service'
+import { AuthorizationGuard } from '../auth/guards/authorization.guard'
 
 export class CategoryController extends Controller {
     protected readonly observer: ListenerPublicServer
@@ -16,6 +17,6 @@ export class CategoryController extends Controller {
     }
 
     initComponents() {
-
+        this.observer.post('categories/create', AuthorizationGuard, () => { return 'hello world' })
     }
 }
