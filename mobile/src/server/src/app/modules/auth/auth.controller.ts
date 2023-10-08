@@ -16,19 +16,19 @@ export class AuthController extends Controller {
     }
 
     initComponents() {
-        this.listener.post('auth/login', async (req, res) => {
+        this.listener.post('@:auth/login', async (req, res) => {
             const response = await this.service.login(req.body)
 
             this.response(response, res)
         })
 
-        this.listener.post('auth/valid-authorization', async (req, res) => {
+        this.listener.post('@:auth/valid-authorization', async (req, res) => {
             const response = await this.service.authorization({ Authorization: req.headers.Authorization || '' })
 
             this.response(response, res)
         })
 
-        this.listenerPrivate.post('auth/authorization', async (req, res) => {
+        this.listenerPrivate.post('$:auth/authorization', async (req, res) => {
             const response = await this.service.authorization(req.body)
 
             this.response(response, res)

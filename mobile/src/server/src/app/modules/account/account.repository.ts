@@ -20,37 +20,37 @@ export class AccountRepository extends Controller {
     }
 
     initComponents() {
-        this.listener.post('accounts/create', async (req, res) => {
+        this.listener.post('db:accounts/create', async (req, res) => {
             const response = await this.createRepository.perform(req.body)
 
             this.response(response, res)
         })
 
-        this.listener.get('accounts/find?name', async (req, res) => {
+        this.listener.get('db:accounts/find?name', async (req, res) => {
             const response = await this.queryRepository.findByName(req.body)
 
             this.response(response, res)
         })
 
-        this.listener.get('accounts/find?login', async (req, res) => {
+        this.listener.get('db:accounts/find?login', async (req, res) => {
             const response = await this.queryRepository.findByLogin(req.body)
 
             this.response(response, res)
         })
 
-        this.listener.get('accounts/find?id', async (req, res) => {
+        this.listener.get('db:accounts/find?id', async (req, res) => {
             const response = await this.queryRepository.findById(req.body)
 
             this.response(response, res)
         })
 
-        this.listener.get('accounts/find-all', async (req, res) => {
+        this.listener.get('db:accounts/find-all', async (req, res) => {
             const response = await this.queryRepository.findAll()
 
             this.response(response, res)
         })
 
-        this.listener.put('accounts/update', async (req, res) => {
+        this.listener.put('db:accounts/update', async (req, res) => {
             const response = await this.updateRepository.perform(req.body)
 
             this.response(response, res)

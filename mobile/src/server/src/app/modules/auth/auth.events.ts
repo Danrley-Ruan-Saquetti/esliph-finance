@@ -3,11 +3,11 @@ import { AuthAuthorizationArgs, AuthAuthorizationResponse } from './use-case/aut
 
 export type AuthPublicEvents = {
     'POST': {
-        'auth/login': {
+        '@:auth/login': {
             body: AuthLoginArgs
             response: AuthLoginResponse
         }
-        'auth/valid-authorization': {
+        '@:auth/valid-authorization': {
             body: any
             response: AuthAuthorizationResponse
         }
@@ -21,7 +21,7 @@ export type AuthPublicEvents = {
 }
 export type AuthPrivateEvents = {
     'POST': {
-        'auth/authorization': {
+        '$:auth/authorization': {
             body: any
             response: AuthAuthorizationResponse
         }

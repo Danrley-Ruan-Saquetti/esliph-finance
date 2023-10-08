@@ -35,7 +35,7 @@ export class AccountUpdateUseCase extends UseCase<AccountUpdateResponse, Account
             throw new BadRequestException({ title: 'Atualizar Conta', message: 'Você precisa informar o identificador da conta atualizá-la' })
         }
 
-        const accountToUpdate = await this.listenerRepository.get('accounts/find?id', { id: accountId })
+        const accountToUpdate = await this.listenerRepository.get('db:accounts/find?id', { id: accountId })
 
         if (!accountToUpdate.isSuccess()) {
             throw new BadRequestException(
@@ -43,7 +43,7 @@ export class AccountUpdateUseCase extends UseCase<AccountUpdateResponse, Account
             )
         }
 
-        const responseUpdate = await this.listenerRepository.put('accounts/update', { login, name, id: accountId })
+        const responseUpdate = await this.listenerRepository.put('db:accounts/update', { login, name, id: accountId })
 
         if (!responseUpdate.isSuccess()) {
             throw new BadRequestException({ title: 'Atualizar Conta', message: 'Não foi possível atualizar a conta', causes: responseUpdate.getError().causes })

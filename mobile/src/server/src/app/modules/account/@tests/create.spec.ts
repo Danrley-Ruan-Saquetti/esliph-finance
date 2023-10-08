@@ -16,7 +16,7 @@ describe('Create Account', () => {
             password: '123456'
         }
 
-        const response = await listenerClient.post('accounts/create', account)
+        const response = await listenerClient.post('@:accounts/create', account)
 
         expect(response.isSuccess()).toBe(true)
     })
@@ -27,8 +27,7 @@ describe('Create Account', () => {
             password: '123456'
         }
 
-        // @ts-expect-error
-        const response = await listenerClient.post('accounts/create', account)
+        const response = await listenerClient.post('@:accounts/create', account)
 
         expect(response.isSuccess()).toBe(false)
     })
@@ -39,8 +38,7 @@ describe('Create Account', () => {
             password: '123'
         }
 
-        // @ts-expect-error
-        const response = await listenerClient.post('accounts/create', account)
+        const response = await listenerClient.post('@:accounts/create', account)
 
         expect(response.isSuccess()).toBe(false)
         expect(response.getError().causes.length).toBe(2)

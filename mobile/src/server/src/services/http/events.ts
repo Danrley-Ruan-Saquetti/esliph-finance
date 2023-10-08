@@ -4,8 +4,20 @@ export type ApplicationEventsPublic = ApplicationModulesEventsPublic
 export type ApplicationEventsPrivate = ApplicationModulesEventsPrivate
 export type ApplicationEventsDatabase = ApplicationModulesEventsDatabase
 
-export const EVENT_CONTEXT = {
-    PUBLIC: 'PUBLIC',
-    PRIVATE: 'PRIVATE',
-    DATABASE: 'DATABASE',
+export enum EVENT_CONTEXT {
+    PUBLIC = 'PUBLIC',
+    PRIVATE = 'PRIVATE',
+    DATABASE = 'DATABASE',
+}
+
+export const ROUTER_PREFIX = {
+    PUBLIC: '@:',
+    PRIVATE: '$:',
+    DATABASE: 'db:',
 } as const
+
+export type RouterPrefix = {
+    PUBLIC: typeof ROUTER_PREFIX.PUBLIC,
+    PRIVATE: typeof ROUTER_PREFIX.PRIVATE,
+    DATABASE: typeof ROUTER_PREFIX.DATABASE,
+}

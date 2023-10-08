@@ -40,9 +40,9 @@ export class AccountFindFirstUseCase extends UseCase<AccountFindFirstResponse, A
         })
 
         if (id) {
-            response = await this.listenerRepository.get('accounts/find?id', { id })
+            response = await this.listenerRepository.get('db:accounts/find?id', { id })
         } else if (login) {
-            response = await this.listenerRepository.get('accounts/find?login', { login })
+            response = await this.listenerRepository.get('db:accounts/find?login', { login })
         }
 
         if (!response.isSuccess()) {

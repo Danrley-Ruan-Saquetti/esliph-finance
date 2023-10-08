@@ -7,21 +7,21 @@ import { CategoryFindManyArgs, CategoryFindManyResponse } from './use-case/query
 
 export type CategoryPublicEvents = {
     'POST': {
-        'categories/create': {
+        '@:categories/create': {
             body: CategoryCreateArgs
             response: CategoryCreateResponse
         }
     }
     'GET': {
-        'categories/find?id': {
+        '@:categories/find?id': {
             body: { id: number }
             response: CategoryFindFirstResponse
         }
-        'categories/find?name': {
+        '@:categories/find?name': {
             body: { name: string }
             response: CategoryFindFirstResponse
         }
-        'categories/find-all': {
+        '@:categories/find-all': {
             body: CategoryFindManyArgs
             response: CategoryFindManyResponse
         }
@@ -43,21 +43,21 @@ export type CategoryPrivateEvents = {
 }
 export type CategoryDatabaseEvents = {
     'POST': {
-        'categories/create': {
+        'db:categories/create': {
             body: CategorySchema,
             response: CategoryCreateRepositoryResponse
         }
     }
     'GET': {
-        'categories/find?id': {
+        'db:categories/find?id': {
             body: CategoryQueryByIdRepository,
             response: CategoryQueryOneRepositoryResponse
         }
-        'categories/find?name': {
+        'db:categories/find?name': {
             body: CategoryQueryByNameRepository,
             response: CategoryQueryOneRepositoryResponse
         }
-        'categories/find-all': {
+        'db:categories/find-all': {
             body: CategoryQueryAllRepository,
             response: CategoryQueryAllRepositoryResponse
         }

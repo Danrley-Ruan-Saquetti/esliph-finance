@@ -5,9 +5,9 @@ export async function GenerateLogin(listenerClient = new ListenerPublicClient(),
     login: 'dan@gmail.com',
     password: '123456'
 }) {
-    await listenerClient.post('accounts/create', accountArgs)
+    await listenerClient.post('@:accounts/create', accountArgs)
 
-    const resultLogin = await listenerClient.post('auth/login', { login: 'dan@gmail.com', password: '123456' })
+    const resultLogin = await listenerClient.post('@:auth/login', { login: 'dan@gmail.com', password: '123456' })
 
     const { token } = resultLogin.getValue()
 
