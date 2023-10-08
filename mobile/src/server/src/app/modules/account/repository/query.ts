@@ -2,6 +2,7 @@ import { Result } from '@esliph/util-node'
 import { RepositoryEsliph } from '@esliph/util-node'
 import { AccountRepository } from '.'
 import { AccountSchema } from '../account.schema'
+import { DatabaseException } from '../../../../common/exception'
 
 export type AccountQueryByNameRepository = { name: string }
 export type AccountQueryByLoginRepository = { login: string }
@@ -21,7 +22,7 @@ export class AccountQueryRepository {
         const response = this.repository.findFirst({ where: { name: { equals: name } } })
 
         if (!response) {
-            return Result.failure({ title: 'Consulta de Conta', message: `Conta "${name}" não encontrada` })
+            throw new DatabaseException({ title: 'Consulta de Conta', message: `Conta "${name}" não encontrada` })
         }
 
         return Result.success<AccountQueryOneRepositoryResponse>(response)
@@ -31,7 +32,7 @@ export class AccountQueryRepository {
         const response = this.repository.findFirst({ where: { login: { equals: login } } })
 
         if (!response) {
-            return Result.failure({ title: 'Consulta de Conta', message: `Conta "${login}" não encontrada` })
+            throw new DatabaseException({ title: 'Consulta de Conta', message: `Conta "${login}" não encontrada` })
         }
 
         return Result.success<AccountQueryOneRepositoryResponse>(response)
@@ -41,7 +42,7 @@ export class AccountQueryRepository {
         const response = this.repository.findFirst({ where: { id: { equals: id } } })
 
         if (!response) {
-            return Result.failure({ title: 'Consulta de Conta', message: `Conta não encontrada com o identificador "${id}"` })
+            throw new DatabaseException({ title: 'Consulta de Conta', message: `Conta não encontrada com o identificador "${id}"` })
         }
 
         return Result.success<AccountQueryOneRepositoryResponse>(response)

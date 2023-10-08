@@ -18,7 +18,7 @@ export class CategoryController extends Controller {
 
     initComponents() {
         this.observer.post('categories/create', AuthorizationGuard, async (req) => {
-            const response = await this.service.create(req.body)
+            const response = await this.service.create({ ...req.body, accountId: req.headers.account })
 
             return response
         })

@@ -1,5 +1,5 @@
 import { Service } from '../../../common/service'
-import { CategoryCreateArgs, CategoryCreateUseCase } from './use-case/create'
+import { CategoryCreateArgs, CategoryCreateUseCase, CategoryCreateArgsHeader } from './use-case/create'
 
 export class CategoryService extends Service {
     private readonly createUseCase: CategoryCreateUseCase
@@ -12,7 +12,7 @@ export class CategoryService extends Service {
 
     initComponents() { }
 
-    async create(args: CategoryCreateArgs) {
+    async create(args: CategoryCreateArgs & CategoryCreateArgsHeader) {
         const response = await this.createUseCase.perform(args)
 
         return response

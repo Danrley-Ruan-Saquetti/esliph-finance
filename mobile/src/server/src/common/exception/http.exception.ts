@@ -6,7 +6,7 @@ export class HttpException extends Exception {
     constructor(errorInfo: ExceptionModelArgs, status: number) {
         const errorResult = Result.failure(
             {
-                message: errorInfo.message,
+                message: errorInfo.message || '',
                 title: errorInfo.title || 'Falha na requisição',
                 causes: errorInfo.causes || [],
                 description: errorInfo.description,

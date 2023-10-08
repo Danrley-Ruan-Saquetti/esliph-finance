@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { ListenerRepositoryClient } from '../../../../../services/http'
 import { ZodValidateService } from '../../../../../services/formatter'
 import jwt from 'jsonwebtoken'
+import { BadRequestException } from '../../../../../common/exception/bad-request.exception'
 
 const AuthLoginSchema = z.object({
     login: z.string().trim().min(1, { message: '"Login" é obrigatório' }).default(''),
@@ -25,7 +26,7 @@ export class AuthLoginUseCase extends UseCase<AuthLoginResponse, AuthLoginArgs> 
         const argsValidate = ZodValidateService.performParse(args, AuthLoginSchema)
 
         if (!argsValidate.isSuccess()) {
-            return Result.failure(argsValidate.getError(), argsValidate.getStatus())
+            throw new BadRequestException(argsValidate.getError())
         }
 
         const { login, password } = argsValidate.getValue()
@@ -33,13 +34,13 @@ export class AuthLoginUseCase extends UseCase<AuthLoginResponse, AuthLoginArgs> 
         const response = await this.observerRepository.get('accounts/find?login', { login })
 
         if (!response.isSuccess()) {
-            return Result.failure({ title: 'login de Autenticação', message: `Conta "${login}" não foi encontrada` }, response.getStatus())
+            throw new BadRequestException({ title: 'login de Autenticação', message: `Conta "${login}" não foi encontrada` })
         }
 
         const isValidPassword = await HashEsliph.compareHashWithRef(response.getValue().password, password)
 
         if (!isValidPassword) {
-            return Result.failure({ title: 'login de Autenticação', message: 'Senha inválida' })
+            throw new BadRequestException({ title: 'login de Autenticação', message: 'Senha inválida' })
         }
 
         const payloadBase = {

@@ -1,4 +1,4 @@
-import { HttpEsliph } from '@esliph/util-node'
+import { HttpEsliph, Result } from '@esliph/util-node'
 import { Guard } from 'src/common/guard'
 import { AuthService } from '../auth.service'
 
@@ -18,7 +18,7 @@ class AuthorizationGuardImplementation extends Guard {
             req.headers.account = response.getValue().sub
         }
 
-        return response
+        return Result.inherit({ ...response.getResponse(), value: null })
     }
 }
 

@@ -12,12 +12,26 @@ describe('Create Category', async () => {
     await GenerateLogin(listenerClient)
 
     test('Create base', async () => {
-        const categoryArgs = { name: 'Categoria de Exemplo', isFavorite: true }
+        const categoryArgs = { name: 'Categoria de Exemplo', isFavorite: true, accentColor: '#ff0000' }
 
         const response = await listenerClient.post('categories/create', categoryArgs)
 
-        console.log(response.getError() || response.getValue())
-
         expect(response.isSuccess()).toBe(true)
+    })
+
+    test('Create without name', async () => {
+        const categoryArgs = { name: '' }
+
+        const response = await listenerClient.post('categories/create', categoryArgs)
+
+        expect(response.isSuccess()).toBe(false)
+    })
+
+    test('Create without account id', async () => {
+        const categoryArgs = { name: 'Categoria de Exemplo', isFavorite: true, accentColor: '#ff0000' }
+
+        const response = await listenerClient.post('categories/create', categoryArgs, { headers: { Authorization: '' } })
+
+        expect(response.isSuccess()).toBe(false)
     })
 })

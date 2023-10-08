@@ -5,6 +5,7 @@ import { ZodValidateService } from '../../../../../services/formatter'
 import { UnauthorizedException } from '../../../../../common/exception'
 import jwt from 'jsonwebtoken'
 import { PayloadAuthorization } from '../../../../../@types/payload-authorization'
+import { BadRequestException } from '../../../../../common/exception/bad-request.exception'
 
 const AuthAuthorizationSchema = z.object({
     Authorization: z.string().optional().default('')
@@ -23,7 +24,7 @@ export class AuthAuthorizationUseCase extends UseCase<AuthAuthorizationResponse,
         const argsValidate = ZodValidateService.performParse(args, AuthAuthorizationSchema)
 
         if (!argsValidate.isSuccess()) {
-            return Result.failure(argsValidate.getError(), argsValidate.getStatus())
+            throw new BadRequestException(argsValidate.getError())
         }
 
         const { Authorization } = argsValidate.getValue()

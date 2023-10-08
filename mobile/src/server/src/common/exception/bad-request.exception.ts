@@ -5,7 +5,7 @@ import { ExceptionModelArgs } from './model'
 const ERROR_INFO_DEFAULT = {
     title: 'Requisição',
     message: 'Falha na requisição',
-    description: 'Houve um erro ao solicitar esse recurso. por favor, tente novamente',
+    description: 'Houve um erro ao solicitar esse recurso. Por favor, tente novamente',
     causes: []
 }
 

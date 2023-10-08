@@ -37,7 +37,7 @@ export class CategoryQueryRepository {
     }
 
     async findAll() {
-        const response = this.repository.findMany({})
+        const response = this.repository.findMany({ orderBy: { isFavorite: 'ASC', order: 'DESC', id: 'DESC' } })
 
         return Result.success<CategoryQueryAllRepositoryResponse>(response)
     }
