@@ -11,14 +11,14 @@ describe('Query Category', async () => {
 
     await GenerateLogin(listenerClient)
 
-    await listenerClient.post('@:categories/create', { name: 'Category 1', order: 1, isFavorite: true })
-    await listenerClient.post('@:categories/create', { name: 'Category 2', order: 1 })
-    await listenerClient.post('@:categories/create', { name: 'Category 3', order: 1, isFavorite: true })
-    await listenerClient.post('@:categories/create', { name: 'Category 4', order: 2 })
-    await listenerClient.post('@:categories/create', { name: 'Category 5', order: 1 })
+    await listenerClient.post('PU:categories/create', { name: 'Category 1', order: 1, isFavorite: true })
+    await listenerClient.post('PU:categories/create', { name: 'Category 2', order: 1 })
+    await listenerClient.post('PU:categories/create', { name: 'Category 3', order: 1, isFavorite: true })
+    await listenerClient.post('PU:categories/create', { name: 'Category 4', order: 2 })
+    await listenerClient.post('PU:categories/create', { name: 'Category 5', order: 1 })
 
     test('Query base', async () => {
-        const response = await listenerClient.get('@:categories/find-all')
+        const response = await listenerClient.get('PU:categories/find-all')
 
         expect(response.isSuccess()).toBe(true)
         expect(response.getValue().categories.length).toBe(5)

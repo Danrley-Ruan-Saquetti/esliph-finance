@@ -31,7 +31,7 @@ export class AccountCreateUseCase extends UseCase<AccountCreateResponse, Account
 
         const { login, name, password } = argsValidate.getValue()
 
-        const accountWithLogin = await this.listenerRepository.get('db:accounts/find?login', { login })
+        const accountWithLogin = await this.listenerRepository.get('DB:accounts/find?login', { login })
 
         if (accountWithLogin.isSuccess()) {
             throw new BadRequestException(
@@ -41,7 +41,7 @@ export class AccountCreateUseCase extends UseCase<AccountCreateResponse, Account
 
         const passwordHash = await HashEsliph.generateHash(password)
 
-        const response = await this.listenerRepository.post('db:accounts/create', { login, name, password: passwordHash })
+        const response = await this.listenerRepository.post('DB:accounts/create', { login, name, password: passwordHash })
 
         if (!response.isSuccess()) {
             throw new BadRequestException({ title: 'Registrar Conta', message: 'Não foi possível registrar a conta', causes: response.getError().causes })

@@ -31,7 +31,7 @@ export class AuthLoginUseCase extends UseCase<AuthLoginResponse, AuthLoginArgs> 
 
         const { login, password } = argsValidate.getValue()
 
-        const response = await this.listenerRepository.get('db:accounts/find?login', { login })
+        const response = await this.listenerRepository.get('DB:accounts/find?login', { login })
 
         if (!response.isSuccess()) {
             throw new BadRequestException({ title: 'login de Autenticação', message: `Conta "${login}" não foi encontrada` })

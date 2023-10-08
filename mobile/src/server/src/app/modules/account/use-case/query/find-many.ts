@@ -20,7 +20,7 @@ export class AccountFindManyUseCase extends UseCase<AccountFindManyResponse, Acc
     }
 
     async perform() {
-        const response = await this.listenerRepository.get('db:accounts/find-all', {} as any)
+        const response = await this.listenerRepository.get('DB:accounts/find-all', {} as any)
 
         if (!response.isSuccess()) {
             throw new HttpException(response.getError(), response.getStatus())

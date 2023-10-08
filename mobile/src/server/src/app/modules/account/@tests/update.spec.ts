@@ -12,9 +12,9 @@ describe('Update Account', async () => {
     await GenerateLogin(listenerClient)
 
     test('Update base', async () => {
-        const response = await listenerClient.put('@:accounts/update', { name: 'Teste' })
+        const response = await listenerClient.put('PU:accounts/update', { name: 'Teste' })
 
-        const responseAccountUpdated = await listenerClient.get('@:accounts/find?id', { id: 1 })
+        const responseAccountUpdated = await listenerClient.get('PU:accounts/find?id', { id: 1 })
 
         expect(response.isSuccess()).toBe(true)
         expect(responseAccountUpdated.getValue().account.name).toBe('Teste')

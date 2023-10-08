@@ -11,9 +11,9 @@ export enum EVENT_CONTEXT {
 }
 
 export const ROUTER_PREFIX = {
-    PUBLIC: '@:',
-    PRIVATE: '$:',
-    DATABASE: 'db:',
+    PUBLIC: 'PU:',
+    PRIVATE: 'PR:',
+    DATABASE: 'DB:',
 } as const
 
 export type RouterPrefix = {

@@ -16,27 +16,27 @@ import { AccountUpdateRepositoryArgs, AccountUpdateRepositoryResponse } from './
 
 export type AccountPublicEvents = {
     'POST': {
-        '@:accounts/create': {
+        'PU:accounts/create': {
             body: AccountCreateArgs
             response: AccountCreateResponse
         }
     }
     'GET': {
-        '@:accounts/find?id': {
+        'PU:accounts/find?id': {
             body: { id: number }
             response: AccountFindFirstResponse
         }
-        '@:accounts/find?login': {
+        'PU:accounts/find?login': {
             body: { login: string }
             response: AccountFindFirstResponse
         }
-        '@:accounts/find-all': {
+        'PU:accounts/find-all': {
             body: AccountFindManyArgs
             response: AccountFindManyResponse
         }
     }
     'PUT': {
-        '@:accounts/update': {
+        'PU:accounts/update': {
             body: AccountUpdateArgs
             response: AccountUpdateResponse
         }
@@ -58,31 +58,31 @@ export type AccountPrivateEvents = {
 }
 export type AccountDatabaseEvents = {
     'POST': {
-        'db:accounts/create': {
+        'DB:accounts/create': {
             body: AccountSchema
             response: AccountCreateRepositoryResponse
         }
     }
     'GET': {
-        'db:accounts/find?name': {
+        'DB:accounts/find?name': {
             body: AccountQueryByNameRepository
             response: AccountQueryOneRepositoryResponse
         }
-        'db:accounts/find?login': {
+        'DB:accounts/find?login': {
             body: AccountQueryByLoginRepository
             response: AccountQueryOneRepositoryResponse
         }
-        'db:accounts/find?id': {
+        'DB:accounts/find?id': {
             body: AccountQueryByIdRepository
             response: AccountQueryOneRepositoryResponse
         }
-        'db:accounts/find-all': {
+        'DB:accounts/find-all': {
             body: AccountQueryAllRepository
             response: AccountQueryAllRepositoryResponse
         }
     }
     'PUT': {
-        'db:accounts/update': {
+        'DB:accounts/update': {
             body: AccountUpdateRepositoryArgs
             response: AccountUpdateRepositoryResponse
         }

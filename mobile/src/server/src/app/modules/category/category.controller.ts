@@ -17,25 +17,25 @@ export class CategoryController extends Controller {
     }
 
     initComponents() {
-        this.listener.post('@:categories/create', AuthorizationGuard, async (req) => {
+        this.listener.post('PU:categories/create', AuthorizationGuard, async (req) => {
             const response = await this.service.create({ ...req.body, accountId: req.headers.account })
 
             return response
         })
 
-        this.listener.get('@:categories/find?id', AuthorizationGuard, async (req) => {
+        this.listener.get('PU:categories/find?id', AuthorizationGuard, async (req) => {
             const response = await this.service.queryById({ id: req.body.id, accountId: req.headers.account })
 
             return response
         })
 
-        this.listener.get('@:categories/find?name', AuthorizationGuard, async (req) => {
+        this.listener.get('PU:categories/find?name', AuthorizationGuard, async (req) => {
             const response = await this.service.queryByName({ name: req.body.name, accountId: req.headers.account })
 
             return response
         })
 
-        this.listener.get('@:categories/find-all', AuthorizationGuard, async (req) => {
+        this.listener.get('PU:categories/find-all', AuthorizationGuard, async (req) => {
             const response = await this.service.queryAll({ accountId: req.headers.account })
 
             return response

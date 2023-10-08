@@ -17,31 +17,31 @@ export class AccountController extends Controller {
     }
 
     initComponents() {
-        this.listener.post('@:accounts/create', async (req, res) => {
+        this.listener.post('PU:accounts/create', async (req, res) => {
             const response = await this.service.create(req.body)
 
             this.response(response, res)
         })
 
-        this.listener.get('@:accounts/find?id', async (req, res) => {
+        this.listener.get('PU:accounts/find?id', async (req, res) => {
             const response = await this.service.queryById(req.body)
 
             this.response(response, res)
         })
 
-        this.listener.get('@:accounts/find?login', async (req, res) => {
+        this.listener.get('PU:accounts/find?login', async (req, res) => {
             const response = await this.service.queryByLogin(req.body)
 
             this.response(response, res)
         })
 
-        this.listener.get('@:accounts/find-all', async (req, res) => {
+        this.listener.get('PU:accounts/find-all', async (req, res) => {
             const response = await this.service.queryAll()
 
             this.response(response, res)
         })
 
-        this.listener.put('@:accounts/update', AuthorizationGuard, async (req, res) => {
+        this.listener.put('PU:accounts/update', AuthorizationGuard, async (req, res) => {
             const response = await this.service.update({ ...req.body, accountId: req.headers.account })
 
             this.response(response, res)

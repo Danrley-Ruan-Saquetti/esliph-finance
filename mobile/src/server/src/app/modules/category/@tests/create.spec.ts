@@ -14,7 +14,7 @@ describe('Create Category', async () => {
     test('Create base', async () => {
         const categoryArgs = { name: 'Categoria de Exemplo', isFavorite: true, accentColor: '#ff0000' }
 
-        const response = await listenerClient.post('@:categories/create', categoryArgs)
+        const response = await listenerClient.post('PU:categories/create', categoryArgs)
 
         expect(response.isSuccess()).toBe(true)
     })
@@ -22,7 +22,7 @@ describe('Create Category', async () => {
     test('Create without name', async () => {
         const categoryArgs = { name: '' }
 
-        const response = await listenerClient.post('@:categories/create', categoryArgs)
+        const response = await listenerClient.post('PU:categories/create', categoryArgs)
 
         expect(response.isSuccess()).toBe(false)
     })
@@ -30,7 +30,7 @@ describe('Create Category', async () => {
     test('Create without account id', async () => {
         const categoryArgs = { name: 'Categoria de Exemplo', isFavorite: true, accentColor: '#ff0000' }
 
-        const response = await listenerClient.post('@:categories/create', categoryArgs, { headers: { Authorization: '' } })
+        const response = await listenerClient.post('PU:categories/create', categoryArgs, { headers: { Authorization: '' } })
 
         expect(response.isSuccess()).toBe(false)
     })

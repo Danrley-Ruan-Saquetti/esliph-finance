@@ -12,13 +12,13 @@ describe('Authorization Login', async () => {
     await GenerateLogin(listenerClient)
 
     test('Authorization base', async () => {
-        const response = await listenerClient.post('@:auth/valid-authorization')
+        const response = await listenerClient.post('PU:auth/valid-authorization')
 
         expect(response.isSuccess()).toBe(true)
     })
 
     test('Authorization without Authorization', async () => {
-        const response = await listenerClient.post('@:auth/valid-authorization', null, { headers: { Authorization: 'Bearer asfsdfdgfd' } })
+        const response = await listenerClient.post('PU:auth/valid-authorization', null, { headers: { Authorization: 'Bearer asfsdfdgfd' } })
 
         expect(response.isSuccess()).toBe(false)
     })

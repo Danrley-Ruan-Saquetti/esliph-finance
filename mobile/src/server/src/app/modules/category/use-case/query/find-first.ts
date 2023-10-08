@@ -42,9 +42,9 @@ export class CategoryFindFirstUseCase extends UseCase<CategoryFindFirstResponse,
         })
 
         if (id) {
-            response = await this.listenerRepository.get('db:categories/find?id', { id, accountId })
+            response = await this.listenerRepository.get('DB:categories/find?id', { id, accountId })
         } else if (name) {
-            response = await this.listenerRepository.get('db:categories/find?name', { name, accountId })
+            response = await this.listenerRepository.get('DB:categories/find?name', { name, accountId })
         }
 
         if (!response.isSuccess()) {

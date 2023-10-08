@@ -21,7 +21,7 @@ export class CategoryFindManyUseCase extends UseCase<CategoryFindManyResponse, C
     }
 
     async perform(args: CategoryFindManyArgs) {
-        const response = await this.listenerRepository.get('db:categories/find-all', { accountId: args.accountId })
+        const response = await this.listenerRepository.get('DB:categories/find-all', { accountId: args.accountId })
 
         if (!response.isSuccess()) {
             return Result.failure(response.getError(), response.getStatus())

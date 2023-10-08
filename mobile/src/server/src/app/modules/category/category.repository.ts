@@ -17,25 +17,25 @@ export class CategoryRepository extends Controller {
     }
 
     initComponents() {
-        this.listener.post('db:categories/create', async (args) => {
+        this.listener.post('DB:categories/create', async (args) => {
             const response = await this.create.perform(args.body)
 
             return response
         })
 
-        this.listener.get('db:categories/find?id', async (args) => {
+        this.listener.get('DB:categories/find?id', async (args) => {
             const response = await this.query.findById(args.body)
 
             return response
         })
 
-        this.listener.get('db:categories/find?name', async (args) => {
+        this.listener.get('DB:categories/find?name', async (args) => {
             const response = await this.query.findByName(args.body)
 
             return response
         })
 
-        this.listener.get('db:categories/find-all', async (args) => {
+        this.listener.get('DB:categories/find-all', async (args) => {
             const response = await this.query.findAll(args.body)
 
             return response
