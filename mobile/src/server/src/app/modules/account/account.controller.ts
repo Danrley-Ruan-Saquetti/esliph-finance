@@ -40,5 +40,11 @@ export class AccountController extends Controller {
 
             this.response(response, res)
         })
+
+        this.listener.put('accounts/update', AuthorizationGuard, async (req, res) => {
+            const response = await this.service.update({ ...req.body, accountId: req.headers.account })
+
+            this.response(response, res)
+        })
     }
 }

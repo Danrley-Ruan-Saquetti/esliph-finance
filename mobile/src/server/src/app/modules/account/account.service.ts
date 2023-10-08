@@ -3,9 +3,11 @@ import { Service } from '../../../common/service'
 import { AccountCreateUseCase } from './use-case/create'
 import { AccountFindFirstArgs, AccountFindFirstUseCase } from './use-case/query/find-first'
 import { AccountFindManyUseCase } from './use-case/query/find-many'
+import { AccountUpdateUseCase, AccountUpdateArgs, AccountUpdateArgsHeader } from './use-case/update'
 
 export class AccountService extends Service {
     private readonly createUseCase: AccountCreateUseCase
+    private readonly updateUseCase: AccountUpdateUseCase
     private readonly queryFindOndeUseCase: AccountFindFirstUseCase
     private readonly queryAllUseCase: AccountFindManyUseCase
 
@@ -13,14 +15,21 @@ export class AccountService extends Service {
         super()
 
         this.createUseCase = new AccountCreateUseCase()
+        this.updateUseCase = new AccountUpdateUseCase()
         this.queryFindOndeUseCase = new AccountFindFirstUseCase()
         this.queryAllUseCase = new AccountFindManyUseCase()
     }
 
-    initComponents() {}
+    initComponents() { }
 
     async create(args: AccountCreateArgs) {
         const response = await this.createUseCase.perform(args)
+
+        return response
+    }
+
+    async update(args: AccountUpdateArgs & AccountUpdateArgsHeader) {
+        const response = await this.updateUseCase.perform(args)
 
         return response
     }

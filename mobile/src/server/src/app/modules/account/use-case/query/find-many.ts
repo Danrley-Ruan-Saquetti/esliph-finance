@@ -8,7 +8,7 @@ import { HttpException } from '../../../../../common/exception'
 
 const AccountFindManySchema = z.object({})
 
-export type AccountFindManyArgs = z.output<typeof AccountFindManySchema>
+export type AccountFindManyArgs = z.input<typeof AccountFindManySchema>
 export type AccountFindManyResponse = { accounts: RepositoryEsliph.FindFirstResponse<AccountSchemaWithoutPassword>[] }
 
 export class AccountFindManyUseCase extends UseCase<AccountFindManyResponse, AccountFindManyArgs> {

@@ -11,6 +11,8 @@ import {
     AccountQueryAllRepository,
     AccountQueryAllRepositoryResponse,
 } from './repository/query'
+import { AccountUpdateArgs, AccountUpdateResponse } from './use-case/update'
+import { AccountUpdateRepositoryArgs, AccountUpdateRepositoryResponse } from './repository/update'
 
 export type AccountPublicEvents = {
     'POST': {
@@ -33,7 +35,12 @@ export type AccountPublicEvents = {
             response: AccountFindManyResponse
         }
     }
-    'PUT': {}
+    'PUT': {
+        'accounts/update': {
+            body: AccountUpdateArgs
+            response: AccountUpdateResponse
+        }
+    }
     'PATCH': {}
     'DELETE': {}
     'HEAD': {}
@@ -74,7 +81,12 @@ export type AccountDatabaseEvents = {
             response: AccountQueryAllRepositoryResponse
         }
     }
-    'PUT': {}
+    'PUT': {
+        'accounts/update': {
+            body: AccountUpdateRepositoryArgs
+            response: AccountUpdateRepositoryResponse
+        }
+    }
     'PATCH': {}
     'DELETE': {}
     'HEAD': {}

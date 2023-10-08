@@ -11,7 +11,7 @@ const AuthAuthorizationSchema = z.object({
     Authorization: z.string().optional().default('')
 })
 
-export type AuthAuthorizationArgs = z.output<typeof AuthAuthorizationSchema>
+export type AuthAuthorizationArgs = z.input<typeof AuthAuthorizationSchema>
 export type AuthAuthorizationResponse = PayloadAuthorization
 
 export class AuthAuthorizationUseCase extends UseCase<AuthAuthorizationResponse, AuthAuthorizationArgs> {

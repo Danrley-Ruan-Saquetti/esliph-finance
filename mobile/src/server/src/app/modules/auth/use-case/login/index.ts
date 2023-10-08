@@ -11,7 +11,7 @@ const AuthLoginSchema = z.object({
     password: z.string().trim().min(1, { message: '"Password" é obrigatório' }).default(''),
 })
 
-export type AuthLoginArgs = z.output<typeof AuthLoginSchema>
+export type AuthLoginArgs = z.input<typeof AuthLoginSchema>
 export type AuthLoginResponse = { token: string }
 
 export class AuthLoginUseCase extends UseCase<AuthLoginResponse, AuthLoginArgs> {

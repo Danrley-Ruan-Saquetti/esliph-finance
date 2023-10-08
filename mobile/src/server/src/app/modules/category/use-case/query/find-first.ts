@@ -15,7 +15,7 @@ const CategoryFindFirstSchema = z
     })
     .refine(({ id, name }) => !!id || !!name, { message: 'Informe ao menos o "Identificador" ou o "Nome" da categoria para fazer a busca' })
 
-export type CategoryFindFirstArgs = z.output<typeof CategoryFindFirstSchema>
+export type CategoryFindFirstArgs = z.input<typeof CategoryFindFirstSchema>
 export type CategoryFindFirstArgsHeader = { accountId: number }
 export type CategoryFindFirstResponse = { category: RepositoryEsliph.Document<CategorySchema> }
 

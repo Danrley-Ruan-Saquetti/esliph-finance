@@ -11,7 +11,7 @@ const AccountCreateSchema = z.object({
     password: z.string().trim().min(1, { message: 'O "Password" é obrigatório' }).min(6, { message: 'A "Senha" precisa ter no mínimo 6 caracteres' }).default(''),
 })
 
-export type AccountCreateArgs = z.output<typeof AccountCreateSchema>
+export type AccountCreateArgs = z.input<typeof AccountCreateSchema>
 export type AccountCreateResponse = { message: string }
 
 export class AccountCreateUseCase extends UseCase<AccountCreateResponse, AccountCreateArgs> {

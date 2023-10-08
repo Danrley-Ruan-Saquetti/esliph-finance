@@ -9,7 +9,7 @@ const CategoryFindManySchema = z.object({
     accountId: z.number().min(1, { message: 'O "Identificador" da conta é obrigatório' })
 })
 
-export type CategoryFindManyArgs = z.output<typeof CategoryFindManySchema>
+export type CategoryFindManyArgs = z.input<typeof CategoryFindManySchema>
 export type CategoryFindManyResponse = { categories: RepositoryEsliph.FindFirstResponse<CategorySchema>[] }
 
 export class CategoryFindManyUseCase extends UseCase<CategoryFindManyResponse, CategoryFindManyArgs> {

@@ -2,16 +2,19 @@ import { ListenerRepositoryServer } from '../../../services/http'
 import { Controller } from '../../../common/controller'
 import { AccountCreateRepository } from './repository/create'
 import { AccountQueryRepository } from './repository/query'
+import { AccountUpdateRepository } from './repository/update'
 
 export class AccountRepository extends Controller {
     protected readonly listener: ListenerRepositoryServer
     private readonly createRepository: AccountCreateRepository
+    private readonly updateRepository: AccountUpdateRepository
     private readonly queryRepository: AccountQueryRepository
 
     constructor() {
         super()
 
         this.createRepository = new AccountCreateRepository()
+        this.updateRepository = new AccountUpdateRepository()
         this.queryRepository = new AccountQueryRepository()
         this.listener = new ListenerRepositoryServer()
     }
@@ -43,6 +46,12 @@ export class AccountRepository extends Controller {
 
         this.listener.get('accounts/find-all', async (req, res) => {
             const response = await this.queryRepository.findAll()
+
+            this.response(response, res)
+        })
+
+        this.listener.put('accounts/update', async (req, res) => {
+            const response = await this.updateRepository.perform(req.body)
 
             this.response(response, res)
         })
