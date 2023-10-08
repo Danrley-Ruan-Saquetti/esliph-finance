@@ -6,12 +6,14 @@ import { UseCase } from '../../../../../common/use-case'
 import { BadRequestException } from '../../../../../common/exception/bad-request.exception'
 
 const CategoryUpdateSchema = z.object({
-    name: z.string().trim().optional(),
-    login: z.string().trim().optional(),
+    name: z.string().trim().max(25, { message: 'O "Nome" da categoria deve ser menor que 25 caracteres' }).optional(),
+    order: z.number().optional(),
+    isFavorite: z.boolean().optional(),
+    accentColor: z.string().optional(),
 })
 
 export type CategoryUpdateArgs = z.input<typeof CategoryUpdateSchema>
-export type CategoryUpdateArgsHeader = { accountId: number }
+export type CategoryUpdateArgsHeader = { accountId: number, categoryId: number }
 export type CategoryUpdateResponse = { message: string }
 
 export class CategoryUpdateUseCase extends UseCase<CategoryUpdateResponse, CategoryUpdateArgs> {
@@ -29,26 +31,30 @@ export class CategoryUpdateUseCase extends UseCase<CategoryUpdateResponse, Categ
             throw new BadRequestException(argsValidate.getError())
         }
 
-        const { login, name, accountId } = { ...argsValidate.getValue(), ...args }
+        const { accountId, accentColor, isFavorite, name, order, categoryId } = { ...argsValidate.getValue(), ...args }
 
         if (!accountId) {
-            throw new BadRequestException({ title: 'Atualizar Conta', message: 'Você precisa informar o identificador da conta atualizá-la' })
+            throw new BadRequestException({ title: 'Atualizar Categoria', message: 'Você precisa informar o identificador da conta para atualizá-la' })
+        }
+
+        if (!categoryId) {
+            throw new BadRequestException({ title: 'Atualizar Categoria', message: 'Você precisa informar o identificador da categoria para atualizá-la' })
         }
 
         const accountToUpdate = await this.listenerRepository.get('DB:accounts/find?id', { id: accountId })
 
         if (!accountToUpdate.isSuccess()) {
             throw new BadRequestException(
-                { title: 'Atualizar Conta', message: `Não foi possível encontrar a conta com o identificador "${accountId}"` },
+                { title: 'Atualizar Categoria', message: `Não foi possível encontrar a conta com o identificador "${accountId}"` },
             )
         }
 
-        const responseUpdate = await this.listenerRepository.put('DB:accounts/update', { login, name, id: accountId })
+        const responseUpdate = await this.listenerRepository.put('DB:categories/update', { accentColor, isFavorite, name, order, id: categoryId, accountId })
 
         if (!responseUpdate.isSuccess()) {
-            throw new BadRequestException({ title: 'Atualizar Conta', message: 'Não foi possível atualizar a conta', causes: responseUpdate.getError().causes })
+            throw new BadRequestException({ title: 'Atualizar Categoria', message: 'Não foi possível atualizar a categoria', causes: responseUpdate.getError().causes })
         }
 
-        return Result.success({ message: 'Conta atualizada com sucesso' })
+        return Result.success({ message: 'Categoria atualizada com sucesso' })
     }
 }

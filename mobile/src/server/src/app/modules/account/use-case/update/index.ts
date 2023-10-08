@@ -32,7 +32,7 @@ export class AccountUpdateUseCase extends UseCase<AccountUpdateResponse, Account
         const { login, name, accountId } = { ...argsValidate.getValue(), ...args }
 
         if (!accountId) {
-            throw new BadRequestException({ title: 'Atualizar Conta', message: 'Você precisa informar o identificador da conta atualizá-la' })
+            throw new BadRequestException({ title: 'Atualizar Conta', message: 'Você precisa informar o identificador da conta para atualizá-la' })
         }
 
         const accountToUpdate = await this.listenerRepository.get('DB:accounts/find?id', { id: accountId })

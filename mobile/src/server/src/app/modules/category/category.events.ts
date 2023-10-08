@@ -1,9 +1,11 @@
 import { CategorySchema } from './category.schema'
 import { CategoryCreateRepositoryResponse } from './repository/create'
 import { CategoryQueryAllRepository, CategoryQueryAllRepositoryResponse, CategoryQueryByIdRepository, CategoryQueryByNameRepository, CategoryQueryOneRepositoryResponse } from './repository/query'
+import { CategoryUpdateRepositoryArgs, CategoryUpdateRepositoryResponse } from './repository/update'
 import { CategoryCreateArgs, CategoryCreateResponse } from './use-case/create'
 import { CategoryFindFirstResponse } from './use-case/query/find-first'
 import { CategoryFindManyArgs, CategoryFindManyResponse } from './use-case/query/find-many'
+import { CategoryUpdateArgs, CategoryUpdateResponse } from './use-case/update'
 
 export type CategoryPublicEvents = {
     'POST': {
@@ -26,7 +28,12 @@ export type CategoryPublicEvents = {
             response: CategoryFindManyResponse
         }
     }
-    'PUT': {}
+    'PUT': {
+        'PU:categories/update': {
+            body: CategoryUpdateArgs
+            response: CategoryUpdateResponse
+        }
+    }
     'PATCH': {}
     'DELETE': {}
     'HEAD': {}
@@ -62,7 +69,12 @@ export type CategoryDatabaseEvents = {
             response: CategoryQueryAllRepositoryResponse
         }
     }
-    'PUT': {}
+    'PUT': {
+        'DB:categories/update': {
+            body: CategoryUpdateRepositoryArgs
+            response: CategoryUpdateRepositoryResponse
+        }
+    }
     'PATCH': {}
     'DELETE': {}
     'HEAD': {}

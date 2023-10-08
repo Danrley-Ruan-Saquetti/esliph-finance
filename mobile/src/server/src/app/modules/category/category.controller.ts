@@ -40,5 +40,11 @@ export class CategoryController extends Controller {
 
             return response
         })
+
+        this.listener.put('PU:categories/update', AuthorizationGuard, async (req) => {
+            const response = await this.service.update({ ...req.body, accountId: req.headers.account, categoryId: req.headers.categoryId })
+
+            return response
+        })
     }
 }
