@@ -4,6 +4,7 @@ import { ListenerRepositoryClient } from '../../../../../services/http'
 import { UseCase } from '../../../../../common/use-case'
 import { RepositoryEsliph } from '@esliph/util-node'
 import { AccountSchemaWithoutPassword } from '../../account.schema'
+import { HttpException } from '../../../../../common/exception'
 
 const AccountFindManySchema = z.object({})
 
@@ -22,7 +23,7 @@ export class AccountFindManyUseCase extends UseCase<AccountFindManyResponse, Acc
         const response = await this.observerRepository.get('accounts/find-all', {} as any)
 
         if (!response.isSuccess()) {
-            return Result.failure(response.getError(), response.getStatus())
+            throw new HttpException(response.getError(), response.getStatus())
         }
 
         return Result.success<AccountFindManyResponse>({

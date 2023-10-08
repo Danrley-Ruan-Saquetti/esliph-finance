@@ -22,5 +22,23 @@ export class CategoryController extends Controller {
 
             return response
         })
+
+        this.observer.get('categories/find?id', AuthorizationGuard, async (req) => {
+            const response = await this.service.queryById({ id: req.body.id, accountId: req.headers.account })
+
+            return response
+        })
+
+        this.observer.get('categories/find?name', AuthorizationGuard, async (req) => {
+            const response = await this.service.queryByName({ name: req.body.name, accountId: req.headers.account })
+
+            return response
+        })
+
+        this.observer.get('categories/find-all', AuthorizationGuard, async (req) => {
+            const response = await this.service.queryAll({ accountId: req.headers.account })
+
+            return response
+        })
     }
 }

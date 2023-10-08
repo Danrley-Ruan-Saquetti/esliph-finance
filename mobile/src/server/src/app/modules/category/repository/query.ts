@@ -3,9 +3,9 @@ import { RepositoryEsliph } from '@esliph/util-node'
 import { CategoryRepository } from '.'
 import { CategorySchema } from '../category.schema'
 
-export type CategoryQueryByNameRepository = { name: string }
-export type CategoryQueryByIdRepository = { id: number }
-export type CategoryQueryAllRepository = undefined
+export type CategoryQueryByNameRepository = { accountId: number, name: string }
+export type CategoryQueryByIdRepository = { accountId: number, id: number }
+export type CategoryQueryAllRepository = { accountId: number }
 export type CategoryQueryOneRepositoryResponse = RepositoryEsliph.Document<CategorySchema>
 export type CategoryQueryAllRepositoryResponse = RepositoryEsliph.Document<CategorySchema>[]
 
@@ -16,8 +16,8 @@ export class CategoryQueryRepository {
         this.repository = new CategoryRepository()
     }
 
-    async findByName({ name }: CategoryQueryByNameRepository) {
-        const response = this.repository.findFirst({ where: { name: { equals: name } } })
+    async findByName({ name, accountId }: CategoryQueryByNameRepository) {
+        const response = this.repository.findFirst({ where: { name: { equals: name }, accountId: { equals: accountId } } })
 
         if (!response) {
             return Result.failure({ title: 'Consulta de Categoria', message: `Categoria "${name}" não encontrada` })
@@ -26,8 +26,8 @@ export class CategoryQueryRepository {
         return Result.success<CategoryQueryOneRepositoryResponse>(response)
     }
 
-    async findById({ id }: CategoryQueryByIdRepository) {
-        const response = this.repository.findFirst({ where: { id: { equals: id } } })
+    async findById({ id, accountId }: CategoryQueryByIdRepository) {
+        const response = this.repository.findFirst({ where: { id: { equals: id }, accountId: { equals: accountId } } })
 
         if (!response) {
             return Result.failure({ title: 'Consulta de Categoria', message: `Categoria não encontrada com o identificador "${id}"` })
@@ -36,8 +36,11 @@ export class CategoryQueryRepository {
         return Result.success<CategoryQueryOneRepositoryResponse>(response)
     }
 
-    async findAll() {
-        const response = this.repository.findMany({ orderBy: { isFavorite: 'ASC', order: 'DESC', id: 'DESC' } })
+    async findAll({ accountId }: CategoryQueryAllRepository) {
+        const response = this.repository.findMany({
+            where: { accountId: { equals: accountId } }, orderBy:
+                [{ isFavorite: 'DESC' }, { order: 'DESC' }, { id: 'DESC' }]
+        })
 
         return Result.success<CategoryQueryAllRepositoryResponse>(response)
     }

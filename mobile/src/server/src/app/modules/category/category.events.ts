@@ -1,6 +1,9 @@
 import { CategorySchema } from './category.schema'
 import { CategoryCreateRepositoryResponse } from './repository/create'
+import { CategoryQueryAllRepository, CategoryQueryAllRepositoryResponse, CategoryQueryByIdRepository, CategoryQueryByNameRepository, CategoryQueryOneRepositoryResponse } from './repository/query'
 import { CategoryCreateArgs, CategoryCreateResponse } from './use-case/create'
+import { CategoryFindFirstResponse } from './use-case/query/find-first'
+import { CategoryFindManyArgs, CategoryFindManyResponse } from './use-case/query/find-many'
 
 export type CategoryPublicEvents = {
     'POST': {
@@ -9,7 +12,20 @@ export type CategoryPublicEvents = {
             response: CategoryCreateResponse
         }
     }
-    'GET': {}
+    'GET': {
+        'categories/find?id': {
+            body: { id: number }
+            response: CategoryFindFirstResponse
+        }
+        'categories/find?name': {
+            body: { name: string }
+            response: CategoryFindFirstResponse
+        }
+        'categories/find-all': {
+            body: CategoryFindManyArgs
+            response: CategoryFindManyResponse
+        }
+    }
     'PUT': {}
     'PATCH': {}
     'DELETE': {}
@@ -32,7 +48,20 @@ export type CategoryDatabaseEvents = {
             response: CategoryCreateRepositoryResponse
         }
     }
-    'GET': {}
+    'GET': {
+        'categories/find?id': {
+            body: CategoryQueryByIdRepository,
+            response: CategoryQueryOneRepositoryResponse
+        }
+        'categories/find?name': {
+            body: CategoryQueryByNameRepository,
+            response: CategoryQueryOneRepositoryResponse
+        }
+        'categories/find-all': {
+            body: CategoryQueryAllRepository,
+            response: CategoryQueryAllRepositoryResponse
+        }
+    }
     'PUT': {}
     'PATCH': {}
     'DELETE': {}

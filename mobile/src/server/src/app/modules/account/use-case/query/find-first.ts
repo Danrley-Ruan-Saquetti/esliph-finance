@@ -5,6 +5,7 @@ import { ListenerRepositoryClient } from '../../../../../services/http'
 import { UseCase } from '../../../../../common/use-case'
 import { AccountQueryOneRepositoryResponse } from '../../repository/query'
 import { AccountSchemaWithoutPassword } from '../../account.schema'
+import { BadRequestException } from '../../../../../common/exception/bad-request.exception'
 
 const AccountFindFirstSchema = z
     .object({
@@ -28,7 +29,7 @@ export class AccountFindFirstUseCase extends UseCase<AccountFindFirstResponse, A
         const argsValidate = ZodValidateService.performParse(args, AccountFindFirstSchema)
 
         if (!argsValidate.isSuccess()) {
-            return Result.failure(argsValidate.getError(), argsValidate.getStatus())
+            throw new BadRequestException(argsValidate.getError())
         }
 
         const { id, login } = argsValidate.getValue()
@@ -45,7 +46,7 @@ export class AccountFindFirstUseCase extends UseCase<AccountFindFirstResponse, A
         }
 
         if (!response.isSuccess()) {
-            return Result.failure(response.getError(), response.getStatus())
+            throw new BadRequestException(response.getError())
         }
 
         return Result.success<AccountFindFirstResponse>({

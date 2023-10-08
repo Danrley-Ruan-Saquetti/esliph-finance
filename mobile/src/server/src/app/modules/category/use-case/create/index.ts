@@ -48,7 +48,17 @@ export class CategoryCreateUseCase extends UseCase<CategoryCreateResponse, Categ
             throw new HttpException(responseAccount.getError(), responseAccount.getStatus())
         }
 
-        const response = await this.observerRepository.post('categories/create', { accentColor, isFavorite, name, order: order || 0, accountId })
+        let newOrder = order || 1
+
+        if (!order) {
+            const allCategories = await this.observerRepository.get('categories/find-all', { accountId })
+
+            if (allCategories.isSuccess()) {
+                newOrder = allCategories.getValue().length + 1
+            }
+        }
+
+        const response = await this.observerRepository.post('categories/create', { accentColor, isFavorite, name, order: newOrder, accountId })
 
         if (!response.isSuccess()) {
             throw new BadRequestException({ title: 'Registrar Categoria', message: 'Não foi possível registrar a categoria', causes: response.getError().causes })
