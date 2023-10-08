@@ -34,7 +34,7 @@ export class Application {
             // this.logger.error(args, null, { context: args.request.context ? `[${args.request.context}]` : '' })
         })
         ListenerPublicClient.on<HttpEsliph.EventsRouter, 'request/end'>('request/end', args => {
-            // this.logger[args.response.isSuccess() ? 'log' : 'error'](`${args.request.access}:${args.request.method} "${args.request.name}" ${args.response.getStatus()}`, null, { context: args.request.context ? `[${args.request.context}]` : '' })
+            // this.logger[args.response.isSuccess() ? 'log' : 'error'](`${args.request.origin ? args.request.origin + ' - ' : ''}${args.request.access}:${args.request.method} "${args.request.name}" ${args.response.getStatus()}`, null, { context: args.request.context ? `[${args.request.context}]` : '' })
         })
     }
 
