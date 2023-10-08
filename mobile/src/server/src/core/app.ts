@@ -4,6 +4,7 @@ import { Module } from '../common/module'
 import { Service } from '../common/service'
 import { ListenerPublicClient } from '../services/http'
 import { HttpEsliph } from '@esliph/util-node'
+import { map } from 'zod'
 
 export enum ENV {
     Production = 'Production',
@@ -21,20 +22,20 @@ export class Application {
     }
 
     initComponents() {
-        // this.logger.log('Initialization components...')
+        this.log('LOG', 'Initialization components...')
 
         this.module.initComponents()
         this.initEvents()
 
-        // this.logger.log('Server started')
+        this.log('LOG', 'Server started')
     }
 
     private initEvents() {
         ListenerPublicClient.on<HttpEsliph.EventsRouter, 'request/error'>('request/error', args => {
-            // this.logger.error(args, null, { context: args.request.context ? `[${args.request.context}]` : '' })
+            this.log('ERROR', args, args.request.context ? `[${args.request.context}]` : '')
         })
         ListenerPublicClient.on<HttpEsliph.EventsRouter, 'request/end'>('request/end', args => {
-            // this.logger[args.response.isSuccess() ? 'log' : 'error'](`${args.request.origin ? args.request.origin + ' - ' : ''}${args.request.access}:${args.request.method} "${args.request.name}" ${args.response.getStatus()}`, null, { context: args.request.context ? `[${args.request.context}]` : '' })
+            this.log(args.response.isSuccess() ? 'LOG' : 'ERROR', `${args.request.origin ? args.request.origin + ' - ' : ''}${args.request.access}:${args.request.method} "${args.request.name}" ${args.response.getStatus()}`, args.request.context ? `[${args.request.context}]` : '')
         })
     }
 
@@ -52,5 +53,11 @@ export class Application {
 
     private initService(service: new () => Service) {
         new service().initComponents()
+    }
+
+    private log(method: 'ERROR' | 'LOG', message: any, context = '[Server]') {
+        if (this.env == ENV.Test) { return }
+
+        this.logger[method == 'ERROR' ? 'error' : 'log'](message, null, { context })
     }
 }
