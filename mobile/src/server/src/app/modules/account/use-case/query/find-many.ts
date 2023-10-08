@@ -12,15 +12,15 @@ export type AccountFindManyArgs = z.output<typeof AccountFindManySchema>
 export type AccountFindManyResponse = { accounts: RepositoryEsliph.FindFirstResponse<AccountSchemaWithoutPassword>[] }
 
 export class AccountFindManyUseCase extends UseCase<AccountFindManyResponse, AccountFindManyArgs> {
-    private readonly observerRepository: ListenerRepositoryClient
+    private readonly listenerRepository: ListenerRepositoryClient
 
     constructor() {
         super()
-        this.observerRepository = new ListenerRepositoryClient()
+        this.listenerRepository = new ListenerRepositoryClient()
     }
 
     async perform() {
-        const response = await this.observerRepository.get('accounts/find-all', {} as any)
+        const response = await this.listenerRepository.get('accounts/find-all', {} as any)
 
         if (!response.isSuccess()) {
             throw new HttpException(response.getError(), response.getStatus())

@@ -15,11 +15,11 @@ export type AuthLoginArgs = z.output<typeof AuthLoginSchema>
 export type AuthLoginResponse = { token: string }
 
 export class AuthLoginUseCase extends UseCase<AuthLoginResponse, AuthLoginArgs> {
-    private readonly observerRepository: ListenerRepositoryClient
+    private readonly listenerRepository: ListenerRepositoryClient
 
     constructor() {
         super()
-        this.observerRepository = new ListenerRepositoryClient()
+        this.listenerRepository = new ListenerRepositoryClient()
     }
 
     async perform(args: AuthLoginArgs) {
@@ -31,7 +31,7 @@ export class AuthLoginUseCase extends UseCase<AuthLoginResponse, AuthLoginArgs> 
 
         const { login, password } = argsValidate.getValue()
 
-        const response = await this.observerRepository.get('accounts/find?login', { login })
+        const response = await this.listenerRepository.get('accounts/find?login', { login })
 
         if (!response.isSuccess()) {
             throw new BadRequestException({ title: 'login de Autenticação', message: `Conta "${login}" não foi encontrada` })

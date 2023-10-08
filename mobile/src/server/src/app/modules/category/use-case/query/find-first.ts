@@ -20,11 +20,11 @@ export type CategoryFindFirstArgsHeader = { accountId: number }
 export type CategoryFindFirstResponse = { category: RepositoryEsliph.Document<CategorySchema> }
 
 export class CategoryFindFirstUseCase extends UseCase<CategoryFindFirstResponse, CategoryFindFirstArgs> {
-    private readonly observerRepository: ListenerRepositoryClient
+    private readonly listenerRepository: ListenerRepositoryClient
 
     constructor() {
         super()
-        this.observerRepository = new ListenerRepositoryClient()
+        this.listenerRepository = new ListenerRepositoryClient()
     }
 
     async perform(args: CategoryFindFirstArgs & CategoryFindFirstArgsHeader) {
@@ -42,9 +42,9 @@ export class CategoryFindFirstUseCase extends UseCase<CategoryFindFirstResponse,
         })
 
         if (id) {
-            response = await this.observerRepository.get('categories/find?id', { id, accountId })
+            response = await this.listenerRepository.get('categories/find?id', { id, accountId })
         } else if (name) {
-            response = await this.observerRepository.get('categories/find?name', { name, accountId })
+            response = await this.listenerRepository.get('categories/find?name', { name, accountId })
         }
 
         if (!response.isSuccess()) {

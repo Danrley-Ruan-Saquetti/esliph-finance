@@ -18,11 +18,11 @@ export type AccountFindFirstArgs = z.output<typeof AccountFindFirstSchema>
 export type AccountFindFirstResponse = { account: RepositoryEsliph.Document<AccountSchemaWithoutPassword> }
 
 export class AccountFindFirstUseCase extends UseCase<AccountFindFirstResponse, AccountFindFirstArgs> {
-    private readonly observerRepository: ListenerRepositoryClient
+    private readonly listenerRepository: ListenerRepositoryClient
 
     constructor() {
         super()
-        this.observerRepository = new ListenerRepositoryClient()
+        this.listenerRepository = new ListenerRepositoryClient()
     }
 
     async perform(args: AccountFindFirstArgs) {
@@ -40,9 +40,9 @@ export class AccountFindFirstUseCase extends UseCase<AccountFindFirstResponse, A
         })
 
         if (id) {
-            response = await this.observerRepository.get('accounts/find?id', { id })
+            response = await this.listenerRepository.get('accounts/find?id', { id })
         } else if (login) {
-            response = await this.observerRepository.get('accounts/find?login', { login })
+            response = await this.listenerRepository.get('accounts/find?login', { login })
         }
 
         if (!response.isSuccess()) {

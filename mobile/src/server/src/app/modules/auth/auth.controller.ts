@@ -3,32 +3,32 @@ import { Controller } from '../../../common/controller'
 import { AuthService } from './auth.service'
 
 export class AuthController extends Controller {
-    protected readonly observer: ListenerPublicServer
-    protected readonly observerPrivate: ListenerPrivateServer
+    protected readonly listener: ListenerPublicServer
+    protected readonly listenerPrivate: ListenerPrivateServer
     private readonly service: AuthService
 
     constructor() {
         super()
 
-        this.observer = new ListenerPublicServer()
-        this.observerPrivate = new ListenerPrivateServer()
+        this.listener = new ListenerPublicServer()
+        this.listenerPrivate = new ListenerPrivateServer()
         this.service = new AuthService()
     }
 
     initComponents() {
-        this.observer.post('auth/login', async (req, res) => {
+        this.listener.post('auth/login', async (req, res) => {
             const response = await this.service.login(req.body)
 
             this.response(response, res)
         })
 
-        this.observer.post('auth/valid-authorization', async (req, res) => {
+        this.listener.post('auth/valid-authorization', async (req, res) => {
             const response = await this.service.authorization({ Authorization: req.headers.Authorization || '' })
 
             this.response(response, res)
         })
 
-        this.observerPrivate.post('auth/authorization', async (req, res) => {
+        this.listenerPrivate.post('auth/authorization', async (req, res) => {
             const response = await this.service.authorization(req.body)
 
             this.response(response, res)

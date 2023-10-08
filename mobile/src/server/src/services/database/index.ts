@@ -2,10 +2,10 @@ import { Service } from '../../common/service'
 import { ListenerRepositoryServer } from '../http'
 
 class Database implements Service {
-    private readonly observer: ListenerRepositoryServer
+    private readonly listener: ListenerRepositoryServer
 
     constructor() {
-        this.observer = new ListenerRepositoryServer()
+        this.listener = new ListenerRepositoryServer()
 
         this.initComponents()
     }

@@ -15,11 +15,11 @@ export type AccountCreateArgs = z.output<typeof AccountCreateSchema>
 export type AccountCreateResponse = { message: string }
 
 export class AccountCreateUseCase extends UseCase<AccountCreateResponse, AccountCreateArgs> {
-    private readonly observerRepository: ListenerRepositoryClient
+    private readonly listenerRepository: ListenerRepositoryClient
 
     constructor() {
         super()
-        this.observerRepository = new ListenerRepositoryClient()
+        this.listenerRepository = new ListenerRepositoryClient()
     }
 
     async perform(args: AccountCreateArgs) {
@@ -31,7 +31,7 @@ export class AccountCreateUseCase extends UseCase<AccountCreateResponse, Account
 
         const { login, name, password } = argsValidate.getValue()
 
-        const accountWithLogin = await this.observerRepository.get('accounts/find?login', { login })
+        const accountWithLogin = await this.listenerRepository.get('accounts/find?login', { login })
 
         if (accountWithLogin.isSuccess()) {
             throw new BadRequestException(
@@ -41,7 +41,7 @@ export class AccountCreateUseCase extends UseCase<AccountCreateResponse, Account
 
         const passwordHash = await HashEsliph.generateHash(password)
 
-        const response = await this.observerRepository.post('accounts/create', { login, name, password: passwordHash })
+        const response = await this.listenerRepository.post('accounts/create', { login, name, password: passwordHash })
 
         if (!response.isSuccess()) {
             throw new BadRequestException({ title: 'Registrar Conta', message: 'Não foi possível registrar a conta', causes: response.getError().causes })

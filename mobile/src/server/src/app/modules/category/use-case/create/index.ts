@@ -19,14 +19,14 @@ export type CategoryCreateArgsHeader = { accountId: number }
 export type CategoryCreateResponse = { message: string }
 
 export class CategoryCreateUseCase extends UseCase<CategoryCreateResponse, CategoryCreateArgs> {
-    private readonly observerRepository: ListenerRepositoryClient
-    private readonly observerClient: ListenerPublicClient
+    private readonly listenerRepository: ListenerRepositoryClient
+    private readonly listenerClient: ListenerPublicClient
 
     constructor() {
         super()
 
-        this.observerRepository = new ListenerRepositoryClient()
-        this.observerClient = new ListenerPublicClient()
+        this.listenerRepository = new ListenerRepositoryClient()
+        this.listenerClient = new ListenerPublicClient()
     }
 
     async perform(args: CategoryCreateArgs & CategoryCreateArgsHeader) {
@@ -42,7 +42,7 @@ export class CategoryCreateUseCase extends UseCase<CategoryCreateResponse, Categ
             throw new BadRequestException({ title: 'Registrar Categoria', message: 'Você precisa informar o identificador da conta para vincular a categoria a ela' })
         }
 
-        const responseAccount = await this.observerClient.get('accounts/find?id', { id: accountId })
+        const responseAccount = await this.listenerClient.get('accounts/find?id', { id: accountId })
 
         if (!responseAccount.isSuccess()) {
             throw new HttpException(responseAccount.getError(), responseAccount.getStatus())
@@ -51,14 +51,14 @@ export class CategoryCreateUseCase extends UseCase<CategoryCreateResponse, Categ
         let newOrder = order || 1
 
         if (!order) {
-            const allCategories = await this.observerRepository.get('categories/find-all', { accountId })
+            const allCategories = await this.listenerRepository.get('categories/find-all', { accountId })
 
             if (allCategories.isSuccess()) {
                 newOrder = allCategories.getValue().length + 1
             }
         }
 
-        const response = await this.observerRepository.post('categories/create', { accentColor, isFavorite, name, order: newOrder, accountId })
+        const response = await this.listenerRepository.post('categories/create', { accentColor, isFavorite, name, order: newOrder, accountId })
 
         if (!response.isSuccess()) {
             throw new BadRequestException({ title: 'Registrar Categoria', message: 'Não foi possível registrar a categoria', causes: response.getError().causes })

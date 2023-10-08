@@ -13,15 +13,15 @@ export type CategoryFindManyArgs = z.output<typeof CategoryFindManySchema>
 export type CategoryFindManyResponse = { categories: RepositoryEsliph.FindFirstResponse<CategorySchema>[] }
 
 export class CategoryFindManyUseCase extends UseCase<CategoryFindManyResponse, CategoryFindManyArgs> {
-    private readonly observerRepository: ListenerRepositoryClient
+    private readonly listenerRepository: ListenerRepositoryClient
 
     constructor() {
         super()
-        this.observerRepository = new ListenerRepositoryClient()
+        this.listenerRepository = new ListenerRepositoryClient()
     }
 
     async perform(args: CategoryFindManyArgs) {
-        const response = await this.observerRepository.get('categories/find-all', { accountId: args.accountId })
+        const response = await this.listenerRepository.get('categories/find-all', { accountId: args.accountId })
 
         if (!response.isSuccess()) {
             return Result.failure(response.getError(), response.getStatus())
