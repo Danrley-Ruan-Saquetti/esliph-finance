@@ -20,6 +20,8 @@ describe('Query Category', async () => {
     test('Query base', async () => {
         const response = await listenerClient.get('categories/find-all')
 
-        console.log(response.getValue().categories)
+        expect(response.isSuccess()).toBe(true)
+        expect(response.getValue().categories.length).toBe(5)
+        expect(response.getValue().categories[0]?.id).toBe(3)
     })
 })
