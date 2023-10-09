@@ -1,14 +1,20 @@
-import { HashEsliph, HttpStatusCodes, Result } from '@esliph/util-node'
+import { HashEsliph, Result } from '@esliph/util-node'
 import { z } from 'zod'
 import { ZodValidateService } from '../../../../../services/formatter'
 import { ListenerRepositoryClient } from '../../../../../services/http'
 import { UseCase } from '../../../../../common/use-case'
 import { BadRequestException } from '../../../../../common/exception/bad-request.exception'
+import { Inversion } from '../../../../../core/injection'
 
 const AccountCreateSchema = z.object({
     name: z.string().trim().min(1, { message: 'O "Nome" é obrigatório' }).default(''),
     login: z.string().trim().min(1, { message: 'O "Login" é obrigatório' }).default(''),
-    password: z.string().trim().min(1, { message: 'O "Password" é obrigatório' }).min(6, { message: 'A "Senha" precisa ter no mínimo 6 caracteres' }).default(''),
+    password: z
+        .string()
+        .trim()
+        .min(1, { message: 'O "Password" é obrigatório' })
+        .min(6, { message: 'A "Senha" precisa ter no mínimo 6 caracteres' })
+        .default(''),
 })
 
 export type AccountCreateArgs = z.input<typeof AccountCreateSchema>
@@ -20,6 +26,10 @@ export class AccountCreateUseCase extends UseCase<AccountCreateResponse, Account
     constructor() {
         super()
         this.listenerRepository = new ListenerRepositoryClient()
+    }
+
+    static initComponents() {
+        Inversion.container.bind('AccountCreateUseCase').to(AccountCreateUseCase)
     }
 
     async perform(args: AccountCreateArgs) {
@@ -34,9 +44,7 @@ export class AccountCreateUseCase extends UseCase<AccountCreateResponse, Account
         const accountWithLogin = await this.listenerRepository.get('DB:accounts/find?login', { login })
 
         if (accountWithLogin.isSuccess()) {
-            throw new BadRequestException(
-                { title: 'Criar Conta', message: `Já existe uma conta com o login "${login}". Por Favor, escolha outro login` },
-            )
+            throw new BadRequestException({ title: 'Criar Conta', message: `Já existe uma conta com o login "${login}". Por Favor, escolha outro login` })
         }
 
         const passwordHash = await HashEsliph.generateHash(password)

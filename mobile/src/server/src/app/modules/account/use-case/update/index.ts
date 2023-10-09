@@ -4,6 +4,7 @@ import { ZodValidateService } from '../../../../../services/formatter'
 import { ListenerRepositoryClient } from '../../../../../services/http'
 import { UseCase } from '../../../../../common/use-case'
 import { BadRequestException } from '../../../../../common/exception/bad-request.exception'
+import { Inversion } from '../../../../../core/injection'
 
 const AccountUpdateSchema = z.object({
     name: z.string().trim().optional(),
@@ -22,6 +23,10 @@ export class AccountUpdateUseCase extends UseCase<AccountUpdateResponse, Account
         this.listenerRepository = new ListenerRepositoryClient()
     }
 
+    static initComponents() {
+        Inversion.container.bind('AccountUpdateUseCase').to(AccountUpdateUseCase)
+    }
+
     async perform(args: AccountUpdateArgs & AccountUpdateArgsHeader) {
         const argsValidate = ZodValidateService.performParse(args, AccountUpdateSchema)
 
@@ -38,9 +43,7 @@ export class AccountUpdateUseCase extends UseCase<AccountUpdateResponse, Account
         const accountToUpdate = await this.listenerRepository.get('DB:accounts/find?id', { id: accountId })
 
         if (!accountToUpdate.isSuccess()) {
-            throw new BadRequestException(
-                { title: 'Atualizar Conta', message: `Não foi possível encontrar a conta com o identificador "${accountId}"` },
-            )
+            throw new BadRequestException({ title: 'Atualizar Conta', message: `Não foi possível encontrar a conta com o identificador "${accountId}"` })
         }
 
         const responseUpdate = await this.listenerRepository.put('DB:accounts/update', { login, name, id: accountId })

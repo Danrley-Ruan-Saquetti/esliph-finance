@@ -6,14 +6,15 @@ import { AccountUpdateRepository } from './repository/update'
 import { Inversion } from '../../../core/injection'
 
 export class AccountRepository extends Controller {
-    private readonly createRepository: AccountCreateRepository
     private readonly updateRepository: AccountUpdateRepository
     private readonly queryRepository: AccountQueryRepository
 
-    constructor(@Inversion.Inject('ListenerRepositoryServer') private readonly listener: ListenerRepositoryServer) {
+    constructor(
+        @Inversion.Inject('ListenerRepositoryServer') private readonly listener: ListenerRepositoryServer,
+        @Inversion.Inject('AccountCreateRepository') private readonly createRepository: AccountCreateRepository,
+    ) {
         super()
 
-        this.createRepository = new AccountCreateRepository()
         this.updateRepository = new AccountUpdateRepository()
         this.queryRepository = new AccountQueryRepository()
     }

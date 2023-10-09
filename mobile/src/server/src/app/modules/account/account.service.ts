@@ -7,18 +7,13 @@ import { AccountUpdateUseCase, AccountUpdateArgs, AccountUpdateArgsHeader } from
 import { Inversion } from '../../../core/injection'
 
 export class AccountService extends Service {
-    private readonly createUseCase: AccountCreateUseCase
-    private readonly updateUseCase: AccountUpdateUseCase
-    private readonly queryFindOndeUseCase: AccountFindFirstUseCase
-    private readonly queryAllUseCase: AccountFindManyUseCase
-
-    constructor() {
+    constructor(
+        @Inversion.Inject('AccountCreateUseCase') private readonly createUseCase: AccountCreateUseCase,
+        @Inversion.Inject('AccountUpdateUseCase') private readonly updateUseCase: AccountUpdateUseCase,
+        @Inversion.Inject('AccountFindFirstUseCase') private readonly queryFindOndeUseCase: AccountFindFirstUseCase,
+        @Inversion.Inject('AccountFindManyUseCase') private readonly queryAllUseCase: AccountFindManyUseCase,
+    ) {
         super()
-
-        this.createUseCase = new AccountCreateUseCase()
-        this.updateUseCase = new AccountUpdateUseCase()
-        this.queryFindOndeUseCase = new AccountFindFirstUseCase()
-        this.queryAllUseCase = new AccountFindManyUseCase()
     }
 
     static initComponents() {

@@ -6,6 +6,7 @@ import { UseCase } from '../../../../../common/use-case'
 import { AccountQueryOneRepositoryResponse } from '../../repository/query'
 import { AccountSchemaWithoutPassword } from '../../account.schema'
 import { BadRequestException } from '../../../../../common/exception/bad-request.exception'
+import { Inversion } from '../../../../../core/injection'
 
 const AccountFindFirstSchema = z
     .object({
@@ -23,6 +24,10 @@ export class AccountFindFirstUseCase extends UseCase<AccountFindFirstResponse, A
     constructor() {
         super()
         this.listenerRepository = new ListenerRepositoryClient()
+    }
+
+    static initComponents() {
+        Inversion.container.bind('AccountFindFirstUseCase').to(AccountFindFirstUseCase)
     }
 
     async perform(args: AccountFindFirstArgs) {

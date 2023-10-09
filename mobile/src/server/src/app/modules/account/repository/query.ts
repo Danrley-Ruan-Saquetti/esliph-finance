@@ -3,6 +3,8 @@ import { RepositoryEsliph } from '@esliph/util-node'
 import { AccountRepository } from '.'
 import { AccountSchema } from '../account.schema'
 import { DatabaseException } from '../../../../common/exception'
+import { Service } from '../../../../common/service'
+import { Inversion } from '../../../../core/injection'
 
 export type AccountQueryByNameRepository = { name: string }
 export type AccountQueryByLoginRepository = { login: string }
@@ -11,11 +13,16 @@ export type AccountQueryAllRepository = undefined
 export type AccountQueryOneRepositoryResponse = RepositoryEsliph.Document<AccountSchema>
 export type AccountQueryAllRepositoryResponse = RepositoryEsliph.Document<AccountSchema>[]
 
-export class AccountQueryRepository {
+export class AccountQueryRepository extends Service {
     protected readonly repository: AccountRepository
 
     constructor() {
+        super()
         this.repository = new AccountRepository()
+    }
+
+    static initComponents() {
+        Inversion.container.bind('AccountQueryRepository').to(AccountQueryRepository)
     }
 
     async findByName({ name }: AccountQueryByNameRepository) {

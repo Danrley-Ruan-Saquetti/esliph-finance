@@ -1,12 +1,8 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "lib": [
-            "ES6"
-        ],
-        "types": [
-            "node"
-        ],
+        "lib": ["ES6"],
+        "types": ["node"],
         "declaration": false,
         "removeComments": true,
         "emitDecoratorMetadata": true,
@@ -32,12 +28,7 @@
         "noEmitHelpers": true,
         "esModuleInterop": true,
         "strict": true,
-        "resolveJsonModule": true,
-        "baseUrl": ".",
-        "paths": {}
+        "resolveJsonModule": true
     },
-    "exclude": [
-        "node_modules",
-        "./vitest.config.ts"
-    ]
+    "exclude": ["node_modules", "./vitest.config.ts"]
 }

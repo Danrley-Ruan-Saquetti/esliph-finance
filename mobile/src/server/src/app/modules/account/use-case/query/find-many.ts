@@ -5,6 +5,7 @@ import { UseCase } from '../../../../../common/use-case'
 import { RepositoryEsliph } from '@esliph/util-node'
 import { AccountSchemaWithoutPassword } from '../../account.schema'
 import { HttpException } from '../../../../../common/exception'
+import { Inversion } from '../../../../../core/injection'
 
 const AccountFindManySchema = z.object({})
 
@@ -17,6 +18,10 @@ export class AccountFindManyUseCase extends UseCase<AccountFindManyResponse, Acc
     constructor() {
         super()
         this.listenerRepository = new ListenerRepositoryClient()
+    }
+
+    static initComponents() {
+        Inversion.container.bind('AccountFindManyUseCase').to(AccountFindManyUseCase)
     }
 
     async perform() {
