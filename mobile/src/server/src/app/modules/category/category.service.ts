@@ -1,3 +1,4 @@
+import { Inversion } from '../../../core/injection'
 import { Service } from '../../../common/service'
 import { CategoryCreateArgs, CategoryCreateUseCase, CategoryCreateArgsHeader } from './use-case/create'
 import { CategoryFindFirstArgs, CategoryFindFirstUseCase } from './use-case/query/find-first'
@@ -19,7 +20,9 @@ export class CategoryService extends Service {
         this.queryAllUseCase = new CategoryFindManyUseCase()
     }
 
-    initComponents() { }
+    static initComponents() {
+        Inversion.container.bind('CategoryService').to(CategoryService)
+    }
 
     async create(args: CategoryCreateArgs & CategoryCreateArgsHeader) {
         const response = await this.createUseCase.perform(args)

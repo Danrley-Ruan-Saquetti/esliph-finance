@@ -1,3 +1,4 @@
+import { Inversion } from '../../../core/injection'
 import { Service } from '../../../common/service'
 import { AuthAuthorizationUseCase, AuthAuthorizationArgs } from './use-case/authorization'
 import { AuthLoginArgs, AuthLoginUseCase } from './use-case/login'
@@ -13,7 +14,11 @@ export class AuthService extends Service {
         this.authAuthorizationUseCase = new AuthAuthorizationUseCase()
     }
 
-    initComponents() { }
+    static initComponents() {
+        Inversion.container.bind('AuthService').to(AuthService)
+    }
+
+    initComponents() {}
 
     async login(args: AuthLoginArgs) {
         const response = await this.authLoginUseCase.perform(args)

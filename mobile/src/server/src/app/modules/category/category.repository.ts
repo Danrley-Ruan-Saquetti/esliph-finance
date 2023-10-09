@@ -3,17 +3,16 @@ import { Controller } from '../../../common/controller'
 import { CategoryCreateRepository } from '../category/repository/create'
 import { CategoryQueryRepository } from './repository/query'
 import { CategoryUpdateRepository } from './repository/update'
+import { Inversion } from '../../../core/injection'
 
 export class CategoryRepository extends Controller {
-    protected readonly listener: ListenerRepositoryServer
     private readonly create: CategoryCreateRepository
     private readonly update: CategoryUpdateRepository
     private readonly query: CategoryQueryRepository
 
-    constructor() {
+    constructor(@Inversion.Inject('ListenerRepositoryServer') private readonly listener: ListenerRepositoryServer) {
         super()
 
-        this.listener = new ListenerRepositoryServer()
         this.create = new CategoryCreateRepository()
         this.query = new CategoryQueryRepository()
         this.update = new CategoryUpdateRepository()

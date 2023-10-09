@@ -1,9 +1,11 @@
-import { HttpStatusCodes, Result } from '@esliph/util-node'
+import { HttpStatusCodes, Result, ResultException } from '@esliph/util-node'
 import { HttpEsliph } from '@esliph/util-node'
+import { Inversion } from '../core/injection'
 
+@Inversion.Injectable()
 export class Controller {
     initComponents() {
-        throw Result.failure({ title: `Guard ${Controller.name}`, message: 'Method not implemented' }, HttpStatusCodes.NOT_IMPLEMENTED)
+        throw new ResultException({ title: `Guard ${Controller.name}`, message: 'Method not implemented', status: HttpStatusCodes.NOT_IMPLEMENTED })
     }
 
     protected response<T>(result: Result<T>, res: HttpEsliph.Response<T>) {

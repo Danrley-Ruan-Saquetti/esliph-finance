@@ -1,18 +1,15 @@
 import { ListenerPrivateServer, ListenerPublicServer } from '../../../services/http'
 import { Controller } from '../../../common/controller'
 import { AuthService } from './auth.service'
+import { Inversion } from '../../../core/injection'
 
 export class AuthController extends Controller {
-    protected readonly listener: ListenerPublicServer
-    protected readonly listenerPrivate: ListenerPrivateServer
-    private readonly service: AuthService
-
-    constructor() {
+    constructor(
+        @Inversion.Inject('AuthService') private readonly service: AuthService,
+        @Inversion.Inject('ListenerPublicServer') private readonly listener: ListenerPublicServer,
+        @Inversion.Inject('ListenerPrivateServer') private readonly listenerPrivate: ListenerPrivateServer,
+    ) {
         super()
-
-        this.listener = new ListenerPublicServer()
-        this.listenerPrivate = new ListenerPrivateServer()
-        this.service = new AuthService()
     }
 
     initComponents() {

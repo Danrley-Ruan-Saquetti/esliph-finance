@@ -1,15 +1,16 @@
+import { Inversion } from '../core/injection'
 import { Controller } from './controller'
 import { Service } from './service'
 
 export interface ModuleArgs {
-    controllers: (new () => Controller)[],
-    services: (new () => Service)[],
-    imports: (new () => Module)[],
+    controllers: (new (...args: any[]) => Controller)[]
+    services: (new (...args: any[]) => Service)[]
+    imports: (new () => Module)[]
 }
 
 export class Module {
-    protected controllers: (new () => Controller)[]
-    protected services: (new () => Service)[]
+    protected controllers: (new (...args: any[]) => Controller)[]
+    protected services: (new (...args: any[]) => Service)[]
     protected imports: (new () => Module)[]
 
     constructor({ controllers = [], services = [], imports = [] }: Partial<ModuleArgs>) {
@@ -19,8 +20,12 @@ export class Module {
     }
 
     initComponents() {
-        this.controllers.map(instance => new instance().initComponents())
-        this.services.map(instance => new instance().initComponents())
+        this.services.map(instance => {
+            // @ts-expect-error
+            instance.initComponents && instance.initComponents()
+            Inversion.container.resolve(instance).initComponents()
+        })
         this.imports.map(instance => new instance().initComponents())
+        this.controllers.map(instance => Inversion.container.resolve(instance).initComponents())
     }
 }

@@ -1,14 +1,11 @@
 import { ListenerRepositoryServer } from '../../../services/http'
 import { Controller } from '../../../common/controller'
+import { Inversion } from '../../../core/injection'
 
 export class AuthRepository extends Controller {
-    protected readonly listener: ListenerRepositoryServer
-
-    constructor() {
+    constructor(@Inversion.Inject('ListenerRepositoryServer') private readonly listener: ListenerRepositoryServer) {
         super()
-
-        this.listener = new ListenerRepositoryServer()
     }
 
-    initComponents() { }
+    initComponents() {}
 }

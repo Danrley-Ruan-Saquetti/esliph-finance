@@ -9,14 +9,17 @@ import { map } from 'zod'
 export enum ENV {
     Production = 'Production',
     Development = 'Development',
-    Test = 'Test'
+    Test = 'Test',
 }
 
 export class Application {
     private module: Module
     private logger: LoggerService
 
-    constructor(module: new () => Module, private readonly env = ENV.Production) {
+    constructor(
+        module: new () => Module,
+        private readonly env = ENV.Production,
+    ) {
         this.module = new module()
         this.logger = new LoggerService('[Server]')
     }
@@ -35,29 +38,21 @@ export class Application {
             this.log('ERROR', args, args.request.context ? `[${args.request.context}]` : '')
         })
         ListenerPublicClient.on<HttpEsliph.EventsRouter, 'request/end'>('request/end', args => {
-            this.log(args.response.isSuccess() ? 'LOG' : 'ERROR', `${args.request.origin ? args.request.origin + ' - ' : ''}${args.request.access}:${args.request.method} "${args.request.name}" ${args.response.getStatus()}`, args.request.context ? `[${args.request.context}]` : '')
+            this.log(
+                args.response.isSuccess() ? 'LOG' : 'ERROR',
+                `${args.request.origin ? args.request.origin + ' - ' : ''}${args.request.access}:${args.request.method} "${
+                    args.request.name
+                }" ${args.response.getStatus()}`,
+                args.request.context ? `[${args.request.context}]` : '',
+            )
         })
     }
 
-    useController(...controllers: (new () => Controller)[]) {
-        controllers.map(controller => this.initController(controller))
-    }
-
-    useService(...services: (new () => Service)[]) {
-        services.map(service => this.initService(service))
-    }
-
-    private initController(controller: new () => Controller) {
-        new controller().initComponents()
-    }
-
-    private initService(service: new () => Service) {
-        new service().initComponents()
-    }
-
     private log(method: 'ERROR' | 'LOG', message: any, context = '[Server]') {
-        if (this.env == ENV.Test) { return }
+        if (this.env == ENV.Test) {
+            return
+        }
 
-        this.logger[method == 'ERROR' ? 'error' : 'log'](message, null, { context })
+        this.logger[method == 'ERROR' ? 'error' : 'log'](message, null, { context: ` ${context}` })
     }
 }

@@ -1,5 +1,5 @@
 import { HttpEsliph, Result } from '@esliph/util-node'
-import { Guard } from 'src/common/guard'
+import { Guard } from '../../../../common/guard'
 import { AuthService } from '../auth.service'
 
 class AuthorizationGuardImplementation extends Guard {
