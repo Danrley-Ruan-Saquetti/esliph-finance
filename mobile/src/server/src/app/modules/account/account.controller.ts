@@ -8,6 +8,7 @@ export class AccountController extends Controller {
     constructor(
         @Inversion.Inject('AccountService') private readonly service: AccountService,
         @Inversion.Inject('ListenerPublicServer') private readonly listener: ListenerPublicServer,
+        @Inversion.Inject('AuthorizationGuard') private readonly authorizationGuard: AuthorizationGuard,
     ) {
         super()
     }
@@ -37,7 +38,7 @@ export class AccountController extends Controller {
             this.response(response, res)
         })
 
-        this.listener.put('PU:accounts/update', AuthorizationGuard, async (req, res) => {
+        this.listener.put('PU:accounts/update', this.authorizationGuard.perform, async (req, res) => {
             const response = await this.service.update({ ...req.body, accountId: req.headers.account })
 
             this.response(response, res)

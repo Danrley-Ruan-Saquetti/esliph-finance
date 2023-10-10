@@ -1,8 +1,11 @@
 import { HttpStatusCodes, Result } from '@esliph/util-node'
 import { HttpEsliph } from '@esliph/util-node'
+import { Inversion } from '../core/injection'
+import { Service } from './service'
 
-export class Guard {
-    static async perform(req: HttpEsliph.Request, res: HttpEsliph.Response) {
+@Inversion.Injectable()
+export class Guard extends Service {
+    async perform(req: HttpEsliph.Request, res: HttpEsliph.Response) {
         const response = Result.failure({ title: 'Guard Request', message: 'Method not implemented' }, HttpStatusCodes.NOT_IMPLEMENTED)
 
         Guard.response(response, res)

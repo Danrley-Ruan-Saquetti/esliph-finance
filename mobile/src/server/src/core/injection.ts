@@ -2,19 +2,10 @@ import 'reflect-metadata'
 import { Container, injectable as Injectable, inject as Inject } from 'inversify'
 
 export class Inversion {
-    static readonly container = new Container({ skipBaseClassChecks: true })
-    private readonly containerLocal?: Container
+    static readonly container = new Container({ skipBaseClassChecks: true, defaultScope: 'Singleton', autoBindInjectable: false })
 
-    constructor(isLocal = false) {
-        if (isLocal) {
-            this.containerLocal = new Container()
-        }
-    }
+    private constructor() { }
 
     static Injectable = Injectable
     static Inject = Inject
-
-    get container() {
-        return this.containerLocal || Inversion.container
-    }
 }

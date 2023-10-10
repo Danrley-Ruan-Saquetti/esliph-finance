@@ -5,21 +5,23 @@ import { ListenerRepositoryClient } from '../../../../../services/http'
 import { ZodValidateService } from '../../../../../services/formatter'
 import jwt from 'jsonwebtoken'
 import { BadRequestException } from '../../../../../common/exception/bad-request.exception'
+import { Inversion } from '../../../../../core/injection'
 
 const AuthLoginSchema = z.object({
-    login: z.string().trim().min(1, { message: '"Login" é obrigatório' }).default(''),
-    password: z.string().trim().min(1, { message: '"Password" é obrigatório' }).default(''),
+    login: z.string().trim().min(1, { message: 'O "Login" é obrigatório' }).default(''),
+    password: z.string().trim().min(1, { message: 'A "Senha" é obrigatório' }).default(''),
 })
 
 export type AuthLoginArgs = z.input<typeof AuthLoginSchema>
 export type AuthLoginResponse = { token: string }
 
 export class AuthLoginUseCase extends UseCase<AuthLoginResponse, AuthLoginArgs> {
-    private readonly listenerRepository: ListenerRepositoryClient
-
-    constructor() {
+    constructor(@Inversion.Inject('ListenerRepositoryClient') private readonly listenerRepository: ListenerRepositoryClient) {
         super()
-        this.listenerRepository = new ListenerRepositoryClient()
+    }
+
+    static initComponents() {
+        Inversion.container.bind('AuthLoginUseCase').to(AuthLoginUseCase)
     }
 
     async perform(args: AuthLoginArgs) {

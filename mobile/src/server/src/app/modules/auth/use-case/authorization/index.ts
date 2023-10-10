@@ -6,6 +6,7 @@ import { UnauthorizedException } from '../../../../../common/exception'
 import jwt from 'jsonwebtoken'
 import { PayloadAuthorization } from '../../../../../@types/payload-authorization'
 import { BadRequestException } from '../../../../../common/exception/bad-request.exception'
+import { Inversion } from '../../../../../core/injection'
 
 const AuthAuthorizationSchema = z.object({
     Authorization: z.string().optional().default('')
@@ -15,9 +16,12 @@ export type AuthAuthorizationArgs = z.input<typeof AuthAuthorizationSchema>
 export type AuthAuthorizationResponse = PayloadAuthorization
 
 export class AuthAuthorizationUseCase extends UseCase<AuthAuthorizationResponse, AuthAuthorizationArgs> {
-
     constructor() {
         super()
+    }
+
+    static initComponents() {
+        Inversion.container.bind('AuthAuthorizationUseCase').to(AuthAuthorizationUseCase)
     }
 
     async perform(args: AuthAuthorizationArgs) {

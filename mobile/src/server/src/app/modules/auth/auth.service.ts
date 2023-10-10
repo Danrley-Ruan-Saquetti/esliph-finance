@@ -4,21 +4,18 @@ import { AuthAuthorizationUseCase, AuthAuthorizationArgs } from './use-case/auth
 import { AuthLoginArgs, AuthLoginUseCase } from './use-case/login'
 
 export class AuthService extends Service {
-    private readonly authLoginUseCase: AuthLoginUseCase
-    private readonly authAuthorizationUseCase: AuthAuthorizationUseCase
-
-    constructor() {
+    constructor(
+        @Inversion.Inject('AuthLoginUseCase') private readonly authLoginUseCase: AuthLoginUseCase,
+        @Inversion.Inject('AuthAuthorizationUseCase') private readonly authAuthorizationUseCase: AuthAuthorizationUseCase
+    ) {
         super()
-
-        this.authLoginUseCase = new AuthLoginUseCase()
-        this.authAuthorizationUseCase = new AuthAuthorizationUseCase()
     }
 
     static initComponents() {
         Inversion.container.bind('AuthService').to(AuthService)
     }
 
-    initComponents() {}
+    initComponents() { }
 
     async login(args: AuthLoginArgs) {
         const response = await this.authLoginUseCase.perform(args)

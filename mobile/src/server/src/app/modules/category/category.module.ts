@@ -5,6 +5,10 @@ import { CategoryService } from './category.service'
 
 export class CategoryModule extends Module {
     constructor() {
-        super({ imports: [], controllers: [CategoryController, CategoryRepository], services: [CategoryService] })
+        super({
+            imports: [],
+            controllers: [CategoryController, CategoryRepository],
+            services: [CategoryService]
+        })
     }
 }

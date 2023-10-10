@@ -23,7 +23,7 @@ export class Module {
         // @ts-expect-error
         this.services.map(instance => instance.initComponents && instance.initComponents())
         this.imports.map(instance => new instance().initComponents())
-        this.controllers.map(instance => Inversion.container.resolve(instance).initComponents())
         this.services.map(instance => Inversion.container.resolve(instance).initComponents())
+        this.controllers.map(instance => Inversion.container.resolve(instance).initComponents())
     }
 }
