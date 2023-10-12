@@ -1,6 +1,6 @@
+import { Result } from '@esliph/util-node'
 import { CategorySchema } from '../category.schema'
 import { CategoryRepository } from '.'
-import { Result } from '@esliph/util-node'
 
 export type CategoryUpdateRepositoryArgs = Partial<CategorySchema> & { accountId: number, id: number }
 export type CategoryUpdateRepositoryResponse = { message: string }

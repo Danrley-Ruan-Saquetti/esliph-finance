@@ -1,18 +1,11 @@
 import { Text, View } from 'react-native'
-import Bootstrap from '@server/core/bootstrap'
-import { GenerateLogin } from '@server/@tests/login'
-import { GenerateListenerClient } from '@server/@tests/listener-client-public'
+import Bootstrap from '../server/core/bootstrap'
 import { useEffect } from 'react'
 
+Bootstrap()
+
 export default function App() {
-    const bootstrap = async () => {
-        Bootstrap()
-
-        const listener = GenerateListenerClient()
-        await GenerateLogin(listener)
-
-        await listener.post('PU:categories/create', { name: 'Category 1' })
-    }
+    const bootstrap = () => {}
 
     useEffect(() => {
         bootstrap()

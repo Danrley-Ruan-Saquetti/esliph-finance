@@ -1,8 +1,8 @@
+import { GenerateLogin } from '../../../../@tests/login'
 import { test, expect, describe } from 'vitest'
 import Bootstrap from '../../../../core/bootstrap'
 import { ENV } from '../../../../core'
 import { GenerateListenerClient } from '../../../../@tests/listener-client-public'
-import { GenerateLogin } from '../../../../@tests/login'
 
 Bootstrap(ENV.Test)
 

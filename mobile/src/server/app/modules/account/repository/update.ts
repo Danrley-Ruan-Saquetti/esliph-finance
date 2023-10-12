@@ -1,7 +1,6 @@
 import { AccountSchema } from '../account.schema'
 import { AccountRepository } from '.'
 import { Result } from '@esliph/util-node'
-import { RepositoryEsliph } from '@esliph/util-node'
 import { Inversion } from '../../../../core/injection'
 import { Service } from '../../../../common/service'
 

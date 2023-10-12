@@ -13,7 +13,7 @@ export class Module {
     protected services: (new (...args: any[]) => Service)[]
     protected imports: (new () => Module)[]
 
-    constructor({ controllers = [], services = [], imports = [] }: Partial<ModuleArgs>) {
+    constructor({ controllers = [], services = [], imports = [] }: Partial<ModuleArgs> = {}) {
         this.controllers = controllers
         this.services = services
         this.imports = imports
@@ -23,7 +23,7 @@ export class Module {
         // @ts-expect-error
         this.services.map(instance => instance.initComponents && instance.initComponents())
         this.imports.map(instance => new instance().initComponents())
-        this.services.map(instance => Inversion.resolve(instance).initComponents())
-        this.controllers.map(instance => Inversion.resolve(instance).initComponents())
+        // this.services.map(instance => Inversion.resolve(instance).initComponents())
+        // this.controllers.map(instance => Inversion.resolve(instance).initComponents())
     }
 }

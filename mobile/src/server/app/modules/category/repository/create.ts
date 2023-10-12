@@ -1,7 +1,6 @@
 import { CategorySchema } from './../category.schema'
 import { CategoryRepository } from '.'
-import { Result } from '@esliph/util-node'
-import { RepositoryEsliph } from '@esliph/util-node'
+import { Result, RepositoryEsliph } from '@esliph/util-node'
 
 export type CategoryCreateRepositoryResponse = RepositoryEsliph.CreateResponse<CategorySchema>
 
