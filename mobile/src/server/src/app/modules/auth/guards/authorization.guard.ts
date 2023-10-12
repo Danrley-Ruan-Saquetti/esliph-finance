@@ -3,17 +3,13 @@ import { Guard } from '../../../../common/guard'
 import { AuthService } from '../auth.service'
 import { Inversion } from '../../../../core/injection'
 
+@Inversion.Injectable('AuthorizationGuard')
 export class AuthorizationGuard extends Guard {
-    constructor(@Inversion.Inject('AuthService') private readonly service: AuthService) {
-        super()
-    }
 
-    static initComponents(): void {
-        Inversion.container.bind('AuthorizationGuard').to(AuthorizationGuard)
-    }
+    static async perform(req: HttpEsliph.Request, res: HttpEsliph.Response) {
+        const authService = Inversion.getInstance<AuthService>('AuthService')
 
-    async perform(req: HttpEsliph.Request, res: HttpEsliph.Response) {
-        const response = await this.service.authorization({ Authorization: req.headers.Authorization })
+        const response = await authService.authorization({ Authorization: req.headers.Authorization })
 
         if (response.isSuccess()) {
             req.headers.account = response.getValue().sub

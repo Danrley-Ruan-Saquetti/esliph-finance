@@ -15,13 +15,10 @@ const AuthAuthorizationSchema = z.object({
 export type AuthAuthorizationArgs = z.input<typeof AuthAuthorizationSchema>
 export type AuthAuthorizationResponse = PayloadAuthorization
 
+@Inversion.Injectable('AuthAuthorizationUseCase')
 export class AuthAuthorizationUseCase extends UseCase<AuthAuthorizationResponse, AuthAuthorizationArgs> {
     constructor() {
         super()
-    }
-
-    static initComponents() {
-        Inversion.container.bind('AuthAuthorizationUseCase').to(AuthAuthorizationUseCase)
     }
 
     async perform(args: AuthAuthorizationArgs) {

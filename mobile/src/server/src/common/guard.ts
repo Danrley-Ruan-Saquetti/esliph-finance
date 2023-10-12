@@ -5,7 +5,7 @@ import { Service } from './service'
 
 @Inversion.Injectable()
 export class Guard extends Service {
-    async perform(req: HttpEsliph.Request, res: HttpEsliph.Response) {
+    static async perform(req: HttpEsliph.Request, res: HttpEsliph.Response) {
         const response = Result.failure({ title: 'Guard Request', message: 'Method not implemented' }, HttpStatusCodes.NOT_IMPLEMENTED)
 
         Guard.response(response, res)

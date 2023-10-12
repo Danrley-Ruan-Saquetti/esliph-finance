@@ -1,8 +1,5 @@
-import { Inversion } from '../core/injection'
-
-@Inversion.Injectable()
 export class Service {
-    initComponents() {}
+    initComponents() { }
 
-    static initComponents() {}
+    static initComponents() { }
 }

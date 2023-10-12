@@ -12,16 +12,13 @@ const AccountFindManySchema = z.object({})
 export type AccountFindManyArgs = z.input<typeof AccountFindManySchema>
 export type AccountFindManyResponse = { accounts: RepositoryEsliph.FindFirstResponse<AccountSchemaWithoutPassword>[] }
 
+@Inversion.Injectable('AccountFindManyUseCase')
 export class AccountFindManyUseCase extends UseCase<AccountFindManyResponse, AccountFindManyArgs> {
     private readonly listenerRepository: ListenerRepositoryClient
 
     constructor() {
         super()
         this.listenerRepository = new ListenerRepositoryClient()
-    }
-
-    static initComponents() {
-        Inversion.container.bind('AccountFindManyUseCase').to(AccountFindManyUseCase)
     }
 
     async perform() {

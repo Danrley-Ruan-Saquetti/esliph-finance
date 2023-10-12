@@ -6,6 +6,7 @@ import { AccountFindManyUseCase } from './use-case/query/find-many'
 import { AccountUpdateUseCase, AccountUpdateArgs, AccountUpdateArgsHeader } from './use-case/update'
 import { Inversion } from '../../../core/injection'
 
+@Inversion.Injectable('AccountService')
 export class AccountService extends Service {
     constructor(
         @Inversion.Inject('AccountCreateUseCase') private readonly createUseCase: AccountCreateUseCase,
@@ -14,10 +15,6 @@ export class AccountService extends Service {
         @Inversion.Inject('AccountFindManyUseCase') private readonly queryAllUseCase: AccountFindManyUseCase,
     ) {
         super()
-    }
-
-    static initComponents() {
-        Inversion.container.bind('AccountService').to(AccountService)
     }
 
     async create(args: AccountCreateArgs) {

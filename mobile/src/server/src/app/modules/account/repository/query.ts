@@ -13,16 +13,13 @@ export type AccountQueryAllRepository = undefined
 export type AccountQueryOneRepositoryResponse = RepositoryEsliph.Document<AccountSchema>
 export type AccountQueryAllRepositoryResponse = RepositoryEsliph.Document<AccountSchema>[]
 
+@Inversion.Injectable('AccountQueryRepository')
 export class AccountQueryRepository extends Service {
     protected readonly repository: AccountRepository
 
     constructor() {
         super()
         this.repository = new AccountRepository()
-    }
-
-    static initComponents() {
-        Inversion.container.bind('AccountQueryRepository').to(AccountQueryRepository)
     }
 
     async findByName({ name }: AccountQueryByNameRepository) {

@@ -18,16 +18,13 @@ const AccountFindFirstSchema = z
 export type AccountFindFirstArgs = z.input<typeof AccountFindFirstSchema>
 export type AccountFindFirstResponse = { account: RepositoryEsliph.Document<AccountSchemaWithoutPassword> }
 
+@Inversion.Injectable('AccountFindFirstUseCase')
 export class AccountFindFirstUseCase extends UseCase<AccountFindFirstResponse, AccountFindFirstArgs> {
     private readonly listenerRepository: ListenerRepositoryClient
 
     constructor() {
         super()
         this.listenerRepository = new ListenerRepositoryClient()
-    }
-
-    static initComponents() {
-        Inversion.container.bind('AccountFindFirstUseCase').to(AccountFindFirstUseCase)
     }
 
     async perform(args: AccountFindFirstArgs) {

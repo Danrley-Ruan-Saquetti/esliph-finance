@@ -5,6 +5,7 @@ import { CategoryFindFirstArgs, CategoryFindFirstUseCase } from './use-case/quer
 import { CategoryFindManyUseCase } from './use-case/query/find-many'
 import { CategoryUpdateArgs, CategoryUpdateArgsHeader, CategoryUpdateUseCase } from './use-case/update'
 
+@Inversion.Injectable('CategoryService')
 export class CategoryService extends Service {
     private readonly createUseCase: CategoryCreateUseCase
     private readonly updateUseCase: CategoryUpdateUseCase
@@ -18,10 +19,6 @@ export class CategoryService extends Service {
         this.updateUseCase = new CategoryUpdateUseCase()
         this.queryFindOndeUseCase = new CategoryFindFirstUseCase()
         this.queryAllUseCase = new CategoryFindManyUseCase()
-    }
-
-    static initComponents() {
-        Inversion.container.bind('CategoryService').to(CategoryService)
     }
 
     async create(args: CategoryCreateArgs & CategoryCreateArgsHeader) {

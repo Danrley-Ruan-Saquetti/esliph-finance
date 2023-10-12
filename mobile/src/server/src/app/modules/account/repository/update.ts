@@ -8,16 +8,13 @@ import { Service } from '../../../../common/service'
 export type AccountUpdateRepositoryArgs = Partial<AccountSchema> & { id: number }
 export type AccountUpdateRepositoryResponse = { message: string }
 
+@Inversion.Injectable('AccountUpdateRepository')
 export class AccountUpdateRepository extends Service {
     private readonly updateRepository: AccountRepository
 
     constructor() {
         super()
         this.updateRepository = new AccountRepository()
-    }
-
-    static initComponents() {
-        Inversion.container.bind('AccountUpdateRepository').to(AccountUpdateRepository)
     }
 
     async perform(args: AccountUpdateRepositoryArgs) {

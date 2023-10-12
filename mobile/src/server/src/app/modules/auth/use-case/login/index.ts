@@ -15,13 +15,10 @@ const AuthLoginSchema = z.object({
 export type AuthLoginArgs = z.input<typeof AuthLoginSchema>
 export type AuthLoginResponse = { token: string }
 
+@Inversion.Injectable('AuthLoginUseCase')
 export class AuthLoginUseCase extends UseCase<AuthLoginResponse, AuthLoginArgs> {
     constructor(@Inversion.Inject('ListenerRepositoryClient') private readonly listenerRepository: ListenerRepositoryClient) {
         super()
-    }
-
-    static initComponents() {
-        Inversion.container.bind('AuthLoginUseCase').to(AuthLoginUseCase)
     }
 
     async perform(args: AuthLoginArgs) {

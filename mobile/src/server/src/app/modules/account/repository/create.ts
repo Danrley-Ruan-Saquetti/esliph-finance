@@ -7,16 +7,13 @@ import { Inversion } from '../../../../core/injection'
 
 export type AccountCreateRepositoryResponse = RepositoryEsliph.CreateResponse<AccountSchema>
 
+@Inversion.Injectable('AccountCreateRepository')
 export class AccountCreateRepository extends Service {
     private readonly createRepository: AccountRepository
 
     constructor() {
         super()
         this.createRepository = new AccountRepository()
-    }
-
-    static initComponents() {
-        Inversion.container.bind('AccountCreateRepository').to(AccountCreateRepository)
     }
 
     async perform(args: AccountSchema) {

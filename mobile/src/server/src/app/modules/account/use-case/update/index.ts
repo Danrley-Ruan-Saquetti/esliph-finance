@@ -15,16 +15,13 @@ export type AccountUpdateArgs = z.input<typeof AccountUpdateSchema>
 export type AccountUpdateArgsHeader = { accountId: number }
 export type AccountUpdateResponse = { message: string }
 
+@Inversion.Injectable('AccountUpdateUseCase')
 export class AccountUpdateUseCase extends UseCase<AccountUpdateResponse, AccountUpdateArgs> {
     private readonly listenerRepository: ListenerRepositoryClient
 
     constructor() {
         super()
         this.listenerRepository = new ListenerRepositoryClient()
-    }
-
-    static initComponents() {
-        Inversion.container.bind('AccountUpdateUseCase').to(AccountUpdateUseCase)
     }
 
     async perform(args: AccountUpdateArgs & AccountUpdateArgsHeader) {
