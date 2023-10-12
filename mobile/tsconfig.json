@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "strict": true,
     "types": [
       "nativewind/types"
@@ -14,7 +16,7 @@
         "./src/assets/*"
       ],
       "@server/*": [
-        "./src/server/src/*"
+        "./src/server/*"
       ],
       "@components/*": [
         "./src/components/*"
