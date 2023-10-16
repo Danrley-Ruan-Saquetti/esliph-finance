@@ -10,6 +10,7 @@ export type AccountQueryByNameRepository = { name: string }
 export type AccountQueryByLoginRepository = { login: string }
 export type AccountQueryByIdRepository = { id: number }
 export type AccountQueryAllRepository = undefined
+export type AccountQueryIsExistsRepositoryResponse = boolean
 export type AccountQueryOneRepositoryResponse = RepositoryEsliph.Document<AccountSchema>
 export type AccountQueryAllRepositoryResponse = RepositoryEsliph.Document<AccountSchema>[]
 
@@ -50,6 +51,12 @@ export class AccountQueryRepository extends Service {
         }
 
         return Result.success<AccountQueryOneRepositoryResponse>(response)
+    }
+
+    async isExistsByLogin({ login }: AccountQueryByLoginRepository) {
+        const response = this.repository.isExists({ where: { login: { equals: login } } })
+
+        return Result.success<AccountQueryIsExistsRepositoryResponse>(response)
     }
 
     async findAll() {

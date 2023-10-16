@@ -10,6 +10,7 @@ import {
     AccountQueryByIdRepository,
     AccountQueryAllRepository,
     AccountQueryAllRepositoryResponse,
+    AccountQueryIsExistsRepositoryResponse,
 } from './repository/query'
 import { AccountUpdateArgs, AccountUpdateResponse } from './use-case/update'
 import { AccountUpdateRepositoryArgs, AccountUpdateRepositoryResponse } from './repository/update'
@@ -71,6 +72,10 @@ export type AccountDatabaseEvents = {
         'DB:accounts/find?login': {
             body: AccountQueryByLoginRepository
             response: AccountQueryOneRepositoryResponse
+        }
+        'DB:accounts/is-exists?login': {
+            body: AccountQueryByLoginRepository
+            response: AccountQueryIsExistsRepositoryResponse
         }
         'DB:accounts/find?id': {
             body: AccountQueryByIdRepository

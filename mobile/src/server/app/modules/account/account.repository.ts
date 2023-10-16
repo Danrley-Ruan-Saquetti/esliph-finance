@@ -38,6 +38,12 @@ export class AccountRepository extends Controller {
             this.response(response, res)
         })
 
+        this.listener.get('DB:accounts/is-exists?login', async (req, res) => {
+            const response = await this.queryRepository.isExistsByLogin(req.body)
+
+            this.response(response, res)
+        })
+
         this.listener.get('DB:accounts/find?id', async (req, res) => {
             const response = await this.queryRepository.findById(req.body)
 

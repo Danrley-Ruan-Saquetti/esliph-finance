@@ -38,9 +38,13 @@ export class AccountCreateUseCase extends UseCase<AccountCreateResponse, Account
 
         const { login, name, password } = argsValidate.getValue()
 
-        const accountWithLogin = await this.listenerRepository.get('DB:accounts/find?login', { login })
+        const accountWithLogin = await this.listenerRepository.get('DB:accounts/is-exists?login', { login })
 
-        if (accountWithLogin.isSuccess()) {
+        if (!accountWithLogin.isSuccess()) {
+            throw new BadRequestException({ title: 'Criar Conta', message: 'Não foi possível validar seu login. Por favor, tente novamente mais tarde' })
+        }
+
+        if (accountWithLogin.getValue()) {
             throw new BadRequestException({ title: 'Criar Conta', message: `Já existe uma conta com o login "${login}". Por Favor, escolha outro login` })
         }
 
