@@ -1,7 +1,7 @@
 import Bootstrap from './core/bootstrap'
 import { ListenerPublicClient } from './services/http'
 
-Bootstrap(process.env.ENV as any)
+Bootstrap()
 
 async function App() {
     const listener = new ListenerPublicClient()
