@@ -10,14 +10,14 @@ class ListenerClient<Events extends EventsModel> extends Client<Events> implemen
         super()
     }
 
-    initComponents() { }
+    initComponents() {}
 }
 
 @Inversion.Injectable('ListenerPublicClient')
 export class ListenerPublicClient extends ListenerClient<ApplicationEventsPublic> {
     constructor() {
         super()
-        this.use({ access: EVENT_CONTEXT.PUBLIC })
+        this.use({ access: EVENT_CONTEXT.PUBLIC, context: `Client:${EVENT_CONTEXT.PUBLIC}` })
     }
 }
 
@@ -25,7 +25,7 @@ export class ListenerPublicClient extends ListenerClient<ApplicationEventsPublic
 export class ListenerPrivateClient extends ListenerClient<ApplicationEventsPrivate> {
     constructor() {
         super()
-        this.use({ access: EVENT_CONTEXT.PRIVATE })
+        this.use({ access: EVENT_CONTEXT.PRIVATE, context: `Client:${EVENT_CONTEXT.PRIVATE}` })
     }
 }
 
@@ -33,6 +33,6 @@ export class ListenerPrivateClient extends ListenerClient<ApplicationEventsPriva
 export class ListenerRepositoryClient extends ListenerClient<ApplicationEventsDatabase> {
     constructor() {
         super()
-        this.use({ access: EVENT_CONTEXT.DATABASE })
+        this.use({ access: EVENT_CONTEXT.DATABASE, context: `Client:${EVENT_CONTEXT.DATABASE}` })
     }
 }
