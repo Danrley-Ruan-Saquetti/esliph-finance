@@ -1,15 +1,16 @@
-import { Inversion } from '../../../core/injection'
 import { Service } from '../../../common/service'
 import { AuthAuthorizationUseCase, AuthAuthorizationArgs } from './use-case/authorization'
 import { AuthLoginArgs, AuthLoginUseCase } from './use-case/login'
 
-@Inversion.Injectable('AuthService')
 export class AuthService extends Service {
-    constructor(
-        @Inversion.Inject('AuthLoginUseCase') private readonly authLoginUseCase: AuthLoginUseCase,
-        @Inversion.Inject('AuthAuthorizationUseCase') private readonly authAuthorizationUseCase: AuthAuthorizationUseCase
-    ) {
+    private readonly authLoginUseCase: AuthLoginUseCase
+    private readonly authAuthorizationUseCase: AuthAuthorizationUseCase
+
+    constructor() {
         super()
+
+        this.authLoginUseCase = new AuthLoginUseCase()
+        this.authAuthorizationUseCase = new AuthAuthorizationUseCase()
     }
 
     async login(args: AuthLoginArgs) {

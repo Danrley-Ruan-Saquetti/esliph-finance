@@ -1,11 +1,9 @@
-import { Inversion } from '../../../core/injection'
 import { Service } from '../../../common/service'
 import { CategoryCreateArgs, CategoryCreateUseCase, CategoryCreateArgsHeader } from './use-case/create'
 import { CategoryFindFirstArgs, CategoryFindFirstUseCase } from './use-case/query/find-first'
 import { CategoryFindManyUseCase } from './use-case/query/find-many'
 import { CategoryUpdateArgs, CategoryUpdateArgsHeader, CategoryUpdateUseCase } from './use-case/update'
 
-@Inversion.Injectable('CategoryService')
 export class CategoryService extends Service {
     private readonly createUseCase: CategoryCreateUseCase
     private readonly updateUseCase: CategoryUpdateUseCase

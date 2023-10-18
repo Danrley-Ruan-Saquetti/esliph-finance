@@ -4,7 +4,6 @@ import { z } from 'zod'
 import { ListenerRepositoryClient } from '../../../../../services/http'
 import { ZodValidateService } from '../../../../../services/formatter'
 import { BadRequestException } from '../../../../../common/exception/bad-request.exception'
-import { Inversion } from '../../../../../core/injection'
 import { Token } from '../../../../../services/token'
 
 const AuthLoginSchema = z.object({
@@ -15,10 +14,13 @@ const AuthLoginSchema = z.object({
 export type AuthLoginArgs = z.input<typeof AuthLoginSchema>
 export type AuthLoginResponse = { token: string }
 
-@Inversion.Injectable('AuthLoginUseCase')
 export class AuthLoginUseCase extends UseCase<AuthLoginResponse, AuthLoginArgs> {
-    constructor(@Inversion.Inject('ListenerRepositoryClient') private readonly listenerRepository: ListenerRepositoryClient) {
+    private readonly listenerRepository: ListenerRepositoryClient
+
+    constructor() {
         super()
+
+        this.listenerRepository = new ListenerRepositoryClient()
     }
 
     async perform(args: AuthLoginArgs) {

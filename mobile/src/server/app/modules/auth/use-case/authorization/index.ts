@@ -5,17 +5,15 @@ import { ZodValidateService } from '../../../../../services/formatter'
 import { UnauthorizedException } from '../../../../../common/exception'
 import { PayloadAuthorization } from '../../../../../@types/payload-authorization'
 import { BadRequestException } from '../../../../../common/exception/bad-request.exception'
-import { Inversion } from '../../../../../core/injection'
 import { Token } from '../../../../../services/token'
 
 const AuthAuthorizationSchema = z.object({
-    Authorization: z.string().optional().default('')
+    Authorization: z.string().optional().default(''),
 })
 
 export type AuthAuthorizationArgs = z.input<typeof AuthAuthorizationSchema>
 export type AuthAuthorizationResponse = PayloadAuthorization
 
-@Inversion.Injectable('AuthAuthorizationUseCase')
 export class AuthAuthorizationUseCase extends UseCase<AuthAuthorizationResponse, AuthAuthorizationArgs> {
     constructor() {
         super()
