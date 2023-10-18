@@ -3,7 +3,6 @@ import { AccountRepository } from '.'
 import { AccountSchema } from '../account.schema'
 import { DatabaseException } from '../../../../common/exception'
 import { Service } from '../../../../common/service'
-import { Inversion } from '../../../../core/injection'
 
 export type AccountQueryByNameRepository = { name: string }
 export type AccountQueryByLoginRepository = { login: string }
@@ -13,7 +12,6 @@ export type AccountQueryIsExistsRepositoryResponse = boolean
 export type AccountQueryOneRepositoryResponse = RepositoryEsliph.Document<AccountSchema>
 export type AccountQueryAllRepositoryResponse = RepositoryEsliph.Document<AccountSchema>[]
 
-@Inversion.Injectable('AccountQueryRepository')
 export class AccountQueryRepository extends Service {
     protected readonly repository: AccountRepository
 

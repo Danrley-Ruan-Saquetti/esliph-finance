@@ -6,7 +6,6 @@ import { UseCase } from '../../../../../common/use-case'
 import { AccountQueryOneRepositoryResponse } from '../../repository/query'
 import { AccountSchemaWithoutPassword } from '../../account.schema'
 import { BadRequestException } from '../../../../../common/exception/bad-request.exception'
-import { Inversion } from '../../../../../core/injection'
 
 const AccountFindFirstSchema = z
     .object({
@@ -18,7 +17,6 @@ const AccountFindFirstSchema = z
 export type AccountFindFirstArgs = z.input<typeof AccountFindFirstSchema>
 export type AccountFindFirstResponse = { account: RepositoryEsliph.Document<AccountSchemaWithoutPassword> }
 
-@Inversion.Injectable('AccountFindFirstUseCase')
 export class AccountFindFirstUseCase extends UseCase<AccountFindFirstResponse, AccountFindFirstArgs> {
     private readonly listenerRepository: ListenerRepositoryClient
 

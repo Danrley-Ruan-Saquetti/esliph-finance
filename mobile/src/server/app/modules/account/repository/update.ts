@@ -1,13 +1,11 @@
 import { AccountSchema } from '../account.schema'
 import { AccountRepository } from '.'
 import { Result } from '@esliph/util-node'
-import { Inversion } from '../../../../core/injection'
 import { Service } from '../../../../common/service'
 
 export type AccountUpdateRepositoryArgs = Partial<AccountSchema> & { id: number }
 export type AccountUpdateRepositoryResponse = { message: string }
 
-@Inversion.Injectable('AccountUpdateRepository')
 export class AccountUpdateRepository extends Service {
     private readonly updateRepository: AccountRepository
 

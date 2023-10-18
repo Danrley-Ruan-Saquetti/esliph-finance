@@ -4,7 +4,6 @@ import { ZodValidateService } from '../../../../../services/formatter'
 import { ListenerRepositoryClient } from '../../../../../services/http'
 import { UseCase } from '../../../../../common/use-case'
 import { BadRequestException } from '../../../../../common/exception/bad-request.exception'
-import { Inversion } from '../../../../../core/injection'
 
 const AccountUpdateSchema = z.object({
     name: z.string().trim().optional(),
@@ -15,7 +14,6 @@ export type AccountUpdateArgs = z.input<typeof AccountUpdateSchema>
 export type AccountUpdateArgsHeader = { accountId: number }
 export type AccountUpdateResponse = { message: string }
 
-@Inversion.Injectable('AccountUpdateUseCase')
 export class AccountUpdateUseCase extends UseCase<AccountUpdateResponse, AccountUpdateArgs> {
     private readonly listenerRepository: ListenerRepositoryClient
 

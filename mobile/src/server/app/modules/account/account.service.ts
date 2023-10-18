@@ -4,17 +4,20 @@ import { AccountCreateUseCase } from './use-case/create'
 import { AccountFindFirstArgs, AccountFindFirstUseCase } from './use-case/query/find-first'
 import { AccountFindManyUseCase } from './use-case/query/find-many'
 import { AccountUpdateUseCase, AccountUpdateArgs, AccountUpdateArgsHeader } from './use-case/update'
-import { Inversion } from '../../../core/injection'
 
-@Inversion.Injectable('AccountService')
 export class AccountService extends Service {
-    constructor(
-        @Inversion.Inject('AccountCreateUseCase') private readonly createUseCase: AccountCreateUseCase,
-        @Inversion.Inject('AccountUpdateUseCase') private readonly updateUseCase: AccountUpdateUseCase,
-        @Inversion.Inject('AccountFindFirstUseCase') private readonly queryFindOndeUseCase: AccountFindFirstUseCase,
-        @Inversion.Inject('AccountFindManyUseCase') private readonly queryAllUseCase: AccountFindManyUseCase,
-    ) {
+    private readonly createUseCase: AccountCreateUseCase
+    private readonly updateUseCase: AccountUpdateUseCase
+    private readonly queryFindOndeUseCase: AccountFindFirstUseCase
+    private readonly queryAllUseCase: AccountFindManyUseCase
+
+    constructor() {
         super()
+
+        this.createUseCase = new AccountCreateUseCase()
+        this.updateUseCase = new AccountUpdateUseCase()
+        this.queryFindOndeUseCase = new AccountFindFirstUseCase()
+        this.queryAllUseCase = new AccountFindManyUseCase()
     }
 
     async create(args: AccountCreateArgs) {

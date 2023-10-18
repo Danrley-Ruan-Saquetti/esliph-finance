@@ -4,14 +4,12 @@ import { ListenerRepositoryClient } from '../../../../../services/http'
 import { UseCase } from '../../../../../common/use-case'
 import { AccountSchemaWithoutPassword } from '../../account.schema'
 import { HttpException } from '../../../../../common/exception'
-import { Inversion } from '../../../../../core/injection'
 
 const AccountFindManySchema = z.object({})
 
 export type AccountFindManyArgs = z.input<typeof AccountFindManySchema>
 export type AccountFindManyResponse = { accounts: RepositoryEsliph.FindFirstResponse<AccountSchemaWithoutPassword>[] }
 
-@Inversion.Injectable('AccountFindManyUseCase')
 export class AccountFindManyUseCase extends UseCase<AccountFindManyResponse, AccountFindManyArgs> {
     private readonly listenerRepository: ListenerRepositoryClient
 

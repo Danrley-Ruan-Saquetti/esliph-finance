@@ -4,7 +4,6 @@ import { ZodValidateService } from '../../../../../services/formatter'
 import { ListenerRepositoryClient } from '../../../../../services/http'
 import { UseCase } from '../../../../../common/use-case'
 import { BadRequestException } from '../../../../../common/exception/bad-request.exception'
-import { Inversion } from '../../../../../core/injection'
 
 const AccountCreateSchema = z.object({
     name: z.string().trim().min(1, { message: 'O "Nome" é obrigatório' }).default(''),
@@ -20,7 +19,6 @@ const AccountCreateSchema = z.object({
 export type AccountCreateArgs = z.input<typeof AccountCreateSchema>
 export type AccountCreateResponse = { message: string }
 
-@Inversion.Injectable('AccountCreateUseCase')
 export class AccountCreateUseCase extends UseCase<AccountCreateResponse, AccountCreateArgs> {
     private readonly listenerRepository: ListenerRepositoryClient
 

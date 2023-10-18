@@ -1,10 +1,8 @@
 import { Server } from '@esliph/util-node'
 import { EventsModel } from '@esliph/util-node/dist/lib/http/controller/model'
 import { Service } from '../../../common/service'
-import { Inversion } from '../../../core/injection'
 import { EVENT_CONTEXT, ApplicationEventsDatabase, ApplicationEventsPrivate, ApplicationEventsPublic } from '../events'
 
-@Inversion.Injectable()
 class ListenerServer<Events extends EventsModel> extends Server<Events> implements Service {
     constructor() {
         super()
@@ -13,7 +11,6 @@ class ListenerServer<Events extends EventsModel> extends Server<Events> implemen
     initComponents() {}
 }
 
-@Inversion.Injectable('ListenerPublicServer')
 export class ListenerPublicServer extends ListenerServer<ApplicationEventsPublic> {
     constructor() {
         super()
@@ -21,7 +18,6 @@ export class ListenerPublicServer extends ListenerServer<ApplicationEventsPublic
     }
 }
 
-@Inversion.Injectable('ListenerPrivateServer')
 export class ListenerPrivateServer extends ListenerServer<ApplicationEventsPrivate> {
     constructor() {
         super()
@@ -29,7 +25,6 @@ export class ListenerPrivateServer extends ListenerServer<ApplicationEventsPriva
     }
 }
 
-@Inversion.Injectable('ListenerRepositoryServer')
 export class ListenerRepositoryServer extends ListenerServer<ApplicationEventsDatabase> {
     constructor() {
         super()
