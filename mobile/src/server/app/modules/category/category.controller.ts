@@ -2,14 +2,16 @@ import { ListenerPublicServer } from '../../../services/http'
 import { Controller } from '../../../common/controller'
 import { CategoryService } from './category.service'
 import { AuthorizationGuard } from '../auth/guards/authorization.guard'
-import { Inversion } from '../../../core/injection'
 
 export class CategoryController extends Controller {
-    constructor(
-        @Inversion.Inject('CategoryService') private readonly service: CategoryService,
-        @Inversion.Inject('ListenerPublicServer') private readonly listener: ListenerPublicServer,
-    ) {
+    private readonly service: CategoryService
+    private readonly listener: ListenerPublicServer
+
+    constructor() {
         super()
+
+        this.service = new CategoryService()
+        this.listener = new ListenerPublicServer()
     }
 
     initComponents() {

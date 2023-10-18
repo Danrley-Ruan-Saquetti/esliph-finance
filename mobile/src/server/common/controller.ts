@@ -1,7 +1,5 @@
 import { HttpStatusCodes, Result, ResultException, HttpEsliph } from '@esliph/util-node'
-import { Inversion } from '../core/injection'
 
-@Inversion.Injectable()
 export class Controller {
     initComponents() {
         throw new ResultException({ title: `Guard ${Controller.name}`, message: 'Method not implemented', status: HttpStatusCodes.NOT_IMPLEMENTED })
