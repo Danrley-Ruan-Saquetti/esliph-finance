@@ -30,3 +30,5 @@ async function App() {
 }
 
 App()
+
+export { Bootstrap }
