@@ -18,7 +18,14 @@ function exec(command = '') {
         console.log(stdout)
         console.error(stderr)
     })
+
+    console.log('COMPLETE\n')
 }
 
-exec(BASE_COMAND + dependenciesName)
-exec(BASE_COMAND + ' -D ' + devDependenciesName)
+dependenciesName.split(' ').forEach(cmd => {
+    exec(BASE_COMAND + cmd)
+})
+
+devDependenciesName.split(' ').forEach(cmd => {
+    exec(BASE_COMAND + ' -D ' + cmd)
+})
