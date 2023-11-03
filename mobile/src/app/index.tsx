@@ -2,7 +2,7 @@ import { Text, View } from 'react-native'
 import Bootstrap from '../server/core/bootstrap'
 import { useEffect } from 'react'
 
-Bootstrap()
+// Bootstrap()
 
 export default function App() {
     const bootstrap = () => {}
