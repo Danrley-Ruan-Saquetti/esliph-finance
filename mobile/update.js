@@ -1,5 +1,5 @@
-import fs from 'node:fs'
-import { execSync } from 'node:child_process'
+const fs = require('node:fs')
+const { execSync } = require('node:child_process')
 
 const pkg = JSON.parse(fs.readFileSync('./package.json', { encoding: 'utf-8' }))
 
