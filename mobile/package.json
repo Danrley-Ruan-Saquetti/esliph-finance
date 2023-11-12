@@ -16,9 +16,11 @@
     },
     "dependencies": {
         "@esliph/common": "^1.0.2",
+        "@esliph/console": "^1.0.3",
         "@esliph/decorator": "^1.0.2",
         "@esliph/http": "^1.0.2",
         "@esliph/injection": "^1.0.3",
+        "@esliph/module": "^1.0.0",
         "expo": "~49.0.15",
         "expo-constants": "^14.4.2",
         "expo-router": "^2.0.10",

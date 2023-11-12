@@ -1,7 +1,8 @@
 import { Text, View } from 'react-native'
-import { Bootstrap } from '@server/index'
+import { Bootstrap } from '@esliph/module'
+import { MainModule } from '@server/main.module'
 
-Bootstrap()
+Bootstrap(MainModule, { logLoad: true, logEventHttp: true, logEventListener: true })
 
 export default function App() {
     return (
