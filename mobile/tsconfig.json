@@ -12,23 +12,8 @@
       "@router/*": [
         "src/app/*"
       ],
-      "@assets/*": [
-        "./src/assets/*"
-      ],
-      "@common/*": [
-        "./src/common/*"
-      ],
-      "@server/*": [
-        "./src/server/*"
-      ],
-      "@components/*": [
-        "./src/components/*"
-      ],
-      "@services/*": [
-        "./src/services"
-      ],
-      "@util/*": [
-        "./src/util/*"
+      "@*": [
+        "./src/*"
       ],
     }
   },

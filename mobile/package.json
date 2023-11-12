@@ -15,10 +15,10 @@
         "submit:ios": "eas submit --platform ios"
     },
     "dependencies": {
-        "@esliph/common": "^1.0.1",
+        "@esliph/common": "^1.0.2",
         "@esliph/decorator": "^1.0.2",
-        "@esliph/http": "^1.0.0",
-        "@esliph/injection": "^1.0.0",
+        "@esliph/http": "^1.0.2",
+        "@esliph/injection": "^1.0.3",
         "expo": "~49.0.15",
         "expo-constants": "^14.4.2",
         "expo-router": "^2.0.10",

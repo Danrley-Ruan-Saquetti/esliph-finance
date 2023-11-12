@@ -11,7 +11,7 @@ class Controller {
     service: Service
 
     constructor() {
-        this.service = Injection.getInstance('Service')
+        this.service = Injection.resolve('Service')
     }
 
     // @Get('/hello')
