@@ -13,8 +13,9 @@ module.exports = function (api) {
                     '@components': './src/components',
                     '@services': './src/services',
                     '@util': './src/util',
+                    '@common': './src/common',
                 }
             }
-        ]],
+        ]]
     }
 }

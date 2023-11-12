@@ -10,10 +10,13 @@
     "baseUrl": ".",
     "paths": {
       "@router/*": [
-        "./src/app/*"
+        "src/app/*"
       ],
       "@assets/*": [
         "./src/assets/*"
+      ],
+      "@common/*": [
+        "./src/common/*"
       ],
       "@server/*": [
         "./src/server/*"

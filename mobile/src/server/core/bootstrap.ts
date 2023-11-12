@@ -1,8 +1,31 @@
-import { AppModule } from '../app/app.module'
-import { Application } from './app'
+// import { Get, Server, Request, Response } from '@esliph/http'
+import { Injection } from '@esliph/injection'
 
-export default function Bootstrap() {
-    const app = new Application(AppModule)
+@Injection.Injectable('Service')
+class Service {
 
-    app.initComponents()
+}
+
+@Injection.Injectable()
+class Controller {
+    service: Service
+
+    constructor() {
+        this.service = Injection.getInstance('Service')
+    }
+
+    // @Get('/hello')
+    // hello(req: Request) {
+    //     return req.body
+    // }
+}
+
+export function Bootstrap() {
+    const controller = Injection.resolve(Controller)
+
+    console.log(controller)
+
+    // const server = new Server<any>()
+
+    // server.get('/hello', { hello: 'Hello World' })
 }
