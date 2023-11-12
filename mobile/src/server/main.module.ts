@@ -1,7 +1,7 @@
-import { AppModule } from '@server/app/app.module'
 import { Module } from '@esliph/module'
-import { Logger } from './services/logger.service'
-import { JWTService } from './services/jwt.service'
+import { AppModule } from '@server/app/app.module'
+import { Logger } from '@server/services/logger.service'
+import { JWTService } from '@server/services/jwt.service'
 
 @Module({
     imports: [AppModule],
