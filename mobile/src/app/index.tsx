@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native'
 import { Bootstrap } from '@esliph/module'
-import { MainModule } from '@server/main.module'
 import { Injection } from '@esliph/injection'
+import { MainModule } from '@server/main.module'
 import { JWTService } from '@server/services/jwt.service'
 
 Injection.Clear()
