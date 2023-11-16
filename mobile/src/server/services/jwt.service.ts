@@ -51,14 +51,14 @@ export class JWTService {
         const now = new Date(Date.now())
 
         if (now > exp) {
-            throw new Error('Token expired')
+            throw new Error('Token expirado')
         }
     }
 
-    private async sign(data: any, secret: string) {
+    private async sign(payload: any, secret: string) {
         const key = await Crypto.digestStringAsync(
             Crypto.CryptoDigestAlgorithm.SHA256,
-            data + secret,
+            JSON.stringify({ payload, secret }),
             { encoding: Crypto.CryptoEncoding.BASE64 }
         )
 
