@@ -1,6 +1,7 @@
 import { Module } from '@esliph/module'
+import { AccountModule } from '@modules/account/account.module'
 
 @Module({
-    imports: []
+    imports: [AccountModule],
 })
-export class AppModule { }
+export class AppModule {}

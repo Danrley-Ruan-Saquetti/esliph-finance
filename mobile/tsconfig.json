@@ -1,21 +1,17 @@
 {
-  "compilerOptions": {
-    "forceConsistentCasingInFileNames": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "strict": true,
-    "types": [
-      "nativewind/types"
-    ],
-    "baseUrl": ".",
-    "paths": {
-      "@router/*": [
-        "src/app/*"
-      ],
-      "@*": [
-        "./src/*"
-      ],
-    }
-  },
-  "extends": "expo/tsconfig.base"
+    "compilerOptions": {
+        "forceConsistentCasingInFileNames": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "strict": true,
+        "types": ["nativewind/types"],
+        "baseUrl": ".",
+        "paths": {
+            "@router/*": ["src/app/*"],
+            "@*": ["./src/*"],
+            "@modules/*": ["./src/server/app/modules/*"],
+            "@@types/*": ["./src/server/@types/*"]
+        }
+    },
+    "extends": "expo/tsconfig.base"
 }
