@@ -1,25 +1,26 @@
 import { Service } from '@esliph/module'
-import crypto from 'crypto'
+import base64 from 'base-64'
+import * as Crypto from 'expo-crypto'
 
 @Service({ name: 'global.service.jwt' })
 export class JWTService {
-    encode(payload: { [x: string]: any }, config: { secret: string, exp: number }) {
+    async encode(payload: { [x: string]: any }, config: { secret: string, exp: number }) {
         const header = { alg: 'HS256', typ: 'JWT' }
-        const encodedHeader = this.base64urlEncode(JSON.stringify(header))
+        const encodedHeader = base64.encode(JSON.stringify(header))
 
         const nowInSeconds = new Date(Date.now()).getTime() / 1000
 
         payload.iat = nowInSeconds
         payload.exp = nowInSeconds + config.exp
 
-        const encodedPayload = this.base64urlEncode(JSON.stringify(payload))
+        const encodedPayload = base64.encode(JSON.stringify(payload))
 
-        const signature = this.sign(`${encodedHeader}.${encodedPayload}`, config.secret)
+        const signature = await this.sign(`${encodedHeader}.${encodedPayload}`, config.secret)
 
         return `${encodedHeader}.${encodedPayload}.${signature}`
     }
 
-    decode(token: string, secret: string) {
+    async decode(token: string, secret: string) {
         const parts = token.split('.')
         if (parts.length !== 3) {
             throw new Error('Token inválido')
@@ -30,33 +31,38 @@ export class JWTService {
         const signature = parts[2]
 
         const signedPart = `${encodedHeader}.${encodedPayload}`
-        const computedSignature = this.sign(signedPart, secret)
+        const computedSignature = await this.sign(signedPart, secret)
+
         if (this.base64urlUnescape(signature) !== this.base64urlUnescape(computedSignature)) {
             throw new Error('Assinatura inválida')
         }
 
-        const payload = JSON.parse(this.base64urlDecode(encodedPayload))
+        const payload = JSON.parse(base64.decode(encodedPayload))
+
+        if (payload.exp) {
+            this.validTimeStamp(payload.exp)
+        }
 
         return payload
     }
 
-    private base64urlEncode(data: any) {
-        return Buffer.from(data).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-    }
+    private validTimeStamp(time: number) {
+        const exp = new Date(time * 1000)
+        const now = new Date(Date.now())
 
-    private sign(data: any, secret: string) {
-        return crypto.createHmac('sha256', secret).update(data).digest('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-    }
-
-    private base64urlDecode(data: any) {
-        let base64String = data.replace(/-/g, '+').replace(/_/g, '/')
-        const padding = 4 - base64String.length % 4
-        if (padding !== 4) {
-            for (let i = 0; i < padding; i++) {
-                base64String += '='
-            }
+        if (now > exp) {
+            throw new Error('Token expired')
         }
-        return Buffer.from(base64String, 'base64').toString()
+    }
+
+    private async sign(data: any, secret: string) {
+        const key = await Crypto.digestStringAsync(
+            Crypto.CryptoDigestAlgorithm.SHA256,
+            data + secret,
+            { encoding: Crypto.CryptoEncoding.BASE64 }
+        )
+
+        return key.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
     }
 
     private base64urlUnescape(str: string) {
