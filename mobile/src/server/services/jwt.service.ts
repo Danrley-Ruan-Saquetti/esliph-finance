@@ -1,6 +1,6 @@
 import { Service } from '@esliph/module'
 import * as base64 from 'base-64'
-import * as Crypto from 'expo-crypto'
+import * as crypto from 'expo-crypto'
 
 export type PayloadJWT<PayloadBody extends object = {}> = PayloadBody & {
     iat: number
@@ -64,8 +64,8 @@ export class JWTService {
     }
 
     private async sign(payload: any, secret: string) {
-        const key = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, JSON.stringify({ payload, secret }), {
-            encoding: Crypto.CryptoEncoding.BASE64,
+        const key = await crypto.digestStringAsync(crypto.CryptoDigestAlgorithm.SHA256, JSON.stringify({ payload, secret }), {
+            encoding: crypto.CryptoEncoding.BASE64,
         })
 
         return key.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
