@@ -1,26 +1,31 @@
-# Levantamento de Requisitos (V1.0.9)
+# Levantamento de Requisitos (V1.1.0)
+
 ## Requisitos Funcionais
+
 O sistema deve permitir que o usuário mantenha as suas contas
 O sistema deve permitir que o usuário faça login
 O sistema deve permitir que o usuário mantenha as categorias
 O sistema deve permitir que o usuário marque uma categoria como favorita
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
+O sistema deve permitir que o usuário vincule as transações a categorias
+O sistema deve permitir que o usuário mantenha a liquidação dos pagamentos das transações financeiras
 O sistema deve permitir que o usuário marque para observar uma transação financeira
 O sistema deve permitir que o usuário duplique uma transação financeira
-O sistema deve gerenciar e permitir que o usuário mantenha as situações das suas transações financeiras
+O sistema deve gerenciar o controle de fluxo das situações das transações financeiras
 O sistema deve permitir que o usuário mantenha as notas das transações financeiras
 O sistema deve permitir o controle de mídias anexadas
 O sistema deve permitir o envio de notificações
-O sistema deve permitir a emissão de relatórios mensais
+O sistema deve permitir a emissão de relatórios
 
-# Requisitos Não Funcionais
+## Requisitos Não Funcionais
+
 O sistema deve ser feito em ambiente mobile
 O sistema deve ser feito usando React Native
 O sistema deve rodar em segundo plano para controle de data e hora das transações
 O repositório de dados deve ser mantido no dispositivo do usuário
 O sistema não deve ter dependência com a internet
 A emissão de relatório pode ser feito em PDF ou JPG
-O sistema de login para se autenticar deve ser por Login e Senha, Digital ou Facial
+O sistema de login para se autenticar deve ser por Email e Senha, Digital ou Facial
 Em um dispositivo pode haver várias contas
 Os dados confidenciais devem ser armazenados e transmitidos de forma criptografada
 O aplicativo deve proteger-se contra ataques de injeção de SQL, validando e sanitizando todas as entradas de dados do usuário
@@ -30,13 +35,28 @@ Implemente um sistema de controle de acesso para garantir que os usuários tenha
 Mantenha cópias de backup dos dados críticos e estabeleça um plano de recuperação de desastres
 
 ## Regras de Negócio
-O cadastro de conta deve conter: Nome; login e senha
 
-O login da conta deve ser única
+### O sistema deve permitir que o usuário mantenha as suas contas
+
+O cadastro de conta deve conter: nome; email e senha
+
+O email da conta deve ser único
+
+### O sistema deve permitir que o usuário faça email
 
 O usuário só pode estar autenticado em uma conta por vez
 
-O cadastro da Categoria deve conter: o nome; a ordem; é favorito; cor de destaque
+### O sistema deve permitir que o usuário mantenha as categorias
+
+O cadastro da Categoria deve conter: o nome; é favorito; cor de destaque
+
+### O sistema deve permitir que o usuário marque uma categoria como favorita
+
+Ao marcar uma categoria como favorita, a mesma deve aparecer como umas das principais opções
+
+### O sistema deve permitir que o usuário mantenha as suas transações financeiras
+
+Para cadastrar uma Transação Financeira é necessário: o título da transação; descrição; data e hora do vencimento da transação; data e hora da competência da transação; o valor; tipo da transação; tipo de ocorrência; situação; anexos de mídias; grau de prioridade; se deseja enviar uma notificação de alerta de vencimento; se deseja observa-la
 
 As Transações Financeiras podem ser do tipo: Despesa ou Renda
 
@@ -44,17 +64,25 @@ As Transações Financeiras podem ter ocorrência do tipo: Única ou Programáti
 
 A situação de uma Transação Financeira pode ser: Pendente; Atrasado; Cancelado; Feito
 
-Para cadastrar uma Transação Financeira é necessário: o título da transação; descrição; data e hora limite da transação; o valor; seu tipo (Despesa ou Renda); as categorias; tipo de ocorrência; situação; anexos de mídias; grau de prioridade; se deseja enviar uma notificação de alerta; se deseja observa-la
-
 Para cadastrar uma transação do tipo Despesa, é necessário: nome do recebedor
 
 Para cadastrar uma transação do tipo Renda, é necessário: nome do remetente
 
+### O sistema deve permitir que o usuário vincule as transações a categorias
+
+Para cada Transação Financeira, o usuário pode vincula-lo a várias categorias
+
+### O sistema deve permitir que o usuário mantenha as notas das transações financeiras
+
 Para adicionar uma nota numa Transação Financeira, deve-se informar: a descrição da nota
+
+### O sistema deve gerenciar e permitir que o usuário mantenha as situações das suas transações financeiras
 
 Toda Transação Financeira do tipo Despesa, cuja a data atual ultrapasse a data da transação então a sua situação fica como Atrasado, caso contrário a sua situação fica como Pendente
 
 O usuário pode definir a situação das Transações Financeiras para Cancelado ou Feito a qualquer momento
+
+### O sistema deve permitir que o usuário duplique uma transação financeira
 
 A duplicação de uma Transação Financeira pode ser feito escolhendo uma Transação Financeira já cadastrada, podendo alterar qualquer dado antes de confirmar a duplicação
 
@@ -68,7 +96,7 @@ Deve ser enviado uma notificação 24h antes da situação da Transação Financ
 
 A consulta de Categorias pode ser feito pelos dados: seu nome, se é favorito
 
-A consulta de Transações Financeiras pode ser feito pelos dados: o título da transação; data e hora limite da transação; o valor; seu tipo (Despesa ou Renda); as categorias; tipo de ocorrência; situação; grau de prioridade; possui uma notificação de alerta
+A consulta de Transações Financeiras pode ser feito pelos dados: o título da transação; data e hora do vencimento da transação; data e hora da competência da transação; o valor; seu tipo (Despesa ou Renda); as categorias; tipo de ocorrência; situação; grau de prioridade; possui uma notificação de alerta
 
 O relatório deve conter: cada valor de entrada e saída movimentado, junto a data e hora da movimentação e ao final deve mostrar o valor total de entrada, total de saída e lucro total
 
