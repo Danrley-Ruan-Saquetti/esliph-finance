@@ -166,6 +166,8 @@ Todos os dados: categorias, transações financeiras e mídias devem ser vincula
 
 O envio de notificação deve conter: o assunto; o conteúdo; o tipo da notificação; se foi lida
 
+Toda Notificação criada, a mesma iniciará como não lida
+
 Os tipos da Notificação são: Interna, Push
 
 ### O sistema deve enviar uma notificação com aviso prévio antes de uma transação financeira fique como atrasada
