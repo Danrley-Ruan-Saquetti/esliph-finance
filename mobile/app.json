@@ -1,38 +1,49 @@
 {
-    "expo": {
-        "name": "portal-finance",
-        "slug": "portal-finance",
-        "scheme": "portal-finance",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./src/assets/icon.png",
-        "jsEngine": "hermes",
-        "userInterfaceStyle": "light",
-        "splash": {
-            "image": "./src/assets/splash.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#ffffff"
-        },
-        "assetBundlePatterns": [
-            "**/*"
-        ],
-        "plugins": [
-            "expo-router"
-        ],
-        "experiments": {
-            "tsconfigPaths": true
-        },
-        "ios": {
-            "supportsTablet": true
-        },
-        "android": {
-            "adaptiveIcon": {
-                "foregroundImage": "./src/assets/adaptive-icon.png",
-                "backgroundColor": "#ffffff"
-            }
-        },
-        "web": {
-            "favicon": "./src/assets/favicon.png"
-        }
+  "expo": {
+    "name": "portal-finance",
+    "slug": "portal-finance",
+    "scheme": "portal-finance",
+    "owner": "esliph",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/icon.png",
+    "jsEngine": "hermes",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./src/assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "tsconfigPaths": true
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "versionCode": 2,
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.esliph.portalfinance"
+    },
+    "web": {
+      "favicon": "./src/assets/favicon.png"
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "c5a75c69-7d3a-4901-8421-6a74a82a7176"
+      }
     }
+  }
 }
