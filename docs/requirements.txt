@@ -53,11 +53,11 @@ O cadastro da Categoria deve conter: o nome; é favorito; cor de destaque
 
 ### O sistema deve permitir que o usuário marque uma categoria como favorita
 
-Ao marcar uma categoria como favorita, a mesma deve aparecer como umas das principais opções
+Ao marcar uma categoria como favorita, a mesma deve aparecer como umas das principais opções de qualquer escolhas nos campos
 
 ### O sistema deve permitir que o usuário mantenha as suas transações financeiras
 
-Para cadastrar uma Transação Financeira é necessário: o título da transação; descrição; data e hora do vencimento da transação; data e hora da competência da transação; o valor; tipo da transação; tipo de ocorrência; situação; anexos de mídias; grau de prioridade; se deseja enviar uma notificação de alerta de vencimento; se deseja observa-la
+Para cadastrar uma Transação Financeira é necessário: o título da transação; descrição; data e hora da expiração da transação; data e hora da competência da transação; o valor; tipo da transação; tipo de ocorrência; situação; anexos de mídias; grau de prioridade; se deseja enviar uma notificação de alerta de vencimento; se deseja observa-la
 
 As Transações Financeiras podem ser do tipo: Despesa ou Renda
 
