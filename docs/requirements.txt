@@ -8,7 +8,8 @@ O sistema deve permitir que o usuário mantenha as categorias
 O sistema deve permitir que o usuário marque uma categoria como favorita
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
 O sistema deve permitir que o usuário vincule as transações a categorias
-O sistema deve permitir que o usuário mantenha a liquidação dos pagamentos das transações financeiras
+O sistema deve permitir que o usuário mantenha os pagamentos das transações financeiras
+O sistema deve permitir que o usuário efetue a liquidação das transações financeiras
 O sistema deve permitir que o usuário marque para observar uma transação financeira
 O sistema deve permitir que o usuário duplique uma transação financeira
 O sistema deve gerenciar o controle de fluxo das situações das transações financeiras
@@ -62,15 +63,27 @@ As Transações Financeiras podem ser do tipo: Despesa ou Renda
 
 As Transações Financeiras podem ter ocorrência do tipo: Única ou Programática
 
-A situação de uma Transação Financeira pode ser: Pendente; Atrasado; Cancelado; Feito
+A situação de uma Transação Financeira pode ser: Pendente; Pago; Pago Parcialmente; Atrasado; Cancelado
 
 Para cadastrar uma transação do tipo Despesa, é necessário: nome do recebedor
 
 Para cadastrar uma transação do tipo Renda, é necessário: nome do remetente
 
+### O sistema deve permitir que o usuário mantenha os pagamentos das transações financeiras
+
+O pagamento deve conter: o valor do pagamento; desconto; data e hora do pagamento
+
+### O sistema deve permitir que o usuário efetue a liquidação das transações financeiras
+
+Ao liquidar uma transação, o valor da mesma deve ser menor ou igual ao valor da transação
+
+Caso o valor da liquidação seja menor, a situação da Transação Financeira passa a ser Pago Parcialmente
+
+Quando a soma de todas as liquidações menos de todos os descontos forem igual ao valor da Transação Financeira, a mesma passará a situação para Pago
+
 ### O sistema deve permitir que o usuário vincule as transações a categorias
 
-Para cada Transação Financeira, o usuário pode vincula-lo a várias categorias
+Para cada Transação Financeira, o usuário pode vincula-lo a várias categorias previamente cadastradas
 
 ### O sistema deve permitir que o usuário mantenha as notas das transações financeiras
 
