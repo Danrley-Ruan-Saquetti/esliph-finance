@@ -1,9 +1,10 @@
-# Levantamento de Requisitos (V1.1.1)
+# Levantamento de Requisitos (V1.1.2)
 
 ## Requisitos Funcionais
 
 O sistema deve permitir que o usuário mantenha as suas contas
 O sistema deve permitir que o usuário faça login
+O sistema deve permitir que o usuário recupere a sua conta
 O sistema deve permitir que o usuário mantenha as categorias
 O sistema deve permitir que o usuário marque uma categoria como favorita
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
@@ -23,6 +24,7 @@ O sistema deve permitir o envio de notificações
 O sistema deve enviar uma notificação com aviso prévio antes de uma transação financeira fique como atrasada
 O sistema deve enviar uma notificação quando uma transação financeira fica atrasada
 O sistema deve enviar uma notificação interna quando ocorre algum erro síncrono do sistema
+O sistema deve permitir o envio de email
 O sistema deve permitir que o usuário marque as notificações internas como lida
 
 ## Requisitos Não Funcionais
@@ -34,6 +36,8 @@ O repositório de dados deve ser mantido no dispositivo do usuário
 O sistema não deve ter dependência com a internet
 A emissão de relatório pode ser feito em PDF ou JPG
 O sistema de login para se autenticar deve ser por Email e Senha, Digital ou Facial
+O email informado no cadastro deve ser um email valido
+A estratégia de autenticação a ser usada deve ser JWT
 Em um dispositivo pode haver várias contas
 Os dados confidenciais devem ser armazenados e transmitidos de forma criptografada
 O aplicativo deve proteger-se contra ataques de injeção de SQL, validando e sanitizando todas as entradas de dados do usuário
@@ -43,18 +47,25 @@ Implemente um sistema de controle de acesso para garantir que os usuários tenha
 Mantenha cópias de backup dos dados críticos e estabeleça um plano de recuperação de desastres
 As mídias permitidas são: JPG; JPEG; PNG; PDF
 O sistema deve verificar se há Transações programáticas todos os dias, em um horário configurável
+A recueração de senha de uma conta deve seguir a estratégia de "autenticação de dois fatores" (A2F)
+O envio do código de recuperação de senha deve ser enviado via email
+O código deve ter um tempo de expiração de 15 minutos
 
 ## Regras de Negócio
 
 ### O sistema deve permitir que o usuário mantenha as suas contas
 
-O cadastro de conta deve conter: nome; email e senha
+O cadastro de conta deve conter: nome; email; senha
 
 O email da conta deve ser único
 
 ### O sistema deve permitir que o usuário faça login
 
 O usuário só pode estar autenticado em uma conta por vez
+
+### O sistema deve permitir que o usuário recupere a sua conta
+
+Para recuperar a conta, o sistema deve enviar um código ao usuário que permitirá que o mesmo refaça uma nova senha para a conta
 
 ### O sistema deve permitir que o usuário mantenha as categorias
 
@@ -168,7 +179,7 @@ O envio de notificação deve conter: o assunto; o conteúdo; o tipo da notifica
 
 Toda Notificação criada, a mesma iniciará como não lida
 
-Os tipos da Notificação são: Interna, Push
+Os tipos da Notificação são: Interna; Push; Mail
 
 ### O sistema deve enviar uma notificação com aviso prévio antes de uma transação financeira fique como atrasada
 
@@ -185,3 +196,7 @@ Quando ocorrer um erro interno em qualquer processo do sistema deve ser emitido 
 ### O sistema deve permitir que o usuário marque as notificações internas como lida
 
 O usuário pode marcar toda e qualquer notificação do tipo Interna como lida
+
+### O sistema deve permitir o envio de email
+
+O envio de email deve conter: o email do destinatário
