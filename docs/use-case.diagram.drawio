@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-11-23T11:24:50.084Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 OPR/104.0.0.0" etag="wZXVioJEZjVtzkZOPUKb" version="22.1.3" type="github">
+<mxfile host="app.diagrams.net" modified="2023-11-23T11:45:36.657Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 OPR/104.0.0.0" etag="-XTvoKbHcpiAlpSQcNU8" version="22.1.3" type="github">
   <diagram name="Página-1" id="0_DiLKsLMHJAqkCnHoMm">
-    <mxGraphModel dx="2046" dy="696" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2568" dy="994" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -144,6 +144,9 @@
         </mxCell>
         <mxCell id="b8jXtvzzi0fBcoB_L3CN-16" value="Usuário" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
           <mxGeometry x="-240" y="615" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="yilj7VfgWse3Skz_e7k4-3" value="Consultar Próxima Data da Duplicação da Transação Financeira" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1794" y="405" width="154" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
