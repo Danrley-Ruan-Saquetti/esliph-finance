@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-11-23T11:56:25.028Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 OPR/104.0.0.0" etag="SuoVMiJNIsAMvWsA7t1s" version="22.1.3" type="github">
+<mxfile host="app.diagrams.net" modified="2023-11-23T12:01:48.672Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 OPR/104.0.0.0" etag="zcNF0RhiDuhq8wspHLA7" version="22.1.3" type="github">
   <diagram name="Página-1" id="0_DiLKsLMHJAqkCnHoMm">
-    <mxGraphModel dx="2568" dy="994" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2110" dy="733" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -27,15 +27,6 @@
         <mxCell id="f0Jf9Pf7vCraimB9YkaR-3" value="Anexar Mídia à Transação Financeira" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1621" y="280" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="VWrTSUjw16DK-F-tD3xL-3" value="Marcar como Favorita" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="1981" y="40" width="140" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="VWrTSUjw16DK-F-tD3xL-4" value="Vincular Transação Financeira as Categorias" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="2321" y="40" width="140" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="VWrTSUjw16DK-F-tD3xL-7" value="Consultar Quanto Falta a ser Liquidado a Transação Financeira" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="1786" y="140" width="170" height="90" as="geometry" />
-        </mxCell>
         <mxCell id="VWrTSUjw16DK-F-tD3xL-9" value="Observar Transação Financeira" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1981" y="150" width="140" height="70" as="geometry" />
         </mxCell>
@@ -58,7 +49,7 @@
           <mxGeometry x="1250" y="400" width="170" height="90" as="geometry" />
         </mxCell>
         <mxCell id="VWrTSUjw16DK-F-tD3xL-17" value="&#xa;Sistema - Portal Financeiro" style="swimlane;startSize=0;" parent="1" vertex="1">
-          <mxGeometry x="-106" y="50" width="975" height="1190" as="geometry" />
+          <mxGeometry x="-106" y="50" width="974" height="1190" as="geometry" />
         </mxCell>
         <mxCell id="b8jXtvzzi0fBcoB_L3CN-21" value="Manter Contas" style="ellipse;whiteSpace=wrap;html=1;" parent="VWrTSUjw16DK-F-tD3xL-17" vertex="1">
           <mxGeometry x="46" y="560" width="140" height="70" as="geometry" />
@@ -78,48 +69,64 @@
         <mxCell id="f0Jf9Pf7vCraimB9YkaR-2" value="Manter as Notas da Transação Financeira" style="ellipse;whiteSpace=wrap;html=1;" parent="VWrTSUjw16DK-F-tD3xL-17" vertex="1">
           <mxGeometry x="726" y="560" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="VWrTSUjw16DK-F-tD3xL-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="VWrTSUjw16DK-F-tD3xL-17" source="VWrTSUjw16DK-F-tD3xL-2" target="VWrTSUjw16DK-F-tD3xL-26" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
         <mxCell id="VWrTSUjw16DK-F-tD3xL-2" value="Recuperar Conta" style="ellipse;whiteSpace=wrap;html=1;" parent="VWrTSUjw16DK-F-tD3xL-17" vertex="1">
           <mxGeometry x="46" y="290" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="VWrTSUjw16DK-F-tD3xL-26" value="Enviar Código para Recuperação de Senha" style="ellipse;whiteSpace=wrap;html=1;" parent="VWrTSUjw16DK-F-tD3xL-17" vertex="1">
-          <mxGeometry x="246" y="290" width="140" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="yilj7VfgWse3Skz_e7k4-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="VWrTSUjw16DK-F-tD3xL-17" source="VWrTSUjw16DK-F-tD3xL-8" target="VWrTSUjw16DK-F-tD3xL-6">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="266" y="745" as="targetPoint" />
-          </mxGeometry>
+          <mxGeometry x="306" y="290" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="VWrTSUjw16DK-F-tD3xL-8" value="Liquidar Transação Financeira" style="ellipse;whiteSpace=wrap;html=1;" parent="VWrTSUjw16DK-F-tD3xL-17" vertex="1">
           <mxGeometry x="46" y="710" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="yilj7VfgWse3Skz_e7k4-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="VWrTSUjw16DK-F-tD3xL-17" source="VWrTSUjw16DK-F-tD3xL-6" target="yilj7VfgWse3Skz_e7k4-6">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
         <mxCell id="VWrTSUjw16DK-F-tD3xL-6" value="Consultar Liquidação da Transação Financeira" style="ellipse;whiteSpace=wrap;html=1;" parent="VWrTSUjw16DK-F-tD3xL-17" vertex="1">
-          <mxGeometry x="246" y="710" width="140" height="70" as="geometry" />
+          <mxGeometry x="46" y="870" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="yilj7VfgWse3Skz_e7k4-6" value="Verificar se foi Liquidada" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="VWrTSUjw16DK-F-tD3xL-17">
-          <mxGeometry x="446" y="710" width="140" height="70" as="geometry" />
+          <mxGeometry x="266" y="710" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="yilj7VfgWse3Skz_e7k4-8" value="Definir Transação Financeira como Pago" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="VWrTSUjw16DK-F-tD3xL-17">
-          <mxGeometry x="716" y="660" width="140" height="70" as="geometry" />
+          <mxGeometry x="536" y="656" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="yilj7VfgWse3Skz_e7k4-21" value="Definir Transação Financeira como Pago Parcialmente" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="VWrTSUjw16DK-F-tD3xL-17">
-          <mxGeometry x="716" y="768" width="140" height="70" as="geometry" />
+          <mxGeometry x="536" y="764" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="yilj7VfgWse3Skz_e7k4-25" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="VWrTSUjw16DK-F-tD3xL-17" source="yilj7VfgWse3Skz_e7k4-21" target="yilj7VfgWse3Skz_e7k4-6">
           <mxGeometry width="160" relative="1" as="geometry">
-            <mxPoint x="506" y="830" as="sourcePoint" />
-            <mxPoint x="666" y="830" as="targetPoint" />
+            <mxPoint x="326" y="826" as="sourcePoint" />
+            <mxPoint x="486" y="826" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="yilj7VfgWse3Skz_e7k4-26" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="VWrTSUjw16DK-F-tD3xL-17" source="yilj7VfgWse3Skz_e7k4-8" target="yilj7VfgWse3Skz_e7k4-6">
           <mxGeometry width="160" relative="1" as="geometry">
-            <mxPoint x="596" y="744.8" as="sourcePoint" />
-            <mxPoint x="756" y="744.8" as="targetPoint" />
+            <mxPoint x="416" y="740.8" as="sourcePoint" />
+            <mxPoint x="576" y="740.8" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VWrTSUjw16DK-F-tD3xL-3" value="Marcar Categoria como Favorita" style="ellipse;whiteSpace=wrap;html=1;" parent="VWrTSUjw16DK-F-tD3xL-17" vertex="1">
+          <mxGeometry x="46" y="170" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="VWrTSUjw16DK-F-tD3xL-4" value="Vincular Transação Financeira as Categorias" style="ellipse;whiteSpace=wrap;html=1;" parent="VWrTSUjw16DK-F-tD3xL-17" vertex="1">
+          <mxGeometry x="46" y="50" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="VWrTSUjw16DK-F-tD3xL-7" value="Consultar Quanto Falta a ser Liquidado a Transação Financeira" style="ellipse;whiteSpace=wrap;html=1;" parent="VWrTSUjw16DK-F-tD3xL-17" vertex="1">
+          <mxGeometry x="31" y="1020" width="170" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="yilj7VfgWse3Skz_e7k4-29" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="VWrTSUjw16DK-F-tD3xL-17" source="VWrTSUjw16DK-F-tD3xL-2" target="VWrTSUjw16DK-F-tD3xL-26">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="286" y="430.0000000000001" as="sourcePoint" />
+            <mxPoint x="446" y="430.0000000000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="yilj7VfgWse3Skz_e7k4-33" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="VWrTSUjw16DK-F-tD3xL-17" source="VWrTSUjw16DK-F-tD3xL-8" target="VWrTSUjw16DK-F-tD3xL-6">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="216" y="720.0000000000001" as="sourcePoint" />
+            <mxPoint x="376" y="720.0000000000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="yilj7VfgWse3Skz_e7k4-34" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="VWrTSUjw16DK-F-tD3xL-17" source="VWrTSUjw16DK-F-tD3xL-8" target="yilj7VfgWse3Skz_e7k4-6">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="201" y="790" as="sourcePoint" />
+            <mxPoint x="201" y="880" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="VWrTSUjw16DK-F-tD3xL-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="b8jXtvzzi0fBcoB_L3CN-16" target="b8jXtvzzi0fBcoB_L3CN-18" edge="1">
@@ -168,6 +175,34 @@
             <mxPoint x="-225" y="680" as="sourcePoint" />
             <Array as="points">
               <mxPoint x="-225" y="795" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="yilj7VfgWse3Skz_e7k4-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="b8jXtvzzi0fBcoB_L3CN-16" target="VWrTSUjw16DK-F-tD3xL-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-225" y="255" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="yilj7VfgWse3Skz_e7k4-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="b8jXtvzzi0fBcoB_L3CN-16" target="VWrTSUjw16DK-F-tD3xL-4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-225" y="135" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="yilj7VfgWse3Skz_e7k4-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="b8jXtvzzi0fBcoB_L3CN-16" target="VWrTSUjw16DK-F-tD3xL-6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-225" y="955" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="yilj7VfgWse3Skz_e7k4-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="b8jXtvzzi0fBcoB_L3CN-16" target="VWrTSUjw16DK-F-tD3xL-7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-225" y="1115" />
             </Array>
           </mxGeometry>
         </mxCell>
