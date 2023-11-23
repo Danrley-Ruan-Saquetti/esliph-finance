@@ -16,6 +16,7 @@ O sistema deve permitir que o usuário efetue a liquidação das transações fi
 O sistema deve permitir que o usuário marque para observar uma transação financeira
 O sistema deve permitir que o usuário duplique uma transação financeira
 O sistema deve replicar as transações financeiras que são programáticas na hora configurada
+O sistema deve calcular a próxima data da transação financeira a ser replicada
 O sistema deve gerenciar o controle de fluxo das situações das transações financeiras
 O sistema deve permitir que o usuário mantenha as notas das transações financeiras
 O sistema deve permitir que o usuário mantenha os anexos
@@ -152,6 +153,10 @@ As Transações Financeiras que são gravadas por ocorrência Programática, ter
 Toda vez que for repetido uma Transação Programática, a quantidade de ocorrências repetidas da Transação Original somará mais 1
 
 Quando a Transação Financeira tiver a quantidade de ocorrências repetidas igual a vezes à repetir, então a mesma não poderá mais repetir
+
+### O sistema deve calcular a próxima data da transação financeira a ser replicada
+
+A próxima data que será replicado uma Transação Financeira
 
 ### O sistema deve gerenciar o controle de fluxo das situações das transações financeiras
 
