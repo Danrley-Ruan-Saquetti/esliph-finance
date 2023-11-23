@@ -15,8 +15,8 @@ O sistema deve calcular quanto que falta a ser liquidado em uma transação
 O sistema deve permitir que o usuário efetue a liquidação das transações financeiras
 O sistema deve permitir que o usuário marque para observar uma transação financeira
 O sistema deve permitir que o usuário duplique uma transação financeira
-O sistema deve replicar as transações financeiras que são programáticas na hora configurada
-O sistema deve calcular a próxima data da transação financeira a ser replicada
+O sistema deve duplicar as transações financeiras que são programáticas na hora configurada
+O sistema deve calcular a próxima data da transação financeira a ser duplicada
 O sistema deve gerenciar o controle de fluxo das situações das transações financeiras
 O sistema deve permitir que o usuário mantenha as notas das transações financeiras
 O sistema deve permitir que o usuário mantenha os anexos
@@ -126,7 +126,7 @@ Para adicionar uma nota numa Transação Financeira, deve-se informar: a descri�
 
 A duplicação de uma Transação Financeira pode ser feito escolhendo uma Transação Financeira já cadastrada, podendo alterar qualquer dado antes de confirmar a nova Transação Financeira duplicada
 
-### O sistema deve replicar as transações financeiras que são programáticas na hora configurada
+### O sistema deve duplicar as transações financeiras que são programáticas na hora configurada
 
 Transações Financeiras com ocorrência diária, deve ser registrado uma nova Transação todos os dias, partindo da data da competência
 
@@ -154,9 +154,9 @@ Toda vez que for repetido uma Transação Programática, a quantidade de ocorrê
 
 Quando a Transação Financeira tiver a quantidade de ocorrências repetidas igual a vezes à repetir, então a mesma não poderá mais repetir
 
-### O sistema deve calcular a próxima data da transação financeira a ser replicada
+### O sistema deve calcular a próxima data da transação financeira a ser duplicada
 
-A próxima data que será replicado uma Transação Financeira
+A próxima data que será duplicada uma Transação Financeira será será o período da duplicação vezes a quantidade de vezes já duplicadas somado a data da compensação da Transação
 
 ### O sistema deve gerenciar o controle de fluxo das situações das transações financeiras
 
