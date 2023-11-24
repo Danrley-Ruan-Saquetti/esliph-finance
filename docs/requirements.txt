@@ -87,7 +87,7 @@ No cadastro da Transação, caso não tenha sido informado a data e hora da comp
 
 As Transações Financeiras podem ser do tipo: Despesa ou Renda
 
-A situação de uma Transação Financeira pode ser: Pendente; Pago; Pago Parcialmente; Atrasado; Cancelado
+A situação de uma Transação Financeira pode ser: Pendente; Pago; Pago Parcialmente; Recebido; Recebido Parcialmente; Atrasado; Cancelado
 
 Para cadastrar uma transação do tipo Despesa, é necessário: nome do recebedor
 
@@ -174,7 +174,11 @@ Quando é liquidado uma Transação Financeira e o valor total liquidado da mesm
 
 Quando é liquidado uma Transação Financeira e o valor total liquidado da mesma for igual ao valor da Transação, a mesma passará a situação para Pago
 
-O usuário pode definir a situação das Transações Financeiras para Cancelado ou Feito a qualquer momento
+Quando é recebido uma Transação Financeira e o valor total recebido da mesma for menor ao valor da Transação, a situação da Transação Financeira passa a ser Recebido Parcialmente
+
+Quando é recebido uma Transação Financeira e o valor total recebido da mesma for igual ao valor da Transação, a mesma passará a situação para Recebido
+
+O usuário pode definir a situação das Transações Financeiras para Cancelado a qualquer momento
 
 ### O sistema deve permitir que o usuário mantenha os anexos
 
