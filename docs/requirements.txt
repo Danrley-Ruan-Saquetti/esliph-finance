@@ -10,9 +10,12 @@ O sistema deve permitir que o usuário marque uma categoria como favorita
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
 O sistema deve permitir que o usuário vincule as transações a categorias
 O sistema deve permitir que o usuário mantenha os pagamentos das transações financeiras
-O sistema deve calcular quanto que já foi liquidado em uma transação
-O sistema deve calcular quanto que falta a ser liquidado em uma transação
-O sistema deve permitir que o usuário efetue a liquidação das transações financeiras
+O sistema deve calcular quanto que já foi liquidado em uma transação de despeza
+O sistema deve calcular quanto que já foi recebido em uma transação de renda
+O sistema deve calcular quanto que falta a ser liquidado em uma transação de despeza
+O sistema deve calcular quanto que falta a ser recebido em uma transação de renda
+O sistema deve permitir que o usuário efetue a liquidação das transações financeiras de despeza
+O sistema deve permitir que o usuário efetue o recebimento das transações financeiras de renda
 O sistema deve permitir que o usuário marque para observar uma transação financeira
 O sistema deve permitir que o usuário duplique uma transação financeira
 O sistema deve duplicar as transações financeiras que são programáticas na hora configurada
@@ -98,21 +101,24 @@ Ocorrências do tipo Programática são ocorrência que pode repetir uma vez por
 
 ### O sistema deve permitir que o usuário mantenha os pagamentos das transações financeiras
 
-O pagamento deve conter: o valor do pagamento; desconto; data e hora do pagamento
+O pagamento deve conter: o valor do pagamento; desconto, acréscimo; data e hora do pagamento
 
-O valor do pagamento não deve ser maior ao valor que falta liquidar da Transação Financeira
+O valor do pagamento não deve ser maior ao valor que falta liquidar/receber da Transação Financeira
 
-### O sistema deve permitir que o usuário efetue a liquidação das transações financeiras
+### O sistema deve permitir que o usuário efetue a liquidação das transações financeiras de despeza
+### O sistema deve permitir que o usuário efetue o recebimento das transações financeiras de renda
 
-Ao liquidar uma transação, o valor da mesma deve ser menor ou igual ao valor da transação
+Para liquidar/receber uma transação, o valor da mesma deve ser menor ou igual ao valor total que falta a ser liquidado/receber
 
-### O sistema deve calcular quanto que já foi liquidado em uma transação
+### O sistema deve calcular quanto que já foi liquidado em uma transação de despeza
+### O sistema deve calcular quanto que já foi recebido em uma transação de renda
 
-O valor total liquidado em uma Transação Financeira é a soma de todas os valores da liquidação da Transação e subtrair pela soma de todos os descontos da mesma
+O valor total liquidado/recebido em uma Transação Financeira é a soma de todos os valores da liquidação/recebimento da Transação subtraído pela soma de todos os descontos mais a soma de todos os acréscimos da mesma
 
-### O sistema deve calcular quanto que falta a ser liquidado em uma transação
+### O sistema deve calcular quanto que falta a ser liquidado em uma transação de despeza
+### O sistema deve calcular quanto que falta a ser recebido em uma transação de renda
 
-O valor total que falta a ser liquidado em uma Transação Financeira é a subtração do valor total liquidado menos o valor da Transação Financeira
+O valor total que falta a ser liquidado/recebido em uma Transação Financeira é a subtração do valor total liquidado/recebido menos o valor da Transação Financeira
 
 ### O sistema deve permitir que o usuário vincule as transações a categorias
 
