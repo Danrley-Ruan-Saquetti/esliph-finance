@@ -8,11 +8,11 @@
         "android": "expo start --android",
         "ios": "expo start --ios",
         "web": "expo start --web",
-        "build:ios": "eas build --platform ios",
-        "build:android": "eas build --platform android",
-        "build:all": "eas build --platform all",
-        "submit:android": "eas submit --platform android",
-        "submit:ios": "eas submit --platform ios"
+        "build:ios": "eas build --platform ios --profile preview",
+        "build:android": "eas build --platform android --profile preview",
+        "submit:android": "eas submit --platform android --profile preview",
+        "submit:ios": "eas submit --platform ios --profile preview",
+        "build:all": "eas build --platform all --profile preview"
     },
     "dependencies": {
         "@esliph/common": "^1.0.2",
@@ -21,6 +21,7 @@
         "@esliph/http": "^1.0.2",
         "@esliph/injection": "^1.0.6",
         "@esliph/module": "^1.0.1",
+        "@expo/config-plugins": "~7.2.2",
         "base-64": "^1.0.0",
         "expo": "~49.0.15",
         "expo-constants": "^14.4.2",
