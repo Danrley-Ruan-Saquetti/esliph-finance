@@ -1,9 +1,10 @@
 const fs = require('node:fs')
 const { execSync } = require('node:child_process')
 
-const pkg = JSON.parse(fs.readFileSync('./package.json', { encoding: 'utf-8' }))
+const pkg = JSON.parse(fs.readFileSync('../package.json', { encoding: 'utf-8' }))
 
-const BASE_COMMAND = 'npm i '
+const BASE_COMMAND_INSTALL = 'npm i '
+const BASE_COMMAND_INSTALL_DEV = 'npm i -D'
 
 const dependenciesName = Object.keys(pkg.dependencies || {}).join('@latest ') + '@latest'
 const devDependenciesName = Object.keys(pkg.devDependencies || {}).join('@latest ') + '@latest'
@@ -23,9 +24,9 @@ function exec(command = '') {
 }
 
 dependenciesName.split(' ').forEach(cmd => {
-	exec(BASE_COMMAND + cmd)
+	exec(BASE_COMMAND_INSTALL + cmd)
 })
 
 devDependenciesName.split(' ').forEach(cmd => {
-	exec(BASE_COMMAND + ' -D ' + cmd)
+	exec(BASE_COMMAND_INSTALL_DEV + cmd)
 })
