@@ -3,7 +3,7 @@ import { Service } from '@esliph/module'
 import * as SQLite from 'expo-sqlite'
 
 export type DatabaseServiceOptions = {
-    log?: boolean
+    log: boolean
 }
 
 @Service({ name: 'global.service.database' })
@@ -15,6 +15,10 @@ export class DatabaseService {
         this.options = {
             log: true
         }
+    }
+
+    updateOptions(options: Partial<DatabaseServiceOptions>) {
+        this.options.log = options.log
     }
 
     async createTable(tableName: string, properties: string[], options?: { dropIfAlreadyExists?: boolean, ignoreIfAlreadyExists?: boolean }) {

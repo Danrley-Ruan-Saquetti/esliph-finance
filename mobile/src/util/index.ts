@@ -37,10 +37,6 @@ export function deepClone<T = any>(obj: T, hash = new WeakMap()): T {
     return clone
 }
 
-function isClass(object: any) {
-    return Object.getPrototypeOf(object) !== Object.prototype
-}
-
 export function deepMerge(target: any, ...sources: any[]) {
     for (const source of sources) {
         for (const key in source) {
@@ -74,3 +70,89 @@ export function randomIdIntWithDate() {
 
     return Number(idString)
 }
+
+function isArray(value) {
+    return isObject(value) && value instanceof Array
+}
+
+function isDate(value) {
+    return isObject(value) && value instanceof Date
+}
+
+function isObject(value) {
+    return typeof value == 'object'
+}
+
+function isClass(value) {
+    return Object.getPrototypeOf(value) !== Object.prototype
+}
+
+function isUndefined(value) {
+    return typeof value == 'undefined'
+}
+
+function mergeObjects(target, source) {
+    for(const keySource in source) {
+        if (isUndefined(source[keySource])) {
+            continue
+        }
+
+        if (isObject(source[keySource])) {
+            if (isArray(source[keySource])) {
+                target[keySource] = mergeArrays(target[keySource] ?? [], source[keySource])
+                continue
+            }
+
+            target[keySource] = {}
+
+            mergeObjects(target[keySource], source[keySource])
+            continue
+        }
+
+        target[keySource] = source[keySource]
+    }
+
+    return target
+}
+
+function mergeArrays(target, source) {
+    source.map(sourceValue => {
+        if (isObject(sourceValue)) {
+            return target.push(mergeObjects({}, sourceValue))
+        }
+
+        if (isArray(sourceValue)) {
+            return target.push(mergeArrays([], sourceValue))
+        }
+
+        target.push(sourceValue)
+    })
+
+    return target
+}
+
+function newDeepMerge(target, ...sources) {
+    sources.map(source => {
+        if (isObject(target)) {
+            if (isObject(source)) {
+                target = mergeObjects(target, source)
+                return
+            }
+
+            if (isArray(target)) {
+                if (isArray(source)) {
+                    target = mergeArrays(target, source)
+                    return
+                }
+
+                target.push(source)
+                return
+            }
+        }
+    })
+
+    return target
+}
+
+newDeepMerge({}, {a: ['B', {}]}, {a: ['A', {b: 0}], b: ''})
+newDeepMerge([], [{a: ''}], [0, [{a: '', b: ''}]])
