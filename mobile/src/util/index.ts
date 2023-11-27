@@ -80,7 +80,7 @@ function isDate(value) {
 }
 
 function isObject(value) {
-    return typeof value == 'object'
+    return getTypeNativeValue(value) == 'object'
 }
 
 function isClass(value) {
@@ -88,22 +88,39 @@ function isClass(value) {
 }
 
 function isUndefined(value) {
-    return typeof value == 'undefined'
+    return getTypeNativeValue(value) == 'undefined'
 }
 
+function isInstanceOf(value, instance) {
+    return value instanceof instance
+}
+
+function getTypeNativeValue(value) {
+    return typeof value
+}
+
+// Deep Merge
+
 function mergeObjects(target, source) {
-    for(const keySource in source) {
+    for (const keySource in source) {
         if (isUndefined(source[keySource])) {
             continue
         }
 
         if (isObject(source[keySource])) {
             if (isArray(source[keySource])) {
-                target[keySource] = mergeArrays(target[keySource] ?? [], source[keySource])
+                target[keySource] = target[keySource] ?? []
+
+                mergeArrays(target[keySource], source[keySource])
                 continue
             }
 
-            target[keySource] = {}
+            if (isArray(target[keySource])) {
+                target[keySource].push(mergeObjects({}, source[keySource]))
+                continue
+            }
+
+            target[keySource] = target[keySource] ?? {}
 
             mergeObjects(target[keySource], source[keySource])
             continue
@@ -135,13 +152,13 @@ function newDeepMerge(target, ...sources) {
     sources.map(source => {
         if (isObject(target)) {
             if (isObject(source)) {
-                target = mergeObjects(target, source)
+                mergeObjects(target, source)
                 return
             }
 
             if (isArray(target)) {
                 if (isArray(source)) {
-                    target = mergeArrays(target, source)
+                    mergeArrays(target, source)
                     return
                 }
 
@@ -154,5 +171,5 @@ function newDeepMerge(target, ...sources) {
     return target
 }
 
-newDeepMerge({}, {a: ['B', {}]}, {a: ['A', {b: 0}], b: ''})
-newDeepMerge([], [{a: ''}], [0, [{a: '', b: ''}]])
+console.log(newDeepMerge({}, { a: ['B', {}] }, { a: ['A', { b: 0 }], b: '' }))
+console.log(newDeepMerge([], [{ a: '' }], [0, [{ a: '', b: '' }]]))
