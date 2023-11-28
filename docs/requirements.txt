@@ -1,4 +1,4 @@
-# Levantamento de Requisitos (V1.1.2)
+# Levantamento de Requisitos (V1.1.3)
 
 ## Requisitos Funcionais
 
@@ -10,6 +10,8 @@ O sistema deve permitir que o usuário marque uma categoria como favorita
 O sistema deve permitir que o usuário mantenha as suas transações financeiras
 O sistema deve permitir que o usuário vincule as transações a categorias
 O sistema deve permitir que o usuário mantenha os pagamentos das transações financeiras
+O sistema deve gerenciar o saldo da conta do usuário
+O sistema deve permitir que o usuário reprocesse o cálcula do saldo da conta
 O sistema deve calcular quanto que já foi liquidado em uma transação de despeza
 O sistema deve calcular quanto que já foi recebido em uma transação de renda
 O sistema deve calcular quanto que falta a ser liquidado em uma transação de despeza
@@ -59,9 +61,13 @@ O código deve ter um tempo de expiração de 15 minutos
 
 ### O sistema deve permitir que o usuário mantenha as suas contas
 
-O cadastro de conta deve conter: nome; email; senha
+O cadastro de conta deve conter: nome; email; senha; saldo
 
 O email da conta deve ser único
+
+O saldo da conta deve iniciar com o valor zerado
+
+O saldo da conta deve acompanhar as Transações Financeiras
 
 ### O sistema deve permitir que o usuário faça login
 
@@ -104,6 +110,14 @@ Ocorrências do tipo Programática são ocorrência que pode repetir uma vez por
 O pagamento deve conter: o valor do pagamento; desconto, acréscimo; data e hora do pagamento
 
 O valor do pagamento não deve ser maior ao valor que falta liquidar/receber da Transação Financeira
+
+### O sistema deve gerenciar o saldo da conta do usuário
+
+Toda vez que for liquidado/recebido um valor de uma Transação Financeira, esse valor deve ser aplicado ao valor do saldo da conta
+
+### O sistema deve permitir que o usuário reprocesse o cálcula do saldo da conta
+
+O cálculo do reprocessamento da conta é somar todos os valores dos pagamentos das transações que tenham a situação Pago, Pago Parcialmente, Recebido, Recebido Parcialmente e este será gravado no saldo da conta do usuário
 
 ### O sistema deve permitir que o usuário efetue a liquidação das transações financeiras de despeza
 ### O sistema deve permitir que o usuário efetue o recebimento das transações financeiras de renda
