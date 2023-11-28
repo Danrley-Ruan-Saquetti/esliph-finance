@@ -1,6 +1,33 @@
-# Lista de consultas da aplicação
+Lista de consultas da aplicação
 
-## Conta
+# Account
+
+## Model
+
+- AccountModel
+name: string
+email: string
+password: string
+balance: number
+
+- Account
+id: number
+name: string
+email: string
+password: string
+balance: number
+createAt: Date
+updateAt: Date
+
+- AccountWithoutPassword
+id: number
+name: string
+email: string
+balance: number
+createAt: Date
+updateAt: Date
+
+## Queries
 findById(id: number)
 findByName(name: string)
 findByEmail(email: string)
@@ -12,7 +39,12 @@ findMany()
 queryByCategoryId(id: number)
 queryByNotificationId(id: number)
 
-# Categoria
+# Category
+
+## Model
+
+- AccountModel
+
 findById(id: number)
 findByName(name: string)
 findByColor()
@@ -22,6 +54,6 @@ findByNameAndIsFavorite()
 findByColorAndIsFavorite()
 findManyByAccountIdAndIsFavorite()
 
-# Notificação
+# Notification
 findById(id: number)
 findManyByAccountId(id: number)
