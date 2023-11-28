@@ -1,14 +1,12 @@
-# Category
+# Model
 
-## Model
-
-### AccountModel
+## AccountModel
 accountId: number
 name: string
 color: string
 isFavorite: boolean
 
-### Account
+## Account
 id: number
 accountId: number
 name: string
@@ -17,8 +15,7 @@ isFavorite: boolean
 createAt: Date
 updateAt: Date
 
-## Query
-
+# Query
 findById(id: number)
 findByName(name: string)
 findByColor()

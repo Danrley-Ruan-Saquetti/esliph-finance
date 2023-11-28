@@ -6,7 +6,7 @@ email: string
 password: string
 balance: number
 
-### Account
+## Account
 id: number
 name: string
 email: string
@@ -15,7 +15,7 @@ balance: number
 createAt: Date
 updateAt: Date
 
-### AccountWithoutPassword
+## AccountWithoutPassword
 id: number
 name: string
 email: string
@@ -23,15 +23,19 @@ balance: number
 createAt: Date
 updateAt: Date
 
-## Query
+# Use Case
+register(args: { name: string, email: string, password: string }): { message: string, ok: boolean }
 
-findById(id: number)
-findByName(name: string)
-findByEmail(email: string)
-findByIdWithoutPassword(id: number)
-findByNameWithoutPassword(name: string)
-findByEmailWithoutPassword(email: string)
-findMany()
+update(args: { name?: string, email?: string, password?: string }): { message: string, ok: boolean }
 
-queryByCategoryId(id: number)
-queryByNotificationId(id: number)
+findById(id: number): Account
+findByName(name: string): Account
+findByEmail(email: string): Account
+findByIdWithoutPassword(id: number): AccountWithoutPassword
+findByNameWithoutPassword(name: string): AccountWithoutPassword
+findByEmailWithoutPassword(email: string): AccountWithoutPassword
+findMany(): Account[]
+findManyWithoutPassword(): AccountWithoutPassword[]
+
+queryByCategoryId(id: number): AccountWithoutPassword
+queryByNotificationId(id: number): AccountWithoutPassword
