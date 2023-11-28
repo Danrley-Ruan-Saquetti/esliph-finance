@@ -44,6 +44,19 @@ queryByNotificationId(id: number)
 ## Model
 
 - AccountModel
+accountId: number
+name: string
+color: string
+isFavorite: boolean
+
+- Account
+id: number
+accountId: number
+name: string
+color: string
+isFavorite: boolean
+createAt: Date
+updateAt: Date
 
 findById(id: number)
 findByName(name: string)
