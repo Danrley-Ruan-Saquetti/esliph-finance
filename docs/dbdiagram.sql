@@ -1,5 +1,6 @@
 # https://dbdiagram.io
 # Docs: https://dbml.dbdiagram.io/docs
+# https://dbdiagram.io/d/portal-finance-656716f83be1495787f68936
 
 Table account {
   id int [primary key]
