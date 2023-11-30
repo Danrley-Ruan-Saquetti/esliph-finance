@@ -4,6 +4,7 @@ export type AccountModel = {
     name: string
     login: string
     password: string
+    balance: number
 }
 
 export type Account = Document<AccountModel>
