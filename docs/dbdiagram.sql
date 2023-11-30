@@ -1,5 +1,5 @@
-// Use DBML to define your database structure
-// Docs: https://dbml.dbdiagram.io/docs
+# https://dbdiagram.io
+# Docs: https://dbml.dbdiagram.io/docs
 
 Table account {
   id int [primary key]
