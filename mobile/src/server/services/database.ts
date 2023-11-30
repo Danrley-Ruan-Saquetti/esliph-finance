@@ -2,26 +2,13 @@ import { Result } from '@esliph/common'
 import { Service } from '@esliph/module'
 import * as SQLite from 'expo-sqlite'
 
-export type DatabaseServiceOptions = {
-    log: boolean
-}
+export type DatabaseServiceOptions = {}
 
 @Service({ name: 'global.service.database' })
 export class DatabaseService {
     private static database = SQLite.openDatabase('portal-finance.db')
-    private options: DatabaseServiceOptions
 
-    constructor() {
-        this.options = {
-            log: true
-        }
-    }
-
-    updateOptions(options: Partial<DatabaseServiceOptions>) {
-        this.options.log = options.log
-    }
-
-    async createTable(tableName: string, properties: string[], options?: { dropIfAlreadyExists?: boolean, ignoreIfAlreadyExists?: boolean }) {
+    async createTable(tableName: string, properties: string[], options?: { dropIfAlreadyExists?: boolean; ignoreIfAlreadyExists?: boolean }) {
         const sqlProperties = properties.join(', ')
         let sqlCreateBase = 'CREATE TABLE '
 
@@ -38,30 +25,31 @@ export class DatabaseService {
         await this.exec(sql)
     }
 
-    async query(sql: string, values: any[] = []) {
-        const response = await this.exec(sql, values, true)
+    async query<T = any>(sql: string, values: any[] = []) {
+        const response = await this.exec<T>(sql, values, true)
 
         return response
     }
 
-    async exec(sql: string, values: any[] = [], readOnly = false) {
-        const response = await this.database.execAsync([{ sql: sql, args: values }], readOnly)
+    async exec<T = any>(sql: string, values: any[] = [], readOnly = false) {
+        try {
+            const response = await this.database.execAsync([{ sql: sql, args: values }], readOnly)
 
-        console.log(response)
-
-        // @ts-expect-error
-        if (response[0].error) {
-            if (this.options.log) {
+            // @ts-expect-error
+            if (response[0].error) {
                 // @ts-expect-error
-                console.error(response[0].error)
+                return Result.failure<T>({ title: 'Database', message: response[0].error })
             }
 
             // @ts-expect-error
-            return Result.failure({ title: 'Database', message: response[0].error })
-        }
+            return Result.success<T>(response[0].rows as any[])
+        } catch (err: any) {
+            if (err instanceof SQLite.SQLError) {
+                return Result.failure<T>({ title: 'Database', message: err.message })
+            }
 
-        // @ts-expect-error
-        return Result.success(response[0].rows as any[])
+            return Result.failure<T>({ title: 'Database', message: err.message })
+        }
     }
 
     get database() {

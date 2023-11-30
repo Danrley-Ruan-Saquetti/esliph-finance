@@ -1,63 +1,5 @@
 export type PartialDeep<T> = { [x in keyof T]?: T[x] extends object ? PartialDeep<T[x]> : T[x] }
-
-export function deepClone<T = any>(obj: T, hash = new WeakMap()): T {
-    if (obj === null || typeof obj !== 'object') {
-        return obj
-    }
-
-    if (obj instanceof Date) {
-        return new Date(obj) as T
-    }
-
-    if (isClass(obj)) {
-        return obj
-    }
-
-    if (hash.has(obj as any)) {
-        return hash.get(obj as any)
-    }
-
-    const isArray = Array.isArray(obj)
-    const clone: T = (isArray ? [] : {}) as T
-
-    hash.set(obj as any, clone)
-
-    if (isArray) {
-        obj.forEach((item, index) => {
-            // @ts-expect-error
-            clone[index] = deepClone(item, hash)
-        })
-    } else {
-        Object.keys(obj).forEach(key => {
-            // @ts-expect-error
-            clone[key] = deepClone(obj[key], hash)
-        })
-    }
-
-    return clone
-}
-
-export function deepMerge(target: any, ...sources: any[]) {
-    for (const source of sources) {
-        for (const key in source) {
-            if (source.hasOwnProperty(key)) {
-                if (typeof source[key] === 'object' && source[key] !== null) {
-                    if (!target[key] || typeof target[key] !== 'object') {
-                        target[key] = Array.isArray(source[key]) ? [] : {}
-                    }
-                    if (source[key] instanceof Date) {
-                        target[key] = new Date(source[key])
-                    } else {
-                        deepMerge(target[key], source[key])
-                    }
-                } else {
-                    target[key] = source[key]
-                }
-            }
-        }
-    }
-    return target
-}
+export type Constructor<T extends abstract new (...args: any[]) => any = any> = new (...args: any[]) => T
 
 export function randomIdIntWithDate() {
     const VALUE_MAX = 9999
@@ -65,111 +7,90 @@ export function randomIdIntWithDate() {
 
     const idString = `${now.getFullYear()}${`${now.getMonth() + 1}`.padStart(2, '0')}${`${Math.floor(Math.random() * VALUE_MAX)}`.padStart(
         `${VALUE_MAX}`.length,
-        '0'
+        '0',
     )}`
 
     return Number(idString)
 }
 
-function isArray(value) {
-    return isObject(value) && value instanceof Array
+export function isTruthy(value?: any) {
+    return !isFalsy(value)
 }
 
-function isDate(value) {
+export function isFalsy(value?: any) {
+    if (isNull(value)) {
+        return true
+    }
+
+    if (isNumber(value)) {
+        return value == 0
+    }
+
+    if (isBoolean(value)) {
+        return !value
+    }
+
+    if (isString(value)) {
+        return value.length == 0 || value.trim().length == 0
+    }
+
+    if (isArray(value)) {
+        return value.length == 0
+    }
+
+    if (isObject(value)) {
+        return Object.keys(value).length == 0
+    }
+
+    return isUndefined(value) || !value
+}
+
+console.log(isFalsy(true))
+
+export function isArray(value: any) {
+    return (isObject(value) && value instanceof Array) || Array.isArray(value)
+}
+
+export function isDate(value: any) {
     return isObject(value) && value instanceof Date
 }
 
-function isObject(value) {
+export function isBoolean(value: any) {
+    return getTypeNativeValue(value) == 'boolean'
+}
+
+export function isFunction(value: any) {
+    return getTypeNativeValue(value) == 'function'
+}
+
+export function isNumber(value: any, coerse = false) {
+    if (coerse) {
+        return !isUndefined(value) && !isNaN(Number(value))
+    }
+
+    return getTypeNativeValue(value) == 'number'
+}
+
+export function isObject(value: any) {
     return getTypeNativeValue(value) == 'object'
 }
 
-function isClass(value) {
+export function isString(value: any) {
+    return getTypeNativeValue(value) == 'string'
+}
+
+export function isClass(value: any) {
     return Object.getPrototypeOf(value) !== Object.prototype
 }
 
-function isUndefined(value) {
+export function isUndefined(value: any) {
     return getTypeNativeValue(value) == 'undefined'
 }
 
-function isInstanceOf(value, instance) {
-    return value instanceof instance
+export function isNull(value: any) {
+    return value == null
 }
 
-function getTypeNativeValue(value) {
+export function getTypeNativeValue(value: any) {
     return typeof value
 }
-
-// Deep Merge
-
-function mergeObjects(target, source) {
-    for (const keySource in source) {
-        if (isUndefined(source[keySource])) {
-            continue
-        }
-
-        if (isObject(source[keySource])) {
-            if (isArray(source[keySource])) {
-                target[keySource] = target[keySource] ?? []
-
-                mergeArrays(target[keySource], source[keySource])
-                continue
-            }
-
-            if (isArray(target[keySource])) {
-                target[keySource].push(mergeObjects({}, source[keySource]))
-                continue
-            }
-
-            target[keySource] = target[keySource] ?? {}
-
-            mergeObjects(target[keySource], source[keySource])
-            continue
-        }
-
-        target[keySource] = source[keySource]
-    }
-
-    return target
-}
-
-function mergeArrays(target, source) {
-    source.map(sourceValue => {
-        if (isObject(sourceValue)) {
-            return target.push(mergeObjects({}, sourceValue))
-        }
-
-        if (isArray(sourceValue)) {
-            return target.push(mergeArrays([], sourceValue))
-        }
-
-        target.push(sourceValue)
-    })
-
-    return target
-}
-
-function newDeepMerge(target, ...sources) {
-    sources.map(source => {
-        if (isObject(target)) {
-            if (isObject(source)) {
-                mergeObjects(target, source)
-                return
-            }
-
-            if (isArray(target)) {
-                if (isArray(source)) {
-                    mergeArrays(target, source)
-                    return
-                }
-
-                target.push(source)
-                return
-            }
-        }
-    })
-
-    return target
-}
-
-console.log(newDeepMerge({}, { a: ['B', {}] }, { a: ['A', { b: 0 }], b: '' }))
-console.log(newDeepMerge([], [{ a: '' }], [0, [{ a: '', b: '' }]]))
