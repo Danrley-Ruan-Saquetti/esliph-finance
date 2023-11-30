@@ -1,16 +1,9 @@
-import { Module } from '../../../common/module'
-import { AccountController } from './account.controller'
-import { AccountRepository } from './account.repository'
-import { AccountService } from './account.service'
-import { AccountRepositoryModule } from './repository/repository.module'
-import { AccountUseCaseModule } from './use-case/use-case-module'
+import { Module } from '@esliph/module'
+import { AccountUseCaseModule } from '@modules/account/use-case/use-case.module'
+import { AccountController } from '@modules/account/account.controller'
 
-export class AccountModule extends Module {
-    constructor() {
-        super({
-            imports: [AccountRepositoryModule, AccountUseCaseModule],
-            controllers: [AccountController, AccountRepository],
-            services: [AccountService],
-        })
-    }
-}
+@Module({
+    imports: [AccountUseCaseModule],
+    controllers: [AccountController]
+})
+export class AccountModule {}

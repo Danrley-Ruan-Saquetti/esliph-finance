@@ -10,24 +10,24 @@
     "baseUrl": ".",
     "paths": {
       "@router/*": [
-        "./src/app/*"
+        "src/app/*"
       ],
-      "@assets/*": [
-        "./src/assets/*"
+      "@*": [
+        "./src/*"
       ],
-      "@server/*": [
-        "./src/server/*"
+      "@modules/*": [
+        "./src/server/app/modules/*"
       ],
-      "@components/*": [
-        "./src/components/*"
-      ],
-      "@services/*": [
-        "./src/services"
-      ],
-      "@util/*": [
-        "./src/util/*"
-      ],
+      "@@types/*": [
+        "./src/server/@types/*"
+      ]
     }
   },
-  "extends": "expo/tsconfig.base"
+  "extends": "expo/tsconfig.base",
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
 }

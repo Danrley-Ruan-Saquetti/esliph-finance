@@ -1,6 +1,0 @@
-export * from './result.exception'
-export * from './http.exception'
-export * from './model'
-export * from './unauthorized.exception'
-export * from './forbidden.exception'
-export * from './database.exception'
