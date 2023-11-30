@@ -1,17 +1,4 @@
 export type PartialDeep<T> = { [x in keyof T]?: T[x] extends object ? PartialDeep<T[x]> : T[x] }
-export type Constructor<T extends abstract new (...args: any[]) => any = any> = new (...args: any[]) => T
-
-export function randomIdIntWithDate() {
-    const VALUE_MAX = 9999
-    const now = new Date()
-
-    const idString = `${now.getFullYear()}${`${now.getMonth() + 1}`.padStart(2, '0')}${`${Math.floor(Math.random() * VALUE_MAX)}`.padStart(
-        `${VALUE_MAX}`.length,
-        '0',
-    )}`
-
-    return Number(idString)
-}
 
 export function isTruthy(value?: any) {
     return !isFalsy(value)
@@ -44,8 +31,6 @@ export function isFalsy(value?: any) {
 
     return isUndefined(value) || !value
 }
-
-console.log(isFalsy(true))
 
 export function isArray(value: any) {
     return (isObject(value) && value instanceof Array) || Array.isArray(value)
