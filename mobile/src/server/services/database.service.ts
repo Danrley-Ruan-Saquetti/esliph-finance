@@ -1,4 +1,4 @@
-import { Result } from '@esliph/common'
+import { Result, ResultException } from '@esliph/common'
 import { Service } from '@esliph/module'
 import * as SQLite from 'expo-sqlite'
 
@@ -26,6 +26,36 @@ export class DatabaseService {
         }
 
         await this.runSql(sql)
+    }
+
+    async queryOrThrow<T = any>(sql: string, values: any[] = []) {
+        const response = await this.query<T>(sql, values)
+
+        if (!response.isSuccess()) {
+            throw new ResultException(response.getError())
+        }
+
+        return response
+    }
+
+    async queryOneOrThrow<T = any>(sql: string, values: any[] = []) {
+        const response = await this.queryOne<T>(sql, values)
+
+        if (!response.isSuccess()) {
+            throw new ResultException(response.getError())
+        }
+
+        return response
+    }
+
+    async execOrThrow<T = any>(sql: string, values: any[] = [], options: Partial<ExecOptions> = {}) {
+        const response = await this.exec<T>(sql, values)
+
+        if (!response.isSuccess()) {
+            throw new ResultException(response.getError())
+        }
+
+        return response
     }
 
     async query<T = any>(sql: string, values: any[] = []) {
