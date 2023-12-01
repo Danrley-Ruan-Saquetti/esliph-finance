@@ -22,25 +22,31 @@ export class DatabaseService {
         const sql = sqlCreateBase + tableName + ` (${sqlProperties})`
 
         if (options?.dropIfAlreadyExists) {
-            await this.exec(`DROP TABLE IF EXISTS ${tableName}`)
+            await this.runSql(`DROP TABLE IF EXISTS ${tableName}`)
         }
 
-        await this.exec(sql)
+        await this.runSql(sql)
     }
 
     async query<T = any>(sql: string, values: any[] = []) {
-        const response = await this.exec<T>(sql, values, { readOnly: true })
+        const response = await this.runSql<T>(sql, values, { readOnly: true })
 
         return response
     }
 
     async queryOne<T = any>(sql: string, values: any[] = []) {
-        const response = await this.exec<T>(sql, values, { readOnly: true, uniqueResult: true })
+        const response = await this.runSql<T>(sql, values, { readOnly: true, uniqueResult: true })
 
         return response
     }
 
     async exec<T = any>(sql: string, values: any[] = [], options: Partial<ExecOptions> = {}) {
+        const response = await this.runSql<T>(sql, values, { ...options })
+
+        return response
+    }
+
+    private async runSql<T = any>(sql: string, values: any[] = [], options: Partial<ExecOptions> = {}) {
         try {
             const response: { rows: TemplateStringsArray[]; error?: SQLite.ResultSetError['error'] }[] = (await this.database.execAsync(
                 [{ sql: sql, args: values }],
