@@ -3,7 +3,7 @@ import { AppModule } from '@server/app/app.module'
 import { Logger } from '@server/services/logger.service'
 import { JWTService } from '@server/services/jwt.service'
 import { ValidatorService } from '@server/services/validator.service'
-import { DatabaseService } from '@server/services/database'
+import { DatabaseService } from '@server/services/database.service'
 
 @Module({
     imports: [AppModule],
@@ -18,4 +18,4 @@ import { DatabaseService } from '@server/services/database'
         { whenCall: 'database', use: 'global.service.database' },
     ],
 })
-export class MainModule { }
+export class MainModule {}

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Bootstrap } from '@esliph/module'
 import { Injection } from '@esliph/injection'
 import { MainModule } from '@server/main.module'
-import { DatabaseService } from '@server/services/database'
+import { DatabaseService } from '@server/services/database.service'
 
 Injection.Clear()
 Bootstrap(MainModule, { logLoad: true, logEventHttp: true, logEventListener: true })
