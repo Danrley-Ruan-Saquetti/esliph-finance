@@ -20,9 +20,9 @@ export namespace AccountModel {
         UPDATE_AT = 'updatedAt'
     }
 
-    export const AccountNames = [Attributes.ID, Attributes.NAME, Attributes.EMAIL, Attributes.PASSWORD, Attributes.BALANCE, Attributes.CREATED_AT, Attributes.UPDATE_AT] as const
+    export const AccountAttributes = [Attributes.ID, Attributes.NAME, Attributes.EMAIL, Attributes.PASSWORD, Attributes.BALANCE, Attributes.CREATED_AT, Attributes.UPDATE_AT] as const
 
-    export const AccountWithoutPasswordNames = [Attributes.ID, Attributes.NAME, Attributes.EMAIL, Attributes.BALANCE, Attributes.CREATED_AT, Attributes.UPDATE_AT] as const
+    export const AccountWithoutPasswordAttributes = [Attributes.ID, Attributes.NAME, Attributes.EMAIL, Attributes.BALANCE, Attributes.CREATED_AT, Attributes.UPDATE_AT] as const
 }
 
 export namespace AccountEntity {
@@ -41,7 +41,7 @@ export namespace AccountEntity {
         UPDATE_AT = 'updated_at'
     }
 
-    export const AccountNames = [Attributes.ID, Attributes.NAME, Attributes.EMAIL, Attributes.PASSWORD, Attributes.BALANCE, Attributes.CREATED_AT, Attributes.UPDATE_AT] as const
+    export const AccountAttributes = [Attributes.ID, Attributes.NAME, Attributes.EMAIL, Attributes.PASSWORD, Attributes.BALANCE, Attributes.CREATED_AT, Attributes.UPDATE_AT] as const
 
-    export const AccountWithoutPasswordNames = [Attributes.ID, Attributes.NAME, Attributes.EMAIL, Attributes.BALANCE, Attributes.CREATED_AT, Attributes.UPDATE_AT] as const
+    export const AccountWithoutPasswordAttributes = [Attributes.ID, Attributes.NAME, Attributes.EMAIL, Attributes.BALANCE, Attributes.CREATED_AT, Attributes.UPDATE_AT] as const
 }

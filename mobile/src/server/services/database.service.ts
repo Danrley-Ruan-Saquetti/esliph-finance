@@ -2,6 +2,7 @@ import * as SQLite from 'expo-sqlite'
 import { Result } from '@esliph/common'
 import { Service } from '@esliph/module'
 import { DatabaseException, ServerInternalErrorException } from '@common/exceptions'
+import { isTruthy } from '../../util'
 
 export type DatabaseServiceOptions = {}
 export type RowQuery<T = { [x: string]: any }> = { [x in keyof T]: T[x] }
@@ -60,7 +61,7 @@ export class DatabaseService {
     }
 
     async query<T = any>(sql: string, values: any[] = []) {
-        const response = await this.runSql<T>(sql, values, { readOnly: true, transformAttribute: true })
+        const response = await this.runSql<T[]>(sql, values, { readOnly: true, transformAttribute: true })
 
         return response
     }
@@ -85,12 +86,15 @@ export class DatabaseService {
             )) as any
 
             if (response[0].error) {
-                return Result.failure<T>({ title: 'Database', ...response[0].error })
+                throw new DatabaseException({ title: 'Database', ...response[0].error })
             }
 
             if (!options.transformAttribute) {
                 if (options.uniqueResult) {
-                    return Result.success<T>(response[0].rows[0] as any ?? {})
+                    if (isTruthy(response[0].rows[0])) {
+                        return Result.success<T>(response[0].rows[0] as any ?? {})
+                    }
+                    return Result.failure<T>({ title: 'Database', message: 'Nenhum registro encontrado' })
                 }
                 return Result.success<T>(response[0].rows as any)
             }
@@ -114,7 +118,7 @@ export class DatabaseService {
             return Result.success<T>(rows as any)
         } catch (err: any) {
             if (err instanceof SQLite.SQLError) {
-                return Result.failure<T>({ title: 'Database', message: err.message })
+                throw new DatabaseException({ title: 'Database', ...err })
             }
 
             throw new ServerInternalErrorException({ ...err })
