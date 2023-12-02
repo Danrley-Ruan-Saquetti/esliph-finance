@@ -1,12 +1,12 @@
+import * as SQLite from 'expo-sqlite'
 import { Result } from '@esliph/common'
 import { Service } from '@esliph/module'
-import * as SQLite from 'expo-sqlite'
 import { DatabaseException, ServerInternalErrorException } from '@common/exceptions'
 
 export type DatabaseServiceOptions = {}
 export type RowQuery<T = { [x: string]: any }> = { [x in keyof T]: T[x] }
 export type QueryOptions = { uniqueResult: boolean }
-export type ExecOptions = QueryOptions & { readOnly: boolean }
+export type ExecOptions = QueryOptions & { readOnly: boolean, transformAttribute: boolean }
 
 @Service({ name: 'global.service.database' })
 export class DatabaseService {
@@ -50,7 +50,7 @@ export class DatabaseService {
     }
 
     async execOrThrow<T = any>(sql: string, values: any[] = [], options: Partial<ExecOptions> = {}) {
-        const response = await this.exec<T>(sql, values)
+        const response = await this.exec<T>(sql, values, options)
 
         if (!response.isSuccess()) {
             throw new DatabaseException(response.getError())
@@ -60,13 +60,13 @@ export class DatabaseService {
     }
 
     async query<T = any>(sql: string, values: any[] = []) {
-        const response = await this.runSql<T>(sql, values, { readOnly: true })
+        const response = await this.runSql<T>(sql, values, { readOnly: true, transformAttribute: true })
 
         return response
     }
 
     async queryOne<T = any>(sql: string, values: any[] = []) {
-        const response = await this.runSql<T>(sql, values, { readOnly: true, uniqueResult: true })
+        const response = await this.runSql<T>(`${sql} LIMITE 1`, values, { readOnly: true, uniqueResult: true, transformAttribute: true })
 
         return response
     }
@@ -80,12 +80,19 @@ export class DatabaseService {
     private async runSql<T = any>(sql: string, values: any[] = [], options: Partial<ExecOptions> = {}) {
         try {
             const response: { rows: TemplateStringsArray[]; error?: SQLite.ResultSetError['error'] }[] = (await this.database.execAsync(
-                [{ sql: sql, args: values }],
+                [{ sql: !options.transformAttribute ? sql : this.transformAttributeToDatabase(sql), args: values }],
                 !!options.readOnly,
             )) as any
 
             if (response[0].error) {
                 return Result.failure<T>({ title: 'Database', ...response[0].error })
+            }
+
+            if (!options.transformAttribute) {
+                if (options.uniqueResult) {
+                    return Result.success<T>(response[0].rows[0] as any ?? {})
+                }
+                return Result.success<T>(response[0].rows as any)
             }
 
             const rows: any[] = []
@@ -94,7 +101,7 @@ export class DatabaseService {
                 const rowTranspiler: any = {}
 
                 Object.keys(row).map(key => {
-                    rowTranspiler[this.converterAttributeToSystem(key)] = row[key as keyof typeof row]
+                    rowTranspiler[this.transformAttributeToSystem(key)] = row[key as keyof typeof row]
                 })
 
                 rows.push(rowTranspiler)
@@ -118,13 +125,13 @@ export class DatabaseService {
         return DatabaseService.database
     }
 
-    private converterAttributeToSystem(value: string) {
+    private transformAttributeToSystem(value: string) {
         return value.replace(/_./g, function (match) {
             return match.charAt(1).toUpperCase()
         })
     }
 
-    private converterAttributeToDatabase(value: string) {
+    private transformAttributeToDatabase(value: string) {
         return value.replace(/[A-Z]/g, function (match) {
             return '_' + match.toLowerCase()
         })

@@ -1,34 +1,59 @@
-import { Result, ResultException } from '@esliph/common'
+import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
+import { BadRequestException } from '@common/exceptions'
 import { DatabaseService } from '@server/services/database.service'
-import { Account } from '@modules/account/account.model'
+import { AccountModel, AccountEntity } from '@modules/account/account.model'
 
 @Service({ name: 'account.use-case.create' })
 export class AccountCreateUseCase {
-    constructor(@Injection.Inject('database') private database: DatabaseService) {}
+    constructor(@Injection.Inject('database') private database: DatabaseService) { }
 
     async findById(id: number) {
-        const accountResult = await this.database.queryOne<Account>('SELECT * FROM account WHERE id = ?', [id])
+        const accountResult = await this.database.queryOne<AccountModel.Model>(`SELECT * FROM ${AccountEntity.ModelName} WHERE ${AccountEntity.Attributes.ID} = ?`, [id])
 
         if (!accountResult.isSuccess()) {
-            return new ResultException({ title: 'Encontrar Conta', message: 'Conta não encontrada' })
+            throw new BadRequestException({ title: 'Encontrar Conta', message: `Conta não encontrada com o ID "${id}"` })
         }
 
         return Result.success(accountResult.getValue())
     }
 
-    async findByName(name: string) {}
+    async findByName(name: string) {
+        const accountResult = await this.database.queryOne<AccountModel.Model>(`SELECT * FROM ${AccountEntity.ModelName} WHERE ${AccountEntity.Attributes.NAME} = ?`, [name])
 
-    async findByEmail(email: string) {}
+        if (!accountResult.isSuccess()) {
+            throw new BadRequestException({ title: 'Encontrar Conta', message: `Conta não encontrada com o Nome "${name}"` })
+        }
 
-    async findByIdWithoutPassword(id: number) {}
+        return Result.success(accountResult.getValue())
+    }
 
-    async findByNameWithoutPassword(name: string) {}
+    async findByEmail(email: string) {
+        const accountResult = await this.database.queryOne<AccountModel.Model>(`SELECT * FROM ${AccountEntity.ModelName} WHERE ${AccountEntity.Attributes.EMAIL} = ?`, [email])
 
-    async findByEmailWithoutPassword(email: string) {}
+        if (!accountResult.isSuccess()) {
+            throw new BadRequestException({ title: 'Encontrar Conta', message: `Conta não encontrada com o E-mail "${email}"` })
+        }
 
-    async findMany() {}
+        return Result.success(accountResult.getValue())
+    }
 
-    async findManyWithoutPassword() {}
+    async findByIdWithoutPassword(id: number) {
+        const accountResult = await this.database.queryOne<AccountModel.WithoutPassword>(`SELECT ${AccountEntity.AccountWithoutPasswordNames.join(', ')} FROM ${AccountEntity.ModelName} WHERE ${AccountEntity.Attributes.ID} = ?`, [id])
+
+        if (!accountResult.isSuccess()) {
+            throw new BadRequestException({ title: 'Encontrar Conta', message: `Conta não encontrada com o ID "${id}"` })
+        }
+
+        return Result.success(accountResult.getValue())
+    }
+
+    async findByNameWithoutPassword(name: string) { }
+
+    async findByEmailWithoutPassword(email: string) { }
+
+    async findMany() { }
+
+    async findManyWithoutPassword() { }
 }

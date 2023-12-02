@@ -1,12 +1,47 @@
 import { Document } from '@@types/index'
 
-export type AccountModel = {
-    name: string
-    login: string
-    password: string
-    balance: number
+export namespace AccountModel {
+    export type Model = {
+        name: string
+        email: string
+        password: string
+        balance: number
+    }
+
+    export type WithoutPassword = Omit<Model, 'password'>
+
+    export enum Attributes {
+        ID = 'id',
+        NAME = 'name',
+        EMAIL = 'email',
+        PASSWORD = 'password',
+        BALANCE = 'balance',
+        CREATED_AT = 'createdAt',
+        UPDATE_AT = 'updatedAt'
+    }
+
+    export const AccountNames = [Attributes.ID, Attributes.NAME, Attributes.EMAIL, Attributes.PASSWORD, Attributes.BALANCE, Attributes.CREATED_AT, Attributes.UPDATE_AT] as const
+
+    export const AccountWithoutPasswordNames = [Attributes.ID, Attributes.NAME, Attributes.EMAIL, Attributes.BALANCE, Attributes.CREATED_AT, Attributes.UPDATE_AT] as const
 }
 
-export type Account = Document<AccountModel>
+export namespace AccountEntity {
+    export const ModelName = 'account'
+    export type Entity = Document<AccountModel.Model>
 
-export type AccountModelWithoutPassword = Omit<Account, 'password'>
+    export type WithoutPassword = Omit<Entity, 'password'>
+
+    export enum Attributes {
+        ID = 'id',
+        NAME = 'name',
+        EMAIL = 'email',
+        PASSWORD = 'password',
+        BALANCE = 'balance',
+        CREATED_AT = 'created_at',
+        UPDATE_AT = 'updated_at'
+    }
+
+    export const AccountNames = [Attributes.ID, Attributes.NAME, Attributes.EMAIL, Attributes.PASSWORD, Attributes.BALANCE, Attributes.CREATED_AT, Attributes.UPDATE_AT] as const
+
+    export const AccountWithoutPasswordNames = [Attributes.ID, Attributes.NAME, Attributes.EMAIL, Attributes.BALANCE, Attributes.CREATED_AT, Attributes.UPDATE_AT] as const
+}
