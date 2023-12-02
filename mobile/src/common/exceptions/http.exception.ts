@@ -9,9 +9,9 @@ export class HttpException extends Exception {
                 title: errorInfo.title || 'Falha na requisição',
                 causes: errorInfo.causes || [],
                 description: errorInfo.description,
-                stack: errorInfo.stack,
+                stack: errorInfo.stack
             },
-            status,
+            status
         )
 
         super(errorResult.getError(), status)

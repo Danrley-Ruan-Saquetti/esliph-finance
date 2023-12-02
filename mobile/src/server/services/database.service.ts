@@ -1,6 +1,7 @@
-import { Result, ResultException } from '@esliph/common'
+import { Result } from '@esliph/common'
 import { Service } from '@esliph/module'
 import * as SQLite from 'expo-sqlite'
+import { DatabaseException, ServerInternalErrorException } from '@common/exceptions'
 
 export type DatabaseServiceOptions = {}
 export type RowQuery<T = { [x: string]: any }> = { [x in keyof T]: T[x] }
@@ -32,7 +33,7 @@ export class DatabaseService {
         const response = await this.query<T>(sql, values)
 
         if (!response.isSuccess()) {
-            throw new ResultException(response.getError())
+            throw new DatabaseException(response.getError())
         }
 
         return response
@@ -42,7 +43,7 @@ export class DatabaseService {
         const response = await this.queryOne<T>(sql, values)
 
         if (!response.isSuccess()) {
-            throw new ResultException(response.getError())
+            throw new DatabaseException(response.getError())
         }
 
         return response
@@ -52,7 +53,7 @@ export class DatabaseService {
         const response = await this.exec<T>(sql, values)
 
         if (!response.isSuccess()) {
-            throw new ResultException(response.getError())
+            throw new DatabaseException(response.getError())
         }
 
         return response
@@ -109,7 +110,7 @@ export class DatabaseService {
                 return Result.failure<T>({ title: 'Database', message: err.message })
             }
 
-            return Result.failure<T>({ title: 'Database', message: err.message })
+            throw new ServerInternalErrorException({ ...err })
         }
     }
 
