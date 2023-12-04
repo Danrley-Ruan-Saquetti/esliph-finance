@@ -1,5 +1,0 @@
-# Model
-
-# Use Case
-
-# Query
