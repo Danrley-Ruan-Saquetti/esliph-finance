@@ -5,6 +5,7 @@ import { BadRequestException } from '@common/exceptions'
 import { DatabaseService } from '@server/services/database.service'
 import { AccountModel, AccountEntity } from '@modules/account/account.model'
 import { Repository } from '@server/services/repository.service'
+import { ID } from '@server/@types'
 
 @Service({ name: 'account.repository' })
 export class AccountRepository extends Repository {
@@ -13,7 +14,9 @@ export class AccountRepository extends Repository {
     }
 
     async register(args: AccountModel.Model) {
-        const registerAccountResult = await this.database.exec<AccountModel.Model>(`INSERT INTO ${this.modelName} (${this.prepareStatementNames(args)})`, [...this.prepareStatementValues(args)])
+        const registerAccountResult = await this.database.exec<AccountModel.Model>(`INSERT INTO ${this.modelName} (${this.prepareStatementNames(args)})`, [
+            ...this.prepareStatementValues(args),
+        ])
 
         if (!registerAccountResult.isSuccess()) {
             throw new BadRequestException({ title: 'Registrar Conta', message: 'Não foi possível registrar a conta' })
@@ -22,8 +25,11 @@ export class AccountRepository extends Repository {
         return Result.success(registerAccountResult.getValue())
     }
 
-    async updateById(args: AccountModel.Model, where: { id: number }) {
-        const updateAccountResult = await this.database.exec<AccountModel.Model>(`UPDATE ${this.modelName} SET ${this.prepareStatementNamesToUpdate(args)} WHERE ${AccountEntity.Attributes.ID} = ?`, [...this.prepareStatementValues(args), where.id])
+    async updateById(args: AccountModel.Model, where: { id: ID }) {
+        const updateAccountResult = await this.database.exec<AccountModel.Model>(
+            `UPDATE ${this.modelName} SET ${this.prepareStatementNamesToUpdate(args)} WHERE ${AccountEntity.Attributes.ID} = ?`,
+            [...this.prepareStatementValues(args), where.id],
+        )
 
         if (!updateAccountResult.isSuccess()) {
             throw new BadRequestException({ title: 'Atualizar Conta', message: 'Não foi possível atualizar a conta' })
@@ -32,7 +38,7 @@ export class AccountRepository extends Repository {
         return Result.success(updateAccountResult.getValue())
     }
 
-    async findById(id: number) {
+    async findById(id: ID) {
         const accountResult = await this.database.queryOne<AccountModel.Model>(`SELECT * FROM ${this.modelName} WHERE ${AccountEntity.Attributes.ID} = ?`, [id])
 
         if (!accountResult.isSuccess()) {
@@ -43,7 +49,9 @@ export class AccountRepository extends Repository {
     }
 
     async findByName(name: string) {
-        const accountResult = await this.database.queryOne<AccountModel.Model>(`SELECT * FROM ${this.modelName} WHERE ${AccountEntity.Attributes.NAME} = ?`, [name])
+        const accountResult = await this.database.queryOne<AccountModel.Model>(`SELECT * FROM ${this.modelName} WHERE ${AccountEntity.Attributes.NAME} = ?`, [
+            name,
+        ])
 
         if (!accountResult.isSuccess()) {
             throw new BadRequestException({ title: 'Encontrar Conta', message: `Conta não encontrada com o Nome "${name}"` })
@@ -53,7 +61,9 @@ export class AccountRepository extends Repository {
     }
 
     async findByEmail(email: string) {
-        const accountResult = await this.database.queryOne<AccountModel.Model>(`SELECT * FROM ${this.modelName} WHERE ${AccountEntity.Attributes.EMAIL} = ?`, [email])
+        const accountResult = await this.database.queryOne<AccountModel.Model>(`SELECT * FROM ${this.modelName} WHERE ${AccountEntity.Attributes.EMAIL} = ?`, [
+            email,
+        ])
 
         if (!accountResult.isSuccess()) {
             throw new BadRequestException({ title: 'Encontrar Conta', message: `Conta não encontrada com o E-mail "${email}"` })
@@ -62,8 +72,11 @@ export class AccountRepository extends Repository {
         return Result.success(accountResult.getValue())
     }
 
-    async findByIdWithoutPassword(id: number) {
-        const accountResult = await this.database.queryOne<AccountModel.WithoutPassword>(`SELECT ${AccountEntity.AccountWithoutPasswordAttributes.join(', ')} FROM ${this.modelName} WHERE ${AccountEntity.Attributes.ID} = ?`, [id])
+    async findByIdWithoutPassword(id: ID) {
+        const accountResult = await this.database.queryOne<AccountModel.WithoutPassword>(
+            `SELECT ${AccountEntity.AccountWithoutPasswordAttributes.join(', ')} FROM ${this.modelName} WHERE ${AccountEntity.Attributes.ID} = ?`,
+            [id],
+        )
 
         if (!accountResult.isSuccess()) {
             throw new BadRequestException({ title: 'Encontrar Conta', message: `Conta não encontrada com o ID "${id}"` })
@@ -73,7 +86,10 @@ export class AccountRepository extends Repository {
     }
 
     async findByNameWithoutPassword(name: string) {
-        const accountResult = await this.database.queryOne<AccountModel.Model>(`SELECT ${AccountEntity.AccountWithoutPasswordAttributes.join(', ')} FROM ${this.modelName} WHERE ${AccountEntity.Attributes.NAME} = ?`, [name])
+        const accountResult = await this.database.queryOne<AccountModel.Model>(
+            `SELECT ${AccountEntity.AccountWithoutPasswordAttributes.join(', ')} FROM ${this.modelName} WHERE ${AccountEntity.Attributes.NAME} = ?`,
+            [name],
+        )
 
         if (!accountResult.isSuccess()) {
             throw new BadRequestException({ title: 'Encontrar Conta', message: `Conta não encontrada com o Nome "${name}"` })
@@ -83,7 +99,10 @@ export class AccountRepository extends Repository {
     }
 
     async findByEmailWithoutPassword(email: string) {
-        const accountResult = await this.database.queryOne<AccountModel.Model>(`SELECT ${AccountEntity.AccountWithoutPasswordAttributes.join(', ')} FROM ${this.modelName} WHERE ${AccountEntity.Attributes.EMAIL} = ?`, [email])
+        const accountResult = await this.database.queryOne<AccountModel.Model>(
+            `SELECT ${AccountEntity.AccountWithoutPasswordAttributes.join(', ')} FROM ${this.modelName} WHERE ${AccountEntity.Attributes.EMAIL} = ?`,
+            [email],
+        )
 
         if (!accountResult.isSuccess()) {
             throw new BadRequestException({ title: 'Encontrar Conta', message: `Conta não encontrada com o E-mail "${email}"` })
@@ -103,7 +122,10 @@ export class AccountRepository extends Repository {
     }
 
     async findManyWithoutPassword() {
-        const accountsResult = await this.database.query<AccountModel.Model>(`SELECT ${AccountEntity.AccountWithoutPasswordAttributes.join(', ')} FROM ${this.modelName}`, [])
+        const accountsResult = await this.database.query<AccountModel.Model>(
+            `SELECT ${AccountEntity.AccountWithoutPasswordAttributes.join(', ')} FROM ${this.modelName}`,
+            [],
+        )
 
         if (!accountsResult.isSuccess()) {
             throw new BadRequestException({ title: 'Encontrar Contas', message: 'Não foi possível buscar as contas' })
