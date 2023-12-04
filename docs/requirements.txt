@@ -5,6 +5,7 @@ Levantamento de Requisitos (V1.1.4)
 O sistema deve permitir o gerencimento de usuário
 O sistema deve permitir que o usuário faça login
 O sistema deve permitir que o usuário mantenha as suas contas bancárias
+O sistema deve permitir que o usuário recupere a sua conta bancária
 O sistema deve permitir que o usuário recupere a sua conta de usuário
 O sistema deve permitir que o usuário mantenha as categorias
 O sistema deve permitir que o usuário marque uma categoria como favorita
@@ -55,23 +56,26 @@ O cadastro de usuário deve conter: nome; email; senha
 O email de usuário deve ser único
 
 ## O sistema deve permitir que o usuário mantenha as suas contas bancárias
-O cadastro de conta bancária deve conter: nome; saldo; senha mestre; usuário vinculado
+O cadastro de conta bancária deve conter: nome; senha mestre; saldo; usuário vinculado
 
 O saldo da conta bancária deve iniciar com o valor zerado
 
 O saldo da conta bancária deve acompanhar as Transações Financeiras
 
-## O sistema deve permitir que o usuário recupere a sua conta bancária de usuário
-Para recuperar a conta bancária, o sistema deve enviar um código ao usuário que permitirá que o mesmo refaça uma nova senha para a conta bancária
+## O sistema deve permitir que o usuário recupere a sua conta bancária
+Para recuperar a conta bancária, o sistema deve enviar um código ao usuário que permitirá que o mesmo refaça uma nova senha mestre para a conta bancária
+
+## O sistema deve permitir que o usuário recupere a sua conta de usuário
+Para recuperar a conta do usuário, o sistema deve enviar um código ao usuário que permitirá que o mesmo refaça uma nova senha para a sua conta
 
 ## O sistema deve permitir que o usuário mantenha as categorias
-O cadastro da Categoria deve conter: o nome; é favorito; cor de destaque
+O cadastro da Categoria deve conter: o nome; se é favorito; cor de destaque; conta bancária vinculada
 
 ## O sistema deve permitir que o usuário marque uma categoria como favorita
-Ao marcar uma categoria como favorita, a mesma deve aparecer como umas das principais opções nos campos de qualquer escolhas
+Ao marcar uma categoria como favorita, a mesma deve aparecer como umas das primeiras opções de consultas
 
 ## O sistema deve permitir que o usuário mantenha as suas transações financeiras
-Para cadastrar uma Transação Financeira é necessário: o título da transação; descrição; data e hora da expiração da transação; data e hora da competência da transação; o valor; tipo da transação; tipo de ocorrência; situação; grau de prioridade; se deseja enviar uma notificação de alerta de vencimento; se deseja observa-la; vezes à repetir
+Para cadastrar uma Transação Financeira é necessário: o título da transação; descrição; data e hora da expiração da transação; data e hora da competência da transação; o valor; tipo da transação; tipo de ocorrência; situação; grau de prioridade; se deseja enviar uma notificação de alerta de vencimento; se deseja observa-la; vezes à repetir; conta bancária vinculada
 
 No cadastro da Transação, caso não tenha sido informado a data e hora da competência, a mesma será a data e hora do momento em que ela está sendo cadastrada
 
@@ -90,7 +94,7 @@ Ocorrências do tipo Única são ocorrências que ocorre apenas uma única vez
 Ocorrências do tipo Programática são ocorrência que pode repetir uma vez por: Diariamente, Semanalmente, Mensalmente, Trimestralmente, Semestralmente, Anualmente
 
 ## O sistema deve permitir que o usuário mantenha os pagamentos das transações financeiras
-O pagamento deve conter: o valor do pagamento; desconto, acréscimo; data e hora do pagamento
+O pagamento deve conter: o valor do pagamento; desconto, acréscimo; data e hora do pagamento; conta bancária vinculada
 
 O valor do pagamento não deve ser maior ao valor que falta liquidar/receber da Transação Financeira
 
