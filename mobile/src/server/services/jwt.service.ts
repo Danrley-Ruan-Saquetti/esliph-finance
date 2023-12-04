@@ -1,6 +1,6 @@
+import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import * as base64 from 'base-64'
-import * as crypto from 'expo-crypto'
+import { CryptoService } from '@server/services/crypto.service'
 
 export type PayloadJWT<PayloadBody extends object = {}> = PayloadBody & {
     iat: number
@@ -9,9 +9,11 @@ export type PayloadJWT<PayloadBody extends object = {}> = PayloadBody & {
 
 @Service({ name: 'global.service.jwt' })
 export class JWTService {
+    constructor(@Injection.Inject('crypto') private crypto: CryptoService) {}
+
     async encode<PayloadBody extends { [x: string]: any }>(payload: PayloadBody, config: { secret: string; exp: number }) {
         const header = { alg: 'HS256', typ: 'JWT' }
-        const encodedHeader = base64.encode(JSON.stringify(header))
+        const encodedHeader = this.crypto.base64.encode(JSON.stringify(header))
 
         const nowInSeconds = new Date(Date.now()).getTime() / 1000
 
@@ -21,7 +23,7 @@ export class JWTService {
             exp: nowInSeconds + config.exp,
         }
 
-        const encodedPayload = base64.encode(JSON.stringify(payloadJwt))
+        const encodedPayload = this.crypto.base64.encode(JSON.stringify(payloadJwt))
 
         const signature = await this.sign(`${encodedHeader}.${encodedPayload}`, config.secret)
 
@@ -41,11 +43,11 @@ export class JWTService {
         const signedPart = `${encodedHeader}.${encodedPayload}`
         const computedSignature = await this.sign(signedPart, secret)
 
-        if (this.base64urlUnescape(signature) !== this.base64urlUnescape(computedSignature)) {
+        if (this.crypto.base64.base64urlUnescape(signature) !== this.crypto.base64.base64urlUnescape(computedSignature)) {
             throw new Error('Assinatura inválida')
         }
 
-        const payload: PayloadJWT<PayloadBody> = JSON.parse(base64.decode(encodedPayload))
+        const payload: PayloadJWT<PayloadBody> = JSON.parse(this.crypto.base64.decode(encodedPayload))
 
         if (payload.exp) {
             this.validTimeStamp(payload.exp)
@@ -64,14 +66,10 @@ export class JWTService {
     }
 
     private async sign(payload: any, secret: string) {
-        const key = await crypto.digestStringAsync(crypto.CryptoDigestAlgorithm.SHA256, JSON.stringify({ payload, secret }), {
-            encoding: crypto.CryptoEncoding.BASE64,
+        const key = await this.crypto.crypto.digestStringAsync(this.crypto.crypto.CryptoDigestAlgorithm.SHA256, JSON.stringify({ payload, secret }), {
+            encoding: this.crypto.crypto.CryptoEncoding.BASE64,
         })
 
         return key.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-    }
-
-    private base64urlUnescape(str: string) {
-        return str + '==='.slice(0, (4 - (str.length % 4)) % 4)
     }
 }
