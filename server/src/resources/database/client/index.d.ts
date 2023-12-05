@@ -2621,13 +2621,13 @@ export namespace Prisma {
   export type BankAccountAvgAggregateOutputType = {
     id: number | null
     userId: number | null
-    balance: Decimal | null
+    balance: number | null
   }
 
   export type BankAccountSumAggregateOutputType = {
     id: number | null
     userId: number | null
-    balance: Decimal | null
+    balance: number | null
   }
 
   export type BankAccountMinAggregateOutputType = {
@@ -2635,7 +2635,7 @@ export namespace Prisma {
     userId: number | null
     name: string | null
     passwordMaster: string | null
-    balance: Decimal | null
+    balance: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2645,7 +2645,7 @@ export namespace Prisma {
     userId: number | null
     name: string | null
     passwordMaster: string | null
-    balance: Decimal | null
+    balance: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2796,7 +2796,7 @@ export namespace Prisma {
     userId: number
     name: string
     passwordMaster: string
-    balance: Decimal
+    balance: number
     createdAt: Date
     updatedAt: Date
     _count: BankAccountCountAggregateOutputType | null
@@ -2867,7 +2867,7 @@ export namespace Prisma {
       userId: number
       name: string
       passwordMaster: string
-      balance: Prisma.Decimal
+      balance: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["bankAccount"]>
@@ -3275,7 +3275,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"BankAccount", 'Int'>
     readonly name: FieldRef<"BankAccount", 'String'>
     readonly passwordMaster: FieldRef<"BankAccount", 'String'>
-    readonly balance: FieldRef<"BankAccount", 'Decimal'>
+    readonly balance: FieldRef<"BankAccount", 'Float'>
     readonly createdAt: FieldRef<"BankAccount", 'DateTime'>
     readonly updatedAt: FieldRef<"BankAccount", 'DateTime'>
   }
@@ -6649,7 +6649,7 @@ export namespace Prisma {
   export type FinancialTransactionAvgAggregateOutputType = {
     id: number | null
     bankAccountId: number | null
-    value: Decimal | null
+    value: number | null
     priority: number | null
     timesToRepeat: number | null
     countRepeatedOccurrences: number | null
@@ -6658,7 +6658,7 @@ export namespace Prisma {
   export type FinancialTransactionSumAggregateOutputType = {
     id: number | null
     bankAccountId: number | null
-    value: Decimal | null
+    value: number | null
     priority: number | null
     timesToRepeat: number | null
     countRepeatedOccurrences: number | null
@@ -6669,7 +6669,7 @@ export namespace Prisma {
     bankAccountId: number | null
     title: string | null
     description: string | null
-    value: Decimal | null
+    value: number | null
     priority: number | null
     isObservable: boolean | null
     isSendNotification: boolean | null
@@ -6690,7 +6690,7 @@ export namespace Prisma {
     bankAccountId: number | null
     title: string | null
     description: string | null
-    value: Decimal | null
+    value: number | null
     priority: number | null
     isObservable: boolean | null
     isSendNotification: boolean | null
@@ -6902,7 +6902,7 @@ export namespace Prisma {
     bankAccountId: number
     title: string
     description: string
-    value: Decimal
+    value: number
     priority: number
     isObservable: boolean
     isSendNotification: boolean
@@ -7003,7 +7003,7 @@ export namespace Prisma {
       bankAccountId: number
       title: string
       description: string
-      value: Prisma.Decimal
+      value: number
       priority: number
       isObservable: boolean
       isSendNotification: boolean
@@ -7420,7 +7420,7 @@ export namespace Prisma {
     readonly bankAccountId: FieldRef<"FinancialTransaction", 'Int'>
     readonly title: FieldRef<"FinancialTransaction", 'String'>
     readonly description: FieldRef<"FinancialTransaction", 'String'>
-    readonly value: FieldRef<"FinancialTransaction", 'Decimal'>
+    readonly value: FieldRef<"FinancialTransaction", 'Float'>
     readonly priority: FieldRef<"FinancialTransaction", 'Int'>
     readonly isObservable: FieldRef<"FinancialTransaction", 'Boolean'>
     readonly isSendNotification: FieldRef<"FinancialTransaction", 'Boolean'>
@@ -8774,25 +8774,25 @@ export namespace Prisma {
   export type PaymentAvgAggregateOutputType = {
     id: number | null
     financialTransactionId: number | null
-    value: Decimal | null
-    discount: Decimal | null
-    increase: Decimal | null
+    value: number | null
+    discount: number | null
+    increase: number | null
   }
 
   export type PaymentSumAggregateOutputType = {
     id: number | null
     financialTransactionId: number | null
-    value: Decimal | null
-    discount: Decimal | null
-    increase: Decimal | null
+    value: number | null
+    discount: number | null
+    increase: number | null
   }
 
   export type PaymentMinAggregateOutputType = {
     id: number | null
     financialTransactionId: number | null
-    value: Decimal | null
-    discount: Decimal | null
-    increase: Decimal | null
+    value: number | null
+    discount: number | null
+    increase: number | null
     paidAt: Date | null
     createdAt: Date | null
   }
@@ -8800,9 +8800,9 @@ export namespace Prisma {
   export type PaymentMaxAggregateOutputType = {
     id: number | null
     financialTransactionId: number | null
-    value: Decimal | null
-    discount: Decimal | null
-    increase: Decimal | null
+    value: number | null
+    discount: number | null
+    increase: number | null
     paidAt: Date | null
     createdAt: Date | null
   }
@@ -8955,9 +8955,9 @@ export namespace Prisma {
   export type PaymentGroupByOutputType = {
     id: number
     financialTransactionId: number
-    value: Decimal
-    discount: Decimal
-    increase: Decimal
+    value: number
+    discount: number
+    increase: number
     paidAt: Date
     createdAt: Date
     _count: PaymentCountAggregateOutputType | null
@@ -9015,9 +9015,9 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       financialTransactionId: number
-      value: Prisma.Decimal
-      discount: Prisma.Decimal
-      increase: Prisma.Decimal
+      value: number
+      discount: number
+      increase: number
       paidAt: Date
       createdAt: Date
     }, ExtArgs["result"]["payment"]>
@@ -9417,9 +9417,9 @@ export namespace Prisma {
   interface PaymentFieldRefs {
     readonly id: FieldRef<"Payment", 'Int'>
     readonly financialTransactionId: FieldRef<"Payment", 'Int'>
-    readonly value: FieldRef<"Payment", 'Decimal'>
-    readonly discount: FieldRef<"Payment", 'Decimal'>
-    readonly increase: FieldRef<"Payment", 'Decimal'>
+    readonly value: FieldRef<"Payment", 'Float'>
+    readonly discount: FieldRef<"Payment", 'Float'>
+    readonly increase: FieldRef<"Payment", 'Float'>
     readonly paidAt: FieldRef<"Payment", 'DateTime'>
     readonly createdAt: FieldRef<"Payment", 'DateTime'>
   }
@@ -9940,16 +9940,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Decimal'
+   * Reference to a field of type 'Float'
    */
-  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
   /**
-   * Reference to a field of type 'Decimal[]'
+   * Reference to a field of type 'Float[]'
    */
-  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -10013,20 +10013,6 @@ export namespace Prisma {
    * Reference to a field of type 'FinancialTransactionSituation[]'
    */
   export type ListEnumFinancialTransactionSituationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinancialTransactionSituation[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
   /**
    * Deep Input Types
@@ -10103,7 +10089,7 @@ export namespace Prisma {
     userId?: IntFilter<"BankAccount"> | number
     name?: StringFilter<"BankAccount"> | string
     passwordMaster?: StringFilter<"BankAccount"> | string
-    balance?: DecimalFilter<"BankAccount"> | Decimal | DecimalJsLike | number | string
+    balance?: FloatFilter<"BankAccount"> | number
     createdAt?: DateTimeFilter<"BankAccount"> | Date | string
     updatedAt?: DateTimeFilter<"BankAccount"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
@@ -10134,7 +10120,7 @@ export namespace Prisma {
     userId?: IntFilter<"BankAccount"> | number
     name?: StringFilter<"BankAccount"> | string
     passwordMaster?: StringFilter<"BankAccount"> | string
-    balance?: DecimalFilter<"BankAccount"> | Decimal | DecimalJsLike | number | string
+    balance?: FloatFilter<"BankAccount"> | number
     createdAt?: DateTimeFilter<"BankAccount"> | Date | string
     updatedAt?: DateTimeFilter<"BankAccount"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
@@ -10166,7 +10152,7 @@ export namespace Prisma {
     userId?: IntWithAggregatesFilter<"BankAccount"> | number
     name?: StringWithAggregatesFilter<"BankAccount"> | string
     passwordMaster?: StringWithAggregatesFilter<"BankAccount"> | string
-    balance?: DecimalWithAggregatesFilter<"BankAccount"> | Decimal | DecimalJsLike | number | string
+    balance?: FloatWithAggregatesFilter<"BankAccount"> | number
     createdAt?: DateTimeWithAggregatesFilter<"BankAccount"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"BankAccount"> | Date | string
   }
@@ -10388,7 +10374,7 @@ export namespace Prisma {
     bankAccountId?: IntFilter<"FinancialTransaction"> | number
     title?: StringFilter<"FinancialTransaction"> | string
     description?: StringFilter<"FinancialTransaction"> | string
-    value?: DecimalFilter<"FinancialTransaction"> | Decimal | DecimalJsLike | number | string
+    value?: FloatFilter<"FinancialTransaction"> | number
     priority?: IntFilter<"FinancialTransaction"> | number
     isObservable?: BoolFilter<"FinancialTransaction"> | boolean
     isSendNotification?: BoolFilter<"FinancialTransaction"> | boolean
@@ -10439,7 +10425,7 @@ export namespace Prisma {
     bankAccountId?: IntFilter<"FinancialTransaction"> | number
     title?: StringFilter<"FinancialTransaction"> | string
     description?: StringFilter<"FinancialTransaction"> | string
-    value?: DecimalFilter<"FinancialTransaction"> | Decimal | DecimalJsLike | number | string
+    value?: FloatFilter<"FinancialTransaction"> | number
     priority?: IntFilter<"FinancialTransaction"> | number
     isObservable?: BoolFilter<"FinancialTransaction"> | boolean
     isSendNotification?: BoolFilter<"FinancialTransaction"> | boolean
@@ -10492,7 +10478,7 @@ export namespace Prisma {
     bankAccountId?: IntWithAggregatesFilter<"FinancialTransaction"> | number
     title?: StringWithAggregatesFilter<"FinancialTransaction"> | string
     description?: StringWithAggregatesFilter<"FinancialTransaction"> | string
-    value?: DecimalWithAggregatesFilter<"FinancialTransaction"> | Decimal | DecimalJsLike | number | string
+    value?: FloatWithAggregatesFilter<"FinancialTransaction"> | number
     priority?: IntWithAggregatesFilter<"FinancialTransaction"> | number
     isObservable?: BoolWithAggregatesFilter<"FinancialTransaction"> | boolean
     isSendNotification?: BoolWithAggregatesFilter<"FinancialTransaction"> | boolean
@@ -10571,9 +10557,9 @@ export namespace Prisma {
     NOT?: PaymentWhereInput | PaymentWhereInput[]
     id?: IntFilter<"Payment"> | number
     financialTransactionId?: IntFilter<"Payment"> | number
-    value?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
-    increase?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
+    value?: FloatFilter<"Payment"> | number
+    discount?: FloatFilter<"Payment"> | number
+    increase?: FloatFilter<"Payment"> | number
     paidAt?: DateTimeFilter<"Payment"> | Date | string
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     financialTransaction?: XOR<FinancialTransactionRelationFilter, FinancialTransactionWhereInput>
@@ -10596,9 +10582,9 @@ export namespace Prisma {
     OR?: PaymentWhereInput[]
     NOT?: PaymentWhereInput | PaymentWhereInput[]
     financialTransactionId?: IntFilter<"Payment"> | number
-    value?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
-    increase?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
+    value?: FloatFilter<"Payment"> | number
+    discount?: FloatFilter<"Payment"> | number
+    increase?: FloatFilter<"Payment"> | number
     paidAt?: DateTimeFilter<"Payment"> | Date | string
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     financialTransaction?: XOR<FinancialTransactionRelationFilter, FinancialTransactionWhereInput>
@@ -10625,9 +10611,9 @@ export namespace Prisma {
     NOT?: PaymentScalarWhereWithAggregatesInput | PaymentScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Payment"> | number
     financialTransactionId?: IntWithAggregatesFilter<"Payment"> | number
-    value?: DecimalWithAggregatesFilter<"Payment"> | Decimal | DecimalJsLike | number | string
-    discount?: DecimalWithAggregatesFilter<"Payment"> | Decimal | DecimalJsLike | number | string
-    increase?: DecimalWithAggregatesFilter<"Payment"> | Decimal | DecimalJsLike | number | string
+    value?: FloatWithAggregatesFilter<"Payment"> | number
+    discount?: FloatWithAggregatesFilter<"Payment"> | number
+    increase?: FloatWithAggregatesFilter<"Payment"> | number
     paidAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
     createdAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
   }
@@ -10699,7 +10685,7 @@ export namespace Prisma {
   export type BankAccountCreateInput = {
     name: string
     passwordMaster: string
-    balance?: Decimal | DecimalJsLike | number | string
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutBankAccountsInput
@@ -10713,7 +10699,7 @@ export namespace Prisma {
     userId: number
     name: string
     passwordMaster: string
-    balance?: Decimal | DecimalJsLike | number | string
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     financialTransactions?: FinancialTransactionUncheckedCreateNestedManyWithoutBankAccountInput
@@ -10724,7 +10710,7 @@ export namespace Prisma {
   export type BankAccountUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     passwordMaster?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBankAccountsNestedInput
@@ -10738,7 +10724,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     passwordMaster?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     financialTransactions?: FinancialTransactionUncheckedUpdateManyWithoutBankAccountNestedInput
@@ -10751,7 +10737,7 @@ export namespace Prisma {
     userId: number
     name: string
     passwordMaster: string
-    balance?: Decimal | DecimalJsLike | number | string
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10759,7 +10745,7 @@ export namespace Prisma {
   export type BankAccountUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     passwordMaster?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10769,7 +10755,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     passwordMaster?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10986,7 +10972,7 @@ export namespace Prisma {
   export type FinancialTransactionCreateInput = {
     title: string
     description?: string
-    value: Decimal | DecimalJsLike | number | string
+    value: number
     priority: number
     isObservable?: boolean
     isSendNotification?: boolean
@@ -11010,7 +10996,7 @@ export namespace Prisma {
     bankAccountId: number
     title: string
     description?: string
-    value: Decimal | DecimalJsLike | number | string
+    value: number
     priority: number
     isObservable?: boolean
     isSendNotification?: boolean
@@ -11031,7 +11017,7 @@ export namespace Prisma {
   export type FinancialTransactionUpdateInput = {
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
     isObservable?: BoolFieldUpdateOperationsInput | boolean
     isSendNotification?: BoolFieldUpdateOperationsInput | boolean
@@ -11055,7 +11041,7 @@ export namespace Prisma {
     bankAccountId?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
     isObservable?: BoolFieldUpdateOperationsInput | boolean
     isSendNotification?: BoolFieldUpdateOperationsInput | boolean
@@ -11078,7 +11064,7 @@ export namespace Prisma {
     bankAccountId: number
     title: string
     description?: string
-    value: Decimal | DecimalJsLike | number | string
+    value: number
     priority: number
     isObservable?: boolean
     isSendNotification?: boolean
@@ -11097,7 +11083,7 @@ export namespace Prisma {
   export type FinancialTransactionUpdateManyMutationInput = {
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
     isObservable?: BoolFieldUpdateOperationsInput | boolean
     isSendNotification?: BoolFieldUpdateOperationsInput | boolean
@@ -11118,7 +11104,7 @@ export namespace Prisma {
     bankAccountId?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
     isObservable?: BoolFieldUpdateOperationsInput | boolean
     isSendNotification?: BoolFieldUpdateOperationsInput | boolean
@@ -11187,9 +11173,9 @@ export namespace Prisma {
   }
 
   export type PaymentCreateInput = {
-    value: Decimal | DecimalJsLike | number | string
-    discount?: Decimal | DecimalJsLike | number | string
-    increase?: Decimal | DecimalJsLike | number | string
+    value: number
+    discount?: number
+    increase?: number
     paidAt?: Date | string
     createdAt?: Date | string
     financialTransaction: FinancialTransactionCreateNestedOneWithoutPaymentsInput
@@ -11198,17 +11184,17 @@ export namespace Prisma {
   export type PaymentUncheckedCreateInput = {
     id?: number
     financialTransactionId: number
-    value: Decimal | DecimalJsLike | number | string
-    discount?: Decimal | DecimalJsLike | number | string
-    increase?: Decimal | DecimalJsLike | number | string
+    value: number
+    discount?: number
+    increase?: number
     paidAt?: Date | string
     createdAt?: Date | string
   }
 
   export type PaymentUpdateInput = {
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    increase?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    increase?: FloatFieldUpdateOperationsInput | number
     paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     financialTransaction?: FinancialTransactionUpdateOneRequiredWithoutPaymentsNestedInput
@@ -11217,9 +11203,9 @@ export namespace Prisma {
   export type PaymentUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     financialTransactionId?: IntFieldUpdateOperationsInput | number
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    increase?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    increase?: FloatFieldUpdateOperationsInput | number
     paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11227,17 +11213,17 @@ export namespace Prisma {
   export type PaymentCreateManyInput = {
     id?: number
     financialTransactionId: number
-    value: Decimal | DecimalJsLike | number | string
-    discount?: Decimal | DecimalJsLike | number | string
-    increase?: Decimal | DecimalJsLike | number | string
+    value: number
+    discount?: number
+    increase?: number
     paidAt?: Date | string
     createdAt?: Date | string
   }
 
   export type PaymentUpdateManyMutationInput = {
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    increase?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    increase?: FloatFieldUpdateOperationsInput | number
     paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11245,9 +11231,9 @@ export namespace Prisma {
   export type PaymentUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     financialTransactionId?: IntFieldUpdateOperationsInput | number
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    increase?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    increase?: FloatFieldUpdateOperationsInput | number
     paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11382,15 +11368,15 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type DecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type UserRelationFilter = {
@@ -11470,20 +11456,20 @@ export namespace Prisma {
     balance?: SortOrder
   }
 
-  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
     _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedDecimalFilter<$PrismaModel>
-    _sum?: NestedDecimalFilter<$PrismaModel>
-    _min?: NestedDecimalFilter<$PrismaModel>
-    _max?: NestedDecimalFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -11997,12 +11983,12 @@ export namespace Prisma {
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
-  export type DecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type UserUpdateOneRequiredWithoutBankAccountsNestedInput = {
@@ -12411,31 +12397,20 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedDecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
-  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
     _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedDecimalFilter<$PrismaModel>
-    _sum?: NestedDecimalFilter<$PrismaModel>
-    _min?: NestedDecimalFilter<$PrismaModel>
-    _max?: NestedDecimalFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
@@ -12522,7 +12497,7 @@ export namespace Prisma {
   export type BankAccountCreateWithoutUserInput = {
     name: string
     passwordMaster: string
-    balance?: Decimal | DecimalJsLike | number | string
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     financialTransactions?: FinancialTransactionCreateNestedManyWithoutBankAccountInput
@@ -12534,7 +12509,7 @@ export namespace Prisma {
     id?: number
     name: string
     passwordMaster: string
-    balance?: Decimal | DecimalJsLike | number | string
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     financialTransactions?: FinancialTransactionUncheckedCreateNestedManyWithoutBankAccountInput
@@ -12576,7 +12551,7 @@ export namespace Prisma {
     userId?: IntFilter<"BankAccount"> | number
     name?: StringFilter<"BankAccount"> | string
     passwordMaster?: StringFilter<"BankAccount"> | string
-    balance?: DecimalFilter<"BankAccount"> | Decimal | DecimalJsLike | number | string
+    balance?: FloatFilter<"BankAccount"> | number
     createdAt?: DateTimeFilter<"BankAccount"> | Date | string
     updatedAt?: DateTimeFilter<"BankAccount"> | Date | string
   }
@@ -12606,7 +12581,7 @@ export namespace Prisma {
   export type FinancialTransactionCreateWithoutBankAccountInput = {
     title: string
     description?: string
-    value: Decimal | DecimalJsLike | number | string
+    value: number
     priority: number
     isObservable?: boolean
     isSendNotification?: boolean
@@ -12628,7 +12603,7 @@ export namespace Prisma {
     id?: number
     title: string
     description?: string
-    value: Decimal | DecimalJsLike | number | string
+    value: number
     priority: number
     isObservable?: boolean
     isSendNotification?: boolean
@@ -12770,7 +12745,7 @@ export namespace Prisma {
     bankAccountId?: IntFilter<"FinancialTransaction"> | number
     title?: StringFilter<"FinancialTransaction"> | string
     description?: StringFilter<"FinancialTransaction"> | string
-    value?: DecimalFilter<"FinancialTransaction"> | Decimal | DecimalJsLike | number | string
+    value?: FloatFilter<"FinancialTransaction"> | number
     priority?: IntFilter<"FinancialTransaction"> | number
     isObservable?: BoolFilter<"FinancialTransaction"> | boolean
     isSendNotification?: BoolFilter<"FinancialTransaction"> | boolean
@@ -12850,7 +12825,7 @@ export namespace Prisma {
   export type BankAccountCreateWithoutNotificationsInput = {
     name: string
     passwordMaster: string
-    balance?: Decimal | DecimalJsLike | number | string
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutBankAccountsInput
@@ -12863,7 +12838,7 @@ export namespace Prisma {
     userId: number
     name: string
     passwordMaster: string
-    balance?: Decimal | DecimalJsLike | number | string
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     financialTransactions?: FinancialTransactionUncheckedCreateNestedManyWithoutBankAccountInput
@@ -12907,7 +12882,7 @@ export namespace Prisma {
   export type BankAccountUpdateWithoutNotificationsInput = {
     name?: StringFieldUpdateOperationsInput | string
     passwordMaster?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBankAccountsNestedInput
@@ -12920,7 +12895,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     passwordMaster?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     financialTransactions?: FinancialTransactionUncheckedUpdateManyWithoutBankAccountNestedInput
@@ -13020,7 +12995,7 @@ export namespace Prisma {
   export type BankAccountCreateWithoutCategoriesInput = {
     name: string
     passwordMaster: string
-    balance?: Decimal | DecimalJsLike | number | string
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutBankAccountsInput
@@ -13033,7 +13008,7 @@ export namespace Prisma {
     userId: number
     name: string
     passwordMaster: string
-    balance?: Decimal | DecimalJsLike | number | string
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     financialTransactions?: FinancialTransactionUncheckedCreateNestedManyWithoutBankAccountInput
@@ -13059,7 +13034,7 @@ export namespace Prisma {
   export type BankAccountUpdateWithoutCategoriesInput = {
     name?: StringFieldUpdateOperationsInput | string
     passwordMaster?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBankAccountsNestedInput
@@ -13072,7 +13047,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     passwordMaster?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     financialTransactions?: FinancialTransactionUncheckedUpdateManyWithoutBankAccountNestedInput
@@ -13082,7 +13057,7 @@ export namespace Prisma {
   export type BankAccountCreateWithoutFinancialTransactionsInput = {
     name: string
     passwordMaster: string
-    balance?: Decimal | DecimalJsLike | number | string
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutBankAccountsInput
@@ -13095,7 +13070,7 @@ export namespace Prisma {
     userId: number
     name: string
     passwordMaster: string
-    balance?: Decimal | DecimalJsLike | number | string
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     categories?: CategoryUncheckedCreateNestedManyWithoutBankAccountInput
@@ -13108,18 +13083,18 @@ export namespace Prisma {
   }
 
   export type PaymentCreateWithoutFinancialTransactionInput = {
-    value: Decimal | DecimalJsLike | number | string
-    discount?: Decimal | DecimalJsLike | number | string
-    increase?: Decimal | DecimalJsLike | number | string
+    value: number
+    discount?: number
+    increase?: number
     paidAt?: Date | string
     createdAt?: Date | string
   }
 
   export type PaymentUncheckedCreateWithoutFinancialTransactionInput = {
     id?: number
-    value: Decimal | DecimalJsLike | number | string
-    discount?: Decimal | DecimalJsLike | number | string
-    increase?: Decimal | DecimalJsLike | number | string
+    value: number
+    discount?: number
+    increase?: number
     paidAt?: Date | string
     createdAt?: Date | string
   }
@@ -13171,7 +13146,7 @@ export namespace Prisma {
   export type BankAccountUpdateWithoutFinancialTransactionsInput = {
     name?: StringFieldUpdateOperationsInput | string
     passwordMaster?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBankAccountsNestedInput
@@ -13184,7 +13159,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     passwordMaster?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categories?: CategoryUncheckedUpdateManyWithoutBankAccountNestedInput
@@ -13213,9 +13188,9 @@ export namespace Prisma {
     NOT?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
     id?: IntFilter<"Payment"> | number
     financialTransactionId?: IntFilter<"Payment"> | number
-    value?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
-    increase?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
+    value?: FloatFilter<"Payment"> | number
+    discount?: FloatFilter<"Payment"> | number
+    increase?: FloatFilter<"Payment"> | number
     paidAt?: DateTimeFilter<"Payment"> | Date | string
     createdAt?: DateTimeFilter<"Payment"> | Date | string
   }
@@ -13250,7 +13225,7 @@ export namespace Prisma {
   export type FinancialTransactionCreateWithoutNotesInput = {
     title: string
     description?: string
-    value: Decimal | DecimalJsLike | number | string
+    value: number
     priority: number
     isObservable?: boolean
     isSendNotification?: boolean
@@ -13273,7 +13248,7 @@ export namespace Prisma {
     bankAccountId: number
     title: string
     description?: string
-    value: Decimal | DecimalJsLike | number | string
+    value: number
     priority: number
     isObservable?: boolean
     isSendNotification?: boolean
@@ -13309,7 +13284,7 @@ export namespace Prisma {
   export type FinancialTransactionUpdateWithoutNotesInput = {
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
     isObservable?: BoolFieldUpdateOperationsInput | boolean
     isSendNotification?: BoolFieldUpdateOperationsInput | boolean
@@ -13332,7 +13307,7 @@ export namespace Prisma {
     bankAccountId?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
     isObservable?: BoolFieldUpdateOperationsInput | boolean
     isSendNotification?: BoolFieldUpdateOperationsInput | boolean
@@ -13352,7 +13327,7 @@ export namespace Prisma {
   export type FinancialTransactionCreateWithoutPaymentsInput = {
     title: string
     description?: string
-    value: Decimal | DecimalJsLike | number | string
+    value: number
     priority: number
     isObservable?: boolean
     isSendNotification?: boolean
@@ -13375,7 +13350,7 @@ export namespace Prisma {
     bankAccountId: number
     title: string
     description?: string
-    value: Decimal | DecimalJsLike | number | string
+    value: number
     priority: number
     isObservable?: boolean
     isSendNotification?: boolean
@@ -13411,7 +13386,7 @@ export namespace Prisma {
   export type FinancialTransactionUpdateWithoutPaymentsInput = {
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
     isObservable?: BoolFieldUpdateOperationsInput | boolean
     isSendNotification?: BoolFieldUpdateOperationsInput | boolean
@@ -13434,7 +13409,7 @@ export namespace Prisma {
     bankAccountId?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
     isObservable?: BoolFieldUpdateOperationsInput | boolean
     isSendNotification?: BoolFieldUpdateOperationsInput | boolean
@@ -13455,7 +13430,7 @@ export namespace Prisma {
     id?: number
     name: string
     passwordMaster: string
-    balance?: Decimal | DecimalJsLike | number | string
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13463,7 +13438,7 @@ export namespace Prisma {
   export type BankAccountUpdateWithoutUserInput = {
     name?: StringFieldUpdateOperationsInput | string
     passwordMaster?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     financialTransactions?: FinancialTransactionUpdateManyWithoutBankAccountNestedInput
@@ -13475,7 +13450,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     passwordMaster?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     financialTransactions?: FinancialTransactionUncheckedUpdateManyWithoutBankAccountNestedInput
@@ -13487,7 +13462,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     passwordMaster?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13496,7 +13471,7 @@ export namespace Prisma {
     id?: number
     title: string
     description?: string
-    value: Decimal | DecimalJsLike | number | string
+    value: number
     priority: number
     isObservable?: boolean
     isSendNotification?: boolean
@@ -13536,7 +13511,7 @@ export namespace Prisma {
   export type FinancialTransactionUpdateWithoutBankAccountInput = {
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
     isObservable?: BoolFieldUpdateOperationsInput | boolean
     isSendNotification?: BoolFieldUpdateOperationsInput | boolean
@@ -13558,7 +13533,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
     isObservable?: BoolFieldUpdateOperationsInput | boolean
     isSendNotification?: BoolFieldUpdateOperationsInput | boolean
@@ -13580,7 +13555,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
     isObservable?: BoolFieldUpdateOperationsInput | boolean
     isSendNotification?: BoolFieldUpdateOperationsInput | boolean
@@ -13661,9 +13636,9 @@ export namespace Prisma {
 
   export type PaymentCreateManyFinancialTransactionInput = {
     id?: number
-    value: Decimal | DecimalJsLike | number | string
-    discount?: Decimal | DecimalJsLike | number | string
-    increase?: Decimal | DecimalJsLike | number | string
+    value: number
+    discount?: number
+    increase?: number
     paidAt?: Date | string
     createdAt?: Date | string
   }
@@ -13676,27 +13651,27 @@ export namespace Prisma {
   }
 
   export type PaymentUpdateWithoutFinancialTransactionInput = {
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    increase?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    increase?: FloatFieldUpdateOperationsInput | number
     paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PaymentUncheckedUpdateWithoutFinancialTransactionInput = {
     id?: IntFieldUpdateOperationsInput | number
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    increase?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    increase?: FloatFieldUpdateOperationsInput | number
     paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PaymentUncheckedUpdateManyWithoutFinancialTransactionInput = {
     id?: IntFieldUpdateOperationsInput | number
-    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    increase?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    value?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    increase?: FloatFieldUpdateOperationsInput | number
     paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

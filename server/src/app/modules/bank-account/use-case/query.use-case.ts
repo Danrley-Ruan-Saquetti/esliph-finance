@@ -8,15 +8,15 @@ import { BankAccountRepository } from '@modules/bank-account/bank-account.reposi
 export class BankAccountQueryUseCase {
     constructor(@Injection.Inject('bank-account.repository') private repository: BankAccountRepository) {}
 
-    async queryByIdWithoutPassword({ id }: { id: ID }) {
-        const account = await this.repository.findByIdWithoutPassword(id)
+    async queryByIdWithoutPassword(args: { id: ID }) {
+        const bankAccountResult = await this.repository.findByIdWithoutPasswordMaster(args.id)
 
-        return Result.success(account)
+        return bankAccountResult
     }
 
-    async queryManyWithoutPassword() {
-        const account = await this.repository.findManyWithoutPassword()
+    async queryManyByIdUserWithoutPassword(args: { userId: ID }) {
+        const bankAccountsResult = await this.repository.findManyByIdUserWithoutPasswordMaster(args.userId)
 
-        return Result.success(account)
+        return bankAccountsResult
     }
 }
