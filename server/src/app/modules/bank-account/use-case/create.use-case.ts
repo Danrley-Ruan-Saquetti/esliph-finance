@@ -10,10 +10,10 @@ const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
         .string()
         .trim()
-        .min(1, { message: 'O nome é obrigatório' })
+        .min(1, { message: 'Name is required' })
         .transform(val => val.replace(/ {2}/g, ' ')),
-    email: ValidatorService.schema.string().email({ message: 'E-mail inválido' }).trim().min(1, { message: 'O e-mail é obrigatório' }),
-    password: ValidatorService.schema.string().trim().min(1, { message: 'A senha é obrigatória' }),
+    userId: ValidatorService.schema.coerce.number({ required_error: 'ID User is required' }).positive({ message: 'Invalid ID User' }),
+    passwordMaster: ValidatorService.schema.string().trim().min(1, { message: 'Password is required' }),
 })
 
 export type BankAccountCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
@@ -27,12 +27,10 @@ export class BankAccountCreateUseCase {
     ) {}
 
     async perform(args: BankAccountCreateDTOArgs) {
-        const { email, name, password } = this.validateDTO(args)
+        const { name, passwordMaster, userId } = this.validateDTO(args)
 
-        await this.validBankAccountEmailAlreadyExists(email)
-
-        const passwordHash = this.cryptPassword(password)
-        await this.registerBankAccount({ email, name, password: passwordHash })
+        const passwordMasterHash = this.cryptPassword(passwordMaster)
+        await this.registerBankAccount({ name, passwordMaster: passwordMasterHash, userId })
 
         return Result.success({ message: 'Conta registrada com sucesso' })
     }
@@ -41,24 +39,12 @@ export class BankAccountCreateUseCase {
         return this.validator.performParse(args, schemaDTO).getValue()
     }
 
-    private async validBankAccountEmailAlreadyExists(email: string) {
-        const accountAlreadyExistsByEmailResult = await this.repository.findByEmail(email)
-
-        if (accountAlreadyExistsByEmailResult.isSuccess()) {
-            throw new BadRequestException({
-                ...accountAlreadyExistsByEmailResult.getError(),
-                title: 'Registrar Conta',
-                message: 'Email já está em uso',
-            })
-        }
-    }
-
     private cryptPassword(password: string) {
-        return this.crypto.cryptoES.MD5(password).toString()
+        return this.crypto.bcrypto.hashSync(password, 5)
     }
 
-    private async registerBankAccount({ email, name, password }: BankAccountCreateDTOArgs) {
-        const registerBankAccountResult = await this.repository.register({ email, name, password, balance: 0 })
+    private async registerBankAccount({ name, passwordMaster, userId }: BankAccountCreateDTOArgs) {
+        const registerBankAccountResult = await this.repository.register({ balance: 0, name, passwordMaster, userId })
 
         if (!registerBankAccountResult.isSuccess()) {
             throw new BadRequestException({

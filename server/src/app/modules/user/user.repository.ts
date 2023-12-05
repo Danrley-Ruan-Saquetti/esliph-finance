@@ -11,21 +11,21 @@ export class UserRepository {
 
     @RepositoryQuery({ error: { title: 'Register User', message: 'Cannot register user' } })
     async register({ email, name, password }: UserModel.Model) {
-        await this.database.user.create({ data: { email, name, password } })
+        await this.repo.create({ data: { email, name, password } })
 
         return Result.success({ ok: true })
     }
 
     @RepositoryQuery({ error: { title: 'Update User', message: 'Cannot update user' } })
     async updateById(args: UserModel.Model, where: { id: number }) {
-        await this.database.user.update({ where: { id: where.id }, data: args })
+        await this.repo.update({ where: { id: where.id }, data: args })
 
         return Result.success({ ok: true })
     }
 
     @RepositoryQuery({ noThrow: true, error: { title: 'Find User', message: 'User not found' } })
     async findById(id: ID) {
-        const user = await this.database.user.findFirst({ where: { id } })
+        const user = await this.repo.findFirst({ where: { id } })
 
         if (!user) {
             return Result.failure<UserModel.Model>({ title: 'Find User', message: 'User not found' })
@@ -36,7 +36,7 @@ export class UserRepository {
 
     @RepositoryQuery({ noThrow: true, error: { title: 'Find User', message: 'User not found' } })
     async findByEmail(email: string) {
-        const user = await this.database.user.findFirst({ where: { email } })
+        const user = await this.repo.findFirst({ where: { email } })
 
         if (!user) {
             return Result.failure<UserModel.Model>({ title: 'Find User', message: 'User not found' })
@@ -47,7 +47,7 @@ export class UserRepository {
 
     @RepositoryQuery({ noThrow: true, error: { title: 'Find User', message: 'User not found' } })
     async findByIdWithoutPassword(id: ID) {
-        const user = await this.database.user.findFirst({ where: { id }, select: UserModel.UserWithoutPasswordSelect })
+        const user = await this.repo.findFirst({ where: { id }, select: UserModel.UserWithoutPasswordSelect })
 
         if (!user) {
             return Result.failure<UserModel.UserWithoutPassword>({ title: 'Find User', message: 'User not found' })
@@ -58,12 +58,16 @@ export class UserRepository {
 
     @RepositoryQuery({ noThrow: true, error: { title: 'Find User', message: 'User not found' } })
     async findByEmailWithoutPassword(email: string) {
-        const user = await this.database.user.findFirst({ where: { email }, select: UserModel.UserWithoutPasswordSelect })
+        const user = await this.repo.findFirst({ where: { email }, select: UserModel.UserWithoutPasswordSelect })
 
         if (!user) {
             return Result.failure<UserModel.UserWithoutPassword>({ title: 'Find User', message: 'User not found' })
         }
 
         return Result.success<UserModel.UserWithoutPassword>(user)
+    }
+
+    private get repo() {
+        return this.database.user
     }
 }

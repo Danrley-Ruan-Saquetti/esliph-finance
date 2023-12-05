@@ -11,21 +11,21 @@ export class BankAccountRepository {
 
     @RepositoryQuery({ error: { title: 'Register Bank Account', message: 'Cannot register bank account' } })
     async register({ balance, name, passwordMaster, userId }: BankAccountModel.Model) {
-        await this.database.bankAccount.create({ data: { balance, name, passwordMaster, userId } })
+        await this.repo.create({ data: { balance, name, passwordMaster, userId } })
 
         return Result.success({ ok: true })
     }
 
     @RepositoryQuery({ error: { title: 'Update Bank Account', message: 'Cannot update bank account' } })
     async updateById(args: Partial<Omit<BankAccountModel.Model, 'userId'>>, where: { id: ID }) {
-        await this.database.bankAccount.update({ where: { id: where.id }, data: args })
+        await this.repo.update({ where: { id: where.id }, data: args })
 
         return Result.success({ ok: true })
     }
 
     @RepositoryQuery({ noThrow: true, error: { title: 'Find Bank Account', message: 'Bank account not found' } })
     async findById(id: ID) {
-        const bankAccount = await this.database.bankAccount.findFirst({ where: { id } })
+        const bankAccount = await this.repo.findFirst({ where: { id } })
 
         if (!bankAccount) {
             return Result.failure<BankAccountModel.Model>({ title: 'Find Bank Account', message: 'Bank account not found' })
@@ -36,7 +36,7 @@ export class BankAccountRepository {
 
     @RepositoryQuery({ noThrow: true, error: { title: 'Find Bank Account', message: 'Bank account not found' } })
     async findByIdWithoutPasswordMaster(id: ID) {
-        const bankAccount = await this.database.bankAccount.findFirst({ where: { id }, select: BankAccountModel.BankAccountWithoutPasswordMasterSelect })
+        const bankAccount = await this.repo.findFirst({ where: { id }, select: BankAccountModel.BankAccountWithoutPasswordMasterSelect })
 
         if (!bankAccount) {
             return Result.failure<BankAccountModel.BankAccountWithoutPasswordMaster>({ title: 'Find Bank Account', message: 'Bank account not found' })
@@ -47,15 +47,19 @@ export class BankAccountRepository {
 
     @RepositoryQuery({ noThrow: true, error: { title: 'Find Bank Account', message: 'Bank account not found' } })
     async findManyByIdUser(userId: ID) {
-        const users = await this.database.bankAccount.findMany({ where: { userId } })
+        const users = await this.repo.findMany({ where: { userId } })
 
         return Result.success<BankAccountModel.Model[]>(users)
     }
 
     @RepositoryQuery({ noThrow: true, error: { title: 'Find Bank Account', message: 'Bank account not found' } })
     async findManyByIdUserWithoutPasswordMaster(userId: ID) {
-        const bankAccounts = await this.database.bankAccount.findMany({ where: { userId }, select: BankAccountModel.BankAccountWithoutPasswordMasterSelect })
+        const bankAccounts = await this.repo.findMany({ where: { userId }, select: BankAccountModel.BankAccountWithoutPasswordMasterSelect })
 
         return Result.success<BankAccountModel.BankAccountWithoutPasswordMaster[]>(bankAccounts)
+    }
+
+    private get repo() {
+        return this.database.bankAccount
     }
 }

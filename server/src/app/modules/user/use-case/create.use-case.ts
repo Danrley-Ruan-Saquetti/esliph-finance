@@ -31,7 +31,7 @@ export class UserCreateUseCase {
 
         await this.validUserEmailAlreadyExists(email)
 
-        const passwordHash = await this.cryptPassword(password)
+        const passwordHash = this.cryptPassword(password)
         await this.registerUser({ email, name, password: passwordHash })
 
         return Result.success({ message: 'Register user successfully' })
@@ -53,10 +53,8 @@ export class UserCreateUseCase {
         }
     }
 
-    private async cryptPassword(password: string) {
-        const passwordHash = await this.crypto.bcrypto.hash(password, 5)
-
-        return passwordHash
+    private  cryptPassword(password: string) {
+        return this.crypto.bcrypto.hashSync(password, 5)
     }
 
     private async registerUser({ email, name, password }: UserCreateDTOArgs) {
