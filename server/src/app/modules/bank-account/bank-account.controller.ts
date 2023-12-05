@@ -2,14 +2,14 @@ import { Request } from '@esliph/http'
 import { Injection } from '@esliph/injection'
 import { Controller, Get, Post } from '@esliph/module'
 import { ID } from '@@types'
-import { AccountCreateUseCase, AccountCreateDTOArgs } from '@modules/account/use-case/create.use-case'
-import { AccountQueryUseCase } from '@modules/account/use-case/query.use-case'
+import { BankAccountCreateUseCase, BankAccountCreateDTOArgs } from '@modules/bank-account/use-case/create.use-case'
+import { BankAccountQueryUseCase } from '@modules/bank-account/use-case/query.use-case'
 
 @Controller()
-export class AccountController {
+export class BankAccountController {
     constructor(
-        @Injection.Inject('account.use-case.create') private createUC: AccountCreateUseCase,
-        @Injection.Inject('account.use-case.query') private queryUC: AccountQueryUseCase,
+        @Injection.Inject('account.use-case.create') private createUC: BankAccountCreateUseCase,
+        @Injection.Inject('account.use-case.query') private queryUC: BankAccountQueryUseCase,
     ) {}
 
     @Get('/accounts')

@@ -31,10 +31,10 @@ export class UserCreateUseCase {
 
         await this.validUserEmailAlreadyExists(email)
 
-        const passwordHash = this.cryptPassword(password)
+        const passwordHash = await this.cryptPassword(password)
         await this.registerUser({ email, name, password: passwordHash })
 
-        return Result.success({ message: 'Conta registrada com sucesso' })
+        return Result.success({ message: 'Register user successfully' })
     }
 
     private validateDTO(args: UserCreateDTOArgs) {
@@ -53,18 +53,20 @@ export class UserCreateUseCase {
         }
     }
 
-    private cryptPassword(password: string) {
-        return this.crypto.bcrypto
+    private async cryptPassword(password: string) {
+        const passwordHash = await this.crypto.bcrypto.hash(password, 5)
+
+        return passwordHash
     }
 
     private async registerUser({ email, name, password }: UserCreateDTOArgs) {
-        const registerUserResult = await this.repository.register({ email, name, password, balance: 0 })
+        const registerUserResult = await this.repository.register({ email, name, password })
 
         if (!registerUserResult.isSuccess()) {
             throw new BadRequestException({
                 ...registerUserResult.getError(),
-                title: 'Registrar Conta',
-                message: `Não foi registrar a conta. Erro: "${registerUserResult.getError().message}"`,
+                title: 'Register User',
+                message: `Cannot register user. Error: "${registerUserResult.getError().message}"`,
             })
         }
     }

@@ -4,7 +4,7 @@ import { Service } from '@esliph/module'
 import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
-import { AccountRepository } from '@modules/account/account.repository'
+import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
 
 const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
@@ -16,32 +16,32 @@ const schemaDTO = ValidatorService.schema.object({
     password: ValidatorService.schema.string().trim().min(1, { message: 'A senha é obrigatória' }),
 })
 
-export type AccountCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
+export type BankAccountCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
-@Service({ name: 'account.use-case.create' })
-export class AccountCreateUseCase {
+@Service({ name: 'bank-account.use-case.create' })
+export class BankAccountCreateUseCase {
     constructor(
-        @Injection.Inject('account.repository') private repository: AccountRepository,
+        @Injection.Inject('account.repository') private repository: BankAccountRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
         @Injection.Inject('validator') private validator: ValidatorService,
     ) {}
 
-    async perform(args: AccountCreateDTOArgs) {
+    async perform(args: BankAccountCreateDTOArgs) {
         const { email, name, password } = this.validateDTO(args)
 
-        await this.validAccountEmailAlreadyExists(email)
+        await this.validBankAccountEmailAlreadyExists(email)
 
         const passwordHash = this.cryptPassword(password)
-        await this.registerAccount({ email, name, password: passwordHash })
+        await this.registerBankAccount({ email, name, password: passwordHash })
 
         return Result.success({ message: 'Conta registrada com sucesso' })
     }
 
-    private validateDTO(args: AccountCreateDTOArgs) {
+    private validateDTO(args: BankAccountCreateDTOArgs) {
         return this.validator.performParse(args, schemaDTO).getValue()
     }
 
-    private async validAccountEmailAlreadyExists(email: string) {
+    private async validBankAccountEmailAlreadyExists(email: string) {
         const accountAlreadyExistsByEmailResult = await this.repository.findByEmail(email)
 
         if (accountAlreadyExistsByEmailResult.isSuccess()) {
@@ -57,14 +57,14 @@ export class AccountCreateUseCase {
         return this.crypto.cryptoES.MD5(password).toString()
     }
 
-    private async registerAccount({ email, name, password }: AccountCreateDTOArgs) {
-        const registerAccountResult = await this.repository.register({ email, name, password, balance: 0 })
+    private async registerBankAccount({ email, name, password }: BankAccountCreateDTOArgs) {
+        const registerBankAccountResult = await this.repository.register({ email, name, password, balance: 0 })
 
-        if (!registerAccountResult.isSuccess()) {
+        if (!registerBankAccountResult.isSuccess()) {
             throw new BadRequestException({
-                ...registerAccountResult.getError(),
+                ...registerBankAccountResult.getError(),
                 title: 'Registrar Conta',
-                message: `Não foi registrar a conta. Erro: "${registerAccountResult.getError().message}"`,
+                message: `Não foi registrar a conta. Erro: "${registerBankAccountResult.getError().message}"`,
             })
         }
     }

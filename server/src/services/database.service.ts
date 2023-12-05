@@ -4,7 +4,6 @@ import { Decorator } from '@esliph/decorator'
 import { Result, ErrorResultInfo } from '@esliph/common'
 import { PrismaClient, Prisma } from '@resources/database/client'
 import { DatabaseException, ServerInternalErrorException } from '@common/exceptions'
-import { isNull } from '@util'
 export * from '@resources/database/client'
 
 @Service({ name: 'global.service.database' })
