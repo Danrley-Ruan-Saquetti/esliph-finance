@@ -1,3 +1,6 @@
+# Domain
+src/resources/database
+
 # Logs
 logs
 *.log

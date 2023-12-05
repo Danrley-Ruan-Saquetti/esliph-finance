@@ -1,6 +1,6 @@
 import { Service } from '@esliph/module'
-import { DatabaseException, ServerInternalErrorException } from '@common/exceptions'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@resources/database/client'
+export * from '@resources/database/client'
 
 @Service({ name: 'global.service.database' })
 export class DatabaseService extends PrismaClient {}
