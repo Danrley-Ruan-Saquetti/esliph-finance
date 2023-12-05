@@ -3,9 +3,9 @@ import { ResultExceptionArgs } from '@esliph/common'
 import { HttpException } from '@common/exceptions/http.exception'
 
 const ERROR_INFO_DEFAULT = {
-    title: 'Proibido',
-    message: 'Requisição negada',
-    description: 'O acesso a este recurso é restrito',
+    title: 'Unauthorized',
+    message: 'Request unauthorized',
+    description: 'Access to this resource is restricted',
     causes: [],
 }
 

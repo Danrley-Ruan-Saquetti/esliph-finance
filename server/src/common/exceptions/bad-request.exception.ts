@@ -3,9 +3,9 @@ import { HttpStatusCodes } from '@esliph/http'
 import { HttpException } from '@common/exceptions/http.exception'
 
 const ERROR_INFO_DEFAULT = {
-    title: 'Requisição',
-    message: 'Falha na requisição',
-    description: 'Houve um erro ao solicitar esse recurso. Por favor, tente novamente',
+    title: 'Request',
+    message: 'Request failed',
+    description: 'There was an error requesting this feature. Please try again',
     causes: [],
 }
 

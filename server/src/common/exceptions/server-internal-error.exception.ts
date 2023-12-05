@@ -3,8 +3,8 @@ import { ResultExceptionArgs } from '@esliph/common'
 import { HttpException } from '@common/exceptions/http.exception'
 
 const ERROR_INFO_DEFAULT = {
-    title: 'Erro interno do servidor',
-    message: 'Houve um erro interno no servido',
+    title: 'Server internal error',
+    message: 'There was an internal server error',
     description: '',
     causes: [],
 }

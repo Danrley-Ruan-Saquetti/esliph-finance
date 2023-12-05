@@ -5,7 +5,12 @@
     "main": "dist/index.js",
     "scripts": {
         "start": "node dist/index.js",
-        "start:dev": "tsx watch src/index.ts"
+        "start:dev": "tsx watch src/index.ts",
+        "prisma:migrate": "prisma migrate dev",
+        "prisma:studio": "prisma studio",
+        "prisma:generate": "prisma generate",
+        "prisma:validate": "prisma format",
+        "prisma:pull": "prisma introspect"
     },
     "keywords": [],
     "author": "Dan Ruan <danrsaquetti@gmail.com>",
@@ -17,11 +22,20 @@
         "@esliph/http": "^1.0.2",
         "@esliph/injection": "^1.0.6",
         "@esliph/module": "^1.0.1",
+        "@prisma/client": "^5.6.0",
+        "bcrypt": "^5.1.1",
+        "jsonwebtoken": "^9.0.2",
         "zod": "^3.22.4"
     },
     "devDependencies": {
+        "@types/jsonwebtoken": "^9.0.5",
         "@types/node": "^20.10.3",
+        "prisma": "^5.6.0",
+        "tslib": "^2.6.2",
         "tsx": "^4.6.1",
         "typescript": "^5.1.3"
+    },
+    "prisma": {
+        "schema": "database/schema.prisma"
     }
 }
