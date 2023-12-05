@@ -1,9 +1,14 @@
 // DOCS: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:.src/resources/database.db" // env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
+
+// datasource db {
+//   provider = "sqlite"
+//   url      = "file:.src/resources/database.db"
+// }
 
 generator client {
   provider = "prisma-client-js"
@@ -11,9 +16,9 @@ generator client {
 
 model User {
   id Int @id @default(autoincrement())
-  name String @db.VarChar(45)
-  email String @db.VarChar(25) @unique
-  password String @db.VarChar(15)
+  name String! @db.VarChar(45)
+  email String! @db.VarChar(25) @unique
+  password String! @db.VarChar(15)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   bankAccounts BankAccount[]
@@ -24,9 +29,9 @@ model User {
 model BankAccount {
   id Int @id @default(autoincrement())
   user User @relation(fields: [userId], references: [id])
-  userId Int @map("user_id")
-  name String @db.VarChar(45)
-  passwordMaster String @db.VarChar(15) @map("password_master")
+  userId Int! @map("user_id")
+  name String! @db.VarChar(45)
+  passwordMaster String! @db.VarChar(15) @map("password_master")
   balance Decimal @default(0)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -48,11 +53,11 @@ enum NotificationType {
 model Notification {
   id Int @id @default(autoincrement())
   bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
-  bankAccountId Int @map("bank_account_id")
-  subject String @db.VarChar(45)
-  content String
+  bankAccountId Int! @map("bank_account_id")
+  subject String! @db.VarChar(45)
+  content String!
   wasRead Boolean @default(false) @map("was_read")
-  type NotificationType @map("type")
+  type NotificationType! @map("type")
   isSend Boolean @default(false) @map("is_send")
   sendAt DateTime @map("send_at")
   createdAt DateTime @default(now()) @map("created_at")
@@ -65,8 +70,8 @@ model Notification {
 model Mail {
   id Int @id @default(autoincrement())
   notification Notification @relation(fields: [notificationId], references: [id])
-  notificationId Int @map("notification_id") @unique
-  recipient String @db.VarChar(45)
+  notificationId Int! @map("notification_id") @unique
+  recipient String! @db.VarChar(45)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -76,9 +81,9 @@ model Mail {
 model Category {
   id Int @id @default(autoincrement())
   bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
-  bankAccountId Int @map("bank_account_id")
-  name String @db.VarChar(45)
-  color String @db.VarChar(15)
+  bankAccountId Int! @map("bank_account_id")
+  name String! @db.VarChar(45)
+  color String! @db.VarChar(15)
   isFavorite Boolean @default(false) @map("is_favorite")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -115,24 +120,24 @@ enum FinancialTransactionSituation {
 model FinancialTransaction {
   id Int @id @default(autoincrement())
   bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
-  bankAccountId Int @map("bank_account_id")
-  title String @db.VarChar(55)
+  bankAccountId Int! @map("bank_account_id")
+  title String! @db.VarChar(55)
   description String @default("")
-  value Decimal
+  value Decimal!
   priority Int
   isObservable Boolean @default(false) @map("is_observable")
   isSendNotification Boolean @default(false) @map("is_send_notification")
   timesToRepeat Int @default(0) @map("times_to_repeat")
   countRepeatedOccurrences Int @default(0) @map("count_repeated_occurrences")
-  type FinancialTransactionType @map("type")
+  type FinancialTransactionType! @map("type")
   receiver String @default("")
   sender String @default("")
-  typeOccurrence DinancialTransactionOccurrence @default(SINGLE) @map("type_occurrence")
+  typeOccurrence FinancialTransactionOccurrence @default(SINGLE) @map("type_occurrence")
   situation FinancialTransactionSituation @default(PENDING) @map("situation")
-  expiresIn DateTime @map("expires_in")
+  expiresIn DateTime! @map("expires_in")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-  payments Payments[]
+  payments Payment[]
   notes Note[]
 
   @@map("financial_transaction")
@@ -141,7 +146,7 @@ model FinancialTransaction {
 model Note {
   id Int @id @default(autoincrement())
   financialTransaction FinancialTransaction @relation(fields: [financialTransactionId], references: [id])
-  financialTransactionId Int @map("financial_transaction_id")
+  financialTransactionId! Int @map("financial_transaction_id")
   description String @default("")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -152,8 +157,8 @@ model Note {
 model Payment {
   id Int @id @default(autoincrement())
   financialTransaction FinancialTransaction @relation(fields: [financialTransactionId], references: [id])
-  financialTransactionId Int @map("financial_transaction_id")
-  value Decimal
+  financialTransactionId Int! @map("financial_transaction_id")
+  value Decimal!
   discount Decimal @default(0)
   increase Decimal @default(0)
   paidAt DateTime @default(now()) @map("paid_at")
