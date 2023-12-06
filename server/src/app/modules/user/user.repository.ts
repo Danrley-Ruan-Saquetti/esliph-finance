@@ -7,7 +7,7 @@ import { UserModel } from '@modules/user/user.model'
 
 @Service({ name: 'user.repository' })
 export class UserRepository {
-    constructor(@Injection.Inject('database') private database: DatabaseService) {}
+    constructor(@Injection.Inject('database') private database: DatabaseService) { }
 
     @RepositoryQuery({ error: { title: 'Register User', message: 'Cannot register user' } })
     async register({ email, name, password }: UserModel.Model) {
@@ -28,10 +28,10 @@ export class UserRepository {
         const user = await this.repo.findFirst({ where: { id } })
 
         if (!user) {
-            return Result.failure<UserModel.Model>({ title: 'Find User', message: 'User not found' })
+            return Result.failure<UserModel.User>({ title: 'Find User', message: 'User not found' })
         }
 
-        return Result.success<UserModel.Model>(user)
+        return Result.success<UserModel.User>(user)
     }
 
     @RepositoryQuery({ noThrow: true, error: { title: 'Find User', message: 'User not found' } })
@@ -39,10 +39,10 @@ export class UserRepository {
         const user = await this.repo.findFirst({ where: { email } })
 
         if (!user) {
-            return Result.failure<UserModel.Model>({ title: 'Find User', message: 'User not found' })
+            return Result.failure<UserModel.User>({ title: 'Find User', message: 'User not found' })
         }
 
-        return Result.success<UserModel.Model>(user)
+        return Result.success<UserModel.User>(user)
     }
 
     @RepositoryQuery({ noThrow: true, error: { title: 'Find User', message: 'User not found' } })
