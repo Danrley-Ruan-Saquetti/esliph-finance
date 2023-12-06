@@ -7,7 +7,7 @@ import { Result } from '@esliph/common'
 
 @Service({ name: 'bank-account.repository' })
 export class BankAccountRepository {
-    constructor(@Injection.Inject('database') private database: DatabaseService) {}
+    constructor(@Injection.Inject('database') private database: DatabaseService) { }
 
     @RepositoryQuery({ error: { title: 'Register Bank Account', message: 'Cannot register bank account' } })
     async register({ balance, name, passwordMaster, userId }: BankAccountModel.Model) {
@@ -60,6 +60,6 @@ export class BankAccountRepository {
     }
 
     private get repo() {
-        return this.database.bankAccount
+        return this.database.instance.bankAccount
     }
 }

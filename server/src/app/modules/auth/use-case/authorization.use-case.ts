@@ -9,7 +9,7 @@ import { PayloadJWTUser } from '@@types'
 export type AuthSignInDTOArgs = { token: string }
 
 @Service({ name: 'auth.use-case.create' })
-export class AuthSignInUseCase {
+export class AuthAuthorizationUseCase {
     constructor(
         @Injection.Inject('jwt') private jwt: JWTService,
     ) { }

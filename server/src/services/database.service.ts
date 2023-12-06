@@ -7,7 +7,13 @@ import { Result, ErrorResultInfo } from '@esliph/common'
 import { DatabaseException, ServerInternalErrorException } from '@common/exceptions'
 
 @Service({ name: 'global.service.database' })
-export class DatabaseService extends PrismaClient { }
+export class DatabaseService {
+    private static instance = new PrismaClient()
+
+    get instance() {
+        return DatabaseService.instance
+    }
+}
 
 export type RepositoryQueryOptions = {
     noThrow: boolean

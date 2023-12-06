@@ -68,6 +68,6 @@ export class UserRepository {
     }
 
     private get repo() {
-        return this.database.user
+        return this.database.instance.user
     }
 }
