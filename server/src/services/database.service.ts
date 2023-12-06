@@ -1,13 +1,13 @@
+export * from '@prisma/client'
 import { isAsyncFunction } from 'util/types'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { Service } from '@esliph/module'
 import { Decorator } from '@esliph/decorator'
 import { Result, ErrorResultInfo } from '@esliph/common'
-import { PrismaClient, Prisma } from '@resources/database/client'
 import { DatabaseException, ServerInternalErrorException } from '@common/exceptions'
-export * from '@resources/database/client'
 
 @Service({ name: 'global.service.database' })
-export class DatabaseService extends PrismaClient {}
+export class DatabaseService extends PrismaClient { }
 
 export type RepositoryQueryOptions = {
     noThrow: boolean
@@ -23,9 +23,9 @@ export function RepositoryQuery(options: Partial<RepositoryQueryOptions> = {}) {
                 try {
                     const result = await originalMethod(...args)
 
-                    return validResultRespository(result, options)
+                    return validResultRepository(result, options)
                 } catch (err: any) {
-                    return validErrorRespository(err, options)
+                    return validErrorRepository(err, options)
                 }
             }
         } else {
@@ -33,9 +33,9 @@ export function RepositoryQuery(options: Partial<RepositoryQueryOptions> = {}) {
                 try {
                     const result = originalMethod(...args)
 
-                    return validResultRespository(result, options)
+                    return validResultRepository(result, options)
                 } catch (err: any) {
-                    return validErrorRespository(err, options)
+                    return validErrorRepository(err, options)
                 }
             }
         }
@@ -44,7 +44,7 @@ export function RepositoryQuery(options: Partial<RepositoryQueryOptions> = {}) {
     return Decorator.Create.Method(handler)
 }
 
-function validResultRespository(result: any, options: Partial<RepositoryQueryOptions> = {}) {
+function validResultRepository(result: any, options: Partial<RepositoryQueryOptions> = {}) {
     if (!options.noThrow) {
         if (result instanceof Result && !result.isSuccess()) {
             throw new DatabaseException({ title: 'Database', message: 'Error on operation', ...options.error })
@@ -54,7 +54,7 @@ function validResultRespository(result: any, options: Partial<RepositoryQueryOpt
     return result
 }
 
-function validErrorRespository(error: any, options: Partial<RepositoryQueryOptions> = {}) {
+function validErrorRepository(error: any, options: Partial<RepositoryQueryOptions> = {}) {
     if (error instanceof Error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             throw new DatabaseException({ causes: [], title: 'Database', ...error, ...options.error })

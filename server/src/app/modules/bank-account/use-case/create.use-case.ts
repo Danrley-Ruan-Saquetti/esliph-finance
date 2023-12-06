@@ -24,7 +24,7 @@ export class BankAccountCreateUseCase {
         @Injection.Inject('account.repository') private repository: BankAccountRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
         @Injection.Inject('validator') private validator: ValidatorService,
-    ) {}
+    ) { }
 
     async perform(args: BankAccountCreateDTOArgs) {
         const { name, passwordMaster, userId } = this.validateDTO(args)
@@ -32,7 +32,7 @@ export class BankAccountCreateUseCase {
         const passwordMasterHash = this.cryptPassword(passwordMaster)
         await this.registerBankAccount({ name, passwordMaster: passwordMasterHash, userId })
 
-        return Result.success({ message: 'Conta registrada com sucesso' })
+        return Result.success({ message: 'Bank account registered successfully' })
     }
 
     private validateDTO(args: BankAccountCreateDTOArgs) {
@@ -49,8 +49,8 @@ export class BankAccountCreateUseCase {
         if (!registerBankAccountResult.isSuccess()) {
             throw new BadRequestException({
                 ...registerBankAccountResult.getError(),
-                title: 'Registrar Conta',
-                message: `Não foi registrar a conta. Erro: "${registerBankAccountResult.getError().message}"`,
+                title: 'Register Bank Account',
+                message: `Cannot register bank account. Error: "${registerBankAccountResult.getError().message}"`,
             })
         }
     }
