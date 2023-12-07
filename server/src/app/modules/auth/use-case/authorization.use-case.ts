@@ -6,24 +6,22 @@ import { UnauthorizedException } from '@common/exceptions'
 import { SERVER_KEY_SECRET } from '@global'
 import { PayloadJWTUser } from '@@types'
 
-export type AuthSignInDTOArgs = { token: string }
+export type AuthSignInDTOArgs = { Authorization: string }
 
-@Service({ name: 'auth.use-case.create' })
+@Service({ name: 'auth.use-case.authorization' })
 export class AuthAuthorizationUseCase {
-    constructor(
-        @Injection.Inject('jwt') private jwt: JWTService,
-    ) { }
+    constructor(@Injection.Inject('jwt') private jwt: JWTService) {}
 
-    perform({ token: AuthorizationToken }: AuthSignInDTOArgs) {
-        if (!AuthorizationToken) {
+    perform({ Authorization }: AuthSignInDTOArgs) {
+        if (!Authorization) {
             throw new UnauthorizedException({ message: 'Authorization token not defined' })
         }
 
-        if (AuthorizationToken.split(' ').length != 2) {
+        if (Authorization.split(' ').length != 2) {
             throw new UnauthorizedException({ message: 'Authorization token not defined' })
         }
 
-        const [bearer, token] = AuthorizationToken.split(' ')
+        const [bearer, token] = Authorization.split(' ')
 
         if (bearer !== 'Bearer') {
             throw new UnauthorizedException({ message: 'Authorization token invalid' })
