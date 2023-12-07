@@ -48,6 +48,11 @@ export function isFunction(value: any) {
     return getTypeNativeValue(value) == 'function'
 }
 
+const AsyncFunction = (async () => { }).constructor
+export function isAsyncFunction(value: any) {
+    return value instanceof AsyncFunction
+}
+
 export function isNumber(value: any, coerce = false) {
     if (coerce) {
         return !isUndefined(value) && !isNaN(Number(value))

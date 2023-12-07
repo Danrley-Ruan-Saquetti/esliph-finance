@@ -15,12 +15,12 @@ export class DatabaseService {
     }
 }
 
-export type RepositoryQueryOptions = {
+export type RepositoryResponseOptions = {
     noThrow: boolean
     error: Partial<ErrorResultInfo>
 }
 
-export function RepositoryQuery(options: Partial<RepositoryQueryOptions> = {}) {
+export function RepositoryResponse(options: Partial<RepositoryResponseOptions> = {}) {
     function handler(target: any, key: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value
 
@@ -50,7 +50,7 @@ export function RepositoryQuery(options: Partial<RepositoryQueryOptions> = {}) {
     return Decorator.Create.Method(handler)
 }
 
-function validResultRepository(result: any, options: Partial<RepositoryQueryOptions> = {}) {
+function validResultRepository(result: any, options: Partial<RepositoryResponseOptions> = {}) {
     if (!options.noThrow) {
         if (result instanceof Result && !result.isSuccess()) {
             throw new DatabaseException({ title: 'Database', message: 'Error on operation', ...options.error })
@@ -60,7 +60,7 @@ function validResultRepository(result: any, options: Partial<RepositoryQueryOpti
     return result
 }
 
-function validErrorRepository(error: any, options: Partial<RepositoryQueryOptions> = {}) {
+function validErrorRepository(error: any, options: Partial<RepositoryResponseOptions> = {}) {
     if (error instanceof Error) {
         console.log(error)
 
