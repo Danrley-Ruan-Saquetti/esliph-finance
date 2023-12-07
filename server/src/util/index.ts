@@ -48,8 +48,8 @@ export function isFunction(value: any) {
     return getTypeNativeValue(value) == 'function'
 }
 
-export function isNumber(value: any, coerse = false) {
-    if (coerse) {
+export function isNumber(value: any, coerce = false) {
+    if (coerce) {
         return !isUndefined(value) && !isNaN(Number(value))
     }
 
@@ -78,4 +78,22 @@ export function isNull(value: any) {
 
 export function getTypeNativeValue(value: any) {
     return typeof value
+}
+
+export type GetEnvArgs<DefaultType> = { name: string, defaultValue?: DefaultType, forceDefaultValue?: boolean, defaultValueInProduction?: boolean }
+
+export function getEnv<DefaultType>({ name, defaultValue, forceDefaultValue, defaultValueInProduction }: GetEnvArgs<DefaultType>): DefaultType {
+    const envValue = process.env[`${name}`] as DefaultType
+
+    if (process.env['ENVIRONMENT'] == 'PRODUCTION') {
+        if (!defaultValueInProduction) {
+            return (envValue) as DefaultType
+        }
+    }
+
+    if (!forceDefaultValue) {
+        return (envValue || defaultValue) as DefaultType
+    }
+
+    return (defaultValue || envValue) as DefaultType
 }

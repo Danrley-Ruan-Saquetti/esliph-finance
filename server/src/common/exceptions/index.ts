@@ -1,6 +1,7 @@
 export * from '@common/exceptions/bad-request.exception'
 export * from '@common/exceptions/database.exception'
 export * from '@common/exceptions/exception'
+export * from '@common/exceptions/router-not-found.exception'
 export * from '@common/exceptions/forbidden.exception'
 export * from '@common/exceptions/http.exception'
 export * from '@common/exceptions/result.exception'
