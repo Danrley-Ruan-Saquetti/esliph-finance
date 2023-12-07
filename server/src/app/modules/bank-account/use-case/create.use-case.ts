@@ -1,6 +1,7 @@
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
+import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
@@ -19,24 +20,21 @@ const schemaDTO = ValidatorService.schema.object({
 export type BankAccountCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
 @Service({ name: 'bank-account.use-case.create' })
-export class BankAccountCreateUseCase {
+export class BankAccountCreateUseCase extends UseCase {
     constructor(
         @Injection.Inject('account.repository') private repository: BankAccountRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
-        @Injection.Inject('validator') private validator: ValidatorService,
-    ) { }
+    ) {
+        super()
+    }
 
     async perform(args: BankAccountCreateDTOArgs) {
-        const { name, passwordMaster, userId } = this.validateDTO(args)
+        const { name, passwordMaster, userId } = this.validateDTO(args, schemaDTO)
 
         const passwordMasterHash = this.cryptPassword(passwordMaster)
         await this.registerBankAccount({ name, passwordMaster: passwordMasterHash, userId })
 
         return Result.success({ message: 'Bank account registered successfully' })
-    }
-
-    private validateDTO(args: BankAccountCreateDTOArgs) {
-        return this.validator.performParse(args, schemaDTO).getValue()
     }
 
     private cryptPassword(password: string) {

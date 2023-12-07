@@ -3,6 +3,7 @@ import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { JWT_EXPIRES_TIME, SERVER_KEY_SECRET } from '@global'
 import { PayloadJWTUser } from '@@types'
+import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
@@ -17,26 +18,23 @@ const schemaDTO = ValidatorService.schema.object({
 export type AuthSignInDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
 @Service({ name: 'auth.use-case.sign-in' })
-export class AuthSignInUseCase {
+export class AuthSignInUseCase extends UseCase {
     constructor(
         @Injection.Inject('user.repository') private userRepository: UserRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
-        @Injection.Inject('validator') private validator: ValidatorService,
         @Injection.Inject('jwt') private jwt: JWTService,
-    ) {}
+    ) {
+        super()
+    }
 
     async perform(args: AuthSignInDTOArgs) {
-        const { email, password } = this.validateDTO(args)
+        const { email, password } = this.validateDTO(args, schemaDTO)
 
         const user = await this.queryUserByEmail(email)
         await this.validPassword(password, user.password)
         const token = this.generateToken({ sub: user.id, email: user.email, name: user.name })
 
         return Result.success({ token })
-    }
-
-    private validateDTO(args: AuthSignInDTOArgs) {
-        return this.validator.performParse(args, schemaDTO).getValue()
     }
 
     private async queryUserByEmail(email: string) {

@@ -2,6 +2,7 @@ import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { BadRequestException } from '@common/exceptions'
+import { UseCase } from '@common/use-case'
 import { CryptoService } from '@services/crypto.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { UserRepository } from '@modules/user/user.repository'
@@ -19,15 +20,16 @@ const schemaDTO = ValidatorService.schema.object({
 export type UserCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
 @Service({ name: 'user.use-case.create' })
-export class UserCreateUseCase {
+export class UserCreateUseCase extends UseCase {
     constructor(
         @Injection.Inject('user.repository') private repository: UserRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
-        @Injection.Inject('validator') private validator: ValidatorService,
-    ) {}
+    ) {
+        super()
+    }
 
     async perform(args: UserCreateDTOArgs) {
-        const { email, name, password } = this.validateDTO(args)
+        const { email, name, password } = this.validateDTO(args, schemaDTO)
 
         await this.validUserEmailAlreadyExists(email)
 
@@ -35,10 +37,6 @@ export class UserCreateUseCase {
         await this.registerUser({ email, name, password: passwordHash })
 
         return Result.success({ message: 'Register user successfully' })
-    }
-
-    private validateDTO(args: UserCreateDTOArgs) {
-        return this.validator.performParse(args, schemaDTO).getValue()
     }
 
     private async validUserEmailAlreadyExists(email: string) {
@@ -53,7 +51,7 @@ export class UserCreateUseCase {
         }
     }
 
-    private  cryptPassword(password: string) {
+    private cryptPassword(password: string) {
         return this.crypto.bcrypto.hashSync(password, 5)
     }
 

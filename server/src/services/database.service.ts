@@ -62,6 +62,8 @@ function validResultRepository(result: any, options: Partial<RepositoryQueryOpti
 
 function validErrorRepository(error: any, options: Partial<RepositoryQueryOptions> = {}) {
     if (error instanceof Error) {
+        console.log(error)
+
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             throw new DatabaseException({ causes: [], title: 'Database', ...error, ...options.error })
         }
