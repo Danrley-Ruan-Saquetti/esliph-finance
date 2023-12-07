@@ -16,14 +16,14 @@ const schemaDTO = ValidatorService.schema.object({
 
 export type AuthSignInDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
-@Service({ name: 'auth.use-case.create' })
+@Service({ name: 'auth.use-case.sign-in' })
 export class AuthSignInUseCase {
     constructor(
         @Injection.Inject('user.repository') private userRepository: UserRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
         @Injection.Inject('validator') private validator: ValidatorService,
         @Injection.Inject('jwt') private jwt: JWTService,
-    ) { }
+    ) {}
 
     async perform(args: AuthSignInDTOArgs) {
         const { email, password } = this.validateDTO(args)
