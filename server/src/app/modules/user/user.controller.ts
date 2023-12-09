@@ -3,5 +3,10 @@ import { Controller, Guard } from '@esliph/module'
 
 @Controller()
 export class UserController {
-    constructor() {}
+    constructor() { }
+
+    @Get('/hello')
+    hello() {
+        return { hello: 'world' }
+    }
 }

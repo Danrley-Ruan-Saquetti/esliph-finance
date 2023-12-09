@@ -131,4 +131,7 @@ dist
 .pnp.*
 
 # prisma generate
-./server/src/resources/database/client
+server/src/resources/database/client
+
+# Packages
+packages/server/*
