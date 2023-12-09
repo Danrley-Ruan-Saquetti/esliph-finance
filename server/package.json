@@ -1,5 +1,5 @@
 {
-    "name": "portal-finance.server",
+    "name": "financial-portal.server",
     "version": "1.0.0",
     "description": "",
     "main": "dist/index.js",
