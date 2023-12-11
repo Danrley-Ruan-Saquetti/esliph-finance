@@ -6,14 +6,13 @@ import { UserModel } from '@modules/user/user.model'
 
 @Service({ name: 'user.repository' })
 export class UserRepository extends Repository {
-
     async register({ email, name, password }: UserModel.Model) {
         try {
             await this.database.instance.user.create({ data: { email, name, password } })
 
             return this.performResponse(Result.success({ ok: true }))
         } catch (err: any) {
-            return this.performError(err, { error: { title: 'Register User', message: 'Cannot register user' } })
+            return this.performError<Result<{ ok: true }>>(err, { error: { title: 'Register User', message: 'Cannot register user' } })
         }
     }
 
@@ -23,7 +22,7 @@ export class UserRepository extends Repository {
 
             return this.performResponse(Result.success({ ok: true }))
         } catch (err: any) {
-            return this.performError(err, { error: { title: 'Update User', message: 'Cannot update user' } })
+            return this.performError<Result<{ ok: true }>>(err, { error: { title: 'Update User', message: 'Cannot update user' } })
         }
     }
 
@@ -37,7 +36,7 @@ export class UserRepository extends Repository {
 
             return this.performResponse(Result.success<UserModel.User>(user))
         } catch (err: any) {
-            return this.performError(err, { noThrow: true, error: { title: 'Find User', message: 'User not found' } })
+            return this.performError<Result<UserModel.User>>(err, { noThrow: true, error: { title: 'Find User', message: 'User not found' } })
         }
     }
 
@@ -51,7 +50,7 @@ export class UserRepository extends Repository {
 
             return this.performResponse(Result.success<UserModel.User>(user))
         } catch (err: any) {
-            return this.performError(err, { noThrow: true, error: { title: 'Find User', message: 'User not found' } })
+            return this.performError<Result<UserModel.User>>(err, { noThrow: true, error: { title: 'Find User', message: 'User not found' } })
         }
     }
 

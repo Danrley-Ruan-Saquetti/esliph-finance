@@ -12,34 +12,34 @@ type RepositoryResponseOptions = {
 
 @Service()
 export class Repository {
-    constructor(@Injection.Inject('database') protected database: DatabaseService) { }
+    constructor(@Injection.Inject('database') protected database: DatabaseService) {}
 
-    protected performResponse(res: any, options: Partial<RepositoryResponseOptions> = {}) {
-        return Repository.validResultRepository(res, options)
+    protected performResponse<T = any>(res: T, options: Partial<RepositoryResponseOptions> = {}) {
+        return Repository.validResultRepository<T>(res, options)
     }
 
-    protected performError(error: any, options: Partial<RepositoryResponseOptions> = {}) {
-        return Repository.validErrorRepository(error, options)
+    protected performError<T = any>(error: any, options: Partial<RepositoryResponseOptions> = {}) {
+        return Repository.validErrorRepository<T>(error, options)
     }
 
-    private static validResultRepository(result: any, options: Partial<RepositoryResponseOptions> = {}) {
+    private static validResultRepository<T = any>(result: T, options: Partial<RepositoryResponseOptions> = {}) {
         if (!options.noThrow) {
-            if (result instanceof Result && (!result.isSuccess() || isNull(result.getValue()))) {
-                throw new DatabaseException({ ...result.getError(), ...options.error })
+            if (result instanceof Result) {
+                if (!result.isSuccess() || isNull(result.getValue())) {
+                    throw new DatabaseException({ ...result.getError(), ...options.error })
+                }
             }
 
             if (isNull(result)) {
-                throw new DatabaseException({ ...result.getError(), ...options.error })
+                throw new DatabaseException({ message: 'No result in operation', ...options.error })
             }
         }
 
         return result
     }
 
-    private static validErrorRepository(error: any, options: Partial<RepositoryResponseOptions> = {}) {
+    private static validErrorRepository<T = any>(error: T, options: Partial<RepositoryResponseOptions> = {}) {
         if (error instanceof Error) {
-            console.log(error)
-
             if (error instanceof Prisma.PrismaClientKnownRequestError) {
                 throw new DatabaseException({ causes: [], title: 'Database', ...error, ...options.error })
             }

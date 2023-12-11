@@ -1,4 +1,3 @@
-import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { ID } from '@@types'
