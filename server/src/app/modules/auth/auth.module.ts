@@ -1,11 +1,12 @@
 import { Module } from '@esliph/module'
 import { AuthController } from '@modules/auth/auth.controller'
 import { AuthUseCaseModule } from '@modules/auth/use-case/use-case.module'
-import { AuthorizationFilter } from '@modules/auth/filters/authorization.filter'
+import { UserAuthorizationFilter } from '@modules/auth/filters/user.authorization.filter'
+import { BankAccountAuthorizationFilter } from '@modules/auth/filters/bank-account.authorization.filter'
 
 @Module({
     imports: [AuthUseCaseModule],
     controllers: [AuthController],
-    providers: [AuthorizationFilter],
+    providers: [UserAuthorizationFilter, BankAccountAuthorizationFilter],
 })
 export class AuthModule {}

@@ -4,7 +4,7 @@ const { execSync } = require('node:child_process')
 const pkg = JSON.parse(fs.readFileSync('package.json', { encoding: 'utf-8' }))
 
 const BASE_COMMAND_INSTALL = 'npm i '
-const BASE_COMMAND_INSTALL_DEV = 'npm i -D'
+const BASE_COMMAND_INSTALL_DEV = 'npm i -D '
 
 const dependenciesName = pkg.dependencies ? Object.keys(pkg.dependencies || {}).join('@latest ') + '@latest' : ''
 const devDependenciesName = pkg.dependencies ? Object.keys(pkg.devDependencies || {}).join('@latest ') + '@latest' : ''

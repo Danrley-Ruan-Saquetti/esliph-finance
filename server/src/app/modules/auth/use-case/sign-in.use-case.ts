@@ -1,7 +1,7 @@
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { JWT_EXPIRES_TIME, SERVER_KEY_SECRET } from '@global'
+import { JWT_EXPIRES_TIME, SERVER_KEY_SECRET_MASTER } from '@global'
 import { PayloadJWTUser } from '@@types'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
@@ -56,6 +56,6 @@ export class AuthSignInUseCase extends UseCase {
     }
 
     private generateToken({ sub, email, name }: PayloadJWTUser) {
-        return this.jwt.encode<PayloadJWTUser>({ sub, name, email }, { exp: JWT_EXPIRES_TIME, secret: SERVER_KEY_SECRET })
+        return this.jwt.encode<PayloadJWTUser>({ sub, name, email }, { exp: JWT_EXPIRES_TIME, secret: SERVER_KEY_SECRET_MASTER })
     }
 }

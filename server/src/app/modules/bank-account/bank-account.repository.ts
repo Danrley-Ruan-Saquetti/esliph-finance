@@ -6,14 +6,13 @@ import { BankAccountModel } from '@modules/bank-account/bank-account.model'
 
 @Service({ name: 'bank-account.repository' })
 export class BankAccountRepository extends Repository {
-
     async register({ balance, name, passwordMaster, userId }: BankAccountModel.Model) {
         try {
             await this.repo.create({ data: { balance, name, passwordMaster, userId } })
 
             return this.performResponse(Result.success({ ok: true }))
         } catch (err: any) {
-            return this.performError(err, { error: { title: 'Register Bank Account', message: 'Cannot register bank account' } })
+            return this.performError<Result<{ ok: boolean }>>(err, { error: { title: 'Register Bank Account', message: 'Cannot register bank account' } })
         }
     }
 
@@ -23,7 +22,7 @@ export class BankAccountRepository extends Repository {
 
             return this.performResponse(Result.success({ ok: true }))
         } catch (err: any) {
-            return this.performError(err, { error: { title: 'Update Bank Account', message: 'Cannot update bank account' } })
+            return this.performError<Result<{ ok: boolean }>>(err, { error: { title: 'Update Bank Account', message: 'Cannot update bank account' } })
         }
     }
 
@@ -46,7 +45,9 @@ export class BankAccountRepository extends Repository {
             const bankAccount = await this.repo.findFirst({ where: { id }, select: BankAccountModel.BankAccountWithoutPasswordMasterSelect })
 
             if (!bankAccount) {
-                return this.performResponse(Result.failure<BankAccountModel.BankAccountWithoutPasswordMaster>({ title: 'Find Bank Account', message: 'Bank account not found' }))
+                return this.performResponse(
+                    Result.failure<BankAccountModel.BankAccountWithoutPasswordMaster>({ title: 'Find Bank Account', message: 'Bank account not found' }),
+                )
             }
 
             return this.performResponse(Result.success<BankAccountModel.BankAccountWithoutPasswordMaster>(bankAccount))

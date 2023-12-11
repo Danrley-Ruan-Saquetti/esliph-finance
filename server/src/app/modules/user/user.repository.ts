@@ -12,7 +12,7 @@ export class UserRepository extends Repository {
 
             return this.performResponse(Result.success({ ok: true }))
         } catch (err: any) {
-            return this.performError<Result<{ ok: true }>>(err, { error: { title: 'Register User', message: 'Cannot register user' } })
+            return this.performError<Result<{ ok: boolean }>>(err, { error: { title: 'Register User', message: 'Cannot register user' } })
         }
     }
 
@@ -22,7 +22,7 @@ export class UserRepository extends Repository {
 
             return this.performResponse(Result.success({ ok: true }))
         } catch (err: any) {
-            return this.performError<Result<{ ok: true }>>(err, { error: { title: 'Update User', message: 'Cannot update user' } })
+            return this.performError<Result<{ ok: boolean }>>(err, { error: { title: 'Update User', message: 'Cannot update user' } })
         }
     }
 
@@ -64,7 +64,7 @@ export class UserRepository extends Repository {
 
             return this.performResponse(Result.success<UserModel.UserWithoutPassword>(user))
         } catch (err: any) {
-            return this.performError(err, { noThrow: true, error: { title: 'Find User', message: 'User not found' } })
+            return this.performError<Result<UserModel.UserWithoutPassword>>(err, { noThrow: true, error: { title: 'Find User', message: 'User not found' } })
         }
     }
 
@@ -78,7 +78,7 @@ export class UserRepository extends Repository {
 
             return this.performResponse(Result.success<UserModel.UserWithoutPassword>(user))
         } catch (err: any) {
-            return this.performError(err, { noThrow: true, error: { title: 'Find User', message: 'User not found' } })
+            return this.performError<Result<UserModel.UserWithoutPassword>>(err, { noThrow: true, error: { title: 'Find User', message: 'User not found' } })
         }
     }
 }
