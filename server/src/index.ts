@@ -16,6 +16,12 @@ const app = Bootstrap(
     [new FastifyAdapter()],
 )
 
-FastifyAdapter.instance.listen({ port: PORT }, () => {
-    app.logger.log(`Server runing in port ${PORT}`)
+FastifyAdapter.instance.listen({ port: PORT }, (err: Error | null, address: string) => {
+    if (err) {
+        console.log(err)
+
+        return process.exit(1)
+    }
+
+    app.logger.log(`Server running on address ${address}`)
 })
