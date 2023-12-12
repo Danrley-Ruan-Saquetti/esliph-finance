@@ -5,7 +5,7 @@ import { AuthBankAccountAuthorizationUseCase } from '@modules/auth/use-case/bank
 
 @Filter({ name: 'bank-account.filter.authorization' })
 export class BankAccountAuthorizationFilter implements FilterPerform {
-    constructor(@Injection.Inject('auth.use-case.authorization') private authorizationUC: AuthBankAccountAuthorizationUseCase) {}
+    constructor(@Injection.Inject('auth.bank-account.use-case.authorization') private authorizationUC: AuthBankAccountAuthorizationUseCase) { }
 
     async perform(req: Request<any>, res: Response<any>) {
         const { AuthorizationBankAccount } = req.headers

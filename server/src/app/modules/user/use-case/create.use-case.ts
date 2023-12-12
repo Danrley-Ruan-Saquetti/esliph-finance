@@ -40,15 +40,14 @@ export class UserCreateUseCase extends UseCase {
     }
 
     private async validUserEmailAlreadyExists(email: string) {
-        const userAlreadyExistsByEmailResult = await this.repository.findByEmail(email)
+        try {
+            await this.repository.findByEmail(email)
+        } catch (err: any) { return }
 
-        if (userAlreadyExistsByEmailResult.isSuccess()) {
-            throw new BadRequestException({
-                ...userAlreadyExistsByEmailResult.getError(),
-                title: 'Register User',
-                message: 'E-mail is already in use',
-            })
-        }
+        throw new BadRequestException({
+            title: 'Register  User',
+            message: 'E-mail is already in use',
+        })
     }
 
     private cryptPassword(password: string) {
@@ -60,7 +59,6 @@ export class UserCreateUseCase extends UseCase {
 
         if (!registerUserResult.isSuccess()) {
             throw new BadRequestException({
-                ...registerUserResult.getError(),
                 title: 'Register User',
                 message: `Cannot register user. Error: "${registerUserResult.getError().message}"`,
             })

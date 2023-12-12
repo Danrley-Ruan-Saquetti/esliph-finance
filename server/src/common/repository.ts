@@ -1,7 +1,7 @@
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { ErrorResultInfo, Result } from '@esliph/common'
-import { DatabaseException, Exception, ServerInternalErrorException } from '@common/exceptions'
+import { DatabaseException, Exception, ResultException, ServerInternalErrorException } from '@common/exceptions'
 import { DatabaseService, Prisma } from '@services/database.service'
 import { isNull } from '../util'
 
@@ -12,7 +12,7 @@ type RepositoryResponseOptions = {
 
 @Service()
 export class Repository {
-    constructor(@Injection.Inject('database') protected database: DatabaseService) {}
+    constructor(@Injection.Inject('database') protected database: DatabaseService) { }
 
     protected performResponse<T = any>(res: T, options: Partial<RepositoryResponseOptions> = {}) {
         return Repository.validResultRepository<T>(res, options)
@@ -39,18 +39,32 @@ export class Repository {
     }
 
     private static validErrorRepository<T = any>(error: T, options: Partial<RepositoryResponseOptions> = {}) {
-        if (error instanceof Error) {
-            if (error instanceof Prisma.PrismaClientKnownRequestError) {
-                throw new DatabaseException({ causes: [], title: 'Database', ...error, ...options.error })
-            }
+        if (!options.noThrow) {
+            if (error instanceof Error) {
+                if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                    throw new DatabaseException({ causes: [], title: 'Database', ...error, ...options.error })
+                }
 
-            if (error instanceof Exception) {
-                throw error
-            }
+                if (error instanceof Exception) {
+                    throw error
+                }
 
-            throw new ServerInternalErrorException({ ...error })
+                throw new ServerInternalErrorException({ ...error })
+            }
         }
 
-        return error
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            return Result.failure({ title: 'Database', ...error, ...options.error })
+        }
+
+        if (error instanceof ResultException) {
+            return Result.failure({ title: 'Database', ...error.getError() })
+        }
+
+        if (error instanceof Result) {
+            return Result.failure({ ...error.getError() })
+        }
+
+        return Result.failure({ title: 'Database', message: 'Error on operation database', ...error })
     }
 }

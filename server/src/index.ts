@@ -1,5 +1,6 @@
 import { Bootstrap } from '@esliph/module'
 import { FastifyAdapter } from '@esliph/adapter-fastify'
+import { Server } from '@esliph/http'
 import Fastify from 'fastify'
 import { MainModule } from '@main.module'
 import { getEnv } from '@util'
@@ -22,6 +23,10 @@ FastifyAdapter.instance.listen({ port: PORT }, (err: Error | null, address: stri
 
         return process.exit(1)
     }
+
+    Server.on('request/error', (args) => {
+        console.log(args)
+    })
 
     app.logger.log(`Server running on address ${address}`)
 })

@@ -6,13 +6,14 @@ import { UserModel } from '@modules/user/user.model'
 
 @Service({ name: 'user.repository' })
 export class UserRepository extends Repository {
+
     async register({ email, name, password }: UserModel.Model) {
         try {
             await this.database.instance.user.create({ data: { email, name, password } })
 
-            return this.performResponse(Result.success({ ok: true }))
+            return this.performResponse(Result.success({ ok: true }), { noThrow: true })
         } catch (err: any) {
-            return this.performError<Result<{ ok: boolean }>>(err, { error: { title: 'Register User', message: 'Cannot register user' } })
+            return this.performError<Result<{ ok: boolean }>>(err, { noThrow: true, error: { title: 'Register User', message: 'Cannot register user' } })
         }
     }
 
@@ -20,9 +21,9 @@ export class UserRepository extends Repository {
         try {
             await this.database.instance.user.update({ where: { id: where.id }, data: args })
 
-            return this.performResponse(Result.success({ ok: true }))
+            return this.performResponse(Result.success({ ok: true }), { noThrow: true })
         } catch (err: any) {
-            return this.performError<Result<{ ok: boolean }>>(err, { error: { title: 'Update User', message: 'Cannot update user' } })
+            return this.performError<Result<{ ok: boolean }>>(err, { noThrow: true, error: { title: 'Update User', message: 'Cannot update user' } })
         }
     }
 
@@ -31,10 +32,10 @@ export class UserRepository extends Repository {
             const user = await this.database.instance.user.findFirst({ where: { id } })
 
             if (!user) {
-                return this.performResponse(Result.failure<UserModel.User>({ title: 'Find User', message: 'User not found' }))
+                return this.performResponse(Result.failure<UserModel.User>({ title: 'Find User', message: 'User not found' }), { noThrow: true })
             }
 
-            return this.performResponse(Result.success<UserModel.User>(user))
+            return this.performResponse(Result.success<UserModel.User>(user), { noThrow: true })
         } catch (err: any) {
             return this.performError<Result<UserModel.User>>(err, { noThrow: true, error: { title: 'Find User', message: 'User not found' } })
         }
@@ -45,10 +46,10 @@ export class UserRepository extends Repository {
             const user = await this.database.instance.user.findFirst({ where: { email } })
 
             if (!user) {
-                return this.performResponse(Result.failure<UserModel.User>({ title: 'Find User', message: 'User not found' }))
+                return this.performResponse(Result.failure<UserModel.User>({ title: 'Find User', message: 'User not found' }), { noThrow: true })
             }
 
-            return this.performResponse(Result.success<UserModel.User>(user))
+            return this.performResponse(Result.success<UserModel.User>(user), { noThrow: true })
         } catch (err: any) {
             return this.performError<Result<UserModel.User>>(err, { noThrow: true, error: { title: 'Find User', message: 'User not found' } })
         }
@@ -59,10 +60,10 @@ export class UserRepository extends Repository {
             const user = await this.database.instance.user.findFirst({ where: { id }, select: UserModel.UserWithoutPasswordSelect })
 
             if (!user) {
-                return this.performResponse(Result.failure<UserModel.UserWithoutPassword>({ title: 'Find User', message: 'User not found' }))
+                return this.performResponse(Result.failure<UserModel.UserWithoutPassword>({ title: 'Find User', message: 'User not found' }), { noThrow: true })
             }
 
-            return this.performResponse(Result.success<UserModel.UserWithoutPassword>(user))
+            return this.performResponse(Result.success<UserModel.UserWithoutPassword>(user), { noThrow: true })
         } catch (err: any) {
             return this.performError<Result<UserModel.UserWithoutPassword>>(err, { noThrow: true, error: { title: 'Find User', message: 'User not found' } })
         }
@@ -73,10 +74,10 @@ export class UserRepository extends Repository {
             const user = await this.database.instance.user.findFirst({ where: { email }, select: UserModel.UserWithoutPasswordSelect })
 
             if (!user) {
-                return this.performResponse(Result.failure<UserModel.UserWithoutPassword>({ title: 'Find User', message: 'User not found' }))
+                return this.performResponse(Result.failure<UserModel.UserWithoutPassword>({ title: 'Find User', message: 'User not found' }), { noThrow: true })
             }
 
-            return this.performResponse(Result.success<UserModel.UserWithoutPassword>(user))
+            return this.performResponse(Result.success<UserModel.UserWithoutPassword>(user), { noThrow: true })
         } catch (err: any) {
             return this.performError<Result<UserModel.UserWithoutPassword>>(err, { noThrow: true, error: { title: 'Find User', message: 'User not found' } })
         }

@@ -7,6 +7,11 @@ import { BankAccountAuthorizationFilter } from '@modules/auth/filters/bank-accou
 @Module({
     imports: [AuthUseCaseModule],
     controllers: [AuthController],
-    providers: [UserAuthorizationFilter, BankAccountAuthorizationFilter],
+    providers: [
+        UserAuthorizationFilter,
+        BankAccountAuthorizationFilter,
+        { use: 'user.filter.authorization', whenCall: 'user.authorization' },
+        { use: 'bank-account.filter.authorization', whenCall: 'bank-account.authorization' }
+    ],
 })
-export class AuthModule {}
+export class AuthModule { }
