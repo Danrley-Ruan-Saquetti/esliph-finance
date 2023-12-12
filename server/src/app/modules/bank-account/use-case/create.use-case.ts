@@ -44,12 +44,14 @@ export class BankAccountCreateUseCase extends UseCase {
     private async registerBankAccount({ name, passwordMaster, userId }: BankAccountCreateDTOArgs) {
         const registerBankAccountResult = await this.repository.register({ balance: 0, name, passwordMaster, userId })
 
-        if (!registerBankAccountResult.isSuccess()) {
-            throw new BadRequestException({
-                ...registerBankAccountResult.getError(),
-                title: 'Register Bank Account',
-                message: `Cannot register bank account. Error: "${registerBankAccountResult.getError().message}"`,
-            })
+        if (registerBankAccountResult.isSuccess()) {
+            return
         }
+
+        throw new BadRequestException({
+            ...registerBankAccountResult.getError(),
+            title: 'Register Bank Account',
+            message: `Unable to register bank account. Error: "${registerBankAccountResult.getError().message}"`,
+        })
     }
 }

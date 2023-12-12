@@ -40,11 +40,15 @@ export class AuthSignInUseCase extends UseCase {
     private async queryUserByEmail(email: string) {
         const userResult = await this.userRepository.findByEmail(email)
 
-        if (!userResult.isSuccess()) {
-            throw new BadRequestException({ title: 'Sign-in', message: 'E-mail or password invalid' })
+        if (userResult.isSuccess()) {
+            return userResult.getValue()
         }
 
-        return userResult.getValue()
+        if (userResult.isErrorInOperation()) {
+            throw new BadRequestException({ title: 'Sign-in', message: 'Unable to valid e-mail or password. Please, try again later' })
+        }
+
+        throw new BadRequestException({ title: 'Sign-in', message: 'E-mail or password invalid' })
     }
 
     private async validPassword(password: string, passwordHash: string) {

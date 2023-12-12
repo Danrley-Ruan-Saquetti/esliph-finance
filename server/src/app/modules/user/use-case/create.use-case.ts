@@ -40,14 +40,21 @@ export class UserCreateUseCase extends UseCase {
     }
 
     private async validUserEmailAlreadyExists(email: string) {
-        try {
-            await this.repository.findByEmail(email)
-        } catch (err: any) { return }
+        const userAlreadyExistsResult = await this.repository.findByEmail(email)
 
-        throw new BadRequestException({
-            title: 'Register  User',
-            message: 'E-mail is already in use',
-        })
+        if (userAlreadyExistsResult.isSuccess()) {
+            throw new BadRequestException({
+                title: 'Register  User',
+                message: 'E-mail is already in use',
+            })
+        }
+
+        if (userAlreadyExistsResult.isErrorInOperation()) {
+            throw new BadRequestException({
+                title: 'Register  User',
+                message: 'Unable to validate whether the e-mail already exists. Please, try again later',
+            })
+        }
     }
 
     private cryptPassword(password: string) {
@@ -57,11 +64,14 @@ export class UserCreateUseCase extends UseCase {
     private async registerUser({ email, name, password }: UserCreateDTOArgs) {
         const registerUserResult = await this.repository.register({ email, name, password })
 
-        if (!registerUserResult.isSuccess()) {
-            throw new BadRequestException({
-                title: 'Register User',
-                message: `Cannot register user. Error: "${registerUserResult.getError().message}"`,
-            })
+        if (registerUserResult.isSuccess()) {
+            return
         }
+
+        throw new BadRequestException({
+            ...registerUserResult.getError(),
+            title: 'Register User',
+            message: `Unable to register user. Error: "${registerUserResult.getError().message}". Please, try again later`,
+        })
     }
 }

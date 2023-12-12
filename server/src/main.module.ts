@@ -18,4 +18,4 @@ import { DatabaseService } from '@services/database.service'
         { whenCall: 'database', use: 'global.service.database' },
     ],
 })
-export class MainModule { }
+export class MainModule {}
