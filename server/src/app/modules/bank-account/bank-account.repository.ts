@@ -1,5 +1,4 @@
 import { Service } from '@esliph/module'
-import { Result } from '@esliph/common'
 import { ID } from '@@types'
 import { Repository } from '@services/repository.service'
 import { BankAccountModel } from '@modules/bank-account/bank-account.model'
@@ -10,9 +9,9 @@ export class BankAccountRepository extends Repository {
         try {
             await this.repo.create({ data: { balance, name, passwordMaster, userId } })
 
-            return this.handleResponse<{ ok: boolean }>({ ok: true }, { error: { title: 'Register Bank Account', message: 'Failed to register bank account' } })
+            return this.handleResponse<{ message: string }>({ message: 'Bank account successfully registered' }, { error: { title: 'Register Bank Account', message: 'Failed to register bank account' } })
         } catch (err: any) {
-            return this.handleError<{ ok: boolean }>(err, { error: { title: 'Register Bank Account', message: 'Unable to register bank account' } })
+            return this.handleError<{ message: string }>(err, { error: { title: 'Register Bank Account', message: 'Unable to register bank account' } })
         }
     }
 
@@ -20,9 +19,9 @@ export class BankAccountRepository extends Repository {
         try {
             await this.repo.update({ where: { id: where.id }, data: args })
 
-            return this.handleResponse<{ ok: boolean }>({ ok: true }, { noAcceptNullable: true, error: { title: 'Update Bank Account', message: 'Fa' } })
+            return this.handleResponse<{ message: string }>({ message: 'Bank account successfully updated' }, { noAcceptNullable: true, error: { title: 'Update Bank Account', message: 'Failed to updated bank account' } })
         } catch (err: any) {
-            return this.handleError<{ ok: boolean }>(err, { error: { title: 'Update Bank Account', message: 'Unable to update bank account' } })
+            return this.handleError<{ message: string }>(err, { error: { title: 'Update Bank Account', message: 'Unable to update bank account' } })
         }
     }
 

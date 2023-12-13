@@ -5,7 +5,7 @@ import { HttpException } from '@common/exceptions/http.exception'
 const ERROR_INFO_DEFAULT = {
     title: 'Request',
     message: 'Request failed',
-    description: 'There was an error requesting this feature. Please try again',
+    description: '',
     causes: [],
 }
 

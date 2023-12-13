@@ -1,4 +1,3 @@
-import { Result } from '@esliph/common'
 import { Service } from '@esliph/module'
 import { ID } from '@@types'
 import { Repository } from '@services/repository.service'
@@ -10,9 +9,9 @@ export class UserRepository extends Repository {
         try {
             await this.database.instance.user.create({ data: { email, name, password } })
 
-            return this.performResponse<{ ok: boolean }>(Result.success({ ok: true }))
+            return this.handleResponse<{ message: string }>({ message: 'User successfully registered' }, { error: { title: 'Register User', message: 'User successfully registered' } })
         } catch (err: any) {
-            return this.performError<{ ok: boolean }>(err, { error: { title: 'Register User', message: 'Unable to register user' } })
+            return this.handleError<{ message: string }>(err, { error: { title: 'Register User', message: 'Unable to register user' } })
         }
     }
 
@@ -20,9 +19,9 @@ export class UserRepository extends Repository {
         try {
             await this.database.instance.user.update({ where: { id: where.id }, data: args })
 
-            return this.performResponse<{ ok: boolean }>(Result.success({ ok: true }))
+            return this.handleResponse<{ message: string }>({ message: 'User successfully updated' }, { error: { title: 'Update User', message: 'User successfully updated' } })
         } catch (err: any) {
-            return this.performError<{ ok: boolean }>(err, { error: { title: 'Update User', message: 'Unable to update user' } })
+            return this.handleError<{ message: string }>(err, { error: { title: 'Update User', message: 'Unable to update user' } })
         }
     }
 
@@ -30,13 +29,9 @@ export class UserRepository extends Repository {
         try {
             const user = await this.database.instance.user.findFirst({ where: { id } })
 
-            if (!user) {
-                return this.performResponse<UserModel.User>(Result.failure<UserModel.User>({ title: 'Find User', message: 'User not found' }))
-            }
-
-            return this.performResponse<UserModel.User>(Result.success<UserModel.User>(user))
+            return this.handleResponse<UserModel.User>(user, { noAcceptNullable: true, error: { title: 'Find User', message: 'User not found' } })
         } catch (err: any) {
-            return this.performError<UserModel.User>(err, { error: { title: 'Find User', message: 'User not found' } })
+            return this.handleError<UserModel.User>(err, { error: { title: 'Find User', message: 'User not found' } })
         }
     }
 
@@ -44,13 +39,9 @@ export class UserRepository extends Repository {
         try {
             const user = await this.database.instance.user.findFirst({ where: { email } })
 
-            if (!user) {
-                return this.performResponse<UserModel.User>(Result.failure<UserModel.User>({ title: 'Find User', message: 'User not found' }))
-            }
-
-            return this.performResponse<UserModel.User>(Result.success<UserModel.User>(user))
+            return this.handleResponse<UserModel.User>(user, { noAcceptNullable: true, error: { title: 'Find User', message: 'User not found' } })
         } catch (err: any) {
-            return this.performError<UserModel.User>(err, { error: { title: 'Find User', message: 'User not found' } })
+            return this.handleError<UserModel.User>(err, { error: { title: 'Find User', message: 'User not found' } })
         }
     }
 
@@ -58,15 +49,9 @@ export class UserRepository extends Repository {
         try {
             const user = await this.database.instance.user.findFirst({ where: { id }, select: UserModel.UserWithoutPasswordSelect })
 
-            if (!user) {
-                return this.performResponse<UserModel.UserWithoutPassword>(
-                    Result.failure<UserModel.UserWithoutPassword>({ title: 'Find User', message: 'User not found' }),
-                )
-            }
-
-            return this.performResponse<UserModel.UserWithoutPassword>(Result.success<UserModel.UserWithoutPassword>(user))
+            return this.handleResponse<UserModel.UserWithoutPassword>(user, { noAcceptNullable: true, error: { title: 'Find User', message: 'User not found' } })
         } catch (err: any) {
-            return this.performError<UserModel.UserWithoutPassword>(err, { error: { title: 'Find User', message: 'User not found' } })
+            return this.handleError<UserModel.UserWithoutPassword>(err, { error: { title: 'Find User', message: 'User not found' } })
         }
     }
 
@@ -74,15 +59,9 @@ export class UserRepository extends Repository {
         try {
             const user = await this.database.instance.user.findFirst({ where: { email }, select: UserModel.UserWithoutPasswordSelect })
 
-            if (!user) {
-                return this.performResponse<UserModel.UserWithoutPassword>(
-                    Result.failure<UserModel.UserWithoutPassword>({ title: 'Find User', message: 'User not found' }),
-                )
-            }
-
-            return this.performResponse<UserModel.UserWithoutPassword>(Result.success<UserModel.UserWithoutPassword>(user))
+            return this.handleResponse<UserModel.UserWithoutPassword>(user, { noAcceptNullable: true, error: { title: 'Find User', message: 'User not found' } })
         } catch (err: any) {
-            return this.performError<UserModel.UserWithoutPassword>(err, { error: { title: 'Find User', message: 'User not found' } })
+            return this.handleError<UserModel.UserWithoutPassword>(err, { error: { title: 'Find User', message: 'User not found' } })
         }
     }
 }

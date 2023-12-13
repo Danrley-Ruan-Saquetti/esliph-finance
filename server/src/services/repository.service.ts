@@ -12,14 +12,14 @@ export type RepositoryHandleErrorOptions = { error: ErrorResultInfo }
 export class Repository {
     constructor(@Injection.Inject('database') protected database: DatabaseService) { }
 
-    protected handleResponse<T = any>(res: any, options: RepositoryHandleResponseOptions) {
+    protected handleResponse<T = any>(res: T | null, options: RepositoryHandleResponseOptions) {
         if (options.noAcceptNullable) {
             if (isNull(res)) {
                 return ResultDatabase.failure<T>({ ...options.error })
             }
         }
 
-        return ResultDatabase.success<T>(res)
+        return ResultDatabase.success<T>(res as T)
     }
 
     protected handleError<T = any>(err: any, options: RepositoryHandleErrorOptions) {
