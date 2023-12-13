@@ -31,6 +31,7 @@ export class AuthSignInUseCase extends UseCase {
         const { email, password } = this.validateDTO(args, schemaDTO)
 
         const user = await this.queryUserByEmail(email)
+        console.log(user)
         await this.validPassword(password, user.password)
         const token = this.generateToken({ sub: user.id, email: user.email, name: user.name })
 

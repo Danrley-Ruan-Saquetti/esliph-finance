@@ -10,7 +10,7 @@ export type PayloadJWT<PayloadBody extends object = {}> = PayloadBody & {
 
 @Service({ name: 'global.service.jwt' })
 export class JWTService {
-    constructor() {}
+    constructor() { }
 
     valid<PayloadBody extends { [x: string]: any } = {}>(Token: string, options: { secretKey: string; name: string }) {
         if (!Token) {
@@ -37,9 +37,14 @@ export class JWTService {
     }
 
     encode<PayloadBody extends { [x: string]: any }>(payload: PayloadBody, config: { secret: string; exp: string }) {
-        const token = JWT.sign(payload, config.secret, { algorithm: 'HS256', expiresIn: config.exp })
+        try {
+            const token = JWT.sign(payload, config.secret, { algorithm: 'HS256', expiresIn: config.exp })
 
-        return token
+            return token
+        } catch (err: any) {
+            console.log(err)
+            throw new BadRequestException({ title: 'Generate Token', message: 'Unable to generate token' })
+        }
     }
 
     decode<PayloadBody extends { [x: string]: any } = {}>(token: string, secret: string) {
@@ -49,7 +54,7 @@ export class JWTService {
             return payload as PayloadJWT<PayloadBody>
         } catch (err: any) {
             if (err instanceof JWT.JsonWebTokenError) {
-                throw new BadRequestException({ title: 'Verify Token', message: 'Token access inválid' })
+                throw new BadRequestException({ title: 'Verify Token', message: 'Token access invalid' })
             }
 
             throw new ServerInternalErrorException({ ...err })
