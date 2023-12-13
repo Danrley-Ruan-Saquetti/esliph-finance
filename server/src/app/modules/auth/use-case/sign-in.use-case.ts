@@ -1,10 +1,11 @@
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { JWT_EXPIRES_TIME, SERVER_KEY_SECRET_MASTER } from '@global'
+import { APP, SERVER_JWT_TOKEN } from '@global'
 import { PayloadJWTUser } from '@@types'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
+import { MailService } from '@services/mail.service'
 import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
@@ -23,6 +24,7 @@ export class AuthSignInUseCase extends UseCase {
         @Injection.Inject('user.repository') private userRepository: UserRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
         @Injection.Inject('jwt') private jwt: JWTService,
+        @Injection.Inject('mail') private mail: MailService,
     ) {
         super()
     }
@@ -31,9 +33,10 @@ export class AuthSignInUseCase extends UseCase {
         const { email, password } = this.validateDTO(args, schemaDTO)
 
         const user = await this.queryUserByEmail(email)
-        console.log(user)
         await this.validPassword(password, user.password)
         const token = this.generateToken({ sub: user.id, email: user.email, name: user.name })
+
+        this.sendEmail({ email })
 
         return Result.success({ token })
     }
@@ -60,7 +63,18 @@ export class AuthSignInUseCase extends UseCase {
         }
     }
 
+    private async sendEmail({ email }: { email: string }) {
+        const result = await this.mail.send({
+            from: `${APP.name} <${APP.mail}>`,
+            to: email,
+            subject: 'Login in your account',
+            text: 'Hello World'
+        })
+
+        console.log(result)
+    }
+
     private generateToken({ sub, email, name }: PayloadJWTUser) {
-        return this.jwt.encode<PayloadJWTUser>({ sub, name, email }, { exp: JWT_EXPIRES_TIME, secret: SERVER_KEY_SECRET_MASTER })
+        return this.jwt.encode<PayloadJWTUser>({ sub, name, email }, { exp: SERVER_JWT_TOKEN.expiresTime, secret: SERVER_JWT_TOKEN.keyMaster })
     }
 }
