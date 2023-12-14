@@ -12,12 +12,9 @@ const devDependenciesName = pkg.dependencies ? Object.keys(pkg.devDependencies |
 function exec(command = '') {
     console.log('start command:', command)
     execSync(command, (error, stdout, stderr) => {
-        if (error) {
-            console.error(error)
-            return
-        }
-        console.log(stdout)
-        console.error(stderr)
+        error && console.error(error)
+        stdout && console.log(stdout)
+        stderr && console.error(stderr)
     })
 
     console.log('COMPLETE\n')

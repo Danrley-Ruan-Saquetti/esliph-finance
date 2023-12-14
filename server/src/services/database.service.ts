@@ -1,5 +1,5 @@
 export * from '@prisma/client'
-import { PrismaClient, Prisma } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import { Service } from '@esliph/module'
 
 @Service({ name: 'global.service.database' })

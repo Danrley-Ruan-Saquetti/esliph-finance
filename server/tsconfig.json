@@ -1,8 +1,12 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "lib": ["ES6"],
-        "types": ["node"],
+        "lib": [
+            "ES6"
+        ],
+        "types": [
+            "node"
+        ],
         "declaration": false,
         "removeComments": true,
         "emitDecoratorMetadata": true,
@@ -30,9 +34,16 @@
         "strict": true,
         "resolveJsonModule": true,
         "paths": {
-            "@modules/*": ["src/app/modules/*"],
-            "@*": ["src/*"]
+            "@modules/*": [
+                "src/app/modules/*"
+            ],
+            "@*": [
+                "src/*"
+            ]
         }
     },
-    "exclude": ["node_modules"]
+    "exclude": [
+        "node_modules",
+        "update.js"
+    ]
 }

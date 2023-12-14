@@ -10,7 +10,7 @@ const PORT = getEnv<number>({ name: 'PORT', defaultValue: 8080 })
 
 FastifyAdapter.loadInstance(Fastify())
 
-const app = Bootstrap(
+const App = Bootstrap(
     MainModule,
     {
         log: { eventHttp: true, eventListener: true, load: true },
@@ -29,10 +29,10 @@ FastifyAdapter.instance.listen({ port: PORT }, (err: Error | null, address: stri
         console.log(args)
     })
 
-    app.logger.log(`Server running on address ${address}`)
+    App.logger.log(`Server running on address ${address}`)
 })
 
 // @ts-expect-error
 new DatabaseService().instance.$on('error', args => {
-    app.logger.error(args)
+    App.logger.error(args)
 })

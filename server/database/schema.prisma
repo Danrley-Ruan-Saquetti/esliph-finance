@@ -25,6 +25,7 @@ model BankAccount {
   id                    Int                    @id @default(autoincrement())
   user                  User                   @relation(fields: [userId], references: [id])
   userId                Int                    @map("user_id")
+  code                  Int                    @unique
   name                  String                 @db.VarChar(45)
   passwordMaster        String                 @map("password_master") @db.VarChar(120)
   balance               Float                  @default(0)

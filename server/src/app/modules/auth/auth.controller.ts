@@ -8,19 +8,26 @@ import { AuthSignInUseCase } from '@modules/auth/use-case/sign-in.use-case'
 @Controller()
 export class AuthController {
     constructor(
-        @Injection.Inject('auth.use-case.sign-up') private signUpUC: AuthSignUpUseCase,
-        @Injection.Inject('auth.use-case.sign-in') private signInUC: AuthSignInUseCase,
-    ) {}
+        @Injection.Inject('auth.user.use-case.sign-up') private signUpUC: AuthSignUpUseCase,
+        @Injection.Inject('auth.user.use-case.sign-in') private signInUC: AuthSignInUseCase,
+    ) { }
 
-    @Post('/auth/sign-up')
-    async signUp(req: Request) {
+    @Post('/auth/user/sign-up')
+    async userSignUp(req: Request) {
         const result = await this.signUpUC.perform(req.body)
 
         return result
     }
 
-    @Post('/auth/sign-in')
-    async signIn(req: Request) {
+    @Post('/auth/user/sign-in')
+    async userSignIn(req: Request) {
+        const result = await this.signInUC.perform(req.body)
+
+        return result
+    }
+
+    @Post('/auth/bank-account/sign-in')
+    async bankAccountSignIn(req: Request) {
         const result = await this.signInUC.perform(req.body)
 
         return result

@@ -1,8 +1,8 @@
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { APP, SERVER_JWT_TOKEN } from '@global'
 import { PayloadJWTUser } from '@@types'
+import { GLOBAL_APP, GLOBAL_SERVER_JWT_TOKEN } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { MailService } from '@services/mail.service'
@@ -18,7 +18,7 @@ const schemaDTO = ValidatorService.schema.object({
 
 export type AuthSignInDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
-@Service({ name: 'auth.use-case.sign-in' })
+@Service({ name: 'auth.user.use-case.sign-in' })
 export class AuthSignInUseCase extends UseCase {
     constructor(
         @Injection.Inject('user.repository') private userRepository: UserRepository,
@@ -35,7 +35,6 @@ export class AuthSignInUseCase extends UseCase {
         const user = await this.queryUserByEmail(email)
         await this.validPassword(password, user.password)
         const token = this.generateToken({ sub: user.id, email: user.email, name: user.name })
-
         this.sendEmail({ email })
 
         return Result.success({ token })
@@ -64,17 +63,15 @@ export class AuthSignInUseCase extends UseCase {
     }
 
     private async sendEmail({ email }: { email: string }) {
-        const result = await this.mail.send({
-            from: `${APP.name} <${APP.mail}>`,
-            to: email,
-            subject: 'Login in your account',
-            text: 'Hello World'
-        })
-
-        console.log(result)
+        // const result = await this.mail.send({
+        //     from: `${GLOBAL_APP.name} <${GLOBAL_APP.mail}>`,
+        //     to: email,
+        //     subject: 'Login in your account',
+        //     text: 'Welcome to back!'
+        // })
     }
 
     private generateToken({ sub, email, name }: PayloadJWTUser) {
-        return this.jwt.encode<PayloadJWTUser>({ sub, name, email }, { exp: SERVER_JWT_TOKEN.expiresTime, secret: SERVER_JWT_TOKEN.keyMaster })
+        return this.jwt.encode<PayloadJWTUser>({ sub, name, email }, { exp: GLOBAL_SERVER_JWT_TOKEN.expiresTime, secret: GLOBAL_SERVER_JWT_TOKEN.keyMaster })
     }
 }

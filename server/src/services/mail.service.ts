@@ -1,6 +1,6 @@
 import Nodemailer from 'nodemailer'
 import { Service } from '@esliph/module'
-import { MAIL_CONFIG } from '@global'
+import { GLOBAL_MAIL_CONFIG } from '@global'
 import { Result } from '@esliph/common'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
 
@@ -15,13 +15,13 @@ export type MailOptions = {
 @Service({ name: 'global.service.mail' })
 export class MailService {
     private static transporter = Nodemailer.createTransport({
-        host: MAIL_CONFIG.host,
-        port: MAIL_CONFIG.port,
-        secure: MAIL_CONFIG.secure,
-        service: MAIL_CONFIG.service,
+        host: GLOBAL_MAIL_CONFIG.host,
+        port: GLOBAL_MAIL_CONFIG.port,
+        secure: GLOBAL_MAIL_CONFIG.secure,
+        service: GLOBAL_MAIL_CONFIG.service,
         auth: {
-            user: MAIL_CONFIG.mail,
-            pass: MAIL_CONFIG.pass
+            user: GLOBAL_MAIL_CONFIG.mail,
+            pass: GLOBAL_MAIL_CONFIG.pass
         }
     })
 
