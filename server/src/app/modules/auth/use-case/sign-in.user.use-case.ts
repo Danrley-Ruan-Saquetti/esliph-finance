@@ -32,6 +32,24 @@ export class AuthSignInUseCase extends UseCase {
     async perform(args: AuthSignInDTOArgs) {
         const { email, password } = this.validateDTO(args, schemaDTO)
 
+        const transaction = this.userRepository.transaction()
+
+        try {
+            transaction.begin()
+
+            const response = await this.performUC({ email, password })
+
+            transaction.commit()
+
+            return response
+        } catch (err: any) {
+            transaction.rollback()
+
+            return Result.inherit({ ...err })
+        }
+    }
+
+    private async performUC({ email, password }: AuthSignInDTOArgs) {
         const user = await this.queryUserByEmail(email)
         await this.validPassword(password, user.password)
         const token = this.generateToken({ sub: user.id, email: user.email, name: user.name })
@@ -63,12 +81,14 @@ export class AuthSignInUseCase extends UseCase {
     }
 
     private async sendEmail({ email }: { email: string }) {
-        // const result = await this.mail.send({
-        //     from: `${GLOBAL_APP.name} <${GLOBAL_APP.mail}>`,
-        //     to: email,
-        //     subject: 'Login in your account',
-        //     text: 'Welcome to back!'
-        // })
+        return
+
+        const result = await this.mail.send({
+            from: `${GLOBAL_APP.name} <${GLOBAL_APP.mail}>`,
+            to: email,
+            subject: 'Login in your account',
+            text: 'Welcome to back!'
+        })
     }
 
     private generateToken({ sub, email, name }: PayloadJWTUser) {

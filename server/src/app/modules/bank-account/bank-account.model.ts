@@ -8,6 +8,7 @@ export namespace BankAccountModel {
     export const BankAccountWithoutPasswordMasterSelect: { [x in keyof BankAccountWithoutPasswordMaster]: true } = {
         id: true,
         userId: true,
+        code: true,
         name: true,
         balance: true,
         createdAt: true,

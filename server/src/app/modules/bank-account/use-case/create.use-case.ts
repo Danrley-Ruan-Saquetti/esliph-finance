@@ -13,7 +13,7 @@ const schemaDTO = ValidatorService.schema.object({
         .trim()
         .min(1, { message: 'Name is required' })
         .transform(val => val.replace(/ {2}/g, ' ')),
-    userId: ValidatorService.schema.coerce.number({ required_error: 'ID User is required' }).positive({ message: 'Invalid ID User' }),
+    userId: ValidatorService.schema.coerce.number({ 'required_error': 'ID User is required' }).positive({ message: 'Invalid ID User' }),
     passwordMaster: ValidatorService.schema.string().trim().min(1, { message: 'Password is required' }),
 })
 
@@ -42,7 +42,9 @@ export class BankAccountCreateUseCase extends UseCase {
     }
 
     private async registerBankAccount({ name, passwordMaster, userId }: BankAccountCreateDTOArgs) {
-        const registerBankAccountResult = await this.repository.register({ balance: 0, name, passwordMaster, userId })
+        const code = this.generateCode()
+
+        const registerBankAccountResult = await this.repository.register({ balance: 0, name, passwordMaster, userId, code })
 
         if (registerBankAccountResult.isSuccess()) {
             return
@@ -53,5 +55,11 @@ export class BankAccountCreateUseCase extends UseCase {
             title: 'Register Bank Account',
             message: `Unable to register bank account. Error: "${registerBankAccountResult.getError().message}"`,
         })
+    }
+
+    private generateCode() {
+        const code = Math.floor(Math.random() * 9000000) + 1000000
+
+        return code
     }
 }

@@ -12,6 +12,24 @@ export type RepositoryHandleErrorOptions = { error: ErrorResultInfo }
 export class Repository {
     constructor(@Injection.Inject('database') protected database: DatabaseService) { }
 
+    transaction() {
+        const db = this.database.instance
+
+        async function begin() {
+            await db.$executeRaw`BEGIN`
+        }
+
+        async function commit() {
+            await db.$executeRaw`COMMIT`
+        }
+
+        async function rollback() {
+            await db.$executeRaw`ROLLBACK`
+        }
+
+        return { begin, commit, rollback }
+    }
+
     protected handleResponse<T = any>(res: T | null, options: RepositoryHandleResponseOptions) {
         if (options.noAcceptNullable) {
             if (isNull(res)) {

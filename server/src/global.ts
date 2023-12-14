@@ -19,3 +19,7 @@ export const GLOBAL_MAIL_CONFIG = {
     mail: getEnv({ name: 'MAIL_CONFIG_EMAIL', defaultValue: '' }),
     pass: getEnv({ name: 'MAIL_CONFIG_PASS', defaultValue: '' }),
 }
+
+export const GLOBAL_DTO = {
+    required: (value: string) => `${value[0].toUpperCase() + value.substring(1)} is required`
+}
