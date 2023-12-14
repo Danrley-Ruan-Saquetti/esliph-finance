@@ -56,7 +56,11 @@ O cadastro de usuário deve conter: nome; email; senha
 O email de usuário deve ser único
 
 ## O sistema deve permitir que o usuário mantenha as suas contas bancárias
-O cadastro de conta bancária deve conter: nome; senha mestre; saldo; usuário vinculado
+O cadastro de conta bancária deve conter: código único; nome; senha mestre; saldo; usuário vinculado
+
+O código único deve ser gerado automaticamente
+
+O mesmo deve ser único entre todas as contas da base
 
 O saldo da conta bancária deve iniciar com o valor zerado
 
