@@ -2,7 +2,7 @@ import { getEnv } from '@util'
 
 export const GLOBAL_APP = {
     name: getEnv({ name: 'APP_NAME', defaultValue: '' }),
-    mail: getEnv({ name: 'APP_MAIL', defaultValue: '' })
+    mail: getEnv({ name: 'APP_MAIL', defaultValue: '' }),
 }
 
 export const GLOBAL_SERVER_JWT_TOKEN = {
@@ -21,5 +21,5 @@ export const GLOBAL_MAIL_CONFIG = {
 }
 
 export const GLOBAL_DTO = {
-    required: (value: string) => `${value[0].toUpperCase() + value.substring(1)} is required`
+    required: (value: string) => `${value[0].toUpperCase() + value.substring(1)} is required`,
 }

@@ -15,8 +15,17 @@ const schemaDTO = ValidatorService.schema.object({
         .min(1, { message: GLOBAL_USER_DTO.name.messageRequired })
         .min(GLOBAL_USER_DTO.name.minCharacters, { message: GLOBAL_USER_DTO.name.messageMinCharacters })
         .transform(val => val.replace(/ {2}/g, ' ')),
-    email: ValidatorService.schema.string().trim().email({ message: GLOBAL_USER_DTO.email.messageInvalid }).trim().min(1, { message: GLOBAL_USER_DTO.email.messageRequired }),
-    password: ValidatorService.schema.string().trim().min(1, { message: GLOBAL_USER_DTO.password.messageRequired }),
+    email: ValidatorService.schema
+        .string()
+        .trim()
+        .email({ message: GLOBAL_USER_DTO.email.messageInvalid })
+        .trim()
+        .min(1, { message: GLOBAL_USER_DTO.email.messageRequired }),
+    password: ValidatorService.schema
+        .string()
+        .trim()
+        .min(1, { message: GLOBAL_USER_DTO.password.messageRequired })
+        .regex(GLOBAL_USER_DTO.password.regex, { message: GLOBAL_USER_DTO.password.messageRegex }),
 })
 
 export type UserCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>

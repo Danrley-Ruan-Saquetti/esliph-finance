@@ -5,16 +5,24 @@ import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.global'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
 
 const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
         .string()
         .trim()
-        .min(1, { message: 'Name is required' })
+        .min(1, { message: GLOBAL_BANK_ACCOUNT_DTO.name.messageRequired })
+        .min(GLOBAL_BANK_ACCOUNT_DTO.name.minCharacters, { message: GLOBAL_BANK_ACCOUNT_DTO.name.messageMinCharacters })
         .transform(val => val.replace(/ {2}/g, ' ')),
-    userId: ValidatorService.schema.coerce.number({ 'required_error': 'ID User is required' }).positive({ message: 'Invalid ID User' }),
-    passwordMaster: ValidatorService.schema.string().trim().min(1, { message: 'Password is required' }),
+    userId: ValidatorService.schema.coerce
+        .number({ 'required_error': GLOBAL_BANK_ACCOUNT_DTO.user.id.messageRequired })
+        .positive({ message: GLOBAL_BANK_ACCOUNT_DTO.user.id.messageInvalid }),
+    passwordMaster: ValidatorService.schema
+        .string()
+        .trim()
+        .min(1, { message: GLOBAL_BANK_ACCOUNT_DTO.passwordMaster.messageRequired })
+        .regex(GLOBAL_BANK_ACCOUNT_DTO.passwordMaster.regex, { message: GLOBAL_BANK_ACCOUNT_DTO.passwordMaster.messageRegex }),
 })
 
 export type BankAccountCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
