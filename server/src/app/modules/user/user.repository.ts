@@ -5,11 +5,14 @@ import { UserModel } from '@modules/user/user.model'
 
 @Service({ name: 'user.repository' })
 export class UserRepository extends Repository {
-    async register({ email, name, password }: UserModel.Model) {
+    async register({ email, name, password, code }: UserModel.Model) {
         try {
-            await this.database.instance.user.create({ data: { email, name, password } })
+            await this.database.instance.user.create({ data: { email, name, password, code } })
 
-            return this.handleResponse<{ message: string }>({ message: 'User successfully registered' }, { error: { title: 'Register User', message: 'User successfully registered' } })
+            return this.handleResponse<{ message: string }>(
+                { message: 'User successfully registered' },
+                { error: { title: 'Register User', message: 'User successfully registered' } },
+            )
         } catch (err: any) {
             return this.handleError<{ message: string }>(err, { error: { title: 'Register User', message: 'Unable to register user' } })
         }
@@ -19,7 +22,10 @@ export class UserRepository extends Repository {
         try {
             await this.database.instance.user.update({ where: { id: where.id }, data: args })
 
-            return this.handleResponse<{ message: string }>({ message: 'User successfully updated' }, { error: { title: 'Update User', message: 'User successfully updated' } })
+            return this.handleResponse<{ message: string }>(
+                { message: 'User successfully updated' },
+                { error: { title: 'Update User', message: 'User successfully updated' } },
+            )
         } catch (err: any) {
             return this.handleError<{ message: string }>(err, { error: { title: 'Update User', message: 'Unable to update user' } })
         }
@@ -28,6 +34,16 @@ export class UserRepository extends Repository {
     async findById(id: ID) {
         try {
             const user = await this.database.instance.user.findFirst({ where: { id } })
+
+            return this.handleResponse<UserModel.User>(user, { noAcceptNullable: true, error: { title: 'Find User', message: 'User not found' } })
+        } catch (err: any) {
+            return this.handleError<UserModel.User>(err, { error: { title: 'Find User', message: 'User not found' } })
+        }
+    }
+
+    async findByCode(code: number) {
+        try {
+            const user = await this.database.instance.user.findFirst({ where: { code } })
 
             return this.handleResponse<UserModel.User>(user, { noAcceptNullable: true, error: { title: 'Find User', message: 'User not found' } })
         } catch (err: any) {
@@ -49,7 +65,23 @@ export class UserRepository extends Repository {
         try {
             const user = await this.database.instance.user.findFirst({ where: { id }, select: UserModel.UserWithoutPasswordSelect })
 
-            return this.handleResponse<UserModel.UserWithoutPassword>(user, { noAcceptNullable: true, error: { title: 'Find User', message: 'User not found' } })
+            return this.handleResponse<UserModel.UserWithoutPassword>(user, {
+                noAcceptNullable: true,
+                error: { title: 'Find User', message: 'User not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<UserModel.UserWithoutPassword>(err, { error: { title: 'Find User', message: 'User not found' } })
+        }
+    }
+
+    async findByCodeWithoutPassword(code: number) {
+        try {
+            const user = await this.database.instance.user.findFirst({ where: { code }, select: UserModel.UserWithoutPasswordSelect })
+
+            return this.handleResponse<UserModel.UserWithoutPassword>(user, {
+                noAcceptNullable: true,
+                error: { title: 'Find User', message: 'User not found' },
+            })
         } catch (err: any) {
             return this.handleError<UserModel.UserWithoutPassword>(err, { error: { title: 'Find User', message: 'User not found' } })
         }
@@ -59,7 +91,10 @@ export class UserRepository extends Repository {
         try {
             const user = await this.database.instance.user.findFirst({ where: { email }, select: UserModel.UserWithoutPasswordSelect })
 
-            return this.handleResponse<UserModel.UserWithoutPassword>(user, { noAcceptNullable: true, error: { title: 'Find User', message: 'User not found' } })
+            return this.handleResponse<UserModel.UserWithoutPassword>(user, {
+                noAcceptNullable: true,
+                error: { title: 'Find User', message: 'User not found' },
+            })
         } catch (err: any) {
             return this.handleError<UserModel.UserWithoutPassword>(err, { error: { title: 'Find User', message: 'User not found' } })
         }
