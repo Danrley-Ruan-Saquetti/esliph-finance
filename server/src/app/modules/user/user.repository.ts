@@ -41,7 +41,7 @@ export class UserRepository extends Repository {
         }
     }
 
-    async findByCode(code: number) {
+    async findByCode(code: string) {
         try {
             const user = await this.database.instance.user.findFirst({ where: { code } })
 
@@ -74,7 +74,7 @@ export class UserRepository extends Repository {
         }
     }
 
-    async findByCodeWithoutPassword(code: number) {
+    async findByCodeWithoutPassword(code: string) {
         try {
             const user = await this.database.instance.user.findFirst({ where: { code }, select: UserModel.UserWithoutPasswordSelect })
 

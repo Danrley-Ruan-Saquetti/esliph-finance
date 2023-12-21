@@ -7,6 +7,7 @@ import { CryptoService } from '@services/crypto.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 import { UserRepository } from '@modules/user/user.repository'
+import { CodeGeneratorService } from '@services/code-generator.service'
 
 const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
@@ -35,6 +36,7 @@ export class UserCreateUseCase extends UseCase {
     constructor(
         @Injection.Inject('user.repository') private repository: UserRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
+        @Injection.Inject('code-generator') private codeGenerator: CodeGeneratorService,
     ) {
         super()
     }
@@ -45,7 +47,8 @@ export class UserCreateUseCase extends UseCase {
         await this.validUserEmailAlreadyExists(email)
 
         const passwordHash = this.cryptPassword(password)
-        await this.registerUser({ email, name, password: passwordHash })
+        const code = await this.generateCode()
+        await this.registerUser({ email, name, password: passwordHash, code })
 
         return Result.success({ message: 'Register user successfully' })
     }
@@ -72,8 +75,12 @@ export class UserCreateUseCase extends UseCase {
         return this.crypto.bcrypto.hashSync(password, 5)
     }
 
-    private async registerUser({ email, name, password }: UserCreateDTOArgs) {
-        const registerUserResult = await this.repository.register({ email, name, password })
+    private async generateCode() {
+        return ''
+    }
+
+    private async registerUser({ email, name, password, code }: UserCreateDTOArgs & { code: string }) {
+        const registerUserResult = await this.repository.register({ email, name, password, code })
 
         if (registerUserResult.isSuccess()) {
             return
