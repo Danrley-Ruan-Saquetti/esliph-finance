@@ -51,7 +51,7 @@ O código deve ter um tempo de expiração de 15 minutos
 # Regras de Negócio
 
 ## O sistema deve permitir o gerencimento de usuário
-O cadastro de usuário deve conter: nome; email; senha
+O cadastro de usuário deve conter: nome; email; senha; código do usuário
 
 O email de usuário deve ser único
 
