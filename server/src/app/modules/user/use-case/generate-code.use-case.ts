@@ -31,19 +31,21 @@ export class UserGenerateCodeUseCase extends UseCase {
     private async generateCode() {
         let code = ''
         let contAttempts = 0
+        let isCodeValid = false
 
         do {
             contAttempts++
 
-            if (contAttempts < 5) {
+            code = this.generate()
+            isCodeValid = await this.validCode(code)
+
+            if (!isCodeValid && contAttempts < GLOBAL_USER_DTO.code.attempts) {
                 throw new BadRequestException({
                     title: 'Register User',
                     message: 'Unable to register user. Error: "Cannot choise code user". Please, try again later',
                 })
             }
-
-            code = this.generate()
-        } while (await this.validCode(code))
+        } while (!isCodeValid)
 
         return code
     }
