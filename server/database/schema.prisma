@@ -11,6 +11,7 @@ generator client {
 
 model User {
   id           Int           @id @default(autoincrement())
+  code         Int           @unique
   name         String        @db.VarChar(45)
   email        String        @unique @db.VarChar(25)
   password     String        @db.VarChar(120)

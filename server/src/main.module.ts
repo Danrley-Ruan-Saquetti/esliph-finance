@@ -5,6 +5,7 @@ import { JWTService } from '@services/jwt.service'
 import { ValidatorService } from '@services/validator.service'
 import { DatabaseService } from '@services/database.service'
 import { MailService } from '@services/mail.service'
+import { CodeGeneratorService } from '@services/code-generator.service'
 
 @Module({
     imports: [AppModule],
@@ -14,6 +15,8 @@ import { MailService } from '@services/mail.service'
         DatabaseService,
         ValidatorService,
         MailService,
+        CodeGeneratorService,
+        { whenCall: 'code-generator', use: 'global.service.code-generator' },
         { whenCall: 'crypto', use: 'global.service.crypto' },
         { whenCall: 'jwt', use: 'global.service.jwt' },
         { whenCall: 'validator', use: 'global.service.validator' },
@@ -21,4 +24,4 @@ import { MailService } from '@services/mail.service'
         { whenCall: 'mail', use: 'global.service.mail' },
     ],
 })
-export class MainModule { }
+export class MainModule {}
