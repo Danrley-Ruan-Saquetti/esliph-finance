@@ -41,8 +41,8 @@ export class UserGenerateCodeUseCase extends UseCase {
 
             if (!isCodeValid && contAttempts < GLOBAL_USER_DTO.code.attempts) {
                 throw new BadRequestException({
-                    title: 'Register User',
-                    message: 'Unable to register user. Error: "Cannot choise code user". Please, try again later',
+                    title: 'Generate Code User',
+                    message: 'Made many attempts to generate the user code. Please, try again later',
                 })
             }
         } while (!isCodeValid)
@@ -64,8 +64,8 @@ export class UserGenerateCodeUseCase extends UseCase {
         if (userResult.isErrorInOperation()) {
             throw new BadRequestException({
                 ...userResult.getError(),
-                title: 'Register User',
-                message: `Unable to register user. Error: "${userResult.getError().message}". Please, try again later`,
+                title: 'Generate Code User',
+                message: `Unable to generate code user. Error: "${userResult.getError().message}". Please, try again later`,
             })
         }
 

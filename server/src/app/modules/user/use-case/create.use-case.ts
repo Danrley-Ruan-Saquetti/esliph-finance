@@ -81,6 +81,7 @@ export class UserCreateUseCase extends UseCase {
         if (codeResult.isSuccess()) {
             throw new BadRequestException({
                 ...codeResult.getError(),
+                title: 'Register User',
             })
         }
 

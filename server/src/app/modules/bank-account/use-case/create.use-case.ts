@@ -7,6 +7,7 @@ import { CryptoService } from '@services/crypto.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.global'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
+import { BankAccountGenerateCodeUseCase } from './generate-code.use-case'
 
 const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
@@ -32,6 +33,7 @@ export class BankAccountCreateUseCase extends UseCase {
     constructor(
         @Injection.Inject('account.repository') private repository: BankAccountRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
+        @Injection.Inject('bank-account.use-case.generate-code') private bankAccountGenerateCodeUC: BankAccountGenerateCodeUseCase,
     ) {
         super()
     }
@@ -40,7 +42,8 @@ export class BankAccountCreateUseCase extends UseCase {
         const { name, passwordMaster, userId } = this.validateDTO(args, schemaDTO)
 
         const passwordMasterHash = this.cryptPassword(passwordMaster)
-        await this.registerBankAccount({ name, passwordMaster: passwordMasterHash, userId })
+        const code = await this.generateCode()
+        await this.registerBankAccount({ name, passwordMaster: passwordMasterHash, userId, code })
 
         return Result.success({ message: 'Bank account registered successfully' })
     }
@@ -49,9 +52,20 @@ export class BankAccountCreateUseCase extends UseCase {
         return this.crypto.bcrypto.hashSync(password, 5)
     }
 
-    private async registerBankAccount({ name, passwordMaster, userId }: BankAccountCreateDTOArgs) {
-        const code = this.generateCode()
+    private async generateCode() {
+        const codeResult = await this.bankAccountGenerateCodeUC.perform()
 
+        if (codeResult.isSuccess()) {
+            throw new BadRequestException({
+                ...codeResult.getError(),
+                title: 'Register Bank Account',
+            })
+        }
+
+        return codeResult.getValue().code
+    }
+
+    private async registerBankAccount({ name, passwordMaster, userId, code }: BankAccountCreateDTOArgs & { code: string }) {
         const registerBankAccountResult = await this.repository.register({ balance: 0, name, passwordMaster, userId, code })
 
         if (registerBankAccountResult.isSuccess()) {
@@ -63,11 +77,5 @@ export class BankAccountCreateUseCase extends UseCase {
             title: 'Register Bank Account',
             message: `Unable to register bank account. Error: "${registerBankAccountResult.getError().message}"`,
         })
-    }
-
-    private generateCode() {
-        const code = Math.floor(Math.random() * 9000000) + 1000000
-
-        return code
     }
 }
