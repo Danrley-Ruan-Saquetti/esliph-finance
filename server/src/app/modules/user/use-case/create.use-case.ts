@@ -7,7 +7,7 @@ import { CryptoService } from '@services/crypto.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 import { UserRepository } from '@modules/user/user.repository'
-import { CodeGeneratorService } from '@services/code-generator.service'
+import { UserGenerateCodeUseCase } from './generate-code.use-case'
 
 const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
@@ -36,7 +36,7 @@ export class UserCreateUseCase extends UseCase {
     constructor(
         @Injection.Inject('user.repository') private repository: UserRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
-        @Injection.Inject('code-generator') private codeGenerator: CodeGeneratorService,
+        @Injection.Inject('user.use-case.generate-code') private userGenerateCodeUC: UserGenerateCodeUseCase,
     ) {
         super()
     }
@@ -76,7 +76,15 @@ export class UserCreateUseCase extends UseCase {
     }
 
     private async generateCode() {
-        return ''
+        const codeResult = await this.userGenerateCodeUC.perform()
+
+        if (codeResult.isSuccess()) {
+            throw new BadRequestException({
+                ...codeResult.getError(),
+            })
+        }
+
+        return codeResult.getValue().code
     }
 
     private async registerUser({ email, name, password, code }: UserCreateDTOArgs & { code: string }) {
