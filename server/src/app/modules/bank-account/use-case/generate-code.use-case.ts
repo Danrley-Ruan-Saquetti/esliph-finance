@@ -18,17 +18,25 @@ export class BankAccountGenerateCodeUseCase extends UseCase {
         super()
     }
 
-    async perform(args: BankAccountGenerateCodeDTOArgs = {}) {
+    async generate(args: BankAccountGenerateCodeDTOArgs = {}) {
         if (args.noValid) {
-            return Result.success({ code: this.generate() })
+            return Result.success({ code: this.generateCode() })
         }
 
-        const code = await this.generateCode()
+        const code = await this.performGenerateCode()
 
         return Result.success({ code })
     }
 
-    private async generateCode() {
+    valid(code: string) {
+        if (this.codeGenerator.validate(code, GLOBAL_BANK_ACCOUNT_DTO.code.template)) {
+            return Result.success({ ok: true })
+        }
+
+        return Result.failure({ title: 'Valid Code Bank Account', message: 'Invalid bank account code' })
+    }
+
+    private async performGenerateCode() {
         let code = ''
         let contAttempts = 0
         let isCodeValid = false
@@ -36,7 +44,7 @@ export class BankAccountGenerateCodeUseCase extends UseCase {
         do {
             contAttempts++
 
-            code = this.generate()
+            code = this.generateCode()
             isCodeValid = await this.validCode(code)
 
             if (!isCodeValid && contAttempts < GLOBAL_BANK_ACCOUNT_DTO.code.attempts) {
@@ -50,7 +58,7 @@ export class BankAccountGenerateCodeUseCase extends UseCase {
         return code
     }
 
-    private generate() {
+    private generateCode() {
         return this.codeGenerator.generateCode(GLOBAL_BANK_ACCOUNT_DTO.code.template)
     }
 

@@ -52,7 +52,7 @@ export class BankAccountCreateUseCase extends UseCase {
     }
 
     private async generateCode() {
-        const codeResult = await this.bankAccountGenerateCodeUC.perform()
+        const codeResult = await this.bankAccountGenerateCodeUC.generate()
 
         if (codeResult.isSuccess()) {
             throw new BadRequestException({
