@@ -80,4 +80,38 @@ export class FinancialTransactionRepository extends Repository {
             })
         }
     }
+
+    async findManyByIdBankAccountAndTypes(bankAccountId: ID, types: FinancialTransactionModel.Type[]) {
+        try {
+            const financialTransactions = await this.database.instance.financialTransaction.findMany({
+                where: { bankAccountId, type: { in: types } },
+                orderBy: { expiresIn: 'asc' },
+            })
+
+            return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialTransactions, {
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        }
+    }
+
+    async findManyByIdBankAccountAndTypeOcurrence(bankAccountId: ID, typeOccurrences: FinancialTransactionModel.TypeOccurrence[]) {
+        try {
+            const financialTransactions = await this.database.instance.financialTransaction.findMany({
+                where: { bankAccountId, typeOccurrence: { in: typeOccurrences } },
+                orderBy: { expiresIn: 'asc' },
+            })
+
+            return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialTransactions, {
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        }
+    }
 }

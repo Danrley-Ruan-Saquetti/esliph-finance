@@ -95,7 +95,7 @@ enum FinancialTransactionType {
   @@map("financial_transaction_type")
 }
 
-enum FinancialTransactionOccurrence {
+enum FinancialTransactionTypeOccurrence {
   SINGLE
   PROGRAMMATIC
 
@@ -115,25 +115,25 @@ enum FinancialTransactionSituation {
 }
 
 model FinancialTransaction {
-  id                       Int                            @id @default(autoincrement())
-  bankAccount              BankAccount                    @relation(fields: [bankAccountId], references: [id])
-  bankAccountId            Int                            @map("bank_account_id")
-  title                    String                         @db.VarChar(55)
-  description              String                         @default("")
+  id                       Int                                @id @default(autoincrement())
+  bankAccount              BankAccount                        @relation(fields: [bankAccountId], references: [id])
+  bankAccountId            Int                                @map("bank_account_id")
+  title                    String                             @db.VarChar(55)
+  description              String                             @default("")
   value                    Float
   priority                 Int
-  isObservable             Boolean                        @default(false) @map("is_observable")
-  isSendNotification       Boolean                        @default(false) @map("is_send_notification")
-  timesToRepeat            Int                            @default(0) @map("times_to_repeat")
-  countRepeatedOccurrences Int                            @default(0) @map("count_repeated_occurrences")
-  type                     FinancialTransactionType       @map("type")
-  receiver                 String                         @default("")
-  sender                   String                         @default("")
-  typeOccurrence           FinancialTransactionOccurrence @default(SINGLE) @map("type_occurrence")
-  situation                FinancialTransactionSituation  @default(PENDING) @map("situation")
-  expiresIn                DateTime                       @map("expires_in")
-  createdAt                DateTime                       @default(now()) @map("created_at")
-  updatedAt                DateTime                       @default(now()) @updatedAt @map("updated_at")
+  isObservable             Boolean                            @default(false) @map("is_observable")
+  isSendNotification       Boolean                            @default(false) @map("is_send_notification")
+  timesToRepeat            Int                                @default(0) @map("times_to_repeat")
+  countRepeatedOccurrences Int                                @default(0) @map("count_repeated_occurrences")
+  type                     FinancialTransactionType           @map("type")
+  receiver                 String                             @default("")
+  sender                   String                             @default("")
+  typeOccurrence           FinancialTransactionTypeOccurrence @default(SINGLE) @map("type_occurrence")
+  situation                FinancialTransactionSituation      @default(PENDING) @map("situation")
+  expiresIn                DateTime                           @map("expires_in")
+  createdAt                DateTime                           @default(now()) @map("created_at")
+  updatedAt                DateTime                           @default(now()) @updatedAt @map("updated_at")
   payments                 Payment[]
   notes                    Note[]
 
