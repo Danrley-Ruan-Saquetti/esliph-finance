@@ -26,4 +26,65 @@ export class CodeGeneratorService {
             })
             .join('')
     }
+
+    validate(code: string, { template, charactersToReplace, charactersToIgnore = [], valuesAllowed }: GenerateCodeOptions) {
+        if (code.length !== template.length) {
+            return false
+        }
+
+        const templateDigits = template.split('')
+
+        for (let i = 0; i < templateDigits.length; i++) {
+            const templateDigit = templateDigits[i]
+            const codeDigit = code[i]
+
+            if (!this.vaideDigits(codeDigit, templateDigit, { charactersToReplace, valuesAllowed, charactersToIgnore })) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    private vaideDigits(codeDigit: string, templateDigit: string, options: Omit<GenerateCodeOptions, 'template'>) {
+        if (codeDigit !== templateDigit) {
+            if (!this.wasSupposedBeDifferent(codeDigit, templateDigit, options)) {
+                return false
+            }
+        } else {
+            if (!this.wasSupposedBeEqual(templateDigit, options.charactersToReplace)) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    private wasSupposedBeDifferent(
+        codeDigit: string,
+        templateDigit: string,
+        { charactersToReplace, valuesAllowed, charactersToIgnore = [] }: Omit<GenerateCodeOptions, 'template'>,
+    ) {
+        if (charactersToReplace.find(digit => digit === templateDigit)) {
+            if (!valuesAllowed.find(digit => digit === codeDigit)) {
+                return false
+            }
+        } else {
+            return false
+        }
+
+        if (charactersToIgnore.find(digit => digit === templateDigit)) {
+            return false
+        }
+
+        return true
+    }
+
+    private wasSupposedBeEqual(templateDigit: string, charactersToReplace: string[]) {
+        if (charactersToReplace.find(value => value === templateDigit)) {
+            return false
+        }
+
+        return true
+    }
 }
