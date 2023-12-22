@@ -1,4 +1,5 @@
-import { getEnv } from '@util'
+import { ValidatorService } from '@services/validator.service'
+import { getEnv, toCapitalise } from '@util'
 
 export const GLOBAL_APP = {
     name: getEnv({ name: 'APP_NAME', defaultValue: '' }),
@@ -21,8 +22,21 @@ export const GLOBAL_MAIL_CONFIG = {
 }
 
 export const GLOBAL_DTO = {
-    required: (value: string) => `${value[0].toUpperCase() + value.substring(1)} is required`,
+    required: (value: string) => `${toCapitalise(value)} is required`,
     text: {
         transform: val => val.replace(/ {2}/g, ' '),
+    },
+    color: {
+        regex: /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/,
+        messageRegex: 'Color hexadecimal is invalid',
+    },
+    number: {
+        messageInvalidType: (value: string) => `${toCapitalise(value)} must be a number`,
+    },
+    id: {
+        schema: ({ name }: { name: string }) =>
+            ValidatorService.schema.coerce
+                .number({ 'required_error': GLOBAL_DTO.required(`ID ${name}`), 'invalid_type_error': `Type ID ${name} must be a number` })
+                .positive({ message: `Invalid ID ${toCapitalise(name)}` }),
     },
 }

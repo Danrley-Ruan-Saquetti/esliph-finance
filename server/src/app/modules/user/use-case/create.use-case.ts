@@ -2,13 +2,13 @@ import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { BadRequestException } from '@common/exceptions'
+import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { CryptoService } from '@services/crypto.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 import { UserRepository } from '@modules/user/user.repository'
-import { UserGenerateCodeUseCase } from './generate-code.use-case'
-import { GLOBAL_DTO } from '@global'
+import { UserGenerateCodeUseCase } from '@modules/user/use-case/generate-code.use-case'
 
 const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema

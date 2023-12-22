@@ -13,10 +13,7 @@ export const GLOBAL_BANK_ACCOUNT_DTO = {
         messageRegex: 'The password must be between 6 and 15 characters, must have 1 uppercase and lowercase letter, 1 number',
     },
     user: {
-        id: {
-            messageRequired: GLOBAL_DTO.required('ID User'),
-            messageInvalid: 'Invalid ID User',
-        },
+        id: GLOBAL_DTO.id.schema({ name: 'User' }),
     },
     code: {
         template: {

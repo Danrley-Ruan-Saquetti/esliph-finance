@@ -1,5 +1,16 @@
 export type PartialDeep<T> = { [x in keyof T]?: T[x] extends object ? PartialDeep<T[x]> : T[x] }
 
+export function toCapitalise(text: string, firstOcurrenceOnly = false) {
+    if (!firstOcurrenceOnly) {
+        return text[0].toUpperCase() + text.substring(1)
+    }
+
+    return text
+        .split(' ')
+        .map(word => word[0].toUpperCase() + word.substring(1))
+        .join(' ')
+}
+
 export function isTruthy(value?: any) {
     return !isFalsy(value)
 }
@@ -48,7 +59,7 @@ export function isFunction(value: any) {
     return getTypeNativeValue(value) == 'function'
 }
 
-const AsyncFunction = (async () => { }).constructor
+const AsyncFunction = (async () => {}).constructor
 export function isAsyncFunction(value: any) {
     return value instanceof AsyncFunction
 }
@@ -85,14 +96,14 @@ export function getTypeNativeValue(value: any) {
     return typeof value
 }
 
-export type GetEnvArgs<DefaultType> = { name: string, defaultValue?: DefaultType, forceDefaultValue?: boolean, defaultValueInProduction?: boolean }
+export type GetEnvArgs<DefaultType> = { name: string; defaultValue?: DefaultType; forceDefaultValue?: boolean; defaultValueInProduction?: boolean }
 
 export function getEnv<DefaultType>({ name, defaultValue, forceDefaultValue, defaultValueInProduction }: GetEnvArgs<DefaultType>): DefaultType {
     const envValue = process.env[`${name}`] as DefaultType
 
     if (process.env['ENVIRONMENT'] == 'PRODUCTION') {
         if (!defaultValueInProduction) {
-            return (envValue) as DefaultType
+            return envValue as DefaultType
         }
     }
 

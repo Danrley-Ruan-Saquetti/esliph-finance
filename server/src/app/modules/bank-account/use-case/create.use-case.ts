@@ -1,14 +1,14 @@
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
+import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.global'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
-import { BankAccountGenerateCodeUseCase } from './generate-code.use-case'
-import { GLOBAL_DTO } from '@global'
+import { BankAccountGenerateCodeUseCase } from '@modules/bank-account/use-case/generate-code.use-case'
 
 const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
@@ -17,9 +17,7 @@ const schemaDTO = ValidatorService.schema.object({
         .min(1, { message: GLOBAL_BANK_ACCOUNT_DTO.name.messageRequired })
         .min(GLOBAL_BANK_ACCOUNT_DTO.name.minCharacters, { message: GLOBAL_BANK_ACCOUNT_DTO.name.messageMinCharacters })
         .transform(GLOBAL_DTO.text.transform),
-    userId: ValidatorService.schema.coerce
-        .number({ 'required_error': GLOBAL_BANK_ACCOUNT_DTO.user.id.messageRequired })
-        .positive({ message: GLOBAL_BANK_ACCOUNT_DTO.user.id.messageInvalid }),
+    userId: GLOBAL_BANK_ACCOUNT_DTO.user.id,
     passwordMaster: ValidatorService.schema
         .string()
         .trim()
