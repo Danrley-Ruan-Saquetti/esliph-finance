@@ -2,33 +2,35 @@ import { Request, Response } from '@esliph/http'
 import { Injection } from '@esliph/injection'
 import { Controller } from '@esliph/module'
 import { Post } from '@esliph/adapter-fastify'
-import { AuthSignUpUseCase } from '@modules/auth/use-case/sign-up.use-case'
-import { AuthSignInUseCase } from '@modules/auth/use-case/sign-in.use-case'
+import { AuthUserSignUpUseCase } from '@modules/auth/use-case/sign-up.user.use-case'
+import { AuthUserSignInUseCase } from '@modules/auth/use-case/sign-in.user.use-case'
+import { AuthBankAccountSignInUseCase } from '@modules/auth/use-case/sign-in.bank-account.use-case'
 
 @Controller()
 export class AuthController {
     constructor(
-        @Injection.Inject('auth.user.use-case.sign-up') private signUpUC: AuthSignUpUseCase,
-        @Injection.Inject('auth.user.use-case.sign-in') private signInUC: AuthSignInUseCase,
-    ) { }
+        @Injection.Inject('auth.user.use-case.sign-up') private signUserUpUC: AuthUserSignUpUseCase,
+        @Injection.Inject('auth.user.use-case.sign-in') private signUserInUC: AuthUserSignInUseCase,
+        @Injection.Inject('auth.bank-account.use-case.sign-in') private signBankAccountInUC: AuthBankAccountSignInUseCase,
+    ) {}
 
     @Post('/auth/user/sign-up')
     async userSignUp(req: Request) {
-        const result = await this.signUpUC.perform(req.body)
+        const result = await this.signUserUpUC.perform(req.body)
 
         return result
     }
 
     @Post('/auth/user/sign-in')
     async userSignIn(req: Request) {
-        const result = await this.signInUC.perform(req.body)
+        const result = await this.signUserInUC.perform(req.body)
 
         return result
     }
 
     @Post('/auth/bank-account/sign-in')
     async bankAccountSignIn(req: Request) {
-        const result = await this.signInUC.perform(req.body)
+        const result = await this.signBankAccountInUC.perform(req.body)
 
         return result
     }

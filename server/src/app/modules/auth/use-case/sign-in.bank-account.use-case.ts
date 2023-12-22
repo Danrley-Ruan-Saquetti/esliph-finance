@@ -1,7 +1,7 @@
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { PayloadJWTUser } from '@@types'
+import { PayloadJWTUser, PayloadJWTUserBankAccount } from '@@types'
 import { GLOBAL_SERVER_JWT_TOKEN } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
@@ -11,6 +11,7 @@ import { JWTService } from '@services/jwt.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { UserRepository } from '@modules/user/user.repository'
 import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.global'
+import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
 
 const schemaDTO = ValidatorService.schema.object({
     userId: GLOBAL_BANK_ACCOUNT_DTO.user.id,
@@ -21,9 +22,10 @@ const schemaDTO = ValidatorService.schema.object({
 export type AuthSignInDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
 @Service({ name: 'auth.bank-account.use-case.sign-in' })
-export class AuthSignInUseCase extends UseCase {
+export class AuthBankAccountSignInUseCase extends UseCase {
     constructor(
         @Injection.Inject('user.repository') private userRepository: UserRepository,
+        @Injection.Inject('bank-account.repository') private bankAccountRepository: BankAccountRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
         @Injection.Inject('jwt') private jwt: JWTService,
         @Injection.Inject('mail') private mail: MailService,
@@ -32,38 +34,56 @@ export class AuthSignInUseCase extends UseCase {
     }
 
     async perform(args: AuthSignInDTOArgs) {
-        const { email, password } = this.validateDTO(args, schemaDTO)
+        const { code, passwordMaster, userId } = this.validateDTO(args, schemaDTO)
 
-        const user = await this.queryUserByEmail(email)
-        await this.validPassword(password, user.password)
-        const token = this.generateToken({ sub: user.id, email: user.email, name: user.name })
+        const user = await this.queryUserByIdUser(userId)
+        const bankAccount = await this.queryBankAccountByCode(code, userId)
+        await this.validPasswordBankAccount(passwordMaster, bankAccount.passwordMaster)
+        const token = this.generateToken({ sub: user.id, email: user.email, name: user.name, bankAccount: bankAccount.id })
 
         return Result.success({ token })
     }
 
-    private async queryUserByEmail(email: string) {
-        const userResult = await this.userRepository.findByEmail(email)
+    private async queryUserByIdUser(userId: number) {
+        const userResult = await this.userRepository.findById(userId)
 
         if (userResult.isSuccess()) {
             return userResult.getValue()
         }
 
         if (userResult.isErrorInOperation()) {
-            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Unable to valid e-mail or password. Please, try again later' })
+            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'User not found. Please, try again later' })
         }
 
-        throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'E-mail or password invalid' })
+        throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'User not found' })
     }
 
-    private async validPassword(password: string, passwordHash: string) {
+    private async queryBankAccountByCode(code: string, userId: number) {
+        const userResult = await this.bankAccountRepository.findByCodeAndIdUser(code, userId)
+
+        if (userResult.isSuccess()) {
+            return userResult.getValue()
+        }
+
+        if (userResult.isErrorInOperation()) {
+            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Bank account not found. Please, try again later' })
+        }
+
+        throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Bank account invalid' })
+    }
+
+    private async validPasswordBankAccount(password: string, passwordHash: string) {
         const isSamePassword = await this.crypto.bcrypto.compare(password, passwordHash)
 
         if (!isSamePassword) {
-            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'E-mail or password invalid' })
+            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Password or Code invalid' })
         }
     }
 
-    private generateToken({ sub, email, name }: PayloadJWTUser) {
-        return this.jwt.encode<PayloadJWTUser>({ sub, name, email }, { exp: GLOBAL_SERVER_JWT_TOKEN.expiresTime, secret: GLOBAL_SERVER_JWT_TOKEN.keyMaster })
+    private generateToken({ sub, email, name, bankAccount }: PayloadJWTUserBankAccount) {
+        return this.jwt.encode<PayloadJWTUserBankAccount>(
+            { sub, name, email, bankAccount },
+            { exp: GLOBAL_SERVER_JWT_TOKEN.expiresTime, secret: GLOBAL_SERVER_JWT_TOKEN.keyMaster },
+        )
     }
 }

@@ -5,7 +5,7 @@ import { AuthUserAuthorizationUseCase } from '@modules/auth/use-case/user.author
 
 @Filter({ name: 'user.filter.authorization' })
 export class UserAuthorizationFilter implements FilterPerform {
-    constructor(@Injection.Inject('auth.user.use-case.authorization') private authorizationUC: AuthUserAuthorizationUseCase) { }
+    constructor(@Injection.Inject('auth.user.use-case.authorization') private authorizationUC: AuthUserAuthorizationUseCase) {}
 
     async perform(req: Request<any>, res: Response<any>) {
         const { authorization } = req.headers

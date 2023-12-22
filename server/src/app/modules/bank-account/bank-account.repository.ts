@@ -18,7 +18,7 @@ export class BankAccountRepository extends Repository {
         }
     }
 
-    async updateById(args: Partial<Omit<BankAccountModel.Model, 'userId'>>, where: { id: ID }) {
+    async updateById(args: Partial<Omit<BankAccountModel.BankAccount, 'userId'>>, where: { id: ID }) {
         try {
             await this.repo.update({ where: { id: where.id }, data: args })
 
@@ -35,12 +35,12 @@ export class BankAccountRepository extends Repository {
         try {
             const bankAccount = await this.repo.findFirst({ where: { id } })
 
-            return this.handleResponse<BankAccountModel.Model>(bankAccount, {
+            return this.handleResponse<BankAccountModel.BankAccount>(bankAccount, {
                 noAcceptNullable: true,
                 error: { title: 'Find Bank Account', message: 'Bank account not found' },
             })
         } catch (err: any) {
-            return this.handleError<BankAccountModel.Model>(err, { error: { title: 'Find Bank Account', message: 'Bank account not found' } })
+            return this.handleError<BankAccountModel.BankAccount>(err, { error: { title: 'Find Bank Account', message: 'Bank account not found' } })
         }
     }
 
@@ -63,12 +63,12 @@ export class BankAccountRepository extends Repository {
         try {
             const bankAccount = await this.repo.findFirst({ where: { code } })
 
-            return this.handleResponse<BankAccountModel.Model>(bankAccount, {
+            return this.handleResponse<BankAccountModel.BankAccount>(bankAccount, {
                 noAcceptNullable: true,
                 error: { title: 'Find Bank Account', message: 'Bank account not found' },
             })
         } catch (err: any) {
-            return this.handleError<BankAccountModel.Model>(err, { error: { title: 'Find Bank Account', message: 'Bank account not found' } })
+            return this.handleError<BankAccountModel.BankAccount>(err, { error: { title: 'Find Bank Account', message: 'Bank account not found' } })
         }
     }
 
@@ -91,12 +91,12 @@ export class BankAccountRepository extends Repository {
         try {
             const bankAccount = await this.repo.findFirst({ where: { code, userId } })
 
-            return this.handleResponse<BankAccountModel.Model>(bankAccount, {
+            return this.handleResponse<BankAccountModel.BankAccount>(bankAccount, {
                 noAcceptNullable: true,
                 error: { title: 'Find Bank Account', message: 'Bank account not found' },
             })
         } catch (err: any) {
-            return this.handleError<BankAccountModel.Model>(err, { error: { title: 'Find Bank Account', message: 'Bank account not found' } })
+            return this.handleError<BankAccountModel.BankAccount>(err, { error: { title: 'Find Bank Account', message: 'Bank account not found' } })
         }
     }
 
@@ -119,9 +119,9 @@ export class BankAccountRepository extends Repository {
         try {
             const users = await this.repo.findMany({ where: { userId } })
 
-            return this.handleResponse<BankAccountModel.Model[]>(users, { error: { title: 'Find Bank Account', message: 'Bank account not found' } })
+            return this.handleResponse<BankAccountModel.BankAccount[]>(users, { error: { title: 'Find Bank Account', message: 'Bank account not found' } })
         } catch (err: any) {
-            return this.handleError<BankAccountModel.Model[]>(err, { error: { title: 'Find Bank Account', message: 'Unable to find bank account' } })
+            return this.handleError<BankAccountModel.BankAccount[]>(err, { error: { title: 'Find Bank Account', message: 'Unable to find bank account' } })
         }
     }
 

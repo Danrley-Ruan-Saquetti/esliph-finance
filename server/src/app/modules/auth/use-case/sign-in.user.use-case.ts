@@ -5,7 +5,6 @@ import { PayloadJWTUser } from '@@types'
 import { GLOBAL_APP, GLOBAL_SERVER_JWT_TOKEN } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
-import { MailService } from '@services/mail.service'
 import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
@@ -19,12 +18,11 @@ const schemaDTO = ValidatorService.schema.object({
 export type AuthSignInDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
 @Service({ name: 'auth.user.use-case.sign-in' })
-export class AuthSignInUseCase extends UseCase {
+export class AuthUserSignInUseCase extends UseCase {
     constructor(
         @Injection.Inject('user.repository') private userRepository: UserRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
         @Injection.Inject('jwt') private jwt: JWTService,
-        @Injection.Inject('mail') private mail: MailService,
     ) {
         super()
     }
@@ -37,7 +35,7 @@ export class AuthSignInUseCase extends UseCase {
         try {
             transaction.begin()
 
-            const response = await this.performUC({ email, password })
+            const response = await this.handlerPerform({ email, password })
 
             transaction.commit()
 
@@ -49,11 +47,10 @@ export class AuthSignInUseCase extends UseCase {
         }
     }
 
-    private async performUC({ email, password }: AuthSignInDTOArgs) {
+    private async handlerPerform({ email, password }: AuthSignInDTOArgs) {
         const user = await this.queryUserByEmail(email)
         await this.validPassword(password, user.password)
         const token = this.generateToken({ sub: user.id, email: user.email, name: user.name })
-        this.sendEmail({ email })
 
         return Result.success({ token })
     }
@@ -78,17 +75,6 @@ export class AuthSignInUseCase extends UseCase {
         if (!isSamePassword) {
             throw new BadRequestException({ title: 'Sign-in User', message: 'E-mail or password invalid' })
         }
-    }
-
-    private async sendEmail({ email }: { email: string }) {
-        return
-
-        const result = await this.mail.send({
-            from: `${GLOBAL_APP.name} <${GLOBAL_APP.mail}>`,
-            to: email,
-            subject: 'Login in your account',
-            text: 'Welcome to back!',
-        })
     }
 
     private generateToken({ sub, email, name }: PayloadJWTUser) {

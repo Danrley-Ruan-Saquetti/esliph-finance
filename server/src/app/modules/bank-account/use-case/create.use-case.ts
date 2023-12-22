@@ -30,7 +30,7 @@ export type BankAccountCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
 @Service({ name: 'bank-account.use-case.create' })
 export class BankAccountCreateUseCase extends UseCase {
     constructor(
-        @Injection.Inject('account.repository') private repository: BankAccountRepository,
+        @Injection.Inject('bank-account.repository') private repository: BankAccountRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
         @Injection.Inject('bank-account.use-case.generate-code') private bankAccountGenerateCodeUC: BankAccountGenerateCodeUseCase,
     ) {
