@@ -19,7 +19,7 @@ export class BankAccountGenerateCodeUseCase extends UseCase {
         super()
     }
 
-    async perform(args: BankAccountGenerateCodeDTOArgs = {}) {
+    async generate(args: BankAccountGenerateCodeDTOArgs = {}) {
         const generator = Injection.resolve(GenerateCode)
 
         const codeResult = await generator.perform('Bank Account', {

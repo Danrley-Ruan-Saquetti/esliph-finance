@@ -9,7 +9,7 @@ export class BankAccountQueryUseCase {
     constructor(@Injection.Inject('bank-account.repository') private repository: BankAccountRepository) {}
 
     async queryByIdWithoutPassword(args: { id: ID }) {
-        const bankAccountResult = await this.repository.findByIdWithoutPasswordMaster(args.id)
+        const bankAccountResult = await this.repository.findByIdWithoutPassword(args.id)
 
         if (!bankAccountResult.isSuccess()) {
             if (bankAccountResult.isErrorInOperation()) {
@@ -23,7 +23,7 @@ export class BankAccountQueryUseCase {
     }
 
     async queryManyByIdUserWithoutPassword(args: { userId: ID }) {
-        const bankAccountsResult = await this.repository.findManyByIdUserWithoutPasswordMaster(args.userId)
+        const bankAccountsResult = await this.repository.findManyByIdUserWithoutPassword(args.userId)
 
         if (!bankAccountsResult.isSuccess()) {
             if (bankAccountsResult.isErrorInOperation()) {

@@ -18,11 +18,11 @@ const schemaDTO = ValidatorService.schema.object({
         .min(GLOBAL_BANK_ACCOUNT_DTO.name.minCharacters, { message: GLOBAL_BANK_ACCOUNT_DTO.name.messageMinCharacters })
         .transform(GLOBAL_DTO.text.transform),
     userId: GLOBAL_BANK_ACCOUNT_DTO.user.id,
-    passwordMaster: ValidatorService.schema
+    password: ValidatorService.schema
         .string()
         .trim()
-        .min(1, { message: GLOBAL_BANK_ACCOUNT_DTO.passwordMaster.messageRequired })
-        .regex(GLOBAL_BANK_ACCOUNT_DTO.passwordMaster.regex, { message: GLOBAL_BANK_ACCOUNT_DTO.passwordMaster.messageRegex }),
+        .min(1, { message: GLOBAL_BANK_ACCOUNT_DTO.password.messageRequired })
+        .regex(GLOBAL_BANK_ACCOUNT_DTO.password.regex, { message: GLOBAL_BANK_ACCOUNT_DTO.password.messageRegex }),
 })
 
 export type BankAccountCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
@@ -38,11 +38,11 @@ export class BankAccountCreateUseCase extends UseCase {
     }
 
     async perform(args: BankAccountCreateDTOArgs) {
-        const { name, passwordMaster, userId } = this.validateDTO(args, schemaDTO)
+        const { name, password, userId } = this.validateDTO(args, schemaDTO)
 
-        const passwordMasterHash = this.cryptPassword(passwordMaster)
+        const passwordHash = this.cryptPassword(password)
         const code = await this.generateCode()
-        await this.registerBankAccount({ name, passwordMaster: passwordMasterHash, userId, code })
+        await this.registerBankAccount({ name, password: passwordHash, userId, code })
 
         return Result.success({ message: 'Bank account registered successfully' })
     }
@@ -64,8 +64,8 @@ export class BankAccountCreateUseCase extends UseCase {
         return codeResult.getValue().code
     }
 
-    private async registerBankAccount({ name, passwordMaster, userId, code }: BankAccountCreateDTOArgs & { code: string }) {
-        const registerBankAccountResult = await this.repository.register({ balance: 0, name, passwordMaster, userId, code })
+    private async registerBankAccount({ name, password, userId, code }: BankAccountCreateDTOArgs & { code: string }) {
+        const registerBankAccountResult = await this.repository.register({ balance: 0, name, password, userId, code })
 
         if (registerBankAccountResult.isSuccess()) {
             return

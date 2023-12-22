@@ -5,9 +5,9 @@ import { BankAccountModel } from '@modules/bank-account/bank-account.model'
 
 @Service({ name: 'bank-account.repository' })
 export class BankAccountRepository extends Repository {
-    async register({ balance, name, passwordMaster, userId, code }: BankAccountModel.Model) {
+    async register({ balance, name, password, userId, code }: BankAccountModel.Model) {
         try {
-            await this.repo.create({ data: { balance, name, passwordMaster, userId, code } })
+            await this.repo.create({ data: { balance, name, password, userId, code } })
 
             return this.handleResponse<{ message: string }>(
                 { message: 'Bank account successfully registered' },
