@@ -1,11 +1,12 @@
-import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { BadRequestException } from '@common/exceptions'
+import { CodeGeneratorService } from '@services/code-generator.service'
 import { UseCase } from '@common/use-case'
+import { GenerateCode } from '@common/generate-code'
+import { BadRequestException } from '@common/exceptions'
 import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.global'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
-import { CodeGeneratorService } from '@services/code-generator.service'
+import { Result } from '@esliph/common'
 
 export type BankAccountGenerateCodeDTOArgs = { noValid?: boolean }
 
@@ -18,14 +19,21 @@ export class BankAccountGenerateCodeUseCase extends UseCase {
         super()
     }
 
-    async generate(args: BankAccountGenerateCodeDTOArgs = {}) {
-        if (args.noValid) {
-            return Result.success({ code: this.generateCode() })
+    async perform(args: BankAccountGenerateCodeDTOArgs = {}) {
+        const generator = Injection.resolve(GenerateCode)
+
+        const codeResult = await generator.perform('Bank Account', {
+            limitAttempts: GLOBAL_BANK_ACCOUNT_DTO.code.attempts,
+            template: GLOBAL_BANK_ACCOUNT_DTO.code.template,
+            validCode: this.validCode,
+            ...args,
+        })
+
+        if (!codeResult.isSuccess()) {
+            throw new BadRequestException({ ...codeResult.getError() })
         }
 
-        const code = await this.performGenerateCode()
-
-        return Result.success({ code })
+        return codeResult
     }
 
     valid(code: string) {
@@ -34,32 +42,6 @@ export class BankAccountGenerateCodeUseCase extends UseCase {
         }
 
         return Result.failure({ title: 'Valid Code Bank Account', message: 'Invalid bank account code' })
-    }
-
-    private async performGenerateCode() {
-        let code = ''
-        let contAttempts = 0
-        let isCodeValid = false
-
-        do {
-            contAttempts++
-
-            code = this.generateCode()
-            isCodeValid = await this.validCode(code)
-
-            if (!isCodeValid && contAttempts < GLOBAL_BANK_ACCOUNT_DTO.code.attempts) {
-                throw new BadRequestException({
-                    title: 'Generate Code Bank Account',
-                    message: 'Made many attempts to generate the bank account code. Please, try again later',
-                })
-            }
-        } while (!isCodeValid)
-
-        return code
-    }
-
-    private generateCode() {
-        return this.codeGenerator.generateCode(GLOBAL_BANK_ACCOUNT_DTO.code.template)
     }
 
     private async validCode(code: string) {
@@ -72,8 +54,8 @@ export class BankAccountGenerateCodeUseCase extends UseCase {
         if (bankAccountResult.isErrorInOperation()) {
             throw new BadRequestException({
                 ...bankAccountResult.getError(),
-                title: 'Generate Code BankAccount',
-                message: `Unable to generate code bank-account. Error: "${bankAccountResult.getError().message}". Please, try again later`,
+                title: 'Generate Code Bank Account',
+                message: `Unable to generate code Bank Account. Error: "${bankAccountResult.getError().message}". Please, try again later`,
             })
         }
 

@@ -1,11 +1,12 @@
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
+import { CodeGeneratorService } from '@services/code-generator.service'
 import { BadRequestException } from '@common/exceptions'
 import { UseCase } from '@common/use-case'
+import { GenerateCode } from '@common/generate-code'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 import { UserRepository } from '@modules/user/user.repository'
-import { CodeGeneratorService } from '@services/code-generator.service'
 
 export type UserGenerateCodeDTOArgs = { noValid?: boolean }
 
@@ -19,39 +20,28 @@ export class UserGenerateCodeUseCase extends UseCase {
     }
 
     async perform(args: UserGenerateCodeDTOArgs = {}) {
-        if (args.noValid) {
-            return Result.success({ code: this.generate() })
+        const generator = Injection.resolve(GenerateCode)
+
+        const codeResult = await generator.perform('User', {
+            limitAttempts: GLOBAL_USER_DTO.code.attempts,
+            template: GLOBAL_USER_DTO.code.template,
+            validCode: this.validCode,
+            ...args,
+        })
+
+        if (!codeResult.isSuccess()) {
+            throw new BadRequestException({ ...codeResult.getError() })
         }
 
-        const code = await this.generateCode()
-
-        return Result.success({ code })
+        return codeResult
     }
 
-    private async generateCode() {
-        let code = ''
-        let contAttempts = 0
-        let isCodeValid = false
+    valid(code: string) {
+        if (this.codeGenerator.validate(code, GLOBAL_USER_DTO.code.template)) {
+            return Result.success({ ok: true })
+        }
 
-        do {
-            contAttempts++
-
-            code = this.generate()
-            isCodeValid = await this.validCode(code)
-
-            if (!isCodeValid && contAttempts < GLOBAL_USER_DTO.code.attempts) {
-                throw new BadRequestException({
-                    title: 'Generate Code User',
-                    message: 'Made many attempts to generate the user code. Please, try again later',
-                })
-            }
-        } while (!isCodeValid)
-
-        return code
-    }
-
-    private generate() {
-        return this.codeGenerator.generateCode(GLOBAL_USER_DTO.code.template)
+        return Result.failure({ title: 'Valid Code Bank Account', message: 'Invalid bank account code' })
     }
 
     private async validCode(code: string) {
