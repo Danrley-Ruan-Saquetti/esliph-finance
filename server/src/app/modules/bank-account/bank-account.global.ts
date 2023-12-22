@@ -16,6 +16,7 @@ export const GLOBAL_BANK_ACCOUNT_DTO = {
         id: GLOBAL_DTO.id.schema({ name: 'User' }),
     },
     code: {
+        messageRequired: GLOBAL_DTO.required('Password Master'),
         template: {
             template: 'XXX-XXXXX-XX',
             charactersToReplace: ['X'],

@@ -2,7 +2,7 @@ import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { PayloadJWTUser } from '@@types'
-import { GLOBAL_APP, GLOBAL_SERVER_JWT_TOKEN } from '@global'
+import { GLOBAL_SERVER_JWT_TOKEN } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { MailService } from '@services/mail.service'
@@ -10,10 +10,12 @@ import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { UserRepository } from '@modules/user/user.repository'
+import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.global'
 
 const schemaDTO = ValidatorService.schema.object({
-    email: ValidatorService.schema.string().email({ message: 'E-mail invalid' }).trim().min(1, { message: 'E-mail is required' }),
-    password: ValidatorService.schema.string().trim().min(1, { message: 'Password is required' }),
+    userId: GLOBAL_BANK_ACCOUNT_DTO.user.id,
+    code: ValidatorService.schema.string().trim().min(1, { message: GLOBAL_BANK_ACCOUNT_DTO.code.messageRequired }),
+    passwordMaster: ValidatorService.schema.string().trim().min(1, { message: GLOBAL_BANK_ACCOUNT_DTO.passwordMaster.messageRequired }),
 })
 
 export type AuthSignInDTOArgs = SchemaValidator.input<typeof schemaDTO>
@@ -35,7 +37,6 @@ export class AuthSignInUseCase extends UseCase {
         const user = await this.queryUserByEmail(email)
         await this.validPassword(password, user.password)
         const token = this.generateToken({ sub: user.id, email: user.email, name: user.name })
-        this.sendEmail({ email })
 
         return Result.success({ token })
     }
@@ -48,27 +49,18 @@ export class AuthSignInUseCase extends UseCase {
         }
 
         if (userResult.isErrorInOperation()) {
-            throw new BadRequestException({ title: 'Sign-in', message: 'Unable to valid e-mail or password. Please, try again later' })
+            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Unable to valid e-mail or password. Please, try again later' })
         }
 
-        throw new BadRequestException({ title: 'Sign-in', message: 'E-mail or password invalid' })
+        throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'E-mail or password invalid' })
     }
 
     private async validPassword(password: string, passwordHash: string) {
         const isSamePassword = await this.crypto.bcrypto.compare(password, passwordHash)
 
         if (!isSamePassword) {
-            throw new BadRequestException({ title: 'Sign-in', message: 'E-mail or password invalid' })
+            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'E-mail or password invalid' })
         }
-    }
-
-    private async sendEmail({ email }: { email: string }) {
-        // const result = await this.mail.send({
-        //     from: `${GLOBAL_APP.name} <${GLOBAL_APP.mail}>`,
-        //     to: email,
-        //     subject: 'Login in your account',
-        //     text: 'Welcome to back!'
-        // })
     }
 
     private generateToken({ sub, email, name }: PayloadJWTUser) {

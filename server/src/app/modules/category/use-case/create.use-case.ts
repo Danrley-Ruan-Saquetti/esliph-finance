@@ -1,12 +1,12 @@
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { UseCase } from '@common/use-case'
 import { GLOBAL_DTO } from '@global'
+import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
-import { GLOBAL_CATEGORY_DTO } from '@modules/category/category.global'
 import { CategoryRepository } from '@modules/category/category.repository'
+import { GLOBAL_CATEGORY_DTO } from '@modules/category/category.global'
 
 const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
