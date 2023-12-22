@@ -2,17 +2,18 @@ import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { PayloadJWTUser } from '@@types'
-import { GLOBAL_APP, GLOBAL_SERVER_JWT_TOKEN } from '@global'
+import { GLOBAL_SERVER_JWT_TOKEN } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { UserRepository } from '@modules/user/user.repository'
+import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 
 const schemaDTO = ValidatorService.schema.object({
-    email: ValidatorService.schema.string().email({ message: 'E-mail invalid' }).trim().min(1, { message: 'E-mail is required' }),
-    password: ValidatorService.schema.string().trim().min(1, { message: 'Password is required' }),
+    email: ValidatorService.schema.string().email({ message: GLOBAL_USER_DTO.email.messageInvalid }).trim().min(1, { message: GLOBAL_USER_DTO.email.messageRequired }),
+    password: ValidatorService.schema.string().trim().min(1, { message: GLOBAL_USER_DTO.password.messageRequired }),
 })
 
 export type AuthSignInDTOArgs = SchemaValidator.input<typeof schemaDTO>
@@ -30,24 +31,6 @@ export class AuthUserSignInUseCase extends UseCase {
     async perform(args: AuthSignInDTOArgs) {
         const { email, password } = this.validateDTO(args, schemaDTO)
 
-        const transaction = this.userRepository.transaction()
-
-        try {
-            transaction.begin()
-
-            const response = await this.handlerPerform({ email, password })
-
-            transaction.commit()
-
-            return response
-        } catch (err: any) {
-            transaction.rollback()
-
-            return Result.inherit({ ...err })
-        }
-    }
-
-    private async handlerPerform({ email, password }: AuthSignInDTOArgs) {
         const user = await this.queryUserByEmail(email)
         await this.validPassword(password, user.password)
         const token = this.generateToken({ sub: user.id, email: user.email, name: user.name })
