@@ -12,9 +12,9 @@ export class BankAccountController {
     @Post('/bank-accounts/create')
     async create(req: Request) {
         const { userId } = req.headers
-        const { name, passwordMaster } = req.body
+        const { name, password } = req.body
 
-        const result = await this.createUC.perform({ name, passwordMaster, userId })
+        const result = await this.createUC.perform({ name, password, userId })
 
         return result
     }

@@ -7,7 +7,7 @@ export const GLOBAL_BANK_ACCOUNT_DTO = {
         messageRequired: GLOBAL_DTO.required('Name'),
         messageMinCharacters: GLOBAL_DTO.required('Name'),
     },
-    passwordMaster: {
+    password: {
         messageRequired: GLOBAL_DTO.required('Password'),
         regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,15}$/,
         messageRegex: 'The password must be between 6 and 15 characters, must have 1 uppercase and lowercase letter, 1 number',
@@ -16,7 +16,7 @@ export const GLOBAL_BANK_ACCOUNT_DTO = {
         id: GLOBAL_DTO.id.schema({ name: 'User' }),
     },
     code: {
-        messageRequired: GLOBAL_DTO.required('Password Master'),
+        messageRequired: GLOBAL_DTO.required('Password'),
         template: {
             template: 'XXX-XXXXX-XX',
             charactersToReplace: ['X'],

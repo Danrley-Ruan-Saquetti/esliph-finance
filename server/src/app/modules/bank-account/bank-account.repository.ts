@@ -44,16 +44,16 @@ export class BankAccountRepository extends Repository {
         }
     }
 
-    async findByIdWithoutPasswordMaster(id: ID) {
+    async findByIdWithoutPassword(id: ID) {
         try {
-            const bankAccount = await this.repo.findFirst({ where: { id }, select: BankAccountModel.BankAccountWithoutPasswordMasterSelect })
+            const bankAccount = await this.repo.findFirst({ where: { id }, select: BankAccountModel.BankAccountWithoutPasswordSelect })
 
-            return this.handleResponse<BankAccountModel.BankAccountWithoutPasswordMaster>(bankAccount, {
+            return this.handleResponse<BankAccountModel.BankAccountWithoutPassword>(bankAccount, {
                 noAcceptNullable: true,
                 error: { title: 'Find Bank Account', message: 'Bank account not found' },
             })
         } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccountWithoutPasswordMaster>(err, {
+            return this.handleError<BankAccountModel.BankAccountWithoutPassword>(err, {
                 error: { title: 'Find Bank Account', message: 'Unable to find bank account' },
             })
         }
@@ -72,16 +72,16 @@ export class BankAccountRepository extends Repository {
         }
     }
 
-    async findByCodeWithoutPasswordMaster(code: string) {
+    async findByCodeWithoutPassword(code: string) {
         try {
-            const bankAccount = await this.repo.findFirst({ where: { code }, select: BankAccountModel.BankAccountWithoutPasswordMasterSelect })
+            const bankAccount = await this.repo.findFirst({ where: { code }, select: BankAccountModel.BankAccountWithoutPasswordSelect })
 
-            return this.handleResponse<BankAccountModel.BankAccountWithoutPasswordMaster>(bankAccount, {
+            return this.handleResponse<BankAccountModel.BankAccountWithoutPassword>(bankAccount, {
                 noAcceptNullable: true,
                 error: { title: 'Find Bank Account', message: 'Bank account not found' },
             })
         } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccountWithoutPasswordMaster>(err, {
+            return this.handleError<BankAccountModel.BankAccountWithoutPassword>(err, {
                 error: { title: 'Find Bank Account', message: 'Unable to find bank account' },
             })
         }
@@ -100,16 +100,16 @@ export class BankAccountRepository extends Repository {
         }
     }
 
-    async findByCodeAndIdUserWithoutPasswordMaster(code: string, userId: ID) {
+    async findByCodeAndIdUserWithoutPassword(code: string, userId: ID) {
         try {
-            const bankAccount = await this.repo.findFirst({ where: { code, userId }, select: BankAccountModel.BankAccountWithoutPasswordMasterSelect })
+            const bankAccount = await this.repo.findFirst({ where: { code, userId }, select: BankAccountModel.BankAccountWithoutPasswordSelect })
 
-            return this.handleResponse<BankAccountModel.BankAccountWithoutPasswordMaster>(bankAccount, {
+            return this.handleResponse<BankAccountModel.BankAccountWithoutPassword>(bankAccount, {
                 noAcceptNullable: true,
                 error: { title: 'Find Bank Account', message: 'Bank account not found' },
             })
         } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccountWithoutPasswordMaster>(err, {
+            return this.handleError<BankAccountModel.BankAccountWithoutPassword>(err, {
                 error: { title: 'Find Bank Account', message: 'Unable to find bank account' },
             })
         }
@@ -125,15 +125,15 @@ export class BankAccountRepository extends Repository {
         }
     }
 
-    async findManyByIdUserWithoutPasswordMaster(userId: ID) {
+    async findManyByIdUserWithoutPassword(userId: ID) {
         try {
-            const bankAccounts = await this.repo.findMany({ where: { userId }, select: BankAccountModel.BankAccountWithoutPasswordMasterSelect })
+            const bankAccounts = await this.repo.findMany({ where: { userId }, select: BankAccountModel.BankAccountWithoutPasswordSelect })
 
-            return this.handleResponse<BankAccountModel.BankAccountWithoutPasswordMaster[]>(bankAccounts, {
+            return this.handleResponse<BankAccountModel.BankAccountWithoutPassword[]>(bankAccounts, {
                 error: { title: 'Find Bank Account', message: 'Bank account not found' },
             })
         } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccountWithoutPasswordMaster[]>(err, {
+            return this.handleError<BankAccountModel.BankAccountWithoutPassword[]>(err, {
                 error: { title: 'Find Bank Account', message: 'Unable to find bank account' },
             })
         }

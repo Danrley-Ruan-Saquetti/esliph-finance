@@ -17,7 +17,7 @@ import { BankAccountGenerateCodeUseCase } from '@modules/bank-account/use-case/g
 const schemaDTO = ValidatorService.schema.object({
     userId: GLOBAL_BANK_ACCOUNT_DTO.user.id,
     code: ValidatorService.schema.string().trim().min(1, { message: GLOBAL_BANK_ACCOUNT_DTO.code.messageRequired }),
-    passwordMaster: ValidatorService.schema.string().trim().min(1, { message: GLOBAL_BANK_ACCOUNT_DTO.passwordMaster.messageRequired }),
+    password: ValidatorService.schema.string().trim().min(1, { message: GLOBAL_BANK_ACCOUNT_DTO.password.messageRequired }),
 })
 
 export type AuthSignInDTOArgs = SchemaValidator.input<typeof schemaDTO>
@@ -35,12 +35,12 @@ export class AuthBankAccountSignInUseCase extends UseCase {
     }
 
     async perform(args: AuthSignInDTOArgs) {
-        const { code, passwordMaster, userId } = this.validateDTO(args, schemaDTO)
+        const { code, password, userId } = this.validateDTO(args, schemaDTO)
 
         this.validCode(code)
         const user = await this.queryUserByIdUser(userId)
         const bankAccount = await this.queryBankAccountByCode(code, userId)
-        await this.validPasswordBankAccount(passwordMaster, bankAccount.passwordMaster)
+        await this.validPasswordBankAccount(password, bankAccount.password)
         const token = this.generateToken({ sub: user.id, email: user.email, name: user.name, bankAccount: bankAccount.id })
 
         return Result.success({ token })
@@ -48,7 +48,7 @@ export class AuthBankAccountSignInUseCase extends UseCase {
 
     private validCode(code: string) {
         if (this.bankAccountGenerateCodeUC.valid(code).isSuccess()) {
-            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password Master invalid. Please, try again later' })
+            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password invalid. Please, try again later' })
         }
     }
 
@@ -74,17 +74,17 @@ export class AuthBankAccountSignInUseCase extends UseCase {
         }
 
         if (userResult.isErrorInOperation()) {
-            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password Master invalid. Please, try again later' })
+            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password invalid. Please, try again later' })
         }
 
-        throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password Master invalid' })
+        throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password invalid' })
     }
 
     private async validPasswordBankAccount(password: string, passwordHash: string) {
         const isSamePassword = await this.crypto.bcrypto.compare(password, passwordHash)
 
         if (!isSamePassword) {
-            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password Master invalid' })
+            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password invalid' })
         }
     }
 
