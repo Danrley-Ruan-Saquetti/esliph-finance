@@ -8,6 +8,7 @@ import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 import { UserRepository } from '@modules/user/user.repository'
 import { UserGenerateCodeUseCase } from './generate-code.use-case'
+import { GLOBAL_DTO } from '@global'
 
 const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
@@ -15,7 +16,7 @@ const schemaDTO = ValidatorService.schema.object({
         .trim()
         .min(1, { message: GLOBAL_USER_DTO.name.messageRequired })
         .min(GLOBAL_USER_DTO.name.minCharacters, { message: GLOBAL_USER_DTO.name.messageMinCharacters })
-        .transform(val => val.replace(/ {2}/g, ' ')),
+        .transform(GLOBAL_DTO.text.transform),
     email: ValidatorService.schema
         .string()
         .trim()

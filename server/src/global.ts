@@ -22,4 +22,7 @@ export const GLOBAL_MAIL_CONFIG = {
 
 export const GLOBAL_DTO = {
     required: (value: string) => `${value[0].toUpperCase() + value.substring(1)} is required`,
+    text: {
+        transform: val => val.replace(/ {2}/g, ' '),
+    },
 }
