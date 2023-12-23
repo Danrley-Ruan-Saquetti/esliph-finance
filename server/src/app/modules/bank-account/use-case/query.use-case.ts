@@ -6,7 +6,7 @@ import { Result } from '@esliph/common'
 
 @Service({ name: 'bank-account.use-case.query' })
 export class BankAccountQueryUseCase {
-    constructor(@Injection.Inject('bank-account.repository') private repository: BankAccountRepository) {}
+    constructor(@Injection.Inject('bank-account.repository') private repository: BankAccountRepository) { }
 
     async queryByIdWithoutPassword(args: { id: ID }) {
         const bankAccountResult = await this.repository.findByIdWithoutPassword(args.id)
@@ -19,7 +19,7 @@ export class BankAccountQueryUseCase {
             return Result.failure({ title: 'Query Bank Account', message: 'Bank account not found' })
         }
 
-        return Result.success(bankAccountResult.getStatus())
+        return Result.success(bankAccountResult.getValue())
     }
 
     async queryManyByIdUserWithoutPassword(args: { userId: ID }) {
@@ -33,6 +33,6 @@ export class BankAccountQueryUseCase {
             return Result.failure({ title: 'Query Bank Accounts', message: 'Bank accounts not found' })
         }
 
-        return Result.success(bankAccountsResult.getStatus())
+        return Result.success(bankAccountsResult.getValue())
     }
 }
