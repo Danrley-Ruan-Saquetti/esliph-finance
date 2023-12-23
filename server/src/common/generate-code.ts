@@ -12,7 +12,7 @@ export class GenerateCode {
     private isCodeValid = false
     private name = ''
     private limitAttempts = 5
-    private template: GenerateCodeOptions = { template: '', charactersToReplace: [], valuesAllowed: [], charactersToIgnore: [] }
+    private template: GenerateCodeOptions = { template: '', charactersToReplace: [], valuesAllowed: [] }
     private validCode = async (code: string) => false
 
     constructor(@Injection.Inject('code-generator') private codeGenerator: CodeGeneratorService) { }

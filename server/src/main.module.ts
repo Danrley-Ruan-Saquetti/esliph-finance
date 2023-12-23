@@ -8,6 +8,7 @@ import { MailService } from '@services/mail.service'
 import { CodeGeneratorService } from '@services/code-generator.service'
 import { WriteStreamOutput } from '@services/write-stream-output.service'
 import { HttpService } from '@services/http.service'
+import { MaskDataService } from '@services/mask-data.service'
 
 @Module({
     imports: [AppModule],
@@ -20,6 +21,8 @@ import { HttpService } from '@services/http.service'
         CodeGeneratorService,
         WriteStreamOutput,
         HttpService,
+        MaskDataService,
+        { whenCall: 'mask-data', use: 'global.service.mask-data' },
         { whenCall: 'http', use: 'global.service.http' },
         { whenCall: 'write-stream-output', use: 'global.service.write-stream-output' },
         { whenCall: 'code-generator', use: 'global.service.code-generator' },

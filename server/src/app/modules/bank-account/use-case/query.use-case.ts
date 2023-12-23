@@ -28,6 +28,34 @@ export class BankAccountQueryUseCase extends UseCase {
         return Result.success(bankAccountResult.getValue())
     }
 
+    async queryByCodeWithoutPassword(args: { code: string }) {
+        const bankAccountResult = await this.repository.findByCodeWithoutPassword(args.code)
+
+        if (!bankAccountResult.isSuccess()) {
+            if (bankAccountResult.isErrorInOperation()) {
+                return Result.failure({ title: 'Query Bank Account', message: 'Unable to query bank account' })
+            }
+
+            return Result.failure({ title: 'Query Bank Account', message: 'Bank account not found' })
+        }
+
+        return Result.success(bankAccountResult.getValue())
+    }
+
+    async queryByCodeWithoutPasswordWithMask(args: { code: string }) {
+        const bankAccountResult = await this.repository.findByCodeWithoutPassword(args.code)
+
+        if (!bankAccountResult.isSuccess()) {
+            if (bankAccountResult.isErrorInOperation()) {
+                return Result.failure({ title: 'Query Bank Account', message: 'Unable to query bank account' })
+            }
+
+            return Result.failure({ title: 'Query Bank Account', message: 'Bank account not found' })
+        }
+
+        return Result.success(bankAccountResult.getValue())
+    }
+
     async queryManyByIdUserWithoutPassword(args: { userId: ID }) {
         const userId = this.validateDTO(args.userId, schemaNumber)
 

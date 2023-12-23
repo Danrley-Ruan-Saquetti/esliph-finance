@@ -3,21 +3,16 @@ import { Service } from '@esliph/module'
 export type GenerateCodeOptions = {
     template: string
     charactersToReplace: string[]
-    charactersToIgnore?: string[]
     valuesAllowed: string[]
 }
 
 @Service({ name: 'global.service.code-generator' })
 export class CodeGeneratorService {
-    generateCode({ template, charactersToReplace, charactersToIgnore = [], valuesAllowed }: GenerateCodeOptions) {
+    generateCode({ template, charactersToReplace, valuesAllowed }: GenerateCodeOptions) {
         return template
             .split('')
             .map(templateDigit => {
                 if (!charactersToReplace.find(characterToReplace => templateDigit === characterToReplace)) {
-                    return templateDigit
-                }
-
-                if (charactersToIgnore.find(digit => digit === templateDigit)) {
                     return templateDigit
                 }
 
@@ -27,7 +22,7 @@ export class CodeGeneratorService {
             .join('')
     }
 
-    validate(code: string, { template, charactersToReplace, charactersToIgnore = [], valuesAllowed }: GenerateCodeOptions) {
+    validate(code: string, { template, charactersToReplace, valuesAllowed }: GenerateCodeOptions) {
         if (code.length !== template.length) {
             return false
         }
@@ -38,7 +33,7 @@ export class CodeGeneratorService {
             const templateDigit = templateDigits[i]
             const codeDigit = code[i]
 
-            if (!this.valideDigits(codeDigit, templateDigit, { charactersToReplace, valuesAllowed, charactersToIgnore })) {
+            if (!this.valideDigits(codeDigit, templateDigit, { charactersToReplace, valuesAllowed })) {
                 return false
             }
         }
@@ -63,17 +58,13 @@ export class CodeGeneratorService {
     private wasSupposedBeDifferent(
         codeDigit: string,
         templateDigit: string,
-        { charactersToReplace, valuesAllowed, charactersToIgnore = [] }: Omit<GenerateCodeOptions, 'template'>,
+        { charactersToReplace, valuesAllowed, }: Omit<GenerateCodeOptions, 'template'>,
     ) {
         if (charactersToReplace.find(digit => digit === templateDigit)) {
             if (!valuesAllowed.find(digit => digit === codeDigit)) {
                 return false
             }
         } else {
-            return false
-        }
-
-        if (charactersToIgnore.find(digit => digit === templateDigit)) {
             return false
         }
 
