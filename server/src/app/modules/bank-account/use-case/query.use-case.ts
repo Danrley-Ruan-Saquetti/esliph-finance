@@ -1,15 +1,21 @@
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { ID } from '@@types'
-import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
 import { Result } from '@esliph/common'
+import { ID } from '@@types'
+import { UseCase } from '@common/use-case'
+import { ValidatorService } from '@services/validator.service'
+import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
+
+const schemaNumber = ValidatorService.schema.coerce.number()
 
 @Service({ name: 'bank-account.use-case.query' })
-export class BankAccountQueryUseCase {
-    constructor(@Injection.Inject('bank-account.repository') private repository: BankAccountRepository) { }
+export class BankAccountQueryUseCase extends UseCase {
+    constructor(@Injection.Inject('bank-account.repository') private repository: BankAccountRepository) { super() }
 
     async queryByIdWithoutPassword(args: { id: ID }) {
-        const bankAccountResult = await this.repository.findByIdWithoutPassword(args.id)
+        const id = this.validateDTO(args.id, schemaNumber)
+
+        const bankAccountResult = await this.repository.findByIdWithoutPassword(id)
 
         if (!bankAccountResult.isSuccess()) {
             if (bankAccountResult.isErrorInOperation()) {
@@ -23,7 +29,9 @@ export class BankAccountQueryUseCase {
     }
 
     async queryManyByIdUserWithoutPassword(args: { userId: ID }) {
-        const bankAccountsResult = await this.repository.findManyByIdUserWithoutPassword(args.userId)
+        const userId = this.validateDTO(args.userId, schemaNumber)
+
+        const bankAccountsResult = await this.repository.findManyByIdUserWithoutPassword(userId)
 
         if (!bankAccountsResult.isSuccess()) {
             if (bankAccountsResult.isErrorInOperation()) {

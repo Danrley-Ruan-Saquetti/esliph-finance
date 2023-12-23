@@ -6,7 +6,7 @@ import { UseCase } from '@common/use-case'
 import { ValidatorService } from '@services/validator.service'
 import { UserRepository } from '@modules/user/user.repository'
 
-const schema = ValidatorService.schema.coerce.number()
+const schemaNumber = ValidatorService.schema.coerce.number()
 
 @Service({ name: 'user.use-case.query' })
 export class UserQueryUseCase extends UseCase {
@@ -15,7 +15,7 @@ export class UserQueryUseCase extends UseCase {
     }
 
     async queryByIdWithoutPassword(args: { id: ID }) {
-        const id = this.validateDTO(args.id, schema)
+        const id = this.validateDTO(args.id, schemaNumber)
 
         const bankAccountResult = await this.repository.findByIdWithoutPassword(id)
 
