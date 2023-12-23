@@ -3,25 +3,33 @@ import { ApplicationModule, Service } from '@esliph/module'
 import { GLOBAL_LOG_CONFIG } from '@global'
 
 class WriteStreamInstance {
-    instance: WriteStream
+    private instance: WriteStream
+    private isOpen = false
 
     constructor(path: string) {
-        this.instance = createWriteStream(path)
+        try {
+            this.instance = createWriteStream(path)
+            this.isOpen = true
+        } catch (err: any) {
+            this.isOpen = false
+        }
     }
 
     write(msg: string) {
-        this.instance.write(msg + '\n')
+        if (!GLOBAL_LOG_CONFIG.enableLog || !this.isOpen) { return }
+
+        try {
+            this.instance.write(msg + '\n')
+        } catch (err: any) {
+            this.isOpen = false
+        }
     }
 }
 
 @Service({ name: 'global.service.write-stream-output' })
 export class WriteStreamOutput {
     static onLoad() {
-        const writer = WriteStreamOutput.newInstance(GLOBAL_LOG_CONFIG.path)
-
-        writer.instance.on('error', args => {
-            console.log(args)
-        })
+        const writer = WriteStreamOutput.newInstance(`${GLOBAL_LOG_CONFIG.path}/app.log`)
 
         ApplicationModule.logger.on('log', msg => {
             writer.write(msg)

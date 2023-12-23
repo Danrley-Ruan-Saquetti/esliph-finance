@@ -1,7 +1,7 @@
 export * from '@prisma/client'
 import { PrismaClient } from '@prisma/client'
-import { ApplicationModule, Service } from '@esliph/module'
-import { GLOBAL_LOG_CONFIG } from '@global'
+import { Service } from '@esliph/module'
+import { GLOBAL_FORMATTER_CONFIG, GLOBAL_LOG_CONFIG } from '@global'
 import { WriteStreamOutput } from '@services/write-stream-output.service'
 
 @Service({ name: 'global.service.database' })
@@ -16,19 +16,19 @@ export class DatabaseService {
     })
 
     static async onLoad() {
-        const writer = WriteStreamOutput.newInstance(GLOBAL_LOG_CONFIG.dbPath)
+        const writer = WriteStreamOutput.newInstance(`${GLOBAL_LOG_CONFIG.path}/db.log`)
 
         this.instance.$on('error', args => {
-            writer.write(`${new Date(Date.now())}  "${args.message}"`)
+            writer.write(`#  ${GLOBAL_FORMATTER_CONFIG.date.format()}  [ERROR]: ${args.message}`)
         })
         this.instance.$on('info', args => {
-            writer.write(`${new Date(Date.now())}  "${args.message}"`)
+            writer.write(`#  ${GLOBAL_FORMATTER_CONFIG.date.format()}  [INFO]: ${args.message}`)
         })
         this.instance.$on('query', args => {
-            writer.write(`${new Date(Date.now())}  "${args.query}"`)
+            writer.write(`#  ${GLOBAL_FORMATTER_CONFIG.date.format()}  [QUERY]: ${args.query} ${args.params}`)
         })
         this.instance.$on('warn', args => {
-            writer.write(`${new Date(Date.now())}  "${args.message}"`)
+            writer.write(`#  ${GLOBAL_FORMATTER_CONFIG.date.format()}  [WARN]: ${args.message}`)
         })
 
         await this.instance.$connect()

@@ -1,7 +1,9 @@
+import 'dotenv/config'
+
 export type PartialDeep<T> = { [x in keyof T]?: T[x] extends object ? PartialDeep<T[x]> : T[x] }
 
-export function toCapitalise(text: string, firstOcurrenceOnly = false) {
-    if (!firstOcurrenceOnly) {
+export function toCapitalise(text: string, firstOccurrenceOnly = false) {
+    if (!firstOccurrenceOnly) {
         return text[0].toUpperCase() + text.substring(1)
     }
 
@@ -59,7 +61,7 @@ export function isFunction(value: any) {
     return getTypeNativeValue(value) == 'function'
 }
 
-const AsyncFunction = (async () => {}).constructor
+const AsyncFunction = (async () => { }).constructor
 export function isAsyncFunction(value: any) {
     return value instanceof AsyncFunction
 }

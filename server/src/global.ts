@@ -21,9 +21,29 @@ export const GLOBAL_MAIL_CONFIG = {
     pass: getEnv({ name: 'MAIL_CONFIG_PASS' }),
 }
 
+export const GLOBAL_OUTPUT = {
+    path: getEnv<string>({ name: 'OUTPUT_PATH', defaultValue: 'output', defaultValueInProduction: true })
+}
+
 export const GLOBAL_LOG_CONFIG = {
-    path: getEnv<string>({ name: 'OUTPUT_PATH_LOG' }),
-    dbPath: getEnv<string>({ name: 'OUTPUT_PATH_LOG_DATABASE' })
+    path: `${GLOBAL_OUTPUT.path}/logs`,
+    enableLog: getEnv<boolean>({ name: 'ENABLE_LOG', defaultValue: false })
+}
+
+export const GLOBAL_FORMATTER_CONFIG = {
+    date: {
+        formatter: new Intl.DateTimeFormat(undefined, {
+            hour12: false,
+            year: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            day: '2-digit',
+            month: '2-digit',
+            calendar: 'gregory',
+        }),
+        format: (date = new Date(Date.now())) => GLOBAL_FORMATTER_CONFIG.date.formatter.format(date).replace(', ', ' ')
+    }
 }
 
 export const GLOBAL_DTO = {

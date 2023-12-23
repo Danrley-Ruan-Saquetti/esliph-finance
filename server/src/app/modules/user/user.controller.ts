@@ -1,5 +1,5 @@
 import { Request } from '@esliph/http'
-import { Get } from '@esliph/adapter-fastify'
+import { Get } from '@services/http.service'
 import { Injection } from '@esliph/injection'
 import { Controller, Guard } from '@esliph/module'
 import { UserQueryUseCase } from '@modules/user/use-case/query.use-case'

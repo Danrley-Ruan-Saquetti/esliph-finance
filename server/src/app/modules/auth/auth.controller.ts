@@ -1,7 +1,7 @@
 import { Request, Response } from '@esliph/http'
 import { Injection } from '@esliph/injection'
 import { Controller, Guard } from '@esliph/module'
-import { Post } from '@esliph/adapter-fastify'
+import { Post } from '@services/http.service'
 import { AuthUserSignUpUseCase } from '@modules/auth/use-case/sign-up.user.use-case'
 import { AuthUserSignInUseCase } from '@modules/auth/use-case/sign-in.user.use-case'
 import { AuthBankAccountSignInUseCase } from '@modules/auth/use-case/sign-in.bank-account.use-case'

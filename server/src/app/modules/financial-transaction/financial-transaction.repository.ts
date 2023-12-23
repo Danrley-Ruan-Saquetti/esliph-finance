@@ -98,7 +98,7 @@ export class FinancialTransactionRepository extends Repository {
         }
     }
 
-    async findManyByIdBankAccountAndTypeOcurrence(bankAccountId: ID, typeOccurrences: FinancialTransactionModel.TypeOccurrence[]) {
+    async findManyByIdBankAccountAndTypeOccurrence(bankAccountId: ID, typeOccurrences: FinancialTransactionModel.TypeOccurrence[]) {
         try {
             const financialTransactions = await this.database.instance.financialTransaction.findMany({
                 where: { bankAccountId, typeOccurrence: { in: typeOccurrences } },
