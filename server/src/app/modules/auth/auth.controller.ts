@@ -1,6 +1,6 @@
 import { Request, Response } from '@esliph/http'
 import { Injection } from '@esliph/injection'
-import { Controller } from '@esliph/module'
+import { Controller, Guard } from '@esliph/module'
 import { Post } from '@esliph/adapter-fastify'
 import { AuthUserSignUpUseCase } from '@modules/auth/use-case/sign-up.user.use-case'
 import { AuthUserSignInUseCase } from '@modules/auth/use-case/sign-in.user.use-case'
@@ -12,7 +12,7 @@ export class AuthController {
         @Injection.Inject('auth.user.use-case.sign-up') private signUserUpUC: AuthUserSignUpUseCase,
         @Injection.Inject('auth.user.use-case.sign-in') private signUserInUC: AuthUserSignInUseCase,
         @Injection.Inject('auth.bank-account.use-case.sign-in') private signBankAccountInUC: AuthBankAccountSignInUseCase,
-    ) {}
+    ) { }
 
     @Post('/auth/user/sign-up')
     async userSignUp(req: Request) {
@@ -28,9 +28,12 @@ export class AuthController {
         return result
     }
 
+    @Guard({ name: 'user.authorization' })
     @Post('/auth/bank-account/sign-in')
     async bankAccountSignIn(req: Request) {
-        const result = await this.signBankAccountInUC.perform(req.body)
+        const { userId } = req.headers
+
+        const result = await this.signBankAccountInUC.perform({ ...req.body, userId })
 
         return result
     }

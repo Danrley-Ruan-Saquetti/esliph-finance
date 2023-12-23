@@ -2,23 +2,27 @@ import { ValidatorService } from '@services/validator.service'
 import { getEnv, toCapitalise } from '@util'
 
 export const GLOBAL_APP = {
-    name: getEnv({ name: 'APP_NAME', defaultValue: '' }),
-    mail: getEnv({ name: 'APP_MAIL', defaultValue: '' }),
+    name: getEnv({ name: 'APP_NAME' }),
+    mail: getEnv({ name: 'APP_MAIL' }),
 }
 
 export const GLOBAL_SERVER_JWT_TOKEN = {
-    keyMaster: getEnv({ name: 'SERVER_JWT_TOKEN_KEY_MASTER', defaultValue: '' }),
-    keyBank: getEnv({ name: 'SERVER_JWT_TOKEN_KEY_BANK', defaultValue: '' }),
-    expiresTime: getEnv({ name: 'SERVER_JWT_TOKEN_EXPIRES_TIME', defaultValue: '' }),
+    keyMaster: getEnv({ name: 'SERVER_JWT_TOKEN_KEY_MASTER' }),
+    keyBank: getEnv({ name: 'SERVER_JWT_TOKEN_KEY_BANK' }),
+    expiresTime: getEnv({ name: 'SERVER_JWT_TOKEN_EXPIRES_TIME' }),
 }
 
 export const GLOBAL_MAIL_CONFIG = {
-    host: getEnv({ name: 'MAIL_CONFIG_HOST', defaultValue: '' }),
+    host: getEnv({ name: 'MAIL_CONFIG_HOST' }),
     port: getEnv<number>({ name: 'MAIL_CONFIG_PORT', defaultValue: 0 }),
     secure: getEnv<boolean>({ name: 'MAIL_CONFIG_SECURE', defaultValue: true }),
-    service: getEnv({ name: 'MAIL_CONFIG_SERVICE', defaultValue: '' }),
-    mail: getEnv({ name: 'MAIL_CONFIG_EMAIL', defaultValue: '' }),
-    pass: getEnv({ name: 'MAIL_CONFIG_PASS', defaultValue: '' }),
+    service: getEnv({ name: 'MAIL_CONFIG_SERVICE' }),
+    mail: getEnv({ name: 'MAIL_CONFIG_EMAIL' }),
+    pass: getEnv({ name: 'MAIL_CONFIG_PASS' }),
+}
+
+export const GLOBAL_LOG_CONFIG = {
+    path: getEnv<string>({ name: 'OUTPUT_PATH_LOG' })
 }
 
 export const GLOBAL_DTO = {

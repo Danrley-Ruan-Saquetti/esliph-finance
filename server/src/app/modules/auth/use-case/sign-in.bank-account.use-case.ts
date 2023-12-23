@@ -47,7 +47,7 @@ export class AuthBankAccountSignInUseCase extends UseCase {
     }
 
     private validCode(code: string) {
-        if (this.bankAccountGenerateCodeUC.valid(code).isSuccess()) {
+        if (!this.bankAccountGenerateCodeUC.valid(code).isSuccess()) {
             throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password invalid. Please, try again later' })
         }
     }

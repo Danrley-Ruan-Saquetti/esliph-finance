@@ -6,6 +6,7 @@ import { ValidatorService } from '@services/validator.service'
 import { DatabaseService } from '@services/database.service'
 import { MailService } from '@services/mail.service'
 import { CodeGeneratorService } from '@services/code-generator.service'
+import { WriteStreamOutput } from './services/write-stream-output.service'
 
 @Module({
     imports: [AppModule],
@@ -16,6 +17,8 @@ import { CodeGeneratorService } from '@services/code-generator.service'
         ValidatorService,
         MailService,
         CodeGeneratorService,
+        WriteStreamOutput,
+        { whenCall: 'write-stream-output', use: 'global.service.write-stream-output' },
         { whenCall: 'code-generator', use: 'global.service.code-generator' },
         { whenCall: 'crypto', use: 'global.service.crypto' },
         { whenCall: 'jwt', use: 'global.service.jwt' },
@@ -24,4 +27,4 @@ import { CodeGeneratorService } from '@services/code-generator.service'
         { whenCall: 'mail', use: 'global.service.mail' },
     ],
 })
-export class MainModule {}
+export class MainModule { }

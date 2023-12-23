@@ -32,7 +32,6 @@ FastifyAdapter.instance.listen({ port: PORT }, (err: Error | null, address: stri
     App.logger.log(`Server running on address ${address}`)
 })
 
-// @ts-expect-error
 new DatabaseService().instance.$on('error', args => {
     App.logger.error(args)
 })
