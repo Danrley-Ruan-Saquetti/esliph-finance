@@ -1,5 +1,6 @@
 import { GLOBAL_DTO } from '@global'
 import { GenerateCodeOptions } from '@services/code-generator.service'
+import { MaskDataOptions } from '@services/mask-data.service'
 
 export const GLOBAL_BANK_ACCOUNT_DTO = {
     name: {
@@ -23,5 +24,10 @@ export const GLOBAL_BANK_ACCOUNT_DTO = {
             valuesAllowed: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
         } as GenerateCodeOptions,
         attempts: 5,
+        maskData: {
+            template: 'XX*-********-XX',
+            charactersToReplace: ['*'],
+            valueReplace: '*'
+        } as MaskDataOptions
     },
 }

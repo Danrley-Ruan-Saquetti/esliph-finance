@@ -27,7 +27,7 @@ export class BankAccountController {
     async getOne(req: Request) {
         const { id } = req.params
 
-        const result = await this.queryUC.queryByIdWithoutPassword({ id })
+        const result = await this.queryUC.queryByIdWithoutPasswordWithMask({ id })
 
         return result
     }

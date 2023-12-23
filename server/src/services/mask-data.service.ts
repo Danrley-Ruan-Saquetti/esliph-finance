@@ -11,7 +11,7 @@ export class MaskDataService {
 
     mask(data: string, { charactersToReplace = [], template = '', valueReplace }: MaskDataOptions) {
         return template.split('').map((digitTemplate, i) => {
-            if (!charactersToReplace.find(digit => digit === digitTemplate)) {
+            if (charactersToReplace.find(digit => digit === digitTemplate)) {
                 return valueReplace
             }
 
