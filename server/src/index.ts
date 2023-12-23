@@ -4,7 +4,7 @@ import { Server } from '@esliph/http'
 import { FastifyAdapter } from '@esliph/adapter-fastify'
 import { getEnv } from '@util'
 import { MainModule } from '@main.module'
-import { DatabaseService } from '@services/database.service'
+import { Logger } from '@services/logger.service'
 
 const PORT = getEnv<number>({ name: 'PORT', defaultValue: 8080 })
 
@@ -14,6 +14,7 @@ const App = Bootstrap(
     MainModule,
     {
         log: { eventHttp: true, eventListener: true, load: true },
+        logger: new Logger()
     }, [new FastifyAdapter()]
 )
 
@@ -28,9 +29,5 @@ FastifyAdapter.instance.listen({ port: PORT }, (err: Error | null, address: stri
         console.log(args)
     })
 
-    App.logger.log(`Server running on address ${address}`)
-})
-
-new DatabaseService().instance.$on('error', args => {
-    App.logger.error(args)
+    App.logger.log(`Server running on address ${address}`, {}, { context: 'SERVER' })
 })

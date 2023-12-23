@@ -38,7 +38,7 @@ export class CodeGeneratorService {
             const templateDigit = templateDigits[i]
             const codeDigit = code[i]
 
-            if (!this.vaideDigits(codeDigit, templateDigit, { charactersToReplace, valuesAllowed, charactersToIgnore })) {
+            if (!this.valideDigits(codeDigit, templateDigit, { charactersToReplace, valuesAllowed, charactersToIgnore })) {
                 return false
             }
         }
@@ -46,7 +46,7 @@ export class CodeGeneratorService {
         return true
     }
 
-    private vaideDigits(codeDigit: string, templateDigit: string, options: Omit<GenerateCodeOptions, 'template'>) {
+    private valideDigits(codeDigit: string, templateDigit: string, options: Omit<GenerateCodeOptions, 'template'>) {
         if (codeDigit !== templateDigit) {
             if (!this.wasSupposedBeDifferent(codeDigit, templateDigit, options)) {
                 return false

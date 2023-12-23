@@ -13,7 +13,7 @@ export const GLOBAL_SERVER_JWT_TOKEN = {
 }
 
 export const GLOBAL_MAIL_CONFIG = {
-    host: getEnv({ name: 'MAIL_CONFIG_HOST' }),
+    host: getEnv<string>({ name: 'MAIL_CONFIG_HOST' }),
     port: getEnv<number>({ name: 'MAIL_CONFIG_PORT', defaultValue: 0 }),
     secure: getEnv<boolean>({ name: 'MAIL_CONFIG_SECURE', defaultValue: true }),
     service: getEnv({ name: 'MAIL_CONFIG_SERVICE' }),
@@ -22,7 +22,8 @@ export const GLOBAL_MAIL_CONFIG = {
 }
 
 export const GLOBAL_LOG_CONFIG = {
-    path: getEnv<string>({ name: 'OUTPUT_PATH_LOG' })
+    path: getEnv<string>({ name: 'OUTPUT_PATH_LOG' }),
+    dbPath: getEnv<string>({ name: 'OUTPUT_PATH_LOG_DATABASE' })
 }
 
 export const GLOBAL_DTO = {
