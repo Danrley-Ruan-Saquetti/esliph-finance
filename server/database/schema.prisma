@@ -11,7 +11,7 @@ generator client {
 
 model User {
   id           Int           @id @default(autoincrement())
-  code         String        @unique
+  code         String        @unique @default("") @db.VarChar(9)
   name         String        @db.VarChar(45)
   email        String        @unique @db.VarChar(25)
   password     String        @db.VarChar(120)
@@ -26,7 +26,7 @@ model BankAccount {
   id                    Int                    @id @default(autoincrement())
   user                  User                   @relation(fields: [userId], references: [id])
   userId                Int                    @map("user_id")
-  code                  String                 @unique
+  code                  String                 @unique @default("") @db.VarChar(15)
   name                  String                 @db.VarChar(45)
   password              String                 @map("password") @db.VarChar(120)
   balance               Float                  @default(0)
@@ -99,7 +99,7 @@ enum FinancialTransactionTypeOccurrence {
   SINGLE
   PROGRAMMATIC
 
-  @@map("financial_transaction_occurrence")
+  @@map("financial_transaction_type_occurrence")
 }
 
 enum FinancialTransactionSituation {

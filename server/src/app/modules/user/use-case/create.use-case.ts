@@ -79,7 +79,7 @@ export class UserCreateUseCase extends UseCase {
     private async generateCode() {
         const codeResult = await this.userGenerateCodeUC.perform()
 
-        if (codeResult.isSuccess()) {
+        if (!codeResult.isSuccess()) {
             throw new BadRequestException({
                 ...codeResult.getError(),
                 title: 'Register User',

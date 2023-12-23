@@ -18,7 +18,7 @@ export const GLOBAL_BANK_ACCOUNT_DTO = {
     code: {
         messageRequired: GLOBAL_DTO.required('Password'),
         template: {
-            template: 'XXX-XXXXX-XX',
+            template: 'XXX-XXXXXXXX-XX',
             charactersToReplace: ['X'],
             charactersToIgnore: [],
             valuesAllowed: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],

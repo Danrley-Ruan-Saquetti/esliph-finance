@@ -25,7 +25,11 @@ export class BankAccountGenerateCodeUseCase extends UseCase {
         const codeResult = await generator.perform('Bank Account', {
             limitAttempts: GLOBAL_BANK_ACCOUNT_DTO.code.attempts,
             template: GLOBAL_BANK_ACCOUNT_DTO.code.template,
-            validCode: this.validCode,
+            validCode: async (code: string) => {
+                const codeResult = await this.validCode(code)
+
+                return codeResult
+            },
             ...args,
         })
 

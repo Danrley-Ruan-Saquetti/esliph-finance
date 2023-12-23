@@ -6,7 +6,7 @@ import { CodeGeneratorService, GenerateCodeOptions } from '@services/code-genera
 
 export type GenerateCodeArgs = { noValid: boolean; limitAttempts: number; template: GenerateCodeOptions; validCode: (code: string) => Promise<boolean> }
 
-@Service()
+@Service({ name: 'common.generate-code' })
 export class GenerateCode {
     private contAttempts = 0
     private isCodeValid = false
@@ -15,7 +15,7 @@ export class GenerateCode {
     private template: GenerateCodeOptions = { template: '', charactersToReplace: [], valuesAllowed: [], charactersToIgnore: [] }
     private validCode = async (code: string) => false
 
-    constructor(@Injection.Inject('code-generator') private codeGenerator: CodeGeneratorService) {}
+    constructor(@Injection.Inject('code-generator') private codeGenerator: CodeGeneratorService) { }
 
     async perform(name: string, args: Partial<GenerateCodeArgs> = {}) {
         this.name = name

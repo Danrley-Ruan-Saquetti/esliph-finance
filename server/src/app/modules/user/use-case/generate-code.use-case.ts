@@ -25,7 +25,12 @@ export class UserGenerateCodeUseCase extends UseCase {
         const codeResult = await generator.perform('User', {
             limitAttempts: GLOBAL_USER_DTO.code.attempts,
             template: GLOBAL_USER_DTO.code.template,
-            validCode: this.validCode,
+            validCode: async (code: string) => {
+                const userResult = await this.validCode(code)
+
+                return userResult
+
+            },
             ...args,
         })
 
