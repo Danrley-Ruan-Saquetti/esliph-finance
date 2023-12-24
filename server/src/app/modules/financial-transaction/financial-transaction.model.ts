@@ -14,3 +14,19 @@ export namespace FinancialTransactionModel {
     export type FinancialTransaction = Database.FinancialTransaction
     export type Model = DocumentSimple<FinancialTransaction>
 }
+
+/*
+bankAccountId: number;
+title: string;
+description: string;
+value: number;
+priority: number;
+isObservable: boolean;
+isSendNotification: boolean;
+timesToRepeat: number;
+type: $Enums.FinancialTransactionType;
+receiver: string;
+sender: string;
+typeOccurrence: $Enums.FinancialTransactionTypeOccurrence;
+expiresIn: Date;
+*/

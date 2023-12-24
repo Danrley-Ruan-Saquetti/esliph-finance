@@ -10,7 +10,7 @@ export class UserController {
 
     @Guard({ name: 'user.authorization' })
     @Get('/users/:id')
-    async hello(req: Request) {
+    async get(req: Request) {
         const { id } = req.params
 
         const result = await this.queryUX.queryByIdWithoutPassword({ id })

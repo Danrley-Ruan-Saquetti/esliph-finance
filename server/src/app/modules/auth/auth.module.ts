@@ -10,8 +10,8 @@ import { BankAccountAuthorizationFilter } from '@modules/auth/filters/bank-accou
     providers: [
         UserAuthorizationFilter,
         BankAccountAuthorizationFilter,
+        { use: 'bank-account.filter.authorization', whenCall: 'bank-account.authorization' },
         { use: 'user.filter.authorization', whenCall: 'user.authorization' },
-        { use: 'bank-account.filter.authorization', whenCall: 'bank-account.authorization' }
     ],
 })
 export class AuthModule { }

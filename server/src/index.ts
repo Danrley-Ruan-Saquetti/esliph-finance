@@ -9,7 +9,8 @@ const PORT = getEnv<number>({ name: 'PORT', defaultValue: 8080 })
 const App = Bootstrap(
     MainModule,
     {
-        logger: new Logger()
+        logger: new Logger(),
+        log: { load: true, eventHttp: true }
     }, [new HttpService()]
 )
 
