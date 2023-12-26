@@ -6,7 +6,8 @@ export const GLOBAL_BANK_ACCOUNT_DTO = {
     name: {
         minCharacters: 3,
         messageRequired: GLOBAL_DTO.required('Name'),
-        messageMinCharacters: GLOBAL_DTO.required('Name'),
+        maxCharacters: 45,
+        messageRangeCharacters: 'The Name must be between 3 and 45 characters',
     },
     password: {
         messageRequired: GLOBAL_DTO.required('Password'),

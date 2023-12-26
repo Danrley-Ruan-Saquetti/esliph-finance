@@ -7,8 +7,10 @@ export const GLOBAL_FINANCIAL_TRANSACTION_DTO = {
     },
     title: {
         minCharacters: 3,
+        maxCharacters: 45,
         messageRequired: GLOBAL_DTO.required('Title'),
-        messageMinCharacters: 'The Title must have at least 3 characters',
+        messageRangeCharacters: 'The Title must be between 3 and 55 characters',
+
     },
     description: {
         default: '',

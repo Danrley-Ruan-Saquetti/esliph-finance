@@ -13,7 +13,7 @@ model User {
   id           Int           @id @default(autoincrement())
   code         String        @unique @default("") @db.VarChar(9)
   name         String        @db.VarChar(45)
-  email        String        @unique @db.VarChar(25)
+  email        String        @unique @db.VarChar(254)
   password     String        @db.VarChar(120)
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at")

@@ -14,7 +14,8 @@ const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
         .string({ 'required_error': GLOBAL_BANK_ACCOUNT_DTO.name.messageRequired })
         .trim()
-        .min(GLOBAL_BANK_ACCOUNT_DTO.name.minCharacters, { message: GLOBAL_BANK_ACCOUNT_DTO.name.messageMinCharacters })
+        .min(GLOBAL_BANK_ACCOUNT_DTO.name.minCharacters, { message: GLOBAL_BANK_ACCOUNT_DTO.name.messageRangeCharacters })
+        .max(GLOBAL_BANK_ACCOUNT_DTO.name.maxCharacters, { message: GLOBAL_BANK_ACCOUNT_DTO.name.messageRangeCharacters })
         .transform(GLOBAL_DTO.text.transform),
     userId: GLOBAL_BANK_ACCOUNT_DTO.user.id,
     password: ValidatorService.schema

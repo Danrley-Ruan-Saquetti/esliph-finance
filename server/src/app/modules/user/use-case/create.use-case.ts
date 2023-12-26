@@ -14,11 +14,13 @@ const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
         .string({ 'required_error': GLOBAL_USER_DTO.name.messageRequired })
         .trim()
-        .min(GLOBAL_USER_DTO.name.minCharacters, { message: GLOBAL_USER_DTO.name.messageMinCharacters })
+        .min(GLOBAL_USER_DTO.name.minCharacters, { message: GLOBAL_USER_DTO.name.messageRangeCharacters })
+        .max(GLOBAL_USER_DTO.name.maxCharacters, { message: GLOBAL_USER_DTO.name.messageRangeCharacters })
         .transform(GLOBAL_DTO.text.transform),
     email: ValidatorService.schema
         .string({ 'required_error': GLOBAL_USER_DTO.email.messageRequired })
         .email({ message: GLOBAL_USER_DTO.email.messageInvalid })
+        .max(GLOBAL_USER_DTO.email.maxCharacters, { message: GLOBAL_USER_DTO.email.messageRangeCharacters })
         .trim(),
     password: ValidatorService.schema
         .string({ 'required_error': GLOBAL_USER_DTO.password.messageRequired })
