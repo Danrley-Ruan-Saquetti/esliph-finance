@@ -1,0 +1,1 @@
+export const GLOBAL_FINANCIAL_INCOME_DTO = {}
