@@ -10,8 +10,6 @@ export class BankAccountAuthorizationFilter implements FilterPerform {
     async perform(req: Request<any>, res: Response<any>) {
         const AuthorizationBankAccount = req.headers['authorizationbankaccount'] || req.headers['authorization']
 
-        console.log(AuthorizationBankAccount, req.headers)
-
         const result = this.authorizationUC.perform({ AuthorizationBankAccount })
 
         req.headers['userId'] = result.getValue().sub

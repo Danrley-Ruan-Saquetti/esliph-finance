@@ -10,8 +10,6 @@ export class UserAuthorizationFilter implements FilterPerform {
     async perform(req: Request<any>, res: Response<any>) {
         const { authorization } = req.headers
 
-        console.log('user', authorization)
-
         const result = this.authorizationUC.perform({ Authorization: authorization })
 
         req.headers['userId'] = result.getValue().sub

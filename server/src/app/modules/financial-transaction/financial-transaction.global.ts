@@ -39,6 +39,8 @@ export const GLOBAL_FINANCIAL_TRANSACTION_DTO = {
     },
     timesToRepeat: {
         default: 0,
+        messageRequired: GLOBAL_DTO.required('Times to Repeat'),
+        messageMustBePositive: 'The number of Times to Repeat must be greater than 0 (zero)',
     },
     receiver: {
         default: '',

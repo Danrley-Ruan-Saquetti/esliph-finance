@@ -72,12 +72,16 @@ const schemaDTO = ValidatorService.schema.object({
         .default(GLOBAL_FINANCIAL_TRANSACTION_DTO.expiresIn.default()),
 })
     .refine(
-        ({ receiver, type }) => type != FinancialTransactionModel.Type.EXPENSE || !!receiver,
+        ({ type, receiver }) => type != FinancialTransactionModel.Type.EXPENSE || !!receiver,
         { message: GLOBAL_FINANCIAL_TRANSACTION_DTO.receiver.messageRequired, path: ['receiver'] }
     )
     .refine(
-        ({ sender, type }) => type != FinancialTransactionModel.Type.INCOME || !!sender,
+        ({ type, sender }) => type != FinancialTransactionModel.Type.INCOME || !!sender,
         { message: GLOBAL_FINANCIAL_TRANSACTION_DTO.sender.messageRequired, path: ['sender'] }
+    )
+    .refine(
+        ({ typeOccurrence, timesToRepeat }) => typeOccurrence != FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC || !!timesToRepeat,
+        { message: GLOBAL_FINANCIAL_TRANSACTION_DTO.timesToRepeat.messageMustBePositive, path: ['timesToRepeat'] }
     )
 
 export type FinancialTransactionCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
@@ -91,15 +95,34 @@ export class FinancialTransactionCreateUseCase extends UseCase {
     async perform(args: FinancialTransactionCreateDTOArgs) {
         const data = this.validateDTO(args, schemaDTO)
 
-        // await this.registerFinancialTransaction(data)
+        const processData = this.processingData(data)
+        await this.registerFinancialTransaction(processData)
 
-        return Result.success({ message: 'Register financial transaction successfully', data })
+        return Result.success({ message: 'Register financial transaction successfully' })
     }
 
-    private async registerFinancialTransaction(data: FinancialTransactionCreateDTOArgs) {
-        const registerFinancialTransactionResult = await this.repository.register({
-            bankAccountId: data.bankAccountId, countRepeatedOccurrences: data.countRepeatedOccurrences, description: data.description, expiresIn: data.expiresIn, isObservable: data.isObservable, isSendNotification: data.isSendNotification, priority: data.priority, receiver: data.receiver, sender: data.sender, situation: FinancialTransactionModel.Situation.PENDING, timesToRepeat: data.timesToRepeat, title: data.title, type: data.type, typeOccurrence: data.typeOccurrence, value: data.value
-        })
+    private processingData(data: SchemaValidator.output<typeof schemaDTO>): FinancialTransactionModel.Model {
+        return {
+            bankAccountId: data.bankAccountId,
+            value: data.value,
+            description: data.description,
+            expiresIn: data.expiresIn,
+            isObservable: !!data.isObservable,
+            isSendNotification: !!data.isSendNotification,
+            priority: data.priority,
+            receiver: data.type == FinancialTransactionModel.Type.EXPENSE ? data.receiver : '',
+            sender: data.type == FinancialTransactionModel.Type.INCOME ? data.sender : '',
+            situation: FinancialTransactionModel.Situation.PENDING,
+            countRepeatedOccurrences: 0,
+            timesToRepeat: data.typeOccurrence === FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC ? data.timesToRepeat : 0,
+            title: data.title,
+            type: FinancialTransactionModel.Type[data.type],
+            typeOccurrence: data.typeOccurrence,
+        }
+    }
+
+    private async registerFinancialTransaction(data: FinancialTransactionModel.Model) {
+        const registerFinancialTransactionResult = await this.repository.register(data)
 
         if (registerFinancialTransactionResult.isSuccess()) {
             return
