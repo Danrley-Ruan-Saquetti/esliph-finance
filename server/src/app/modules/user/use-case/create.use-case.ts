@@ -12,21 +12,17 @@ import { UserGenerateCodeUseCase } from '@modules/user/use-case/generate-code.us
 
 const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
-        .string()
+        .string({ 'required_error': GLOBAL_USER_DTO.name.messageRequired })
         .trim()
-        .min(1, { message: GLOBAL_USER_DTO.name.messageRequired })
         .min(GLOBAL_USER_DTO.name.minCharacters, { message: GLOBAL_USER_DTO.name.messageMinCharacters })
         .transform(GLOBAL_DTO.text.transform),
     email: ValidatorService.schema
-        .string()
-        .trim()
+        .string({ 'required_error': GLOBAL_USER_DTO.email.messageRequired })
         .email({ message: GLOBAL_USER_DTO.email.messageInvalid })
-        .trim()
-        .min(1, { message: GLOBAL_USER_DTO.email.messageRequired }),
+        .trim(),
     password: ValidatorService.schema
-        .string()
+        .string({ 'required_error': GLOBAL_USER_DTO.password.messageRequired })
         .trim()
-        .min(1, { message: GLOBAL_USER_DTO.password.messageRequired })
         .regex(GLOBAL_USER_DTO.password.regex, { message: GLOBAL_USER_DTO.password.messageRegex }),
 })
 

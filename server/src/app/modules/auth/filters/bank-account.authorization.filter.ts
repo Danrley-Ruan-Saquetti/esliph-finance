@@ -8,9 +8,9 @@ export class BankAccountAuthorizationFilter implements FilterPerform {
     constructor(@Injection.Inject('auth.bank-account.use-case.authorization') private authorizationUC: AuthBankAccountAuthorizationUseCase) { }
 
     async perform(req: Request<any>, res: Response<any>) {
-        const AuthorizationBankAccount = req.headers['authorizationbankaccount']
+        const AuthorizationBankAccount = req.headers['authorizationbankaccount'] || req.headers['authorization']
 
-        console.log('bank', AuthorizationBankAccount)
+        console.log(AuthorizationBankAccount, req.headers)
 
         const result = this.authorizationUC.perform({ AuthorizationBankAccount })
 

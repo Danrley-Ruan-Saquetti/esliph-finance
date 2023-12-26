@@ -12,16 +12,14 @@ import { BankAccountGenerateCodeUseCase } from '@modules/bank-account/use-case/g
 
 const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
-        .string()
+        .string({ 'required_error': GLOBAL_BANK_ACCOUNT_DTO.name.messageRequired })
         .trim()
-        .min(1, { message: GLOBAL_BANK_ACCOUNT_DTO.name.messageRequired })
         .min(GLOBAL_BANK_ACCOUNT_DTO.name.minCharacters, { message: GLOBAL_BANK_ACCOUNT_DTO.name.messageMinCharacters })
         .transform(GLOBAL_DTO.text.transform),
     userId: GLOBAL_BANK_ACCOUNT_DTO.user.id,
     password: ValidatorService.schema
-        .string()
+        .string({ 'required_error': GLOBAL_BANK_ACCOUNT_DTO.password.messageRequired })
         .trim()
-        .min(1, { message: GLOBAL_BANK_ACCOUNT_DTO.password.messageRequired })
         .regex(GLOBAL_BANK_ACCOUNT_DTO.password.regex, { message: GLOBAL_BANK_ACCOUNT_DTO.password.messageRegex }),
 })
 

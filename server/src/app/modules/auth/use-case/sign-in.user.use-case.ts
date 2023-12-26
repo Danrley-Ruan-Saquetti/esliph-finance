@@ -8,12 +8,17 @@ import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { GLOBAL_AUTH_USER_DTO } from '@modules/auth/auth.global'
 import { UserRepository } from '@modules/user/user.repository'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 
 const schemaDTO = ValidatorService.schema.object({
-    email: ValidatorService.schema.string().email({ message: GLOBAL_USER_DTO.email.messageInvalid }).trim().min(1, { message: GLOBAL_USER_DTO.email.messageRequired }),
-    password: ValidatorService.schema.string().trim().min(1, { message: GLOBAL_USER_DTO.password.messageRequired }),
+    login: ValidatorService.schema
+        .string({ 'required_error': GLOBAL_AUTH_USER_DTO.login.messageRequired })
+        .trim(),
+    password: ValidatorService.schema
+        .string({ 'required_error': GLOBAL_USER_DTO.password.messageRequired })
+        .trim()
 })
 
 export type AuthSignInDTOArgs = SchemaValidator.input<typeof schemaDTO>
@@ -29,9 +34,9 @@ export class AuthUserSignInUseCase extends UseCase {
     }
 
     async perform(args: AuthSignInDTOArgs) {
-        const { email, password } = this.validateDTO(args, schemaDTO)
+        const { login, password } = this.validateDTO(args, schemaDTO)
 
-        const user = await this.queryUserByEmail(email)
+        const user = await this.queryUserByEmail(login)
         await this.validPassword(password, user.password)
         const token = this.generateToken({ sub: user.id, email: user.email, name: user.name })
 

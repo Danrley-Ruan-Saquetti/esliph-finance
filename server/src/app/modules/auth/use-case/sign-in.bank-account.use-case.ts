@@ -16,8 +16,12 @@ import { BankAccountGenerateCodeUseCase } from '@modules/bank-account/use-case/g
 
 const schemaDTO = ValidatorService.schema.object({
     userId: GLOBAL_BANK_ACCOUNT_DTO.user.id,
-    code: ValidatorService.schema.string().trim().min(1, { message: GLOBAL_BANK_ACCOUNT_DTO.code.messageRequired }),
-    password: ValidatorService.schema.string().trim().min(1, { message: GLOBAL_BANK_ACCOUNT_DTO.password.messageRequired }),
+    code: ValidatorService.schema
+        .string({ 'required_error': GLOBAL_BANK_ACCOUNT_DTO.code.messageRequired })
+        .trim(),
+    password: ValidatorService.schema
+        .string({ 'required_error': GLOBAL_BANK_ACCOUNT_DTO.password.messageRequired })
+        .trim()
 })
 
 export type AuthSignInDTOArgs = SchemaValidator.input<typeof schemaDTO>

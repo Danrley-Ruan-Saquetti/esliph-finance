@@ -6,8 +6,9 @@ export const GLOBAL_FINANCIAL_TRANSACTION_DTO = {
         id: GLOBAL_DTO.id.schema({ name: 'Bank Account' }),
     },
     title: {
+        minCharacters: 3,
         messageRequired: GLOBAL_DTO.required('Title'),
-        messageMinCharacters: 'Title is not empty',
+        messageMinCharacters: 'The Title must have at least 3 characters',
     },
     description: {
         default: '',
@@ -18,17 +19,19 @@ export const GLOBAL_FINANCIAL_TRANSACTION_DTO = {
     },
     priority: {
         messageRequired: GLOBAL_DTO.required('Priority'),
-        messageMustBePositive: 'The Priority must be greater than 0 (zero)',
+        messageMustBePositive: 'The Priority must be greater or equal than 0 (zero)',
     },
     isObservable: {
         default: false,
     },
     type: {
         enum: [FinancialTransactionModel.Type.EXPENSE, FinancialTransactionModel.Type.INCOME],
+        messageRequired: GLOBAL_DTO.required('Type'),
         messageEnumInvalid: 'Type must be Expense or Income'
     },
     typeOccurrence: {
         enum: [FinancialTransactionModel.TypeOccurrence.SINGLE, FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC],
+        messageRequired: GLOBAL_DTO.required('Type Occurrence'),
         messageEnumInvalid: 'Type Occurrence must be Single or Programmatic'
     },
     isSendNotification: {
@@ -39,14 +42,13 @@ export const GLOBAL_FINANCIAL_TRANSACTION_DTO = {
     },
     receiver: {
         default: '',
+        messageRequired: GLOBAL_DTO.required('Receiver'),
     },
     sender: {
         default: '',
+        messageRequired: GLOBAL_DTO.required('Sender'),
     },
     expiresIn: {
         default: () => new Date(Date.now()),
     },
-    super: {
-        messageSenderAndReceiverNotEmpty: 'Sender or Receiver is not empty'
-    }
 }
