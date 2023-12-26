@@ -63,7 +63,7 @@ export class BankAccountCreateUseCase extends UseCase {
         return codeResult.getValue().code
     }
 
-    private async registerBankAccount({ name, password, userId, code }: BankAccountCreateDTOArgs & { code: string }) {
+    private async registerBankAccount({ name, password, userId, code }: SchemaValidator.output<typeof schemaDTO> & { code: string }) {
         const registerBankAccountResult = await this.repository.register({ balance: 0, name, password, userId, code })
 
         if (registerBankAccountResult.isSuccess()) {

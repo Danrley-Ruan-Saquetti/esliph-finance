@@ -87,7 +87,7 @@ export class UserCreateUseCase extends UseCase {
         return codeResult.getValue().code
     }
 
-    private async registerUser({ email, name, password, code }: UserCreateDTOArgs & { code: string }) {
+    private async registerUser({ email, name, password, code }: SchemaValidator.output<typeof schemaDTO> & { code: string }) {
         const registerUserResult = await this.repository.register({ email, name, password, code })
 
         if (registerUserResult.isSuccess()) {

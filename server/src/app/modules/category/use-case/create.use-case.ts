@@ -10,17 +10,16 @@ import { GLOBAL_CATEGORY_DTO } from '@modules/category/category.global'
 
 const schemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
-        .string()
+        .string({ 'required_error': GLOBAL_CATEGORY_DTO.name.messageRequired })
         .trim()
-        .min(1, { message: GLOBAL_CATEGORY_DTO.name.messageRequired })
-        .min(GLOBAL_CATEGORY_DTO.name.minCharacters, { message: GLOBAL_CATEGORY_DTO.name.messageMinCharacters })
+        .min(GLOBAL_CATEGORY_DTO.name.minCharacters, { message: GLOBAL_CATEGORY_DTO.name.messageRangeCharacters })
+        .max(GLOBAL_CATEGORY_DTO.name.maxCharacters, { message: GLOBAL_CATEGORY_DTO.name.messageRangeCharacters })
         .transform(GLOBAL_DTO.text.transform),
     bankAccountId: GLOBAL_CATEGORY_DTO.bankAccount.id,
     color: ValidatorService.schema
-        .string()
+        .string({ 'required_error': GLOBAL_CATEGORY_DTO.color.messageRequired })
         .trim()
-        .min(1, { message: GLOBAL_CATEGORY_DTO.name.messageRequired })
-        .min(GLOBAL_CATEGORY_DTO.name.minCharacters, { message: GLOBAL_CATEGORY_DTO.name.messageMinCharacters })
+        .max(GLOBAL_CATEGORY_DTO.color.maxCharacters, { message: GLOBAL_CATEGORY_DTO.color.messageRangeCharacters })
         .regex(GLOBAL_DTO.color.regex, { message: GLOBAL_DTO.color.messageRegex }),
     isFavorite: ValidatorService.schema.boolean().default(GLOBAL_CATEGORY_DTO.isFavorite.default),
 })
@@ -41,7 +40,7 @@ export class CategoryCreateUseCase extends UseCase {
         return Result.success({ message: 'Category registered successfully' })
     }
 
-    private async registerCategory({ bankAccountId, color, name, isFavorite = false }: CategoryCreateDTOArgs) {
+    private async registerCategory({ bankAccountId, color, name, isFavorite }: SchemaValidator.output<typeof schemaDTO>) {
         const registerCategoryResult = await this.repository.register({ bankAccountId, color, name, isFavorite })
 
         if (registerCategoryResult.isSuccess()) {
