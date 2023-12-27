@@ -132,6 +132,7 @@ model FinancialTransaction {
   typeOccurrence           FinancialTransactionTypeOccurrence @default(SINGLE) @map("type_occurrence")
   situation                FinancialTransactionSituation      @default(PENDING) @map("situation")
   expiresIn                DateTime                           @map("expires_in")
+  dateTimeCompetence       DateTime                           @default(now()) @map("date_time_competence")
   createdAt                DateTime                           @default(now()) @map("created_at")
   updatedAt                DateTime                           @default(now()) @updatedAt @map("updated_at")
   payments                 Payment[]

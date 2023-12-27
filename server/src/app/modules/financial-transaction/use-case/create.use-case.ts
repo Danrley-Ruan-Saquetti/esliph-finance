@@ -71,6 +71,10 @@ const schemaDTO = ValidatorService.schema.object({
         .schema
         .date()
         .default(GLOBAL_FINANCIAL_TRANSACTION_DTO.expiresIn.default()),
+    dateTimeCompetence: ValidatorService
+        .schema
+        .date()
+        .default(GLOBAL_FINANCIAL_TRANSACTION_DTO.dateTimeCompetence.default()),
 })
     .refine(
         ({ type, receiver }) => type != FinancialTransactionModel.Type.EXPENSE || !!receiver,
@@ -119,6 +123,7 @@ export class FinancialTransactionCreateUseCase extends UseCase {
             title: data.title,
             type: FinancialTransactionModel.Type[data.type],
             typeOccurrence: data.typeOccurrence,
+            dateTimeCompetence: data.dateTimeCompetence,
         }
     }
 

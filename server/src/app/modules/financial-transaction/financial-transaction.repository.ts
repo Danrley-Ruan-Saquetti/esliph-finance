@@ -20,7 +20,7 @@ export class FinancialTransactionRepository extends Repository {
         }
     }
 
-    async updateById(args: FinancialTransactionModel.Model, where: { id: number }) {
+    async updateById(args: FinancialTransactionModel.Model, where: { id: ID }) {
         try {
             await this.database.instance.financialTransaction.update({ where: { id: where.id }, data: args })
 
@@ -52,7 +52,10 @@ export class FinancialTransactionRepository extends Repository {
 
     async findManyByIdBankAccount(bankAccountId: ID) {
         try {
-            const financialTransactions = await this.database.instance.financialTransaction.findMany({ where: { bankAccountId } })
+            const financialTransactions = await this.database.instance.financialTransaction.findMany({
+                where: { bankAccountId },
+                orderBy: { expiresIn: 'asc' }
+            })
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialTransactions, {
                 error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },

@@ -55,4 +55,7 @@ export const GLOBAL_FINANCIAL_TRANSACTION_DTO = {
     expiresIn: {
         default: () => new Date(Date.now()),
     },
+    dateTimeCompetence: {
+        default: () => new Date(Date.now()),
+    },
 }
