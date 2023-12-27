@@ -2,13 +2,13 @@ import { Request } from '@esliph/http'
 import { Injection } from '@esliph/injection'
 import { Controller, Guard } from '@esliph/module'
 import { Get, Post } from '@services/http.service'
-import { FinancialTransactionCreateUseCase } from '@modules/financial-transaction/use-case/create.use-case'
+import { FinancialIncomeCreateUseCase } from '@modules/financial-transaction/income/use-case/create.use-case'
 import { FinancialIncomeQueryUseCase } from '@modules/financial-transaction/income/use-case/query.use-case'
 
 @Controller({ prefix: '/financial-transactions/income' })
 export class FinancialIncomeController {
     constructor(
-        @Injection.Inject('financial-transaction.use-case.create') private createUC: FinancialTransactionCreateUseCase,
+        @Injection.Inject('financial-income.use-case.create') private createUC: FinancialIncomeCreateUseCase,
         @Injection.Inject('financial-income.use-case.query') private queryUC: FinancialIncomeQueryUseCase,
     ) { }
 
