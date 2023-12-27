@@ -10,7 +10,7 @@ const App = Bootstrap(
     MainModule,
     {
         logger: new Logger(),
-        log: { load: true, eventHttp: true }
+        log: { load: true }
     }, [new HttpService()]
 )
 

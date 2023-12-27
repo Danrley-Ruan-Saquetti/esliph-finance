@@ -40,8 +40,6 @@ export class BankAccountController {
 
         const result = await this.queryUC.queryByIdCodeMaskWithoutPasswordWhitMask({ id })
 
-        console.log(result)
-
         return result
     }
 }
