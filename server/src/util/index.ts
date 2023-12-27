@@ -13,6 +13,42 @@ export function toCapitalise(text: string, firstOccurrenceOnly = false) {
         .join(' ')
 }
 
+export type ObjectWithoutProps<T extends object, K extends keyof T> = Omit<T, K>;
+
+export function removeProps<T extends object, K extends keyof T>(obj: T, props: K[]): ObjectWithoutProps<T, K> {
+    if (typeof obj !== 'object' || !Array.isArray(props)) {
+        return obj as ObjectWithoutProps<T, K>
+    }
+
+    const newObj = { ...obj }
+
+    props.forEach(propName => {
+        if (newObj.hasOwnProperty(propName)) {
+            delete newObj[propName]
+        }
+    })
+
+    return newObj as ObjectWithoutProps<T, K>
+}
+
+export type ObjectExtractProps<T extends object, K extends keyof T> = Pick<T, K>;
+
+export function extractProps<T extends object, K extends keyof T>(obj: T, props: K[]): ObjectExtractProps<T, K> {
+    if (typeof obj !== 'object' || !Array.isArray(props)) {
+        return obj as ObjectExtractProps<T, K>
+    }
+
+    const newObj = {} as any
+
+    props.forEach(propName => {
+        if (obj.hasOwnProperty(propName)) {
+            newObj[propName] = obj[propName]
+        }
+    })
+
+    return newObj as ObjectExtractProps<T, K>
+}
+
 export function isTruthy(value?: any) {
     return !isFalsy(value)
 }

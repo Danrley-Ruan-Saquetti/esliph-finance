@@ -54,6 +54,7 @@
 		"@typescript-eslint/no-empty-function": "off",
 		"prefer-const": "off",
 		"no-empty-pattern": "off",
+		"no-prototype-builtins": "off",
 		"camelcase": "warn",
 		"no-async-promise-executor": "off",
 		"no-constant-condition": "warn",

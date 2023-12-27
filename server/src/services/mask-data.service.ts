@@ -6,6 +6,16 @@ export type MaskDataOptions = {
     valueReplace: string
 }
 
+export type ReplaceDataOptions = {
+    character: string
+}
+
+export type BetweenDataOptions = {
+    indexStart: number
+    indexEnd: number
+    character: string
+}
+
 @Service({ name: 'global.service.mask-data' })
 export class MaskDataService {
 
@@ -17,5 +27,17 @@ export class MaskDataService {
 
             return data[i]
         }).join('')
+    }
+
+    replace(data: string, { character }: ReplaceDataOptions) {
+        return data.split('').map(() => character).join('')
+    }
+
+    between(data: string, { character, indexEnd, indexStart }: BetweenDataOptions) {
+        for (let i = indexStart; i < data.length - indexEnd; i++) {
+            data = data.substring(0, i) + character + data.substring(i + 1)
+        }
+
+        return data
     }
 }

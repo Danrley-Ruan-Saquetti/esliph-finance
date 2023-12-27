@@ -26,9 +26,16 @@ export const GLOBAL_BANK_ACCOUNT_DTO = {
         } as GenerateCodeOptions,
         attempts: 5,
         maskData: {
-            template: 'XX*-********-XX',
+            template: 'XX*-********-*X',
             charactersToReplace: ['*'],
             valueReplace: '*'
         } as MaskDataOptions
     },
+    balance: {
+        maskData: {
+            template: '******,**',
+            charactersToReplace: [],
+            valueReplace: ''
+        } as MaskDataOptions
+    }
 }

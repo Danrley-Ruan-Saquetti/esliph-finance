@@ -13,32 +13,34 @@ export class BankAccountController {
     ) { }
 
     @Guard({ name: 'bank-account.authorization' })
-    @Get('/bank-accounts')
-    async get(req: Request) {
-        const { userId } = req.headers
-
-        const result = await this.queryUC.queryManyByIdUserWithoutPassword({ userId })
-
-        return result
-    }
-
-    @Guard({ name: 'bank-account.authorization' })
-    @Get('/bank-accounts/:id')
-    async getOne(req: Request) {
-        const { id } = req.params
-
-        const result = await this.queryUC.queryByIdWithoutPasswordWithMask({ id })
-
-        return result
-    }
-
-    @Guard({ name: 'bank-account.authorization' })
     @Post('/bank-accounts/create')
     async create(req: Request) {
         const { userId } = req.headers
         const { name, password } = req.body
 
         const result = await this.createUC.perform({ name, password, userId })
+
+        return result
+    }
+
+    @Guard({ name: 'user.authorization' })
+    @Get('/bank-accounts')
+    async get(req: Request) {
+        const { userId } = req.headers
+
+        const result = await this.queryUC.queryManyByIdUserWithoutPasswordAndBalance({ userId })
+
+        return result
+    }
+
+    @Guard({ name: 'bank-account.authorization' })
+    @Get('/bank-accounts/current')
+    async getOne(req: Request) {
+        const id = req.headers['bankAccountId']
+
+        const result = await this.queryUC.queryByIdCodeMaskWithoutPasswordWhitMask({ id })
+
+        console.log(result)
 
         return result
     }

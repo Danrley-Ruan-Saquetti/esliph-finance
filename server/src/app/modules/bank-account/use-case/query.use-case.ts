@@ -4,17 +4,21 @@ import { Result } from '@esliph/common'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { ValidatorService } from '@services/validator.service'
+import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.global'
+import { BankAccountModel } from '@modules/bank-account/bank-account.model'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
-import { MaskDataService } from '@services/mask-data.service'
-import { GLOBAL_BANK_ACCOUNT_DTO } from '../bank-account.global'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
 
 @Service({ name: 'bank-account.use-case.query' })
 export class BankAccountQueryUseCase extends UseCase {
+    private static MASK_PROPS = {
+        code: GLOBAL_BANK_ACCOUNT_DTO.code.maskData,
+        balance: GLOBAL_BANK_ACCOUNT_DTO.balance.maskData,
+    }
+
     constructor(
         @Injection.Inject('bank-account.repository') private repository: BankAccountRepository,
-        @Injection.Inject('mask-data') private maskDataService: MaskDataService,
     ) { super() }
 
     async queryByIdWithoutPassword(args: { id: ID }) {
@@ -24,29 +28,45 @@ export class BankAccountQueryUseCase extends UseCase {
 
         if (!bankAccountResult.isSuccess()) {
             if (bankAccountResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Bank Account', message: 'Unable to query bank account' })
+                return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Unable to query bank account' })
             }
 
-            return Result.failure({ title: 'Query Bank Account', message: 'Bank account not found' })
+            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Bank account not found' })
         }
 
-        return Result.success(bankAccountResult.getValue())
+        return Result.success<BankAccountModel.BankAccountWithoutPassword>(bankAccountResult.getValue())
     }
 
-    async queryByIdWithoutPasswordWithMask(args: { id: ID }) {
+    async queryByIdCodeMaskWithoutPassword(args: { id: ID }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
         const bankAccountResult = await this.repository.findByIdWithoutPassword(id)
 
         if (!bankAccountResult.isSuccess()) {
             if (bankAccountResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Bank Account', message: 'Unable to query bank account' })
+                return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Unable to query bank account' })
             }
 
-            return Result.failure({ title: 'Query Bank Account', message: 'Bank account not found' })
+            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Bank account not found' })
         }
 
-        return Result.success({ ...bankAccountResult.getValue(), code: this.maskDataService.mask(bankAccountResult.getValue().code, GLOBAL_BANK_ACCOUNT_DTO.code.maskData) })
+        return Result.success<BankAccountModel.BankAccountWithoutPassword>(this.maskProp(bankAccountResult.getValue(), { prop: 'code', mask: BankAccountQueryUseCase.MASK_PROPS.code }))
+    }
+
+    async queryByIdCodeMaskWithoutPasswordWhitMask(args: { id: ID }, options: { masks?: (keyof BankAccountModel.BankAccountWithoutPassword)[] } = {}) {
+        const id = this.validateDTO(args.id, schemaNumber)
+
+        const bankAccountResult = await this.repository.findByIdWithoutPassword(id)
+
+        if (!bankAccountResult.isSuccess()) {
+            if (bankAccountResult.isErrorInOperation()) {
+                return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Unable to query bank account' })
+            }
+
+            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Bank account not found' })
+        }
+
+        return Result.success<BankAccountModel.BankAccountWithoutPassword>(this.maskProp(bankAccountResult.getValue(), { prop: 'code', mask: BankAccountQueryUseCase.MASK_PROPS.code }))
     }
 
     async queryByCodeWithoutPassword(args: { code: string }) {
@@ -54,13 +74,13 @@ export class BankAccountQueryUseCase extends UseCase {
 
         if (!bankAccountResult.isSuccess()) {
             if (bankAccountResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Bank Account', message: 'Unable to query bank account' })
+                return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Unable to query bank account' })
             }
 
-            return Result.failure({ title: 'Query Bank Account', message: 'Bank account not found' })
+            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Bank account not found' })
         }
 
-        return Result.success(bankAccountResult.getValue())
+        return Result.success<BankAccountModel.BankAccountWithoutPassword>(bankAccountResult.getValue())
     }
 
     async queryByCodeWithoutPasswordWithMask(args: { code: string }) {
@@ -68,13 +88,13 @@ export class BankAccountQueryUseCase extends UseCase {
 
         if (!bankAccountResult.isSuccess()) {
             if (bankAccountResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Bank Account', message: 'Unable to query bank account' })
+                return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Unable to query bank account' })
             }
 
-            return Result.failure({ title: 'Query Bank Account', message: 'Bank account not found' })
+            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Bank account not found' })
         }
 
-        return Result.success({ ...bankAccountResult.getValue(), code: this.maskDataService.mask(bankAccountResult.getValue().code, GLOBAL_BANK_ACCOUNT_DTO.code.maskData) })
+        return Result.success<BankAccountModel.BankAccountWithoutPassword>(this.maskProp(bankAccountResult.getValue(), { prop: 'code', mask: BankAccountQueryUseCase.MASK_PROPS.code }))
     }
 
     async queryManyByIdUserWithoutPassword(args: { userId: ID }) {
@@ -84,12 +104,28 @@ export class BankAccountQueryUseCase extends UseCase {
 
         if (!bankAccountsResult.isSuccess()) {
             if (bankAccountsResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Bank Accounts', message: 'Unable to query bank accounts' })
+                return Result.failure<BankAccountModel.BankAccountWithoutPassword[]>({ title: 'Query Bank Accounts', message: 'Unable to query bank accounts' })
             }
 
-            return Result.failure({ title: 'Query Bank Accounts', message: 'Bank accounts not found' })
+            return Result.failure<BankAccountModel.BankAccountWithoutPassword[]>({ title: 'Query Bank Accounts', message: 'Bank accounts not found' })
         }
 
-        return Result.success(bankAccountsResult.getValue().map(bank => ({ ...bank, code: this.maskDataService.mask(bank.code, GLOBAL_BANK_ACCOUNT_DTO.code.maskData) })))
+        return Result.success<BankAccountModel.BankAccountWithoutPassword[]>(this.maskArray(bankAccountsResult.getValue(), { prop: 'code', mask: BankAccountQueryUseCase.MASK_PROPS.code }))
+    }
+
+    async queryManyByIdUserWithoutPasswordAndBalance(args: { userId: ID }) {
+        const userId = this.validateDTO(args.userId, schemaNumber)
+
+        const bankAccountsResult = await this.repository.findManyByIdUserWithoutPasswordAndBalance(userId)
+
+        if (!bankAccountsResult.isSuccess()) {
+            if (bankAccountsResult.isErrorInOperation()) {
+                return Result.failure<BankAccountModel.BankAccountWithoutPasswordAndBalance[]>({ title: 'Query Bank Accounts', message: 'Unable to query bank accounts' })
+            }
+
+            return Result.failure<BankAccountModel.BankAccountWithoutPasswordAndBalance[]>({ title: 'Query Bank Accounts', message: 'Bank accounts not found' })
+        }
+
+        return Result.success<BankAccountModel.BankAccountWithoutPasswordAndBalance[]>(this.maskArray(bankAccountsResult.getValue(), { prop: 'code', mask: BankAccountQueryUseCase.MASK_PROPS.code }))
     }
 }
