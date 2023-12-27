@@ -2,6 +2,7 @@ import { Service } from '@esliph/module'
 import { ID } from '@@types'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
+import console from 'console'
 
 @Service({ name: 'financial-expense.repository' })
 export class FinancialExpenseRepository extends FinancialTransactionRepository {
@@ -23,10 +24,10 @@ export class FinancialExpenseRepository extends FinancialTransactionRepository {
         }
     }
 
-    async findManyIdBankAccount(id: ID, bankAccountId: ID) {
+    async findManyByIdBankAccount(bankAccountId: ID) {
         try {
             const financialExpense = await this.database.instance.financialTransaction.findMany({
-                where: { id, bankAccountId, type: FinancialTransactionModel.Type.EXPENSE }
+                where: { bankAccountId, type: FinancialTransactionModel.Type.EXPENSE }
             })
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialExpense, {
