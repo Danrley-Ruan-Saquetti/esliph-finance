@@ -29,15 +29,30 @@ export class PaymentQueryCompensationUseCase extends UseCase {
 
         const { value, payments } = await this.getFinancialTransactionWhitPayments(financialTransactionId)
 
-        const valueAmountPaid = payments.map(payment => payment.value - payment.discount + payment.increase).reduce((acc, value) => acc + value, 0)
+        const stateTotal = {
+            value: 0,
+            discount: 0,
+            increase: 0
+        }
 
-        const pendingPaymentAmount = value - valueAmountPaid
+        payments.map(({ value, increase, discount }) => {
+            stateTotal.value += value
+            stateTotal.increase += increase
+            stateTotal.discount += discount
+        })
+
+        const valueTotalPaid = stateTotal.value + stateTotal.increase - stateTotal.discount
+        const valueToPay = value - stateTotal.value - stateTotal.discount
 
         return Result.success({
             valueFinancialTransaction: value,
             payments: payments,
-            valueAmountPaid,
-            pendingPaymentAmount
+            valueTotalPaid,
+            valueToPay,
+            financialTransactionId,
+            totalPayments: {
+                ...stateTotal
+            }
         })
     }
 

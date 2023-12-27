@@ -46,11 +46,43 @@ export class PaymentCreateUseCase extends UseCase {
     async perform(args: PaymentCreateDTOArgs) {
         const { discount, financialTransactionId, paidAt, increase, value } = this.validateDTO(args, schemaDTO)
 
-        const compensation = await this.queryCompensation(financialTransactionId)
+        this.validPaidAt(paidAt)
+        this.validCompensation(financialTransactionId, { value, discount, increase })
 
         // await this.registerPayment({ discount, financialTransactionId, paidAt, increase, value })
 
-        return Result.success({ message: 'Payment registered successfully', compensation })
+        return Result.success({ message: 'Payment registered successfully' })
+    }
+
+    private async validCompensation(financialTransactionId: ID, { discount, increase, value }: { value: number, discount: number, increase: number }) {
+        const compensation = await this.queryCompensation(financialTransactionId)
+
+        console.log(compensation)
+
+        if (compensation.valueToPay <= 0) {
+            throw new BadRequestException({
+                title: 'Register Payment',
+                message: 'Financial transaction already paid'
+            })
+        }
+
+        const valueOfPayment = value - discount
+
+        if (valueOfPayment > compensation.valueToPay) {
+            throw new BadRequestException({
+                title: 'Register Payment',
+                message: 'The payment value cannot be higher than the amount payable'
+            })
+        }
+    }
+
+    private validPaidAt(paidAt: Date) {
+        if (new Date(Date.now()) < new Date(paidAt)) {
+            throw new BadRequestException({
+                title: 'Register Payment',
+                message: 'Payment date cannot be greater than the current date'
+            })
+        }
     }
 
     private async queryCompensation(financialTransactionId: ID) {

@@ -4,12 +4,14 @@ import { Controller, Guard } from '@esliph/module'
 import { Get, Post } from '@services/http.service'
 import { FinancialIncomeCreateUseCase } from '@modules/financial-transaction/income/use-case/create.use-case'
 import { FinancialIncomeQueryUseCase } from '@modules/financial-transaction/income/use-case/query.use-case'
+import { FinancialIncomeReceiveUseCase } from '@modules/financial-transaction/income/use-case/receive.use-case'
 
 @Controller({ prefix: '/financial-transactions/income' })
 export class FinancialIncomeController {
     constructor(
         @Injection.Inject('financial-income.use-case.create') private createUC: FinancialIncomeCreateUseCase,
         @Injection.Inject('financial-income.use-case.query') private queryUC: FinancialIncomeQueryUseCase,
+        @Injection.Inject('financial-income.use-case.receive') private receiveUC: FinancialIncomeReceiveUseCase,
     ) { }
 
     @Guard({ name: 'bank-account.authorization' })
@@ -37,6 +39,16 @@ export class FinancialIncomeController {
         const bankAccountId = req.headers['bankAccountId']
 
         const result = await this.queryUC.queryByIdAndIdBankAccount({ id, bankAccountId })
+
+        return result
+    }
+
+    @Guard({ name: 'bank-account.authorization' })
+    @Post('/:id/receive')
+    async receive(req: Request) {
+        const financialTransactionId = req.params['id']
+
+        const result = await this.receiveUC.perform({ ...req.params, ...req.body, financialTransactionId })
 
         return result
     }
