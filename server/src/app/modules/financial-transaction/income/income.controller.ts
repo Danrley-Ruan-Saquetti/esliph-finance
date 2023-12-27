@@ -4,7 +4,6 @@ import { Controller, Guard } from '@esliph/module'
 import { Get, Post } from '@services/http.service'
 import { FinancialTransactionCreateUseCase } from '@modules/financial-transaction/use-case/create.use-case'
 import { FinancialIncomeQueryUseCase } from '@modules/financial-transaction/income/use-case/query.use-case'
-import console from 'console'
 
 @Controller({ prefix: '/financial-transactions/income' })
 export class FinancialIncomeController {

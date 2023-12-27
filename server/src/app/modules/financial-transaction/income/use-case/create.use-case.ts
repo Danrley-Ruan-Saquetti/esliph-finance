@@ -1,7 +1,18 @@
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { UseCase } from '@common/use-case'
+import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { FinancialTransactionCreateDTOArgs, FinancialTransactionCreateUseCase } from '@modules/financial-transaction/use-case/create.use-case'
+import { GLOBAL_FINANCIAL_TRANSACTION_DTO } from '@modules/financial-transaction/financial-transaction.global'
+
+const schemaDTO = ValidatorService.schema.object({
+    sender: ValidatorService
+        .schema
+        .string({ 'required_error': GLOBAL_FINANCIAL_TRANSACTION_DTO.sender.messageRequired })
+        .trim()
+})
+
+export type FinancialIncomeCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
 @Service({ name: 'financial-income.use-case.create' })
 export class FinancialIncomeCreateUseCase extends UseCase {
@@ -9,8 +20,10 @@ export class FinancialIncomeCreateUseCase extends UseCase {
         super()
     }
 
-    async perform(args: FinancialTransactionCreateDTOArgs) {
-        const result = await this.createUC.perform(args)
+    async perform(args: FinancialTransactionCreateDTOArgs & FinancialIncomeCreateDTOArgs) {
+        const data = this.validateDTO(args, schemaDTO)
+
+        const result = await this.createUC.perform({ ...args, ...data, type: 'INCOME' })
 
         return result
     }
