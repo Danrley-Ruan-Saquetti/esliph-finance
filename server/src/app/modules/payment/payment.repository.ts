@@ -2,6 +2,7 @@ import { Service } from '@esliph/module'
 import { ID } from '@@types'
 import { Repository } from '@services/repository.service'
 import { PaymentModel } from '@modules/payment/payment.model'
+import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 
 @Service({ name: 'payment.repository' })
 export class PaymentRepository extends Repository {
@@ -41,6 +42,56 @@ export class PaymentRepository extends Repository {
             })
         } catch (err: any) {
             return this.handleError<PaymentModel.Payment>(err, { error: { title: 'Find Payment', message: 'Payment not found' } })
+        }
+    }
+
+    async findByIdAndIdBankAccountAndIdFinancialTransaction(id: ID, bankAccountId: ID, financialTransactionId: ID) {
+        try {
+            const payment = await this.database.instance.payment.findFirst({ where: { id, financialTransactionId, financialTransaction: { bankAccountId } } })
+
+            return this.handleResponse<PaymentModel.Payment>(payment, {
+                noAcceptNullable: true,
+                error: { title: 'Find Payment', message: 'Payment not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<PaymentModel.Payment>(err, { error: { title: 'Find Payment', message: 'Payment not found' } })
+        }
+    }
+
+    async findManyByIdBankAccountAndIdFinancialTransaction(bankAccountId: ID, financialTransactionId: ID) {
+        try {
+            const payments = await this.database.instance.payment.findMany({ where: { financialTransactionId, financialTransaction: { bankAccountId } } })
+
+            return this.handleResponse<PaymentModel.Payment[]>(payments, {
+                error: { title: 'Find Payments', message: 'Payments not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<PaymentModel.Payment[]>(err, { error: { title: 'Find Payments', message: 'Payments not found' } })
+        }
+    }
+
+    async findManyByIdBankAccount(bankAccountId: ID) {
+        try {
+            const payments = await this.database.instance.payment.findMany({ where: { financialTransaction: { bankAccountId } } })
+
+            return this.handleResponse<PaymentModel.Payment[]>(payments, {
+                error: { title: 'Find Payments', message: 'Payments not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<PaymentModel.Payment[]>(err, { error: { title: 'Find Payments', message: 'Payments not found' } })
+        }
+    }
+
+    async findManyByIdBankAccountAndTypesFinancialTransaction(bankAccountId: ID, types: FinancialTransactionModel.Type[]) {
+        try {
+            const payments = await this.database.instance.payment.findMany({ where: { financialTransaction: { bankAccountId, type: { in: types } } } })
+
+            return this.handleResponse<PaymentModel.Payment[]>(payments, {
+                noAcceptNullable: true,
+                error: { title: 'FindPayments', message: 'Payments not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<PaymentModel.Payment[]>(err, { error: { title: 'Find Payments', message: 'Payments not found' } })
         }
     }
 }

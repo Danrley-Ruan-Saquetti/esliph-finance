@@ -77,14 +77,6 @@ const schemaDTO = ValidatorService.schema.object({
         .default(GLOBAL_FINANCIAL_TRANSACTION_DTO.dateTimeCompetence.default()),
 })
     .refine(
-        ({ type, receiver }) => type != FinancialTransactionModel.Type.EXPENSE || !!receiver,
-        { message: GLOBAL_FINANCIAL_TRANSACTION_DTO.receiver.messageRequired, path: ['receiver'] }
-    )
-    .refine(
-        ({ type, sender }) => type != FinancialTransactionModel.Type.INCOME || !!sender,
-        { message: GLOBAL_FINANCIAL_TRANSACTION_DTO.sender.messageRequired, path: ['sender'] }
-    )
-    .refine(
         ({ typeOccurrence, timesToRepeat }) => typeOccurrence != FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC || !!timesToRepeat,
         { message: GLOBAL_FINANCIAL_TRANSACTION_DTO.timesToRepeat.messageMustBePositive, path: ['timesToRepeat'] }
     )
@@ -136,7 +128,7 @@ export class FinancialTransactionCreateUseCase extends UseCase {
 
         throw new BadRequestException({
             ...registerFinancialTransactionResult.getError(),
-            title: 'Register FinancialTransaction',
+            title: 'Register Financial Transaction',
             message: `Unable to register financial transaction. Error: "${registerFinancialTransactionResult.getError().message}". Please, try again later`,
         })
     }
