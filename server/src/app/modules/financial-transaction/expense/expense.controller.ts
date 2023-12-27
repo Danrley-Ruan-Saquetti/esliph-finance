@@ -1,6 +1,6 @@
 import { Controller } from '@esliph/module'
 
-@Controller()
+@Controller({ prefix: '/financial-transactions/expense' })
 export class FinancialExpenseController {
     constructor() { }
 }

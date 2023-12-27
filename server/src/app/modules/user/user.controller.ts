@@ -4,12 +4,12 @@ import { Injection } from '@esliph/injection'
 import { Controller, Guard } from '@esliph/module'
 import { UserQueryUseCase } from '@modules/user/use-case/query.use-case'
 
-@Controller()
+@Controller({ prefix: '/users' })
 export class UserController {
     constructor(@Injection.Inject('user.use-case.query') private queryUX: UserQueryUseCase) { }
 
     @Guard({ name: 'user.authorization' })
-    @Get('/users/:id')
+    @Get('/:id')
     async get(req: Request) {
         const { id } = req.params
 

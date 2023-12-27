@@ -1,6 +1,6 @@
 import { Controller } from '@esliph/module'
 
-@Controller()
+@Controller({ prefix: '/categories' })
 export class CategoryController {
-    constructor() {}
+    constructor() { }
 }
