@@ -7,7 +7,6 @@ import { BadRequestException } from '@common/exceptions'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { PaymentRepository } from '@modules/payment/payment.repository'
 import { GLOBAL_PAYMENT_DTO } from '@modules/payment/payment.global'
-import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { PaymentQueryCompensationUseCase } from '@modules/payment/use-case/query-compensation.use-case'
 
 const schemaDTO = ValidatorService.schema.object({
@@ -29,7 +28,8 @@ const schemaDTO = ValidatorService.schema.object({
     paidAt: ValidatorService.schema
         .coerce
         .date()
-        .default(GLOBAL_PAYMENT_DTO.paidAt.default()),
+        .default(GLOBAL_PAYMENT_DTO.paidAt.default())
+        .refine(date => new Date(Date.now()) < new Date(date), { message: GLOBAL_PAYMENT_DTO.paidAt.messagePaidAtHigherCurrentDate }),
 })
 
 export type PaymentCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
@@ -46,7 +46,6 @@ export class PaymentCreateUseCase extends UseCase {
     async perform(args: PaymentCreateDTOArgs) {
         const { discount, financialTransactionId, paidAt, increase, value } = this.validateDTO(args, schemaDTO)
 
-        this.validPaidAt(paidAt)
         this.validCompensation(financialTransactionId, { value, discount, increase })
 
         // await this.registerPayment({ discount, financialTransactionId, paidAt, increase, value })
@@ -72,15 +71,6 @@ export class PaymentCreateUseCase extends UseCase {
             throw new BadRequestException({
                 title: 'Register Payment',
                 message: 'The payment value cannot be higher than the amount payable'
-            })
-        }
-    }
-
-    private validPaidAt(paidAt: Date) {
-        if (new Date(Date.now()) < new Date(paidAt)) {
-            throw new BadRequestException({
-                title: 'Register Payment',
-                message: 'Payment date cannot be greater than the current date'
             })
         }
     }

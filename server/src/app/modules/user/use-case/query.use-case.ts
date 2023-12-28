@@ -1,9 +1,8 @@
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { Result } from '@esliph/common'
-import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
-import { ValidatorService } from '@services/validator.service'
+import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { UserRepository } from '@modules/user/user.repository'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
@@ -14,7 +13,7 @@ export class UserQueryUseCase extends UseCase {
         super()
     }
 
-    async queryByIdWithoutPassword(args: { id: ID }) {
+    async queryByIdWithoutPassword(args: { id: SchemaValidator.input<typeof schemaNumber> }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
         const bankAccountResult = await this.repository.findByIdWithoutPassword(id)

@@ -15,6 +15,7 @@ export const GLOBAL_PAYMENT_DTO = {
         default: 0
     },
     paidAt: {
-        default: (date = Date.now()) => new Date(date)
+        default: (date = Date.now()) => new Date(date),
+        messagePaidAtHigherCurrentDate: 'Payment date cannot be greater than the current date'
     }
 }

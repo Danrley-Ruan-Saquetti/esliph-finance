@@ -26,7 +26,12 @@ export class GenerateCode {
             this.template = args.template
         }
         if (args.validCode) {
-            this.validCode = args.validCode
+            this.validCode = async (code: string) => {
+                // @ts-expect-error
+                const result = await args.validCode(code)
+
+                return result
+            }
         }
 
         if (args.noValid) {

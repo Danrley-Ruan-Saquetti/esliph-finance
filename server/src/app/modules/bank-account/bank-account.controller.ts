@@ -22,7 +22,7 @@ export class BankAccountController {
         return result
     }
 
-    @Guard({ name: 'bank-account.authorization' })
+    @Guard({ name: 'user.authorization' })
     @Post('/create')
     async create(req: Request) {
         const { userId } = req.headers
