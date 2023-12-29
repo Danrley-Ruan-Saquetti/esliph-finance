@@ -4,13 +4,22 @@ import { ErrorResultInfo } from '@esliph/common'
 import { DatabaseService, Prisma } from '@services/database.service'
 import { isNull } from '@util'
 import { ResultDatabase } from '@common/result.database'
+import { QueryBuilderService } from './query-builder.service'
 
 export type RepositoryHandleResponseOptions = { noAcceptNullable?: boolean, error: ErrorResultInfo }
 export type RepositoryHandleErrorOptions = { error: ErrorResultInfo }
 
+export type RepositoryPagination = {
+    pageIndex: number
+    limite: number
+}
+
 @Service()
 export class Repository {
-    constructor(@Injection.Inject('database') protected database: DatabaseService) { }
+    constructor(
+        @Injection.Inject('database') protected database: DatabaseService,
+        @Injection.Inject('database') protected queryBuilder: QueryBuilderService,
+    ) { }
 
     transaction() {
         const db = this.database.instance
@@ -28,6 +37,10 @@ export class Repository {
         }
 
         return { begin, commit, rollback }
+    }
+
+    calcSkipRegister({ limite, pageIndex }: RepositoryPagination) {
+        return pageIndex * limite
     }
 
     protected handleResponse<T = any>(res: T | null, options: RepositoryHandleResponseOptions) {

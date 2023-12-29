@@ -9,6 +9,7 @@ import { CodeGeneratorService } from '@services/code-generator.service'
 import { WriteStreamOutput } from '@services/write-stream-output.service'
 import { HttpService } from '@services/http.service'
 import { MaskDataService } from '@services/mask-data.service'
+import { QueryBuilderService } from '@services/query-builder.service'
 
 @Module({
     imports: [AppModule],
@@ -22,6 +23,8 @@ import { MaskDataService } from '@services/mask-data.service'
         WriteStreamOutput,
         HttpService,
         MaskDataService,
+        QueryBuilderService,
+        { whenCall: 'query-builder', use: 'global.service.query-builder' },
         { whenCall: 'mask-data', use: 'global.service.mask-data' },
         { whenCall: 'http', use: 'global.service.http' },
         { whenCall: 'write-stream-output', use: 'global.service.write-stream-output' },

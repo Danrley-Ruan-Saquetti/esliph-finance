@@ -1,7 +1,16 @@
 import { Service } from '@esliph/module'
 import { ID } from '@@types'
-import { Repository } from '@services/repository.service'
+import { Prisma } from '@services/database.service'
+import { Repository, RepositoryPagination } from '@services/repository.service'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
+
+export type FinancialTransactionWhereArgs = Prisma.FinancialTransactionWhereInput
+export type FinancialTransactionSelectArgs = keyof FinancialTransactionModel.FinancialTransaction
+export type FinancialTransactionQuery = {
+    where: FinancialTransactionWhereArgs
+    select: { [x in FinancialTransactionSelectArgs]?: boolean }
+    page: RepositoryPagination
+}
 
 @Service({ name: 'financial-transaction.repository' })
 export class FinancialTransactionRepository extends Repository {
@@ -128,6 +137,24 @@ export class FinancialTransactionRepository extends Repository {
             })
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        }
+    }
+
+    async findMany(query: FinancialTransactionQuery) {
+        try {
+            const financialTransaction = await this.database.instance.financialTransaction.findFirst({
+                where: { ...query.where },
+                skip: this.calcSkipRegister(query.page),
+                take: query.page.limite
+            })
+
+            return this.handleResponse<FinancialTransactionModel.FinancialTransaction>(financialTransaction, {
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<FinancialTransactionModel.FinancialTransaction>(err, {
                 error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
             })
         }

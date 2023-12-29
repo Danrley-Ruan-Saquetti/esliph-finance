@@ -17,7 +17,7 @@
     "author": "Dan Ruan <danrsaquetti@gmail.com>",
     "private": true,
     "dependencies": {
-        "@esliph/adapter-fastify": "^1.1.0",
+        "@esliph/adapter-fastify": "^1.1.1",
         "@esliph/common": "^1.0.2",
         "@esliph/console": "^1.0.4",
         "@esliph/decorator": "^1.0.2",
