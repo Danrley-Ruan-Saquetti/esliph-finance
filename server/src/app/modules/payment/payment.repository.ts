@@ -82,6 +82,18 @@ export class PaymentRepository extends Repository {
         }
     }
 
+    async findManyByIdFinancialTransaction(financialTransactionId: ID) {
+        try {
+            const payments = await this.database.instance.payment.findMany({ where: { financialTransactionId } })
+
+            return this.handleResponse<PaymentModel.Payment[]>(payments, {
+                error: { title: 'Find Payments', message: 'Payments not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<PaymentModel.Payment[]>(err, { error: { title: 'Find Payments', message: 'Payments not found' } })
+        }
+    }
+
     async findManyByIdBankAccountAndTypesFinancialTransaction(bankAccountId: ID, types: FinancialTransactionModel.Type[]) {
         try {
             const payments = await this.database.instance.payment.findMany({ where: { financialTransaction: { bankAccountId, type: { in: types } } } })

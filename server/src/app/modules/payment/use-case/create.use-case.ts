@@ -1,13 +1,14 @@
-import { ID } from '@@types'
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { UseCase } from '@common/use-case'
+import { ID } from '@@types'
 import { BadRequestException } from '@common/exceptions'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { PaymentRepository } from '@modules/payment/payment.repository'
 import { GLOBAL_PAYMENT_DTO } from '@modules/payment/payment.global'
-import { PaymentQueryCompensationUseCase } from '@modules/payment/use-case/query-compensation.use-case'
+import { PaymentModel } from '@modules/payment/payment.model'
+import { CompensationPaymentsControl } from '@modules/payment/control/compensation-payments.control'
 
 const schemaDTO = ValidatorService.schema.object({
     financialTransactionId: GLOBAL_PAYMENT_DTO.financialTransaction.id,
@@ -16,21 +17,27 @@ const schemaDTO = ValidatorService.schema.object({
         .number({
             'required_error': GLOBAL_PAYMENT_DTO.value.messageRequire,
             'invalid_type_error': GLOBAL_PAYMENT_DTO.value.messageMustBePositive
-        }),
+        })
+        .nonnegative({ message: GLOBAL_PAYMENT_DTO.value.messageMustBePositive }),
     discount: ValidatorService.schema
         .coerce
         .number()
+        .nonnegative({ message: GLOBAL_PAYMENT_DTO.discount.messageMustBePositive })
         .default(GLOBAL_PAYMENT_DTO.discount.default),
     increase: ValidatorService.schema
         .coerce
         .number()
+        .nonnegative({ message: GLOBAL_PAYMENT_DTO.increase.messageMustBePositive })
         .default(GLOBAL_PAYMENT_DTO.increase.default),
     paidAt: ValidatorService.schema
         .coerce
         .date()
         .default(GLOBAL_PAYMENT_DTO.paidAt.default())
-        .refine(date => new Date(Date.now()) < new Date(date), { message: GLOBAL_PAYMENT_DTO.paidAt.messagePaidAtHigherCurrentDate }),
 })
+    .refine(
+        ({ discount, increase, value }) => discount > 0 || increase > 0 || value > 0,
+        { message: GLOBAL_PAYMENT_DTO.super.messageNoValue }
+    )
 
 export type PaymentCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
@@ -38,58 +45,46 @@ export type PaymentCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
 export class PaymentCreateUseCase extends UseCase {
     constructor(
         @Injection.Inject('payment.repository') private repository: PaymentRepository,
-        @Injection.Inject('payment.use-case.query-compensation') private queryCompensationUC: PaymentQueryCompensationUseCase,
+        @Injection.Inject('compensation-payments.control') private compensationControl: CompensationPaymentsControl,
     ) {
         super()
     }
 
     async perform(args: PaymentCreateDTOArgs) {
+        const dateCurrent = new Date(Date.now())
         const { discount, financialTransactionId, paidAt, increase, value } = this.validateDTO(args, schemaDTO)
 
-        this.validCompensation(financialTransactionId, { value, discount, increase })
+        this.validPaidAt(dateCurrent, paidAt)
+        const { paidInFull } = await this.validCompensation(financialTransactionId, { discount, increase, value })
+        await this.registerPayment({ discount, financialTransactionId, paidAt, increase, value })
 
-        // await this.registerPayment({ discount, financialTransactionId, paidAt, increase, value })
-
-        return Result.success({ message: 'Payment registered successfully' })
+        return Result.success({ message: 'Payment registered successfully', paidInFull })
     }
 
-    private async validCompensation(financialTransactionId: ID, { discount, increase, value }: { value: number, discount: number, increase: number }) {
-        const compensation = await this.queryCompensation(financialTransactionId)
-
-        console.log(compensation)
-
-        if (compensation.valueToPay <= 0) {
-            throw new BadRequestException({
-                title: 'Register Payment',
-                message: 'Financial transaction already paid'
-            })
-        }
-
-        const valueOfPayment = value - discount
-
-        if (valueOfPayment > compensation.valueToPay) {
-            throw new BadRequestException({
-                title: 'Register Payment',
-                message: 'The payment value cannot be higher than the amount payable'
-            })
-        }
-    }
-
-    private async queryCompensation(financialTransactionId: ID) {
-        const compensationResult = await this.queryCompensationUC.perform({ financialTransactionId })
-
-        if (compensationResult.isSuccess()) {
-            return compensationResult.getValue()
+    private validPaidAt(current: Date, paidAt: Date) {
+        if (current >= paidAt) {
+            return
         }
 
         throw new BadRequestException({
-            ...compensationResult.getError(),
             title: 'Register Payment',
-            message: `Unable query compensation. Error: "${compensationResult.getError().message}". Please, try again later`,
+            message: GLOBAL_PAYMENT_DTO.paidAt.messagePaidAtHigherCurrentDate
         })
     }
 
-    private async registerPayment(data: SchemaValidator.output<typeof schemaDTO>) {
+    private async validCompensation(financialTransactionId: ID, paymentData: { value: number, discount: number, increase: number }) {
+        await this.compensationControl.loadComponents(financialTransactionId)
+
+        const validResult = this.compensationControl.validCompensation(paymentData)
+
+        if (validResult.isSuccess()) {
+            return validResult.getValue()
+        }
+
+        throw new BadRequestException({ ...validResult.getError() })
+    }
+
+    private async registerPayment(data: PaymentModel.Model) {
         const paymentResult = await this.repository.register(data)
 
         if (paymentResult.isSuccess()) {

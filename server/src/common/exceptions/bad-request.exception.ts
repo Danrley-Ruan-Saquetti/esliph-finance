@@ -13,10 +13,10 @@ export class BadRequestException extends HttpException {
     constructor(errorInfo?: ResultExceptionArgs) {
         super(
             {
-                message: errorInfo?.message || ERROR_INFO_DEFAULT.message,
-                causes: errorInfo?.causes || ERROR_INFO_DEFAULT.causes,
-                description: errorInfo?.description || ERROR_INFO_DEFAULT.description,
                 title: errorInfo?.title || ERROR_INFO_DEFAULT.title,
+                message: errorInfo?.message || ERROR_INFO_DEFAULT.message,
+                description: errorInfo?.description || ERROR_INFO_DEFAULT.description,
+                causes: errorInfo?.causes || ERROR_INFO_DEFAULT.causes,
                 stack: errorInfo?.stack || '',
             },
             HttpStatusCodes.BAD_REQUEST,

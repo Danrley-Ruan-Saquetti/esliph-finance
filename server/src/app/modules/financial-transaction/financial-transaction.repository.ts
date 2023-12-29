@@ -20,7 +20,7 @@ export class FinancialTransactionRepository extends Repository {
         }
     }
 
-    async updateById(args: FinancialTransactionModel.Model, where: { id: ID }) {
+    async updateById(args: Partial<FinancialTransactionModel.Model>, where: { id: ID }) {
         try {
             await this.database.instance.financialTransaction.update({ where: { id: where.id }, data: args })
 

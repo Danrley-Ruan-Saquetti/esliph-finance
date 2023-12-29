@@ -59,3 +59,8 @@ export const GLOBAL_FINANCIAL_TRANSACTION_DTO = {
         default: () => new Date(Date.now()),
     },
 }
+
+export const GLOBAL_FINANCIAL_TRANSACTION_RULES = {
+    situationsEnableToPaid: [FinancialTransactionModel.Situation.PENDING, FinancialTransactionModel.Situation.PARTIALLY_PAID, FinancialTransactionModel.Situation.PARTIALLY_RECEIVED, FinancialTransactionModel.Situation.LATE],
+    messageNoSituationEnableToPaid: 'The financial transaction situation does not allow payments to be cleared'
+}

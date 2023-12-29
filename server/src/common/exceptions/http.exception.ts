@@ -5,10 +5,10 @@ export class HttpException extends Exception {
     constructor(errorInfo: ResultExceptionArgs, status: number) {
         const errorResult = Result.failure(
             {
-                message: errorInfo.message || '',
                 title: errorInfo.title || 'Request failed',
-                causes: errorInfo.causes || [],
+                message: errorInfo.message || '',
                 description: errorInfo.description,
+                causes: errorInfo.causes || [],
                 stack: errorInfo.stack,
             },
             status,
