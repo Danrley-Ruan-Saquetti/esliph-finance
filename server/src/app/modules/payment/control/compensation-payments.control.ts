@@ -67,21 +67,21 @@ export class CompensationPaymentsControl {
     validCompensation({ discount, increase, value }: { value: number, discount: number, increase: number }) {
         if (!GLOBAL_FINANCIAL_TRANSACTION_RULES.situationsEnableToPaid.find(situation => situation == this.financialTransaction.situation)) {
             return Result.failure<{ paidInFull: boolean }>({
-                title: 'Register Payment',
+                title: 'Valid Compensation',
                 message: GLOBAL_FINANCIAL_TRANSACTION_RULES.messageNoSituationEnableToPaid
             })
         }
 
         if (this.state.valueToPay <= 0) {
             return Result.failure<{ paidInFull: boolean }>({
-                title: 'Register Payment',
+                title: 'Valid Compensation',
                 message: 'Financial transaction already paid'
             })
         }
 
         if (discount > this.state.valueToPay) {
             return Result.failure<{ paidInFull: boolean }>({
-                title: 'Register Payment',
+                title: 'Valid Compensation',
                 message: 'Discount value cannot be higher than then value to pay'
             })
         }
@@ -91,7 +91,7 @@ export class CompensationPaymentsControl {
 
         if (netValuePayment > netValueToPaid) {
             return Result.failure<{ paidInFull: boolean }>({
-                title: 'Register Payment',
+                title: 'Valid Compensation',
                 message: 'The payment value cannot be higher than the value payable'
             })
         }
