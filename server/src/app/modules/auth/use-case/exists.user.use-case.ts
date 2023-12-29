@@ -1,9 +1,6 @@
 import { BadRequestException } from '@common/exceptions'
-import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { PayloadJWTUserBankAccount } from '@@types'
-import { GLOBAL_SERVER_JWT_TOKEN } from '@global'
 import { UserQueryUseCase } from '@modules/user/use-case/query.use-case'
 
 export type AuthUserExistsDTOArgs = { userId: string }

@@ -1,8 +1,9 @@
 import Nodemailer from 'nodemailer'
-import { Service } from '@esliph/module'
-import { GLOBAL_MAIL_CONFIG } from '@global'
-import { Result } from '@esliph/common'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
+import { Service } from '@esliph/module'
+import { Result } from '@esliph/common'
+import { GLOBAL_LOG_CONFIG, GLOBAL_MAIL_CONFIG } from '@global'
+import { WriteStreamOutput } from '@services/write-stream-output.service'
 
 export type MailOptions = {
     from: string
@@ -24,6 +25,22 @@ export class MailService {
             pass: GLOBAL_MAIL_CONFIG.pass
         }
     })
+
+    static onLoad() {
+        const writer = WriteStreamOutput.newInstance(`${GLOBAL_LOG_CONFIG.path}/mail.log`)
+
+        this.transporter.on('error', err => {
+            console.log(err.message)
+
+            writer.write(JSON.stringify(err))
+        })
+
+        this.transporter.on('token', token => {
+            console.log(token)
+
+            writer.write(JSON.stringify(token))
+        })
+    }
 
     async send(options: MailOptions) {
         try {
