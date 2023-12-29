@@ -17,7 +17,7 @@ export class BankAccountController {
     async get(req: Request) {
         const { userId } = req.headers
 
-        const result = await this.queryUC.queryManyByIdUserWithoutPasswordAndBalance({ userId })
+        const result = await this.queryUC.queryManyByUserIdWithoutPasswordAndBalance({ userId })
 
         return result
     }

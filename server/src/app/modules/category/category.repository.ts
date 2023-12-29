@@ -44,7 +44,7 @@ export class CategoryRepository extends Repository {
         }
     }
 
-    async findManyByIdBankAccount(bankAccountId: ID) {
+    async findManyByBankAccountId(bankAccountId: ID) {
         try {
             const users = await this.database.instance.category.findMany({ where: { bankAccountId } })
 
@@ -54,7 +54,7 @@ export class CategoryRepository extends Repository {
         }
     }
 
-    async findManyByIdBankAccountOrderIsFavorite(bankAccountId: ID) {
+    async findManyByBankAccountIdOrderIsFavorite(bankAccountId: ID) {
         try {
             const users = await this.database.instance.category.findMany({ where: { bankAccountId }, orderBy: { isFavorite: 'asc' } })
 

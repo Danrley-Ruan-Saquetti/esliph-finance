@@ -42,7 +42,7 @@ export class AuthBankAccountSignInUseCase extends UseCase {
         const { code, password, userId } = this.validateDTO(args, schemaDTO)
 
         this.validCode(code)
-        const user = await this.queryUserByIdUser(userId)
+        const user = await this.queryUserByUserId(userId)
         const bankAccount = await this.queryBankAccountByCode(code, userId)
         await this.validPasswordBankAccount(password, bankAccount.password)
         const token = this.generateToken({ sub: user.id, email: user.email, name: user.name, bankAccount: bankAccount.id })
@@ -56,7 +56,7 @@ export class AuthBankAccountSignInUseCase extends UseCase {
         }
     }
 
-    private async queryUserByIdUser(userId: number) {
+    private async queryUserByUserId(userId: number) {
         const userResult = await this.userRepository.findById(userId)
 
         if (userResult.isSuccess()) {

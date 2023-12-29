@@ -97,10 +97,10 @@ export class BankAccountQueryUseCase extends UseCase {
         return Result.success<BankAccountModel.BankAccountWithoutPassword>(this.maskProp(bankAccountResult.getValue(), { prop: 'code', mask: BankAccountQueryUseCase.MASK_PROPS.code }))
     }
 
-    async queryManyByIdUserWithoutPassword(args: { userId: ID }) {
+    async queryManyByUserIdWithoutPassword(args: { userId: ID }) {
         const userId = this.validateDTO(args.userId, schemaNumber)
 
-        const bankAccountsResult = await this.repository.findManyByIdUserWithoutPassword(userId)
+        const bankAccountsResult = await this.repository.findManyByUserIdWithoutPassword(userId)
 
         if (!bankAccountsResult.isSuccess()) {
             if (bankAccountsResult.isErrorInOperation()) {
@@ -113,10 +113,10 @@ export class BankAccountQueryUseCase extends UseCase {
         return Result.success<BankAccountModel.BankAccountWithoutPassword[]>(this.maskArray(bankAccountsResult.getValue(), { prop: 'code', mask: BankAccountQueryUseCase.MASK_PROPS.code }))
     }
 
-    async queryManyByIdUserWithoutPasswordAndBalance(args: { userId: ID }) {
+    async queryManyByUserIdWithoutPasswordAndBalance(args: { userId: ID }) {
         const userId = this.validateDTO(args.userId, schemaNumber)
 
-        const bankAccountsResult = await this.repository.findManyByIdUserWithoutPasswordAndBalance(userId)
+        const bankAccountsResult = await this.repository.findManyByUserIdWithoutPasswordAndBalance(userId)
 
         if (!bankAccountsResult.isSuccess()) {
             if (bankAccountsResult.isErrorInOperation()) {

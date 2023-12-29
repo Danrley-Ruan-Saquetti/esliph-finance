@@ -19,7 +19,7 @@ export class FinancialExpenseController {
     async getMany(req: Request) {
         const bankAccountId = req.headers['bankAccountId']
 
-        const result = await this.queryUC.queryManyByIdBankAccount({ bankAccountId })
+        const result = await this.queryUC.queryManyByBankAccountId({ bankAccountId })
 
         return result
     }
@@ -38,7 +38,7 @@ export class FinancialExpenseController {
         const id = req.params['id']
         const bankAccountId = req.headers['bankAccountId']
 
-        const result = await this.queryUC.queryByIdAndIdBankAccount({ id, bankAccountId })
+        const result = await this.queryUC.queryByIdAndBankAccountId({ id, bankAccountId })
 
         return result
     }

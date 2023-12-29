@@ -18,10 +18,10 @@ export class FinancialExpenseQueryUseCase extends UseCase {
         super()
     }
 
-    async queryByIdAndIdBankAccount(args: { id: ID, bankAccountId: ID }) {
+    async queryByIdAndBankAccountId(args: { id: ID, bankAccountId: ID }) {
         const { bankAccountId, id } = this.validateDTO(args, schemaIdAndBankAccountId)
 
-        const bankAccountResult = await this.repository.findByIdAndIdBankAccount(id, bankAccountId)
+        const bankAccountResult = await this.repository.findByIdAndBankAccountId(id, bankAccountId)
 
         if (!bankAccountResult.isSuccess()) {
             if (bankAccountResult.isErrorInOperation()) {
@@ -34,10 +34,10 @@ export class FinancialExpenseQueryUseCase extends UseCase {
         return Result.success(bankAccountResult.getValue())
     }
 
-    async queryManyByIdBankAccount(args: { bankAccountId: ID }) {
+    async queryManyByBankAccountId(args: { bankAccountId: ID }) {
         const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
 
-        const bankAccountResult = await this.repository.findManyByIdBankAccount(bankAccountId)
+        const bankAccountResult = await this.repository.findManyByBankAccountId(bankAccountId)
 
         if (!bankAccountResult.isSuccess()) {
             if (bankAccountResult.isErrorInOperation()) {

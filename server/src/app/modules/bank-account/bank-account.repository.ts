@@ -124,7 +124,7 @@ export class BankAccountRepository extends Repository {
         }
     }
 
-    async findManyByIdUser(userId: ID) {
+    async findManyByUserId(userId: ID) {
         try {
             const users = await this.repo.findMany({
                 where: { userId },
@@ -137,7 +137,7 @@ export class BankAccountRepository extends Repository {
         }
     }
 
-    async findManyByIdUserWithoutPassword(userId: ID) {
+    async findManyByUserIdWithoutPassword(userId: ID) {
         try {
             const bankAccounts = await this.repo.findMany({
                 where: { userId },
@@ -155,7 +155,7 @@ export class BankAccountRepository extends Repository {
         }
     }
 
-    async findManyByIdUserWithoutPasswordAndBalance(userId: ID) {
+    async findManyByUserIdWithoutPasswordAndBalance(userId: ID) {
         try {
             const bankAccounts = await this.repo.findMany({
                 where: { userId },

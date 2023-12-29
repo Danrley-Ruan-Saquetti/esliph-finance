@@ -7,7 +7,7 @@ import console from 'console'
 @Service({ name: 'financial-expense.repository' })
 export class FinancialExpenseRepository extends FinancialTransactionRepository {
 
-    async findByIdAndIdBankAccount(id: ID, bankAccountId: ID) {
+    async findByIdAndBankAccountId(id: ID, bankAccountId: ID) {
         try {
             const financialExpense = await this.database.instance.financialTransaction.findFirst({
                 where: { id, bankAccountId, type: FinancialTransactionModel.Type.EXPENSE }
@@ -24,7 +24,7 @@ export class FinancialExpenseRepository extends FinancialTransactionRepository {
         }
     }
 
-    async findManyByIdBankAccount(bankAccountId: ID) {
+    async findManyByBankAccountId(bankAccountId: ID) {
         try {
             const financialExpense = await this.database.instance.financialTransaction.findMany({
                 where: { bankAccountId, type: FinancialTransactionModel.Type.EXPENSE }

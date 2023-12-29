@@ -45,7 +45,7 @@ export class PaymentRepository extends Repository {
         }
     }
 
-    async findByIdAndIdBankAccountAndIdFinancialTransaction(id: ID, bankAccountId: ID, financialTransactionId: ID) {
+    async findByIdAndBankAccountIdAndFinancialTransactionId(id: ID, bankAccountId: ID, financialTransactionId: ID) {
         try {
             const payment = await this.database.instance.payment.findFirst({ where: { id, financialTransactionId, financialTransaction: { bankAccountId } } })
 
@@ -58,7 +58,7 @@ export class PaymentRepository extends Repository {
         }
     }
 
-    async findManyByIdBankAccountAndIdFinancialTransaction(bankAccountId: ID, financialTransactionId: ID) {
+    async findManyByBankAccountIdAndFinancialTransactionId(bankAccountId: ID, financialTransactionId: ID) {
         try {
             const payments = await this.database.instance.payment.findMany({ where: { financialTransactionId, financialTransaction: { bankAccountId } } })
 
@@ -70,7 +70,7 @@ export class PaymentRepository extends Repository {
         }
     }
 
-    async findManyByIdBankAccount(bankAccountId: ID) {
+    async findManyByBankAccountId(bankAccountId: ID) {
         try {
             const payments = await this.database.instance.payment.findMany({ where: { financialTransaction: { bankAccountId } } })
 
@@ -82,7 +82,7 @@ export class PaymentRepository extends Repository {
         }
     }
 
-    async findManyByIdFinancialTransaction(financialTransactionId: ID) {
+    async findManyByFinancialTransactionId(financialTransactionId: ID) {
         try {
             const payments = await this.database.instance.payment.findMany({ where: { financialTransactionId } })
 
@@ -94,7 +94,7 @@ export class PaymentRepository extends Repository {
         }
     }
 
-    async findManyByIdBankAccountAndTypesFinancialTransaction(bankAccountId: ID, types: FinancialTransactionModel.Type[]) {
+    async findManyByBankAccountIdAndTypesFinancialTransaction(bankAccountId: ID, types: FinancialTransactionModel.Type[]) {
         try {
             const payments = await this.database.instance.payment.findMany({ where: { financialTransaction: { bankAccountId, type: { in: types } } } })
 

@@ -6,7 +6,7 @@ import { FinancialTransactionModel } from '@modules/financial-transaction/financ
 @Service({ name: 'financial-income.repository' })
 export class FinancialIncomeRepository extends FinancialTransactionRepository {
 
-    async findByIdAndIdBankAccount(id: ID, bankAccountId: ID) {
+    async findByIdAndBankAccountId(id: ID, bankAccountId: ID) {
         try {
             const financialIncome = await this.database.instance.financialTransaction.findFirst({
                 where: { id, bankAccountId, type: FinancialTransactionModel.Type.INCOME }

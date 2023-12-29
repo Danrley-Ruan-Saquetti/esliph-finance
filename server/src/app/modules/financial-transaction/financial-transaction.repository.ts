@@ -65,7 +65,7 @@ export class FinancialTransactionRepository extends Repository {
         }
     }
 
-    async findManyByIdBankAccount(bankAccountId: ID) {
+    async findManyByBankAccountId(bankAccountId: ID) {
         try {
             const financialTransactions = await this.database.instance.financialTransaction.findMany({
                 where: { bankAccountId },
@@ -82,7 +82,7 @@ export class FinancialTransactionRepository extends Repository {
         }
     }
 
-    async findManyByIdBankAccountAndSituations(bankAccountId: ID, situations: FinancialTransactionModel.Situation[]) {
+    async findManyByBankAccountIdAndSituations(bankAccountId: ID, situations: FinancialTransactionModel.Situation[]) {
         try {
             const financialTransactions = await this.database.instance.financialTransaction.findMany({
                 where: { bankAccountId, situation: { in: situations } },
@@ -99,7 +99,7 @@ export class FinancialTransactionRepository extends Repository {
         }
     }
 
-    async findManyByIdBankAccountAndTypes(bankAccountId: ID, types: FinancialTransactionModel.Type[]) {
+    async findManyByBankAccountIdAndTypes(bankAccountId: ID, types: FinancialTransactionModel.Type[]) {
         try {
             const financialTransactions = await this.database.instance.financialTransaction.findMany({
                 where: { bankAccountId, type: { in: types } },
@@ -116,7 +116,7 @@ export class FinancialTransactionRepository extends Repository {
         }
     }
 
-    async findManyByIdBankAccountAndTypeOccurrence(bankAccountId: ID, typeOccurrences: FinancialTransactionModel.TypeOccurrence[]) {
+    async findManyByBankAccountIdAndTypeOccurrence(bankAccountId: ID, typeOccurrences: FinancialTransactionModel.TypeOccurrence[]) {
         try {
             const financialTransactions = await this.database.instance.financialTransaction.findMany({
                 where: { bankAccountId, typeOccurrence: { in: typeOccurrences } },

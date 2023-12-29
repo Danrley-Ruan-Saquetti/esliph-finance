@@ -136,7 +136,7 @@ export class CompensationPaymentsControl {
     }
 
     async loadPayments() {
-        const payments = await this.repositoryPayment.findManyByIdFinancialTransaction(this.financialTransactionId)
+        const payments = await this.repositoryPayment.findManyByFinancialTransactionId(this.financialTransactionId)
 
         if (!payments.isSuccess()) {
             throw new BadRequestException({ ...payments.getError() })
