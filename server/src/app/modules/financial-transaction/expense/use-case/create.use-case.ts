@@ -7,9 +7,9 @@ import { FinancialTransactionModel } from '@modules/financial-transaction/financ
 import { FinancialTransactionCreateDTOArgs, FinancialTransactionCreateUseCase } from '@modules/financial-transaction/use-case/create.use-case'
 
 const schemaDTO = ValidatorService.schema.object({
-    sender: ValidatorService
+    receiver: ValidatorService
         .schema
-        .string({ 'required_error': GLOBAL_FINANCIAL_TRANSACTION_DTO.sender.messageRequired })
+        .string({ 'required_error': GLOBAL_FINANCIAL_TRANSACTION_DTO.receiver.messageRequired })
         .trim()
 })
 

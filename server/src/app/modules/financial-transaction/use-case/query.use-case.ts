@@ -7,10 +7,6 @@ import { ValidatorService } from '@services/validator.service'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
-const schemaIdAndBankAccountId = ValidatorService.schema.object({
-    id: schemaNumber,
-    bankAccountId: schemaNumber,
-})
 
 @Service({ name: 'financial-transaction.use-case.query' })
 export class FinancialTransactionQueryUseCase extends UseCase {
