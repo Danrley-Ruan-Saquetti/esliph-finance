@@ -9,9 +9,9 @@ export class UserController {
     constructor(@Injection.Inject('user.use-case.query') private queryUX: UserQueryUseCase) { }
 
     @Guard({ name: 'user.authorization' })
-    @Get('/:id')
+    @Get('/current')
     async get(req: Request) {
-        const { id } = req.params
+        const id = req.headers['userId']
 
         const result = await this.queryUX.queryByIdWithoutPassword({ id })
 
