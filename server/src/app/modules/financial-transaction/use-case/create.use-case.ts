@@ -69,10 +69,12 @@ const schemaDTO = ValidatorService.schema.object({
         .default(GLOBAL_FINANCIAL_TRANSACTION_DTO.sender.default),
     expiresIn: ValidatorService
         .schema
+        .coerce
         .date()
         .default(GLOBAL_FINANCIAL_TRANSACTION_DTO.expiresIn.default()),
     dateTimeCompetence: ValidatorService
         .schema
+        .coerce
         .date()
         .default(GLOBAL_FINANCIAL_TRANSACTION_DTO.dateTimeCompetence.default()),
 })
