@@ -24,7 +24,5 @@ export class UpdateSituationTransaction {
             },
             take: 10
         })
-
-        console.log(financialTransactionsLate)
     }
 }

@@ -2,16 +2,19 @@ import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { ValidatorService } from '@services/validator.service'
 import { MaskDataOptions, MaskDataService } from '@services/mask-data.service'
+import { DateService } from '@services/date.service'
 import { z } from 'zod'
 
 @Service()
 export class UseCase {
     protected validator: ValidatorService
     protected maskDataService: MaskDataService
+    protected dateService: DateService
 
     constructor() {
         this.validator = Injection.resolve(ValidatorService)
         this.maskDataService = Injection.resolve(MaskDataService)
+        this.dateService = Injection.resolve(DateService)
     }
 
     protected validateDTO<ZodSchema extends z.Schema>(args: z.input<ZodSchema>, schema: ZodSchema) {

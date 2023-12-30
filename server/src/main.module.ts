@@ -12,6 +12,7 @@ import { HttpService } from '@services/http.service'
 import { MaskDataService } from '@services/mask-data.service'
 import { QueryBuilderService } from '@services/query-builder.service'
 import { JobService } from '@services/job.service'
+import { DateService } from '@services/date.service'
 
 @Module({
     imports: [AppModule, JobModule],
@@ -27,6 +28,8 @@ import { JobService } from '@services/job.service'
         MaskDataService,
         QueryBuilderService,
         JobService,
+        DateService,
+        { whenCall: 'date', use: 'global.service.date' },
         { whenCall: 'job', use: 'global.service.job' },
         { whenCall: 'query-builder', use: 'global.service.query-builder' },
         { whenCall: 'mask-data', use: 'global.service.mask-data' },

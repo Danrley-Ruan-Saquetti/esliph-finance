@@ -6,7 +6,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = []
 }
 
 model User {
@@ -15,8 +16,8 @@ model User {
   name         String        @db.VarChar(45)
   email        String        @unique @db.VarChar(254)
   password     String        @db.VarChar(120)
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at")
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamp(3)
+  updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamp(3)
   bankAccounts BankAccount[]
 
   @@map("user")
@@ -30,8 +31,8 @@ model BankAccount {
   name                  String                 @db.VarChar(45)
   password              String                 @map("password") @db.VarChar(120)
   balance               Float                  @default(0)
-  createdAt             DateTime               @default(now()) @map("created_at")
-  updatedAt             DateTime               @default(now()) @updatedAt @map("updated_at")
+  createdAt             DateTime               @default(now()) @map("created_at") @db.Timestamp(3)
+  updatedAt             DateTime               @default(now()) @updatedAt @map("updated_at") @db.Timestamp(3)
   financialTransactions FinancialTransaction[]
   categories            Category[]
   notifications         Notification[]
@@ -56,9 +57,9 @@ model Notification {
   wasRead       Boolean          @default(false) @map("was_read")
   type          NotificationType @map("type")
   isSend        Boolean          @default(false) @map("is_send")
-  sendAt        DateTime         @map("send_at")
-  createdAt     DateTime         @default(now()) @map("created_at")
-  updatedAt     DateTime         @default(now()) @updatedAt @map("updated_at")
+  sendAt        DateTime         @map("send_at") @db.Timestamp(3)
+  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamp(3)
+  updatedAt     DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamp(3)
   mail          Mail?
 
   @@map("notification")
@@ -69,8 +70,8 @@ model Mail {
   notification   Notification @relation(fields: [notificationId], references: [id])
   notificationId Int          @unique @map("notification_id")
   recipient      String       @db.VarChar(45)
-  createdAt      DateTime     @default(now()) @map("created_at")
-  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at")
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamp(3)
+  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(3)
 
   @@map("mail")
 }
@@ -82,8 +83,8 @@ model Category {
   name          String      @db.VarChar(45)
   color         String      @db.VarChar(15)
   isFavorite    Boolean     @default(false) @map("is_favorite")
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime    @default(now()) @updatedAt @map("updated_at")
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamp(3)
+  updatedAt     DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamp(3)
 
   @@map("category")
 }
@@ -131,10 +132,10 @@ model FinancialTransaction {
   sender                   String                             @default("")
   typeOccurrence           FinancialTransactionTypeOccurrence @default(SINGLE) @map("type_occurrence")
   situation                FinancialTransactionSituation      @default(PENDING) @map("situation")
-  expiresIn                DateTime                           @map("expires_in")
-  dateTimeCompetence       DateTime                           @default(now()) @map("date_time_competence")
-  createdAt                DateTime                           @default(now()) @map("created_at")
-  updatedAt                DateTime                           @default(now()) @updatedAt @map("updated_at")
+  expiresIn                DateTime                           @map("expires_in") @db.Timestamp(3)
+  dateTimeCompetence       DateTime                           @default(now()) @map("date_time_competence") @db.Timestamp(3)
+  createdAt                DateTime                           @default(now()) @map("created_at") @db.Timestamp(3)
+  updatedAt                DateTime                           @default(now()) @updatedAt @map("updated_at") @db.Timestamp(3)
   payments                 Payment[]
   notes                    Note[]
 
@@ -146,8 +147,8 @@ model Note {
   financialTransaction   FinancialTransaction @relation(fields: [financialTransactionId], references: [id])
   financialTransactionId Int                  @map("financial_transaction_id")
   description            String               @default("")
-  createdAt              DateTime             @default(now()) @map("created_at")
-  updatedAt              DateTime             @default(now()) @updatedAt @map("updated_at")
+  createdAt              DateTime             @default(now()) @map("created_at") @db.Timestamp(3)
+  updatedAt              DateTime             @default(now()) @updatedAt @map("updated_at") @db.Timestamp(3)
 
   @@map("note")
 }
@@ -159,8 +160,8 @@ model Payment {
   value                  Float
   discount               Float                @default(0)
   increase               Float                @default(0)
-  paidAt                 DateTime             @default(now()) @map("paid_at")
-  createdAt              DateTime             @default(now()) @map("created_at")
+  paidAt                 DateTime             @default(now()) @map("paid_at") @db.Timestamp(3)
+  createdAt              DateTime             @default(now()) @map("created_at") @db.Timestamp(3)
 
   @@map("payment")
 }
