@@ -26,7 +26,7 @@ export class MailService {
         }
     })
 
-    static onLoad() {
+    static onStart() {
         const writer = WriteStreamOutput.newInstance(`${GLOBAL_LOG_CONFIG.path}/mail.log`)
 
         this.transporter.on('error', err => {

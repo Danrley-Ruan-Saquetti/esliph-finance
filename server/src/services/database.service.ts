@@ -15,7 +15,7 @@ export class DatabaseService {
         ]
     })
 
-    static async onLoad() {
+    static onLoad() {
         const writer = WriteStreamOutput.newInstance(`${GLOBAL_LOG_CONFIG.path}/db.log`)
 
         this.instance.$on('error', args => {
@@ -30,7 +30,9 @@ export class DatabaseService {
         this.instance.$on('warn', args => {
             writer.write(`#  ${GLOBAL_FORMATTER_CONFIG.date.format()}  [WARN]: ${args.message}`)
         })
+    }
 
+    static async onStart() {
         await this.instance.$connect()
     }
 

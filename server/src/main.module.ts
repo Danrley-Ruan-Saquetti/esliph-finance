@@ -10,6 +10,7 @@ import { WriteStreamOutput } from '@services/write-stream-output.service'
 import { HttpService } from '@services/http.service'
 import { MaskDataService } from '@services/mask-data.service'
 import { QueryBuilderService } from '@services/query-builder.service'
+import { JobService } from '@services/job.service'
 
 @Module({
     imports: [AppModule],
@@ -24,6 +25,8 @@ import { QueryBuilderService } from '@services/query-builder.service'
         HttpService,
         MaskDataService,
         QueryBuilderService,
+        JobService,
+        { whenCall: 'job', use: 'global.service.job' },
         { whenCall: 'query-builder', use: 'global.service.query-builder' },
         { whenCall: 'mask-data', use: 'global.service.mask-data' },
         { whenCall: 'http', use: 'global.service.http' },
