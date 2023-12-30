@@ -99,23 +99,26 @@ export class FinancialTransactionCreateUseCase extends UseCase {
     }
 
     private processingData(data: SchemaValidator.output<typeof schemaDTO>): FinancialTransactionModel.Model {
+        const isAlreadyLate = new Date(Date.now()) < data.expiresIn
+        const isProgrammatic = data.typeOccurrence === FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC
+
         return {
             bankAccountId: data.bankAccountId,
-            value: data.value,
+            title: data.title,
             description: data.description,
+            value: data.value,
+            situation: isAlreadyLate ? FinancialTransactionModel.Situation.LATE : FinancialTransactionModel.Situation.PENDING,
+            type: FinancialTransactionModel.Type[data.type],
+            dateTimeCompetence: data.dateTimeCompetence,
             expiresIn: data.expiresIn,
+            receiver: data.receiver || '',
+            sender: data.sender || '',
             isObservable: !!data.isObservable,
             isSendNotification: !!data.isSendNotification,
             priority: data.priority,
-            receiver: data.type == FinancialTransactionModel.Type.EXPENSE ? data.receiver : '',
-            sender: data.type == FinancialTransactionModel.Type.INCOME ? data.sender : '',
-            situation: FinancialTransactionModel.Situation.PENDING,
-            countRepeatedOccurrences: 0,
-            timesToRepeat: data.typeOccurrence === FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC ? data.timesToRepeat : 0,
-            title: data.title,
-            type: FinancialTransactionModel.Type[data.type],
             typeOccurrence: data.typeOccurrence,
-            dateTimeCompetence: data.dateTimeCompetence,
+            timesToRepeat: isProgrammatic ? data.timesToRepeat : 0,
+            countRepeatedOccurrences: 0,
         }
     }
 

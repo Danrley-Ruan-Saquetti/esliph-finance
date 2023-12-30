@@ -24,7 +24,7 @@ export class FinancialExpenseCreateUseCase extends UseCase {
     async perform(args: FinancialTransactionCreateDTOArgs & FinancialExpenseCreateDTOArgs) {
         const data = this.validateDTO(args, schemaDTO)
 
-        const result = await this.createUC.perform({ ...args, ...data, type: FinancialTransactionModel.Type.EXPENSE })
+        const result = await this.createUC.perform({ ...args, ...data, type: FinancialTransactionModel.Type.EXPENSE, sender: '' })
 
         return result
     }
