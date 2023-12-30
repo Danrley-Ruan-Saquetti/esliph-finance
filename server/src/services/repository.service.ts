@@ -9,9 +9,16 @@ import { QueryBuilderService } from './query-builder.service'
 export type RepositoryHandleResponseOptions = { noAcceptNullable?: boolean, error: ErrorResultInfo }
 export type RepositoryHandleErrorOptions = { error: ErrorResultInfo }
 
+export type RepositoryWhereArgs = {}
+export type RepositorySelectArgs = ''
 export type RepositoryPagination = {
     pageIndex: number
     limite: number
+}
+export type RepositoryQuery = {
+    where: RepositoryWhereArgs
+    select: { [x in RepositorySelectArgs]?: boolean }
+    page: RepositoryPagination
 }
 
 @Service()
@@ -41,6 +48,10 @@ export class Repository {
 
     calcSkipRegister({ limite, pageIndex }: RepositoryPagination) {
         return pageIndex * limite
+    }
+
+    getDatabase() {
+        return this.database.instance
     }
 
     protected handleResponse<T = any>(res: T | null, options: RepositoryHandleResponseOptions) {
