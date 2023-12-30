@@ -49,6 +49,14 @@ export function extractProps<T extends object, K extends keyof T>(obj: T, props:
     return newObj as ObjectExtractProps<T, K>
 }
 
+export function isInstance(obj: any) {
+    return !isObjectLiteral(obj)
+}
+
+export function isObjectLiteral(obj: any) {
+    return obj !== null && typeof obj === 'object' && obj.constructor === Object
+}
+
 export function isTruthy(value?: any) {
     return !isFalsy(value)
 }
