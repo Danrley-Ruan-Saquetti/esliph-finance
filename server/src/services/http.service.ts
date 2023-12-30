@@ -3,15 +3,22 @@ import { ApplicationModule, Service } from '@esliph/module'
 import { EventsRouter, Server } from '@esliph/http'
 import { FastifyAdapter } from '@esliph/adapter-fastify'
 import { GLOBAL_LOG_CONFIG } from '@global'
+import { getEnv } from '@util'
 import { WriteStreamOutput } from '@services/write-stream-output.service'
 
 export * from '@esliph/adapter-fastify'
+
+const PORT = getEnv<number>({ name: 'PORT', defaultValue: 8080 })
 
 @Service({ name: 'global.service.http' })
 export class HttpService extends FastifyAdapter {
 
     static onLoad() {
         HttpService.loadInstance(Fastify())
+    }
+
+    static onStart() {
+        HttpService.listen({ port: PORT })
     }
 
     static listen({ port }: { port: number }) {

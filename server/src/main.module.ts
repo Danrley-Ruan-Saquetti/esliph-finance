@@ -1,5 +1,6 @@
 import { Module } from '@esliph/module'
 import { AppModule } from '@app/app.module'
+import { JobModule } from '@app/job.module'
 import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
 import { ValidatorService } from '@services/validator.service'
@@ -13,7 +14,7 @@ import { QueryBuilderService } from '@services/query-builder.service'
 import { JobService } from '@services/job.service'
 
 @Module({
-    imports: [AppModule],
+    imports: [AppModule, JobModule],
     providers: [
         CryptoService,
         JWTService,
