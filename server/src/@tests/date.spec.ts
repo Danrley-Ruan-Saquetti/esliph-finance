@@ -1,3 +1,17 @@
 import { DateTime } from 'luxon'
 
-console.log(DateTime.now().setZone('America/Sao_Paulo').toISO())
+class DateService {
+    static DATE = DateTime
+
+    now() {
+        return new Date(this.DATE.now().toUTC().toISO())
+    }
+
+    converterToUTC(date: Date) {
+        return this.DATE.fromJSDate(date)
+    }
+
+    get DATE() {
+        return DateService.DATE
+    }
+}

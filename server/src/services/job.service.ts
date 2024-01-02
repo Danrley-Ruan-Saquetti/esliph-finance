@@ -8,13 +8,15 @@ export function Job(options: JobOptions) {
     return (constructor: any) => {
         // @ts-expect-error
         Service({ name: `service.${options.name}`, context: 'Job' })(constructor)
-        return EsliphJob(options)(constructor)
+        // @ts-expect-error
+        return EsliphJob({ timeZone: 'Zulu', ...options })(constructor)
     }
 }
 
 export function Cron(options: CronOptions) {
     return (target: any, key: string, descriptor: PropertyDescriptor) => {
-        return EsliphCron(options)(target, key, descriptor)
+        // @ts-expect-error
+        return EsliphCron({ timeZone: 'Zulu', ...options })(target, key, descriptor)
     }
 }
 
