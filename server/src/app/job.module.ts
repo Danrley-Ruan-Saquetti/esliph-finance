@@ -1,8 +1,8 @@
 import { Module } from '@esliph/module'
-import { UpdateSituationTransaction } from '@app/jobs/update-situation-transaction.job'
+import { FinancialTransactionJob } from '@app/jobs/financial-transaction.job'
 
 @Module({
-    providers: [UpdateSituationTransaction]
+    providers: [FinancialTransactionJob]
 })
 export class JobModule {
 

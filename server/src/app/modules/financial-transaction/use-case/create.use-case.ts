@@ -1,12 +1,13 @@
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { BadRequestException } from '@common/exceptions'
+import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
+import { BadRequestException } from '@common/exceptions'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { GLOBAL_FINANCIAL_TRANSACTION_DTO } from '@modules/financial-transaction/financial-transaction.global'
-import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 
 const schemaDTO = ValidatorService.schema.object({
     bankAccountId: GLOBAL_FINANCIAL_TRANSACTION_DTO.bankAccount.id,
@@ -71,12 +72,14 @@ const schemaDTO = ValidatorService.schema.object({
         .schema
         .coerce
         .date()
-        .default(GLOBAL_FINANCIAL_TRANSACTION_DTO.expiresIn.default()),
+        .default(GLOBAL_FINANCIAL_TRANSACTION_DTO.expiresIn.default())
+        .transform(GLOBAL_DTO.date.transform),
     dateTimeCompetence: ValidatorService
         .schema
         .coerce
         .date()
-        .default(GLOBAL_FINANCIAL_TRANSACTION_DTO.dateTimeCompetence.default()),
+        .default(GLOBAL_FINANCIAL_TRANSACTION_DTO.dateTimeCompetence.default())
+        .transform(GLOBAL_DTO.date.transform),
 })
     .refine(
         ({ typeOccurrence, timesToRepeat }) => typeOccurrence != FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC || !!timesToRepeat,
@@ -87,7 +90,9 @@ export type FinancialTransactionCreateDTOArgs = SchemaValidator.input<typeof sch
 
 @Service({ name: 'financial-transaction.use-case.create' })
 export class FinancialTransactionCreateUseCase extends UseCase {
-    constructor(@Injection.Inject('financial-transaction.repository') private repository: FinancialTransactionRepository) {
+    constructor(
+        @Injection.Inject('financial-transaction.repository') private repository: FinancialTransactionRepository,
+    ) {
         super()
     }
 
@@ -111,8 +116,8 @@ export class FinancialTransactionCreateUseCase extends UseCase {
             value: data.value,
             situation: isAlreadyLate ? FinancialTransactionModel.Situation.LATE : FinancialTransactionModel.Situation.PENDING,
             type: FinancialTransactionModel.Type[data.type],
-            dateTimeCompetence: data.dateTimeCompetence,
-            expiresIn: data.expiresIn,
+            dateTimeCompetence: this.dateService.converterToUTC(data.dateTimeCompetence),
+            expiresIn: this.dateService.converterToUTC(data.expiresIn),
             receiver: data.receiver || '',
             sender: data.sender || '',
             isObservable: !!data.isObservable,

@@ -5,17 +5,16 @@ import { DateService } from '@services/date.service'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 
-@Job({ name: 'update-situation-transaction' })
-export class UpdateSituationTransaction {
+@Job({ name: 'job.financial-transaction' })
+export class FinancialTransactionJob {
 
     constructor(
         @Injection.Inject('financial-transaction.repository') private repositoryFinancialTransaction: FinancialTransactionRepository,
         @Injection.Inject('date') private dateService: DateService,
     ) { }
 
-    @Cron({ name: 'update-situation', cronTime: CronExpression.EVERY_30_MINUTES, alreadyStart: true })
+    @Cron({ name: 'update-situation-transactions-late', cronTime: CronExpression.EVERY_5_SECONDS, alreadyStart: true })
     async update() {
-
         const transaction = this.repositoryFinancialTransaction.transaction()
 
         try {
@@ -28,15 +27,20 @@ export class UpdateSituationTransaction {
                 where: {
                     expiresIn: { lt: dateNow },
                     situation: {
-                        in: [FinancialTransactionModel.Situation.PENDING, FinancialTransactionModel.Situation.PARTIALLY_PAID, FinancialTransactionModel.Situation.PARTIALLY_RECEIVED]
+                        in: [FinancialTransactionModel.Situation.PENDING]
                     }
                 },
                 take: 10
             })
 
-            transaction.commit()
+            const ids = financialTransactionsLate.map(({ id }) => id)
 
-            console.log(financialTransactionsLate)
+            await database.financialTransaction.updateMany({
+                data: { situation: FinancialTransactionModel.Situation.LATE },
+                where: { id: { in: ids } },
+            })
+
+            transaction.commit()
         } catch (err: any) {
             transaction.rollback()
             console.log(err)

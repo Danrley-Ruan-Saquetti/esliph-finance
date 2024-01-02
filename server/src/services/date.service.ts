@@ -10,7 +10,7 @@ export class DateService {
     }
 
     converterToUTC(date: Date) {
-        return this.DATE.fromJSDate(date)
+        return new Date(this.DATE.fromJSDate(date).toISO() as string)
     }
 
     get DATE() {

@@ -1,5 +1,7 @@
+import { Injection } from '@esliph/injection'
 import { ValidatorService } from '@services/validator.service'
 import { getEnv, toCapitalise } from '@util'
+import { DateService } from './services/date.service'
 
 export const GLOBAL_APP = {
     name: getEnv<string>({ name: 'APP_NAME' }),
@@ -50,6 +52,21 @@ export const GLOBAL_DTO = {
     required: (value: string) => `${toCapitalise(value)} is required`,
     text: {
         transform: val => val.replace(/ {2}/g, ' '),
+    },
+    date: {
+        schema: ValidatorService.schema
+            .coerce
+            .date()
+            .transform(date => {
+                const dateService = Injection.resolve(DateService)
+
+                return dateService.converterToUTC(date)
+            }),
+        transform: date => {
+            const dateService = Injection.resolve(DateService)
+
+            return dateService.converterToUTC(date)
+        },
     },
     color: {
         regex: /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/,

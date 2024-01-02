@@ -27,7 +27,7 @@ export class FinancialIncomeController {
     @Guard({ name: 'bank-account.authorization' })
     @Post('/create')
     async create(req: Request) {
-        const result = await this.createUC.perform({ ...req.body, ...req.headers })
+        const result = await this.createUC.perform({ ...req.body, bankAccountId: req.headers['bankAccountId'] })
 
         return result
     }
