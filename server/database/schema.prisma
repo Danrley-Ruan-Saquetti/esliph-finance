@@ -96,6 +96,17 @@ enum FinancialTransactionType {
   @@map("financial_transaction_type")
 }
 
+enum FinancialTransactionFrequency {
+  NULL
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  SEMIANNUALLY
+  ANNUALLY
+
+  @@map("financial_transaction_frequency")
+}
+
 enum FinancialTransactionTypeOccurrence {
   SINGLE
   PROGRAMMATIC
@@ -131,6 +142,7 @@ model FinancialTransaction {
   receiver                 String                             @default("")
   sender                   String                             @default("")
   typeOccurrence           FinancialTransactionTypeOccurrence @default(SINGLE) @map("type_occurrence")
+  frequency                FinancialTransactionFrequency      @default(NULL)
   situation                FinancialTransactionSituation      @default(PENDING) @map("situation")
   expiresIn                DateTime                           @map("expires_in") @db.Timestamp(3)
   dateTimeCompetence       DateTime                           @default(now()) @map("date_time_competence") @db.Timestamp(3)

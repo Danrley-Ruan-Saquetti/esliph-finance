@@ -58,6 +58,12 @@ const schemaDTO = ValidatorService.schema.object({
             [FinancialTransactionModel.TypeOccurrence.SINGLE, FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC],
             { errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.messageEnumInvalid }) }
         ),
+    frequency: ValidatorService
+        .schema
+        .enum(
+            Object.keys(FinancialTransactionModel.Frequency) as any,
+            { errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.messageEnumInvalid }) }
+        ).default(FinancialTransactionModel.Frequency.NULL),
     receiver: ValidatorService
         .schema
         .string()
@@ -84,6 +90,10 @@ const schemaDTO = ValidatorService.schema.object({
     .refine(
         ({ typeOccurrence, timesToRepeat }) => typeOccurrence != FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC || !!timesToRepeat,
         { message: GLOBAL_FINANCIAL_TRANSACTION_DTO.timesToRepeat.messageMustBePositive, path: ['timesToRepeat'] }
+    )
+    .refine(
+        ({ typeOccurrence, frequency }) => typeOccurrence != FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC || (!!frequency && frequency != FinancialTransactionModel.Frequency.NULL),
+        { message: GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.messageEnumInvalid, path: ['frequency'] }
     )
 
 export type FinancialTransactionCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
@@ -126,6 +136,7 @@ export class FinancialTransactionCreateUseCase extends UseCase {
             typeOccurrence: data.typeOccurrence,
             timesToRepeat: isProgrammatic ? data.timesToRepeat : 0,
             countRepeatedOccurrences: 0,
+            frequency: isProgrammatic ? data.frequency : FinancialTransactionModel.Frequency.NULL
         }
     }
 

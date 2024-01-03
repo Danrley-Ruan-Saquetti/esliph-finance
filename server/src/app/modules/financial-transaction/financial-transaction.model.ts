@@ -7,8 +7,10 @@ export namespace FinancialTransactionModel {
         FinancialTransactionTypeOccurrence: TypeOccurrence,
         FinancialTransactionSituation: Situation,
         FinancialTransactionType: Type,
+        FinancialTransactionFrequency: Frequency
     } = Database.$Enums
     export type TypeOccurrence = keyof typeof TypeOccurrence
+    export type Frequency = keyof typeof Frequency
     export type Situation = keyof typeof Situation
     export type Type = keyof typeof Type
 

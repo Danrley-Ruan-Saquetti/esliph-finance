@@ -69,7 +69,7 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
             title: title,
             type: type,
             value: value,
-            typeOccurrence: FinancialTransactionModel.TypeOccurrence.SINGLE
+            typeOccurrence: FinancialTransactionModel.TypeOccurrence.SINGLE,
         })
 
         return result.isSuccess()

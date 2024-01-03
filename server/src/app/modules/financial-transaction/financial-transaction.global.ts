@@ -44,6 +44,10 @@ export const GLOBAL_FINANCIAL_TRANSACTION_DTO = {
         messageRequired: GLOBAL_DTO.required('Times to Repeat'),
         messageMustBePositive: 'The number of Times to Repeat must be greater than 0 (zero)',
     },
+    frequency: {
+        messageEnumInvalid: 'The frequency of the occurrence must be one of the types: Daily, Weekly, Monthly, Quarterly, Semiannually or Annually',
+        default: FinancialTransactionModel.Frequency.NULL,
+    },
     receiver: {
         default: '',
         messageRequired: GLOBAL_DTO.required('Receiver'),
