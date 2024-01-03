@@ -1,49 +1,24 @@
 import { Injection } from '@esliph/injection'
 import { Cron, Job } from '@services/job.service'
 import { CronExpression } from '@util'
-import { DateService } from '@services/date.service'
-import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
-import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
+import { FinancialTransactionUpdateSituationLateUseCase } from '@modules/financial-transaction/use-case/update-situation-late.use-case'
+import { FinancialTransactionDuplicateTransactionsRepeatUseCase } from '@modules/financial-transaction/use-case/duplicate-transactions-repeat.use-case.ts'
 
 @Job({ name: 'job.financial-transaction' })
 export class FinancialTransactionJob {
 
     constructor(
-        @Injection.Inject('financial-transaction.repository') private repositoryFinancialTransaction: FinancialTransactionRepository,
-        @Injection.Inject('date') private dateService: DateService,
+        @Injection.Inject('financial-transaction.use-case.update-situation-late') private updateSituationLateUC: FinancialTransactionUpdateSituationLateUseCase,
+        @Injection.Inject('financial-transaction.use-case.duplicate-transactions-repeat') private duplicateTransactionsRepeatUC: FinancialTransactionDuplicateTransactionsRepeatUseCase
     ) { }
 
-    @Cron({ name: 'update-situation-transactions-late', cronTime: CronExpression.EVERY_5_SECONDS, alreadyStart: true })
-    async update() {
-        const transaction = this.repositoryFinancialTransaction.transaction()
+    @Cron({ name: 'update-situation-transactions-late', cronTime: CronExpression.EVERY_5_SECONDS, alreadyStart: false, ignore: true })
+    async updateTransactionsLate() {
+        await this.updateSituationLateUC.perform()
+    }
 
-        try {
-            transaction.begin()
-
-            const database = this.repositoryFinancialTransaction.getDatabase()
-            const dateNow = this.dateService.now()
-
-            const financialTransactionsLate = await database.financialTransaction.findMany({
-                where: {
-                    expiresIn: { lt: dateNow },
-                    situation: {
-                        in: [FinancialTransactionModel.Situation.PENDING]
-                    }
-                },
-                take: 10
-            })
-
-            const ids = financialTransactionsLate.map(({ id }) => id)
-
-            await database.financialTransaction.updateMany({
-                data: { situation: FinancialTransactionModel.Situation.LATE },
-                where: { id: { in: ids } },
-            })
-
-            transaction.commit()
-        } catch (err: any) {
-            transaction.rollback()
-            console.log(err)
-        }
+    @Cron({ name: 'create-transaction-repeat', cronTime: CronExpression.EVERY_DAY_AT_6AM, alreadyStart: true })
+    async createTransactionsInRepeat() {
+        await this.duplicateTransactionsRepeatUC.perform()
     }
 }

@@ -4,7 +4,7 @@ import { ErrorResultInfo } from '@esliph/common'
 import { DatabaseService, Prisma } from '@services/database.service'
 import { isNull } from '@util'
 import { ResultDatabase } from '@common/result.database'
-import { QueryBuilderService } from './query-builder.service'
+import { CodeGeneratorService } from './code-generator.service'
 
 export type RepositoryHandleResponseOptions = { noAcceptNullable?: boolean, error: ErrorResultInfo }
 export type RepositoryHandleErrorOptions = { error: ErrorResultInfo }
@@ -25,11 +25,16 @@ export type RepositoryQuery = {
 export class Repository {
     constructor(
         @Injection.Inject('database') protected database: DatabaseService,
-        @Injection.Inject('database') protected queryBuilder: QueryBuilderService,
+        @Injection.Inject('code-generator') protected codeGeneratorService: CodeGeneratorService,
     ) { }
 
     transaction() {
         const db = this.database.instance
+        const code = this.codeGeneratorService.generateCode({
+            template: 'XXXXX',
+            charactersToReplace: ['X'],
+            valuesAllowed: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        })
 
         async function begin() {
             await db.$executeRaw`BEGIN`

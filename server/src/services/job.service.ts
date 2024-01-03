@@ -37,8 +37,8 @@ export class JobService {
         ApplicationModule.listener.on('job/end', data => {
             writer.write(`Job "${data.name}" end`)
         })
-        ApplicationModule.listener.on('job/erro', data => {
-            writer.write(`Job "${data.name}" erro`)
+        ApplicationModule.listener.on('job/error', data => {
+            writer.write(`Job "${data.name}" error: "${data.error.message}"`)
         })
 
         JobBootstrap(jobsProviders)
