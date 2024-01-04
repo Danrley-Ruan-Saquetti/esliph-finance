@@ -8,7 +8,7 @@ import { FinancialTransactionModel } from '@modules/financial-transaction/financ
 import { FinancialTransactionCreateUseCase } from '@modules/financial-transaction/use-case/create.use-case'
 import { CalcDateRepeatControl } from '@modules/financial-transaction/control/calc-date-repeat.control'
 
-type IFinancialTransactionDuplicateArgs = Pick<FinancialTransactionModel.FinancialTransaction, 'id' | 'bankAccountId' | 'dateTimeCompetence' | 'description' | 'expiresIn' | 'isObservable' | 'isSendNotification' | 'priority' | 'receiver' | 'sender' | 'title' | 'type' | 'value'>
+type IFinancialTransactionDuplicateArgs = Pick<FinancialTransactionModel.FinancialTransaction, 'id' | 'bankAccountId' | 'dateTimeCompetence' | 'description' | 'expiresIn' | 'isObservable' | 'isSendNotification' | 'priority' | 'receiver' | 'sender' | 'title' | 'type' | 'value' | 'countRepeatedOccurrences' | 'timesToRepeat'>
 
 @Service({ name: 'financial-transaction.use-case.duplicate-transactions-repeat' })
 export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseCase {
@@ -111,6 +111,7 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
             type: transaction.type,
             value: transaction.value,
             typeOccurrence: FinancialTransactionModel.TypeOccurrence.SINGLE,
+            notes: [{ description: `Parent Financial Transaction #${transaction.id} (${transaction.countRepeatedOccurrences + 1}/${transaction.timesToRepeat})` }]
         })
 
         return result.isSuccess()

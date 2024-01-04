@@ -14,9 +14,14 @@ export type FinancialTransactionQuery = {
 
 @Service({ name: 'financial-transaction.repository' })
 export class FinancialTransactionRepository extends Repository {
-    async register(data: FinancialTransactionModel.Model) {
+    async register(data: FinancialTransactionModel.Model, notes: { description: string }[] = []) {
         try {
-            await this.database.instance.financialTransaction.create({ data })
+            await this.database.instance.financialTransaction.create({
+                data: {
+                    ...data,
+                    notes: { createMany: { data: notes } }
+                }
+            })
 
             return this.handleResponse<{ message: string }>(
                 { message: 'Financial transaction successfully registered' },

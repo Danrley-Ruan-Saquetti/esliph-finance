@@ -86,6 +86,18 @@ const schemaDTO = ValidatorService.schema.object({
         .date()
         .default(GLOBAL_FINANCIAL_TRANSACTION_DTO.dateTimeCompetence.default())
         .transform(GLOBAL_DTO.date.transform),
+    notes: ValidatorService
+        .schema
+        .array(ValidatorService
+            .schema.object({
+                description: ValidatorService
+                    .schema
+                    .string()
+                    .trim()
+                    .optional()
+            }))
+        .optional()
+        .default([])
 })
     .refine(
         ({ typeOccurrence, timesToRepeat }) => typeOccurrence != FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC || !!timesToRepeat,
@@ -109,39 +121,42 @@ export class FinancialTransactionCreateUseCase extends UseCase {
     async perform(args: FinancialTransactionCreateDTOArgs) {
         const data = this.validateDTO(args, schemaDTO)
 
-        const processData = this.processingData(data)
-        await this.registerFinancialTransaction(processData)
+        const { financialTransaction, notes } = this.processingData(data)
+        await this.registerFinancialTransaction(financialTransaction, notes)
 
         return Result.success({ message: 'Register financial transaction successfully' })
     }
 
-    private processingData(data: SchemaValidator.output<typeof schemaDTO>): FinancialTransactionModel.Model {
+    private processingData(data: SchemaValidator.output<typeof schemaDTO>): { financialTransaction: FinancialTransactionModel.Model, notes: { description: string }[] } {
         const isAlreadyLate = new Date(Date.now()) < data.expiresIn
         const isProgrammatic = data.typeOccurrence === FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC
 
         return {
-            bankAccountId: data.bankAccountId,
-            title: data.title,
-            description: data.description,
-            value: data.value,
-            situation: isAlreadyLate ? FinancialTransactionModel.Situation.LATE : FinancialTransactionModel.Situation.PENDING,
-            type: FinancialTransactionModel.Type[data.type],
-            dateTimeCompetence: this.dateService.converterToUTC(data.dateTimeCompetence),
-            expiresIn: this.dateService.converterToUTC(data.expiresIn),
-            receiver: data.receiver || '',
-            sender: data.sender || '',
-            isObservable: !!data.isObservable,
-            isSendNotification: !!data.isSendNotification,
-            priority: data.priority,
-            typeOccurrence: data.typeOccurrence,
-            timesToRepeat: isProgrammatic ? data.timesToRepeat : 0,
-            countRepeatedOccurrences: 0,
-            frequency: isProgrammatic ? data.frequency : FinancialTransactionModel.Frequency.NULL
+            financialTransaction: {
+                bankAccountId: data.bankAccountId,
+                title: data.title,
+                description: data.description,
+                value: data.value,
+                situation: isAlreadyLate ? FinancialTransactionModel.Situation.LATE : FinancialTransactionModel.Situation.PENDING,
+                type: FinancialTransactionModel.Type[data.type],
+                dateTimeCompetence: this.dateService.converterToUTC(data.dateTimeCompetence),
+                expiresIn: this.dateService.converterToUTC(data.expiresIn),
+                receiver: data.receiver || '',
+                sender: data.sender || '',
+                isObservable: !!data.isObservable,
+                isSendNotification: !!data.isSendNotification,
+                priority: data.priority,
+                typeOccurrence: data.typeOccurrence,
+                timesToRepeat: isProgrammatic ? data.timesToRepeat : 0,
+                countRepeatedOccurrences: 0,
+                frequency: isProgrammatic ? data.frequency : FinancialTransactionModel.Frequency.NULL
+            },
+            notes: data.notes.filter(note => !!note.description) as { description: string }[]
         }
     }
 
-    private async registerFinancialTransaction(data: FinancialTransactionModel.Model) {
-        const registerFinancialTransactionResult = await this.repository.register(data)
+    private async registerFinancialTransaction(data: FinancialTransactionModel.Model, notes: { description: string }[] = []) {
+        const registerFinancialTransactionResult = await this.repository.register(data, notes)
 
         if (registerFinancialTransactionResult.isSuccess()) {
             return
