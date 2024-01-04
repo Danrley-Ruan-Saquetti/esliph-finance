@@ -59,16 +59,6 @@ export class NoteRepository extends Repository {
 
     async findManyByFinancialTransactionId(financialTransactionId: ID) {
         try {
-            const users = await this.database.instance.note.findMany({ where: { financialTransactionId } })
-
-            return this.handleResponse<NoteModel.Note[]>(users, { error: { title: 'Find Note', message: 'Note not found' } })
-        } catch (err: any) {
-            return this.handleError<NoteModel.Note[]>(err, { error: { title: 'Find Note', message: 'Unable to find note' } })
-        }
-    }
-
-    async findManyByFinancialTransactionIdOrderIsFavorite(financialTransactionId: ID) {
-        try {
             const users = await this.database.instance.note.findMany({ where: { financialTransactionId }, orderBy: { createdAt: 'desc' } })
 
             return this.handleResponse<NoteModel.Note[]>(users, { error: { title: 'Find Note', message: 'Note not found' } })
