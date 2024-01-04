@@ -98,6 +98,7 @@ enum FinancialTransactionType {
 
 enum FinancialTransactionFrequency {
   NULL
+  DAILY
   WEEKLY
   MONTHLY
   QUARTERLY

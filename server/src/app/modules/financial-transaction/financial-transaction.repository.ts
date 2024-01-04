@@ -142,6 +142,41 @@ export class FinancialTransactionRepository extends Repository {
         }
     }
 
+    async findAllToRepeat() {
+        try {
+            const financialTransactions = await this.getDatabase().$queryRawUnsafe<FinancialTransactionModel.FinancialTransaction[]>('SELECT * FROM public.financial_transaction WHERE type_occurrence::text = $1 AND count_repeated_occurrences < times_to_repeat', FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC)
+
+            return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(
+                financialTransactions.map(transaction => ({
+                    countRepeatedOccurrences: transaction['count_repeated_occurrences'],
+                    createdAt: transaction['created_at'],
+                    description: transaction['description'],
+                    frequency: transaction['frequency'],
+                    id: transaction['id'],
+                    priority: transaction['priority'],
+                    receiver: transaction['receiver'],
+                    sender: transaction['sender'],
+                    situation: transaction['situation'],
+                    timesToRepeat: transaction['times_to_repeat'],
+                    title: transaction['title'],
+                    type: transaction['type'],
+                    typeOccurrence: transaction['type_occurrence'],
+                    updatedAt: transaction['updated_at'],
+                    value: transaction['value'],
+                    bankAccountId: transaction['bank_account_id'],
+                    dateTimeCompetence: transaction['date_time_competence'],
+                    expiresIn: transaction['expires_in'],
+                    isObservable: transaction['is_observable'],
+                    isSendNotification: transaction['is_send_notification']
+                })),
+                { error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' } })
+        } catch (err: any) {
+            return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        }
+    }
+
     async findMany(query: FinancialTransactionQuery) {
         try {
             const financialTransaction = await this.database.instance.financialTransaction.findFirst({

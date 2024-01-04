@@ -37,15 +37,15 @@ export class Repository {
         })
 
         async function begin() {
-            await db.$executeRaw`BEGIN`
+            await db.$executeRawUnsafe('BEGIN', code)
         }
 
         async function commit() {
-            await db.$executeRaw`COMMIT`
+            await db.$executeRawUnsafe('COMMIT', code)
         }
 
         async function rollback() {
-            await db.$executeRaw`ROLLBACK`
+            await db.$executeRawUnsafe('ROLLBACK', code)
         }
 
         return { begin, commit, rollback }

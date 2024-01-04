@@ -17,7 +17,7 @@ export class FinancialTransactionJob {
         await this.updateSituationLateUC.perform()
     }
 
-    @Cron({ name: 'create-transaction-repeat', cronTime: CronExpression.EVERY_DAY_AT_6AM })
+    @Cron({ name: 'create-transaction-repeat', cronTime: CronExpression.EVERY_5_SECONDS })
     async createTransactionsInRepeat() {
         await this.duplicateTransactionsRepeatUC.perform()
     }

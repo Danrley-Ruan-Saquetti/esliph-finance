@@ -2,36 +2,69 @@ import { Injection } from '@esliph/injection'
 import { Result } from '@esliph/common'
 import { Service } from '@esliph/module'
 import { UseCase } from '@common/use-case'
+import { BadRequestException } from '@common/exceptions'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { FinancialTransactionCreateUseCase } from '@modules/financial-transaction/use-case/create.use-case'
+import { CalcDateRepeatControl } from '@modules/financial-transaction/control/calc-date-repeat.control'
+
+type IFinancialTransactionDuplicateArgs = Pick<FinancialTransactionModel.FinancialTransaction, 'id' | 'bankAccountId' | 'dateTimeCompetence' | 'description' | 'expiresIn' | 'isObservable' | 'isSendNotification' | 'priority' | 'receiver' | 'sender' | 'title' | 'type' | 'value'>
 
 @Service({ name: 'financial-transaction.use-case.duplicate-transactions-repeat' })
 export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseCase {
     constructor(
         @Injection.Inject('financial-transaction.repository') private repository: FinancialTransactionRepository,
         @Injection.Inject('financial-transaction.use-case.create') private createUC: FinancialTransactionCreateUseCase,
+        @Injection.Inject('calc-date-repeat.control') private calcDateRepeatControl: CalcDateRepeatControl,
     ) {
         super()
     }
 
     async perform() {
-        const transaction = this.repository.transaction()
+        let i = 0
+        do {
+            await this.performDuplicate()
+            i++
+        } while (i < 1)
+    }
 
+    async performDuplicate() {
         try {
-            await transaction.begin()
+            const financialTransactions = await this.queryTransactionToRepeat()
+            await this.duplicateTransactions(financialTransactions)
 
-            const financialTransactions = await this.repository.getDatabase().$queryRawUnsafe<FinancialTransactionModel.FinancialTransaction[]>('SELECT * FROM public.financial_transaction WHERE type_occurrence::text = $1 AND count_repeated_occurrences < times_to_repeat', FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC)
+            return Result.success({ message: 'Create transactions in repeat successfully' })
+        } catch (err: any) {
+            return Result.failure({ title: 'Create Transactions in Repeat', message: `Cannot create transactions in repeat. Error: "${err.message}"` })
+        }
+    }
 
-            financialTransactions.map(async transaction => {
-                const isSuccess = await this.duplicate({
-                    ...transaction,
-                    bankAccountId: transaction['bank_account_id'],
-                    dateTimeCompetence: transaction['date_time_competence'],
-                    expiresIn: transaction['expires_in'],
-                    isObservable: transaction['is_observable'],
-                    isSendNotification: transaction['is_send_notification']
-                })
+    private async queryTransactionToRepeat() {
+        const financialTransactionsToRepeat = await this.repository.findAllToRepeat()
+
+        if (!financialTransactionsToRepeat.isSuccess()) {
+            if (financialTransactionsToRepeat.isErrorInOperation()) {
+                throw new BadRequestException({ title: 'Find All Financial Transaction to Repeat', message: `Unable to find financial transactions. Error: "${financialTransactionsToRepeat.getError()}"` })
+            }
+
+            return []
+        }
+
+        return financialTransactionsToRepeat.getValue()
+    }
+
+    private async duplicateTransactions(transactions: FinancialTransactionModel.FinancialTransaction[]) {
+        transactions.map(async transaction => {
+            const transactionDB = this.repository.transaction()
+
+            try {
+                await transactionDB.begin()
+
+                if (!this.validDuplicate(transaction)) {
+                    return
+                }
+
+                const isSuccess = await this.duplicateTransaction(transaction)
 
                 if (!isSuccess) {
                     return
@@ -43,32 +76,40 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
                     },
                     where: { id: transaction.id }
                 })
-            })
 
-            await transaction.commit()
+                await transactionDB.commit()
+            } catch (err: any) {
+                await transactionDB.rollback()
 
-            return Result.success({ message: 'Create transactions in repeat successfully' })
-        } catch (err: any) {
-            await transaction.rollback()
-
-            return Result.failure({ title: 'Create Transactions in Repeat', message: `Cannot create transactions in repeat. Error: "${err.message}"` })
-        }
+                return Result.failure({ title: 'Create Transactions in Repeat', message: `Cannot create transactions in repeat. Error: "${err.message}"` })
+            }
+        })
     }
 
-    private async duplicate({ bankAccountId, dateTimeCompetence, description, expiresIn, isObservable, isSendNotification, priority, receiver, sender, title, type, value }: FinancialTransactionModel.FinancialTransaction) {
+    private validDuplicate(transaction: FinancialTransactionModel.FinancialTransaction) {
+        const now = this.dateService.now()
+        const nextDate = this.calcDateRepeatControl.calcNextDate(transaction.createdAt, transaction.frequency, transaction.countRepeatedOccurrences)
+
+        now.setHours(0, 0, 0, 0)
+        nextDate.setHours(0, 0, 0, 0)
+
+        return nextDate <= now
+    }
+
+    private async duplicateTransaction(transaction: IFinancialTransactionDuplicateArgs) {
         const result = await this.createUC.perform({
-            bankAccountId: bankAccountId,
-            dateTimeCompetence: dateTimeCompetence,
-            description: description,
-            expiresIn: expiresIn,
-            isObservable: isObservable,
-            isSendNotification: isSendNotification,
-            priority: priority,
-            receiver: receiver,
-            sender: sender,
-            title: title,
-            type: type,
-            value: value,
+            bankAccountId: transaction.bankAccountId,
+            dateTimeCompetence: transaction.dateTimeCompetence,
+            description: transaction.description,
+            expiresIn: transaction.expiresIn,
+            isObservable: transaction.isObservable,
+            isSendNotification: transaction.isSendNotification,
+            priority: transaction.priority,
+            receiver: transaction.receiver,
+            sender: transaction.sender,
+            title: transaction.title,
+            type: transaction.type,
+            value: transaction.value,
             typeOccurrence: FinancialTransactionModel.TypeOccurrence.SINGLE,
         })
 

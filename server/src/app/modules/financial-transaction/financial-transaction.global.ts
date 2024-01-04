@@ -66,5 +66,14 @@ export const GLOBAL_FINANCIAL_TRANSACTION_DTO = {
 
 export const GLOBAL_FINANCIAL_TRANSACTION_RULES = {
     situationsEnableToPaid: [FinancialTransactionModel.Situation.PENDING, FinancialTransactionModel.Situation.PARTIALLY_PAID, FinancialTransactionModel.Situation.PARTIALLY_RECEIVED, FinancialTransactionModel.Situation.LATE],
-    messageNoSituationEnableToPaid: 'The financial transaction situation does not allow payments to be cleared'
+    messageNoSituationEnableToPaid: 'The financial transaction situation does not allow payments to be cleared',
+    frequencyInDays: {
+        NULL: 0,
+        DAILY: 1,
+        WEEKLY: 7,
+        MONTHLY: 30,
+        QUARTERLY: 90,
+        SEMIANNUALLY: 180,
+        ANNUALLY: 365,
+    }
 }

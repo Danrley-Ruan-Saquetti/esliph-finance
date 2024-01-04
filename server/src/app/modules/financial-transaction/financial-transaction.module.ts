@@ -4,10 +4,11 @@ import { FinancialTransactionRepository } from '@modules/financial-transaction/f
 import { FinancialTransactionUseCaseModule } from '@modules/financial-transaction/use-case/use-case.module'
 import { FinancialIncomeModule } from '@modules/financial-transaction/income/income.module'
 import { FinancialExpenseModule } from '@modules/financial-transaction/expense/expense.module'
+import { CalcDateRepeatControl } from '@modules/financial-transaction/control/calc-date-repeat.control'
 
 @Module({
     imports: [FinancialTransactionUseCaseModule, FinancialIncomeModule, FinancialExpenseModule],
     controllers: [FinancialTransactionController],
-    providers: [FinancialTransactionRepository],
+    providers: [FinancialTransactionRepository, CalcDateRepeatControl],
 })
 export class FinancialTransactionModule { }
