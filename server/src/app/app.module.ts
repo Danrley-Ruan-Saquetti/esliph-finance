@@ -5,8 +5,9 @@ import { AuthModule } from '@modules/auth/auth.module'
 import { CategoryModule } from '@modules/category/category.module'
 import { PaymentModule } from '@modules//payment/payment.module'
 import { FinancialTransactionModule } from '@modules/financial-transaction/financial-transaction.module'
+import { NoteModule } from '@modules/note/note.module'
 
 @Module({
-    imports: [UserModule, AuthModule, BankAccountModule, CategoryModule, FinancialTransactionModule, PaymentModule],
+    imports: [UserModule, AuthModule, BankAccountModule, CategoryModule, FinancialTransactionModule, PaymentModule, NoteModule],
 })
 export class AppModule { }

@@ -8,6 +8,7 @@ import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { GLOBAL_FINANCIAL_TRANSACTION_DTO } from '@modules/financial-transaction/financial-transaction.global'
+import { GLOBAL_NOTE_DTO } from '../../note/note.global'
 
 const schemaDTO = ValidatorService.schema.object({
     bankAccountId: GLOBAL_FINANCIAL_TRANSACTION_DTO.bankAccount.id,
@@ -94,6 +95,7 @@ const schemaDTO = ValidatorService.schema.object({
                     .schema
                     .string()
                     .trim()
+                    .max(GLOBAL_NOTE_DTO.description.maxCharacters, { message: GLOBAL_NOTE_DTO.description.messageRangeCharacters })
                     .optional()
             }))
         .optional()

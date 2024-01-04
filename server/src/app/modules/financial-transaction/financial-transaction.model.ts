@@ -1,6 +1,7 @@
 import * as Database from '@services/database.service'
 import { DocumentSimple } from '@@types'
 import { PaymentModel } from '@modules/payment/payment.model'
+import { NoteModel } from '@modules/note/note.model'
 
 export namespace FinancialTransactionModel {
     export const {
@@ -18,5 +19,12 @@ export namespace FinancialTransactionModel {
     export type Model = DocumentSimple<FinancialTransaction>
     export type FinancialTransactionWithPayments = FinancialTransaction & {
         payments: PaymentModel.Payment[]
+    }
+    export type FinancialTransactionWithNotes = FinancialTransaction & {
+        notes: NoteModel.Note[]
+    }
+    export type FinancialTransactionWithPaymentsAndNotes = FinancialTransaction & {
+        payments: PaymentModel.Payment[]
+        notes: NoteModel.Note[]
     }
 }

@@ -21,26 +21,6 @@ export class FinancialTransactionQueryUseCase extends UseCase {
         super()
     }
 
-    async queryMany(query: FinancialTransactionWhereArgs) {
-        const { limite, pageIndex } = this.validateDTO(query, schemaQuery)
-
-        const financialTransactionsResult = await this.repository.findMany({
-            where: {},
-            page: { limite, pageIndex },
-            select: {}
-        })
-
-        if (!financialTransactionsResult.isSuccess()) {
-            if (financialTransactionsResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Financial Income', message: 'Unable to query financial transaction' })
-            }
-
-            return Result.failure({ title: 'Query Financial Income', message: 'Bank account not found' })
-        }
-
-        return Result.success(financialTransactionsResult.getValue())
-    }
-
     async queryManyByBankAccountId(args: { bankAccountId: ID }) {
         const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
 

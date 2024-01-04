@@ -79,6 +79,36 @@ export class FinancialTransactionRepository extends Repository {
         }
     }
 
+    async findByIdWithNotes(id: ID) {
+        try {
+            const financialTransaction = await this.database.instance.financialTransaction.findFirst({ where: { id }, include: { notes: { orderBy: { createdAt: 'desc' } } } })
+
+            return this.handleResponse<FinancialTransactionModel.FinancialTransactionWithNotes>(financialTransaction, {
+                noAcceptNullable: true,
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<FinancialTransactionModel.FinancialTransactionWithNotes>(err, {
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        }
+    }
+
+    async findByIdWithPaymentsAndNotes(id: ID) {
+        try {
+            const financialTransaction = await this.database.instance.financialTransaction.findFirst({ where: { id }, include: { payments: { orderBy: { paidAt: 'desc' } }, notes: { orderBy: { createdAt: 'desc' } } } })
+
+            return this.handleResponse<FinancialTransactionModel.FinancialTransactionWithPaymentsAndNotes>(financialTransaction, {
+                noAcceptNullable: true,
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<FinancialTransactionModel.FinancialTransactionWithPaymentsAndNotes>(err, {
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        }
+    }
+
     async findManyByBankAccountId(bankAccountId: ID) {
         try {
             const financialTransactions = await this.database.instance.financialTransaction.findMany({
