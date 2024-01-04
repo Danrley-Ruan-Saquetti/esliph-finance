@@ -4,12 +4,14 @@ import { Get } from '@esliph/adapter-fastify'
 import { Controller, Guard } from '@esliph/module'
 import { PaymentQueryCompensationUseCase } from '@modules/payment/use-case/query-compensation.use-case'
 import { FinancialTransactionQueryUseCase } from '@modules/financial-transaction/use-case/query.use-case'
+import { NoteQueryUseCase } from '@modules/note/use-case/query.use-case'
 
 @Controller({ prefix: '/financial-transactions' })
 export class FinancialTransactionController {
     constructor(
         @Injection.Inject('financial-transaction.use-case.query') private queryUC: FinancialTransactionQueryUseCase,
         @Injection.Inject('payment.use-case.query-compensation') private queryCompensationUC: PaymentQueryCompensationUseCase,
+        @Injection.Inject('note.use-case.query') private queryNotesUC: NoteQueryUseCase,
     ) { }
 
     @Guard({ name: 'bank-account.authorization' })
@@ -28,6 +30,16 @@ export class FinancialTransactionController {
         const financialTransactionId = req.params['id']
 
         const result = await this.queryCompensationUC.perform({ financialTransactionId })
+
+        return result
+    }
+
+    @Guard({ name: 'bank-account.authorization' })
+    @Get('/:id/notes')
+    async getNotes(req: Request) {
+        const financialTransactionId = req.params['id']
+
+        const result = await this.queryNotesUC.queryManyByUFinancialTransactionId({ financialTransactionId })
 
         return result
     }

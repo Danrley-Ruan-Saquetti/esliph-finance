@@ -39,7 +39,7 @@
     "devDependencies": {
         "@types/bcrypt": "^5.0.2",
         "@types/jsonwebtoken": "^9.0.5",
-        "@types/luxon": "^3.3.7",
+        "@types/luxon": "^3.3.8",
         "@types/node": "^20.10.6",
         "@types/nodemailer": "^6.4.14",
         "prisma": "^5.7.1",
@@ -47,7 +47,7 @@
         "tslib": "^2.6.2",
         "tsx": "^4.7.0",
         "typescript": "^5.3.3",
-        "vitest": "^1.1.1"
+        "vitest": "^1.1.2"
     },
     "prisma": {
         "schema": "database/schema.prisma"

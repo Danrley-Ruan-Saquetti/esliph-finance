@@ -7,8 +7,6 @@ import { ValidatorService } from '@services/validator.service'
 import { NoteModel } from '@modules/note/note.model'
 import { NoteRepository } from '@modules/note/note.repository'
 
-const schemaNumber = ValidatorService.schema.coerce.number()
-
 @Service({ name: 'note.use-case.query' })
 export class NoteQueryUseCase extends UseCase {
     constructor(
@@ -16,23 +14,31 @@ export class NoteQueryUseCase extends UseCase {
     ) { super() }
 
     async queryById(args: { id: ID }) {
-        const id = this.validateDTO(args.id, schemaNumber)
+        const id = Number(args.id)
 
-        const bankAccountResult = await this.repository.findById(id)
+        if (!id) {
+            return Result.failure<NoteModel.Note[]>({ title: 'Query Notes', message: 'ID Note not defined' })
+        }
 
-        if (!bankAccountResult.isSuccess()) {
-            if (bankAccountResult.isErrorInOperation()) {
+        const noteResult = await this.repository.findById(id)
+
+        if (!noteResult.isSuccess()) {
+            if (noteResult.isErrorInOperation()) {
                 return Result.failure<NoteModel.Note>({ title: 'Query Note', message: 'Unable to query note' })
             }
 
             return Result.failure<NoteModel.Note>({ title: 'Query Note', message: 'note not found' })
         }
 
-        return Result.success<NoteModel.Note>(bankAccountResult.getValue())
+        return Result.success<NoteModel.Note>(noteResult.getValue())
     }
 
     async queryManyByUFinancialTransactionId(args: { financialTransactionId: ID }) {
-        const financialTransactionId = this.validateDTO(args.financialTransactionId, schemaNumber)
+        const financialTransactionId = Number(args.financialTransactionId)
+
+        if (!financialTransactionId) {
+            return Result.failure<NoteModel.Note[]>({ title: 'Query Notes', message: 'ID Financial Transaction not defined' })
+        }
 
         const notesResult = await this.repository.findManyByFinancialTransactionId(financialTransactionId)
 

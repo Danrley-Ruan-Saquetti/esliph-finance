@@ -8,5 +8,6 @@ Bootstrap(
     MainModule,
     {
         logger: new Logger(),
+        log: { load: false }
     }, [new HttpService()]
 )
