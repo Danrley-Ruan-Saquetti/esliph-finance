@@ -1,10 +1,11 @@
-import Fastify from 'fastify'
+import Fastify, { FastifyRequest } from 'fastify'
 import { ApplicationModule, Service } from '@esliph/module'
 import { EventsRouter, Server } from '@esliph/http'
 import { FastifyAdapter } from '@esliph/adapter-fastify'
 import { GLOBAL_LOG_CONFIG } from '@global'
 import { getEnv } from '@util'
 import { WriteStreamOutput } from '@services/write-stream-output.service'
+import { Result } from '@esliph/common'
 
 export * from '@esliph/adapter-fastify'
 
@@ -15,6 +16,14 @@ export class HttpService extends FastifyAdapter {
 
     static onLoad() {
         HttpService.loadInstance(Fastify())
+
+        HttpService.instance.decorate('notFound', (request: FastifyRequest, reply) => {
+            const result = Result.failure({ title: 'Router Not Found', message: `Router ${request.method} "${request.url}" not found` }, 404)
+
+            reply.status(result.getStatus()).send(result.getResponse())
+        })
+
+        HttpService.instance.setNotFoundHandler(HttpService.instance['notFound'])
     }
 
     static onStart() {
