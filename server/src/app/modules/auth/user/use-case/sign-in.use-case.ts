@@ -8,7 +8,7 @@ import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
-import { GLOBAL_AUTH_USER_DTO } from '@modules/auth/auth.global'
+import { GLOBAL_AUTH_USER_DTO } from '@modules/auth/user/auth-user.global'
 import { UserRepository } from '@modules/user/user.repository'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 
