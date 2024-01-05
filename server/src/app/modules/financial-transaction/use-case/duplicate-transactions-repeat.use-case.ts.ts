@@ -44,7 +44,7 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
 
         if (!financialTransactionsToRepeat.isSuccess()) {
             if (financialTransactionsToRepeat.isErrorInOperation()) {
-                throw new BadRequestException({ title: 'Find All Financial Transaction to Repeat', message: `Unable to find financial transactions. Error: "${financialTransactionsToRepeat.getError()}"` })
+                throw new BadRequestException({ title: 'Find All Financial Transaction to Repeat', message: `Unable to find financial transactions. Error: "${financialTransactionsToRepeat.getError().message}"` })
             }
 
             return []

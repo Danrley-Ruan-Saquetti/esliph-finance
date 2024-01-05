@@ -31,7 +31,20 @@ export class NoteRepository extends Repository {
         }
     }
 
-    async updateById(args: NoteModel.Model, where: { id: number }) {
+    async removeById(id: ID) {
+        try {
+            await this.database.instance.note.delete({ where: { id } })
+
+            return this.handleResponse<{ message: string }>(
+                { message: 'Note successfully deleted' },
+                { error: { title: 'Delete Note', message: 'Note successfully deleted' } },
+            )
+        } catch (err: any) {
+            return this.handleError<{ message: string }>(err, { error: { title: 'Delete Note', message: 'Unable to delete note' } })
+        }
+    }
+
+    async updateById(args: { description: string }, where: { id: ID }) {
         try {
             await this.database.instance.note.update({ where: { id: where.id }, data: args })
 

@@ -1,6 +1,7 @@
 import { GLOBAL_DTO } from '@global'
 
 export const GLOBAL_NOTE_DTO = {
+    id: GLOBAL_DTO.id.schema({ name: 'Note' }),
     financialTransaction: {
         id: GLOBAL_DTO.id.schema({ name: 'Financial Transaction' }),
     },
