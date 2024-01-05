@@ -25,6 +25,16 @@ export class FinancialTransactionController {
     }
 
     @Guard({ name: 'bank-account.authorization' })
+    @Get('/:id')
+    async getOne(req: Request) {
+        const id = req.params['id']
+
+        const result = await this.queryUC.queryByIdWithNotesAndPayments({ id })
+
+        return result
+    }
+
+    @Guard({ name: 'bank-account.authorization' })
     @Get('/:id/compensation')
     async getCompensation(req: Request) {
         const financialTransactionId = req.params['id']

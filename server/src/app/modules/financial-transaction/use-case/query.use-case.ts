@@ -21,6 +21,38 @@ export class FinancialTransactionQueryUseCase extends UseCase {
         super()
     }
 
+    async queryByIdWithNotes(args: { id: ID }) {
+        const id = this.validateDTO(args.id, schemaNumber)
+
+        const financialTransactionsResult = await this.repository.findByIdWithNotes(id)
+
+        if (!financialTransactionsResult.isSuccess()) {
+            if (financialTransactionsResult.isErrorInOperation()) {
+                return Result.failure({ title: 'Query Financial Transaction', message: 'Unable to query financial transaction' })
+            }
+
+            return Result.failure({ title: 'Query Financial Transaction', message: 'Bank account not found' })
+        }
+
+        return Result.success(financialTransactionsResult.getValue())
+    }
+
+    async queryByIdWithNotesAndPayments(args: { id: ID }) {
+        const id = this.validateDTO(args.id, schemaNumber)
+
+        const financialTransactionsResult = await this.repository.findByIdWithPaymentsAndNotes(id)
+
+        if (!financialTransactionsResult.isSuccess()) {
+            if (financialTransactionsResult.isErrorInOperation()) {
+                return Result.failure({ title: 'Query Financial Transaction', message: 'Unable to query financial transaction' })
+            }
+
+            return Result.failure({ title: 'Query Financial Transaction', message: 'Bank account not found' })
+        }
+
+        return Result.success(financialTransactionsResult.getValue())
+    }
+
     async queryManyByBankAccountId(args: { bankAccountId: ID }) {
         const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
 
@@ -28,10 +60,10 @@ export class FinancialTransactionQueryUseCase extends UseCase {
 
         if (!financialTransactionsResult.isSuccess()) {
             if (financialTransactionsResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Financial Income', message: 'Unable to query financial transaction' })
+                return Result.failure({ title: 'Query Financial Transaction', message: 'Unable to query financial transaction' })
             }
 
-            return Result.failure({ title: 'Query Financial Income', message: 'Bank account not found' })
+            return Result.failure({ title: 'Query Financial Transaction', message: 'Bank account not found' })
         }
 
         return Result.success(financialTransactionsResult.getValue())
