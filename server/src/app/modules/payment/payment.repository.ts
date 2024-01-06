@@ -45,6 +45,21 @@ export class PaymentRepository extends Repository {
         }
     }
 
+    async findByIdAndBankAccountId(id: ID, bankAccountId: ID) {
+        try {
+            const payment = await this.database.instance.payment.findFirst({ where: { id, financialTransaction: { bankAccountId } } })
+
+            return this.handleResponse<PaymentModel.Payment>(payment, {
+                noAcceptNullable: true,
+                error: { title: 'Find Payment', message: 'Payment not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<PaymentModel.Payment>(err, {
+                error: { title: 'Find Payment', message: 'Payment not found' },
+            })
+        }
+    }
+
     async findByIdAndBankAccountIdAndFinancialTransactionId(id: ID, bankAccountId: ID, financialTransactionId: ID) {
         try {
             const payment = await this.database.instance.payment.findFirst({ where: { id, financialTransactionId, financialTransaction: { bankAccountId } } })

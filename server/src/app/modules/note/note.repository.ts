@@ -70,6 +70,36 @@ export class NoteRepository extends Repository {
         }
     }
 
+    async findByIdAndFinancialTransactionId(id: ID, financialTransactionId: ID) {
+        try {
+            const note = await this.database.instance.note.findFirst({ where: { id, financialTransactionId } })
+
+            return this.handleResponse<NoteModel.Note>(note, {
+                noAcceptNullable: true,
+                error: { title: 'Find Note', message: 'Note not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<NoteModel.Note>(err, {
+                error: { title: 'Find Note', message: 'Note not found' },
+            })
+        }
+    }
+
+    async findByIdAndBankAccountId(id: ID, bankAccountId: ID) {
+        try {
+            const note = await this.database.instance.note.findFirst({ where: { id, financialTransaction: { bankAccountId } } })
+
+            return this.handleResponse<NoteModel.Note>(note, {
+                noAcceptNullable: true,
+                error: { title: 'Find Note', message: 'Note not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<NoteModel.Note>(err, {
+                error: { title: 'Find Note', message: 'Note not found' },
+            })
+        }
+    }
+
     async findManyByFinancialTransactionId(financialTransactionId: ID) {
         try {
             const users = await this.database.instance.note.findMany({ where: { financialTransactionId }, orderBy: { createdAt: 'desc' } })
