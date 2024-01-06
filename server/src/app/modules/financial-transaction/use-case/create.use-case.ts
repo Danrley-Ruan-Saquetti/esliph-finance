@@ -49,20 +49,20 @@ const schemaDTO = ValidatorService.schema.object({
     type: ValidatorService
         .schema
         .enum(
-            [FinancialTransactionModel.Type.EXPENSE, FinancialTransactionModel.Type.INCOME],
+            GLOBAL_FINANCIAL_TRANSACTION_DTO.type.enum,
             { errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.type.messageEnumInvalid }) }
         )
         .transform(val => val.toUpperCase()),
     typeOccurrence: ValidatorService
         .schema
         .enum(
-            [FinancialTransactionModel.TypeOccurrence.SINGLE, FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC],
+            GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum,
             { errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.messageEnumInvalid }) }
         ),
     frequency: ValidatorService
         .schema
         .enum(
-            Object.keys(FinancialTransactionModel.Frequency) as any,
+            GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.enum,
             { errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.messageEnumInvalid }) }
         ).default(FinancialTransactionModel.Frequency.NULL),
     receiver: ValidatorService
@@ -130,7 +130,7 @@ export class FinancialTransactionCreateUseCase extends UseCase {
     }
 
     private processingData(data: SchemaValidator.output<typeof schemaDTO>): { financialTransaction: FinancialTransactionModel.Model, notes: { description: string }[] } {
-        const isAlreadyLate = new Date(Date.now()) < data.expiresIn
+        const isAlreadyLate = this.dateService.now() < data.expiresIn
         const isProgrammatic = data.typeOccurrence === FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC
 
         return {

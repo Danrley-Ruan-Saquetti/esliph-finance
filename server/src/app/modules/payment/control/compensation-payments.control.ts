@@ -65,10 +65,10 @@ export class CompensationPaymentsControl {
     }
 
     validCompensation({ discount, increase, value }: { value: number, discount: number, increase: number }) {
-        if (!GLOBAL_FINANCIAL_TRANSACTION_RULES.situationsEnableToPaid.find(situation => situation == this.financialTransaction.situation)) {
+        if (!GLOBAL_FINANCIAL_TRANSACTION_RULES.paid.situationsEnableToPaid.enum.find(situation => situation == this.financialTransaction.situation)) {
             return Result.failure<{ paidInFull: boolean }>({
                 title: 'Valid Compensation',
-                message: GLOBAL_FINANCIAL_TRANSACTION_RULES.messageNoSituationEnableToPaid
+                message: GLOBAL_FINANCIAL_TRANSACTION_RULES.paid.situationsEnableToPaid.messageNoSituationEnableToPaid
             })
         }
 
