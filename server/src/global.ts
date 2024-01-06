@@ -69,8 +69,9 @@ export const GLOBAL_DTO = {
         },
     },
     color: {
-        regex: /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/,
+        regex: /^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/,
         messageRegex: 'Color hexadecimal is invalid',
+        transform: (color: string) => color.toUpperCase()
     },
     number: {
         messageInvalidType: (value: string) => `${toCapitalise(value)} must be a number`,

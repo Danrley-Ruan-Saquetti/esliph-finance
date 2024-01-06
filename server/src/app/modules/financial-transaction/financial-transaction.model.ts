@@ -2,6 +2,7 @@ import * as Database from '@services/database.service'
 import { DocumentSimple } from '@@types'
 import { PaymentModel } from '@modules/payment/payment.model'
 import { NoteModel } from '@modules/note/note.model'
+import { CategoryModel } from '@modules/category/category.model'
 
 export namespace FinancialTransactionModel {
     export const {
@@ -20,11 +21,23 @@ export namespace FinancialTransactionModel {
     export type FinancialTransactionWithPayments = FinancialTransaction & {
         payments: PaymentModel.Payment[]
     }
+    export type FinancialTransactionWithCategories = FinancialTransaction & {
+        categories: CategoryModel.Category[]
+    }
     export type FinancialTransactionWithNotes = FinancialTransaction & {
         notes: NoteModel.Note[]
+    }
+    export type FinancialTransactionWithNotesAndCategories = FinancialTransaction & {
+        notes: NoteModel.Note[]
+        categories: CategoryModel.Category[]
     }
     export type FinancialTransactionWithPaymentsAndNotes = FinancialTransaction & {
         payments: PaymentModel.Payment[]
         notes: NoteModel.Note[]
+    }
+    export type FinancialTransactionWithPaymentsAndNotesAndCategories = FinancialTransaction & {
+        payments: PaymentModel.Payment[]
+        notes: NoteModel.Note[]
+        categories: CategoryModel.Category[]
     }
 }

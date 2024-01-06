@@ -9,18 +9,19 @@ import { CategoryRepository } from '@modules/category/category.repository'
 import { GLOBAL_CATEGORY_DTO } from '@modules/category/category.global'
 
 const schemaDTO = ValidatorService.schema.object({
+    bankAccountId: GLOBAL_CATEGORY_DTO.bankAccount.id,
     name: ValidatorService.schema
         .string({ 'required_error': GLOBAL_CATEGORY_DTO.name.messageRequired })
         .trim()
         .min(GLOBAL_CATEGORY_DTO.name.minCharacters, { message: GLOBAL_CATEGORY_DTO.name.messageRangeCharacters })
         .max(GLOBAL_CATEGORY_DTO.name.maxCharacters, { message: GLOBAL_CATEGORY_DTO.name.messageRangeCharacters })
         .transform(GLOBAL_DTO.text.transform),
-    bankAccountId: GLOBAL_CATEGORY_DTO.bankAccount.id,
     color: ValidatorService.schema
         .string({ 'required_error': GLOBAL_CATEGORY_DTO.color.messageRequired })
         .trim()
         .max(GLOBAL_CATEGORY_DTO.color.maxCharacters, { message: GLOBAL_CATEGORY_DTO.color.messageRangeCharacters })
-        .regex(GLOBAL_DTO.color.regex, { message: GLOBAL_DTO.color.messageRegex }),
+        .regex(GLOBAL_DTO.color.regex, { message: GLOBAL_DTO.color.messageRegex })
+        .transform(GLOBAL_DTO.color.transform),
     isFavorite: ValidatorService.schema.boolean().default(GLOBAL_CATEGORY_DTO.isFavorite.default),
 })
 

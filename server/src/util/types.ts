@@ -6,6 +6,22 @@ export function isObjectLiteral(obj: any) {
     return obj !== null && typeof obj === 'object' && obj.constructor === Object
 }
 
+export function isCodeHexadecimal(color: string) {
+    if (isFalsy(color)) {
+        return false
+    }
+
+    const colorCode = color.substring(0, 1) === '#' ? color.substring(1) : color
+
+    switch (colorCode.length) {
+        case 3: return /^[0-9A-F]{3}$/i.test(colorCode)
+        case 6: return /^[0-9A-F]{6}$/i.test(colorCode)
+        case 8: return /^[0-9A-F]{8}$/i.test(colorCode)
+    }
+
+    return false
+}
+
 export function isTruthy(value?: any) {
     return !isFalsy(value)
 }

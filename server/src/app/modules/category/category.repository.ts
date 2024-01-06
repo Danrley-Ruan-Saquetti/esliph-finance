@@ -18,7 +18,7 @@ export class CategoryRepository extends Repository {
         }
     }
 
-    async updateById(args: CategoryModel.Model, where: { id: number }) {
+    async updateById(args: CategoryModel.UpdateArgs, where: { id: number }) {
         try {
             await this.database.instance.category.update({ where: { id: where.id }, data: args })
 
@@ -28,6 +28,19 @@ export class CategoryRepository extends Repository {
             )
         } catch (err: any) {
             return this.handleError<{ message: string }>(err, { error: { title: 'Update Category', message: 'Unable to update category' } })
+        }
+    }
+
+    async removeById(where: { id: number }) {
+        try {
+            await this.database.instance.category.delete({ where: { id: where.id } })
+
+            return this.handleResponse<{ message: string }>(
+                { message: 'Category removed updated' },
+                { error: { title: 'Remove Category', message: 'Category successfully removed' } },
+            )
+        } catch (err: any) {
+            return this.handleError<{ message: string }>(err, { error: { title: 'Remove Category', message: 'Unable to remove category' } })
         }
     }
 

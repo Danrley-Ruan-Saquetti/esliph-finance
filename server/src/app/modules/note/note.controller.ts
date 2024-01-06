@@ -57,7 +57,7 @@ export class NoteController {
     }
 
     @Guard({ name: 'bank-account.authorization' })
-    @Delete('/remove/:id')
+    @Delete('/:id/remove')
     async remove(req: Request) {
         const id = req.params['id']
 
