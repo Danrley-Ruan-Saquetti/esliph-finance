@@ -2,6 +2,7 @@ import { GLOBAL_DTO } from '@global'
 import { GenerateCodeOptions } from '@services/code-generator.service'
 
 export const GLOBAL_USER_DTO = {
+    id: GLOBAL_DTO.id.schema({ name: 'User' }),
     name: {
         minCharacters: 3,
         maxCharacters: 45,

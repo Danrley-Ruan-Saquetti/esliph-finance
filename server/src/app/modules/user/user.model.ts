@@ -5,6 +5,7 @@ export namespace UserModel {
     export type User = Database.User
     export type Model = DocumentSimple<User>
     export type UserWithoutPassword = Omit<User, 'password'>
+    export type UpdateArgs = Partial<Pick<Model, 'name' | 'email'>>
     export const UserWithoutPasswordSelect: { [x in keyof UserWithoutPassword]: true } = {
         code: true,
         createdAt: true,

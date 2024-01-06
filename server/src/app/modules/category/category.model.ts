@@ -1,5 +1,5 @@
 import * as Database from '@services/database.service'
-import { DocumentSimple } from '@@types/index'
+import { DocumentSimple } from '@@types'
 
 export namespace CategoryModel {
     export type Category = Database.Category

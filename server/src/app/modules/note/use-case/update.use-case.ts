@@ -7,7 +7,6 @@ import { BadRequestException } from '@common/exceptions'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { NoteRepository } from '@modules/note/note.repository'
 import { GLOBAL_NOTE_DTO } from '@modules/note/note.global'
-import { NoteModel } from '../note.model'
 
 const schemaDTO = ValidatorService.schema.object({
     id: GLOBAL_NOTE_DTO.financialTransaction.id,

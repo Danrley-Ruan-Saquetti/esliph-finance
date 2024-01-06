@@ -1,7 +1,7 @@
 import { Injection } from '@esliph/injection'
 import { ValidatorService } from '@services/validator.service'
 import { getEnv, toCapitalise } from '@util'
-import { DateService } from './services/date.service'
+import { DateService } from '@services/date.service'
 
 export const GLOBAL_APP = {
     name: getEnv<string>({ name: 'APP_NAME' }),

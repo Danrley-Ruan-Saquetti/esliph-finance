@@ -4,7 +4,7 @@ import { ErrorResultInfo } from '@esliph/common'
 import { DatabaseService, Prisma } from '@services/database.service'
 import { isNull } from '@util'
 import { ResultDatabase } from '@common/result.database'
-import { CodeGeneratorService } from './code-generator.service'
+import { CodeGeneratorService } from '@services/code-generator.service'
 
 export type RepositoryHandleResponseOptions = { noAcceptNullable?: boolean, error: ErrorResultInfo }
 export type RepositoryHandleErrorOptions = { error: ErrorResultInfo }

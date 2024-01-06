@@ -18,7 +18,7 @@ export class UserRepository extends Repository {
         }
     }
 
-    async updateById(args: UserModel.Model, where: { id: number }) {
+    async updateById(args: UserModel.UpdateArgs, where: { id: number }) {
         try {
             await this.database.instance.user.update({ where: { id: where.id }, data: args })
 
@@ -54,6 +54,16 @@ export class UserRepository extends Repository {
     async findByEmail(email: string) {
         try {
             const user = await this.database.instance.user.findFirst({ where: { email } })
+
+            return this.handleResponse<UserModel.User>(user, { noAcceptNullable: true, error: { title: 'Find User', message: 'User not found' } })
+        } catch (err: any) {
+            return this.handleError<UserModel.User>(err, { error: { title: 'Find User', message: 'User not found' } })
+        }
+    }
+
+    async findByEmailOrCode(emailOrCode: string) {
+        try {
+            const user = await this.database.instance.user.findFirst({ where: { OR: [{ code: emailOrCode }, { email: emailOrCode }] } })
 
             return this.handleResponse<UserModel.User>(user, { noAcceptNullable: true, error: { title: 'Find User', message: 'User not found' } })
         } catch (err: any) {

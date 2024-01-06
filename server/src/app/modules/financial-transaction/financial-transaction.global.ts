@@ -1,5 +1,5 @@
 import { GLOBAL_DTO } from '@global'
-import { FinancialTransactionModel } from './financial-transaction.model'
+import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 
 export const GLOBAL_FINANCIAL_TRANSACTION_DTO = {
     bankAccount: {
