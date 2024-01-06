@@ -6,10 +6,12 @@ import { PaymentQueryCompensationUseCase } from '@modules/payment/use-case/query
 import { FinancialTransactionQueryUseCase } from '@modules/financial-transaction/use-case/query.use-case'
 import { NoteQueryUseCase } from '@modules/note/use-case/query.use-case'
 import { FinancialTransactionUpdateUseCase } from '@modules/financial-transaction/use-case/update.use-case'
+import { BankAccountBelongControl } from '@modules/bank-account/control/belong.control'
 
 @Controller({ prefix: '/financial-transactions' })
 export class FinancialTransactionController {
     constructor(
+        @Injection.Inject('bank-account.control.belong') private bankAccountBelongControl: BankAccountBelongControl,
         @Injection.Inject('financial-transaction.use-case.query') private queryUC: FinancialTransactionQueryUseCase,
         @Injection.Inject('financial-transaction.use-case.update') private updateUC: FinancialTransactionUpdateUseCase,
         @Injection.Inject('payment.use-case.query-compensation') private queryCompensationUC: PaymentQueryCompensationUseCase,
@@ -31,6 +33,8 @@ export class FinancialTransactionController {
     async getOne(req: Request) {
         const id = req.params['id']
 
+        await this.bankAccountBelongControl.verifyFinancialTransaction({ financialTransactionId: id, bankAccountId: req.headers['bankAccountId'] })
+
         const result = await this.queryUC.queryByIdWithNotesAndPayments({ id })
 
         return result
@@ -40,6 +44,8 @@ export class FinancialTransactionController {
     @Get('/:id/compensation')
     async getCompensation(req: Request) {
         const financialTransactionId = req.params['id']
+
+        await this.bankAccountBelongControl.verifyFinancialTransaction({ financialTransactionId, bankAccountId: req.headers['bankAccountId'] })
 
         const result = await this.queryCompensationUC.perform({ financialTransactionId })
 
@@ -51,6 +57,8 @@ export class FinancialTransactionController {
     async getNotes(req: Request) {
         const financialTransactionId = req.params['id']
 
+        await this.bankAccountBelongControl.verifyFinancialTransaction({ financialTransactionId, bankAccountId: req.headers['bankAccountId'] })
+
         const result = await this.queryNotesUC.queryManyByUFinancialTransactionId({ financialTransactionId })
 
         return result
@@ -60,6 +68,8 @@ export class FinancialTransactionController {
     @Put('/:id/update')
     async update(req: Request) {
         const id = req.params['id']
+
+        await this.bankAccountBelongControl.verifyFinancialTransaction({ financialTransactionId: id, bankAccountId: req.headers['bankAccountId'] })
 
         const result = await this.updateUC.perform({ ...req.body, id })
 

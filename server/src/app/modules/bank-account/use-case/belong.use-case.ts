@@ -21,13 +21,13 @@ export class BankAccountBelongUseCase extends UseCase {
     }
 
     async isFinancialTransactionBelongBankAccount({ bankAccountId, financialTransactionId }: { financialTransactionId: ID, bankAccountId: ID }) {
-        const result = await this.financialTransactionRepository.findByIdAndBankAccountId(financialTransactionId, bankAccountId)
+        const result = await this.financialTransactionRepository.findByIdAndBankAccountId(Number(financialTransactionId), Number(bankAccountId))
 
         if (result.isSuccess()) {
             return Result.success({ ok: true })
         }
 
-        if (result.isErrorInOperation()) {
+        if (!result.isErrorInOperation()) {
             return Result.success({ ok: false })
         }
 
@@ -35,13 +35,13 @@ export class BankAccountBelongUseCase extends UseCase {
     }
 
     async isCategoryBelongBankAccount({ bankAccountId, categoryId }: { categoryId: ID, bankAccountId: ID }) {
-        const result = await this.categoryRepository.findByIdAndBankAccountId(categoryId, bankAccountId)
+        const result = await this.categoryRepository.findByIdAndBankAccountId(Number(categoryId), Number(bankAccountId))
 
         if (result.isSuccess()) {
             return Result.success({ ok: true })
         }
 
-        if (result.isErrorInOperation()) {
+        if (!result.isErrorInOperation()) {
             return Result.success({ ok: false })
         }
 
@@ -49,13 +49,13 @@ export class BankAccountBelongUseCase extends UseCase {
     }
 
     async isNoteBelongBankAccount({ bankAccountId, noteId }: { noteId: ID, bankAccountId: ID }) {
-        const result = await this.noteRepository.findByIdAndBankAccountId(noteId, bankAccountId)
+        const result = await this.noteRepository.findByIdAndBankAccountId(Number(noteId), Number(bankAccountId))
 
         if (result.isSuccess()) {
             return Result.success({ ok: true })
         }
 
-        if (result.isErrorInOperation()) {
+        if (!result.isErrorInOperation()) {
             return Result.success({ ok: false })
         }
 
@@ -63,13 +63,13 @@ export class BankAccountBelongUseCase extends UseCase {
     }
 
     async isPaymentBelongBankAccount({ bankAccountId, paymentId }: { paymentId: ID, bankAccountId: ID }) {
-        const result = await this.paymentRepository.findByIdAndBankAccountId(paymentId, bankAccountId)
+        const result = await this.paymentRepository.findByIdAndBankAccountId(Number(paymentId), Number(bankAccountId))
 
         if (result.isSuccess()) {
             return Result.success({ ok: true })
         }
 
-        if (result.isErrorInOperation()) {
+        if (!result.isErrorInOperation()) {
             return Result.success({ ok: false })
         }
 

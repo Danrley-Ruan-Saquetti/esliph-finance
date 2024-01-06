@@ -6,10 +6,12 @@ import { NoteQueryUseCase } from '@modules/note/use-case/query.use-case'
 import { NoteRemoveUseCase } from '@modules/note/use-case/remove.use-case'
 import { NoteUpdateUseCase } from '@modules/note/use-case/update.use-case'
 import { NoteCreateManyUseCase } from '@modules/note/use-case/create.use-case'
+import { BankAccountBelongControl } from '@modules/bank-account/control/belong.control'
 
 @Controller({ prefix: '/notes' })
 export class NoteController {
     constructor(
+        @Injection.Inject('bank-account.control.belong') private bankAccountBelongControl: BankAccountBelongControl,
         @Injection.Inject('note.use-case.create-many') private createManyUC: NoteCreateManyUseCase,
         @Injection.Inject('note.use-case.query') private queryUC: NoteQueryUseCase,
         @Injection.Inject('note.use-case.remove') private removeUC: NoteRemoveUseCase,
@@ -31,6 +33,8 @@ export class NoteController {
     async getOne(req: Request) {
         const id = req.params['id']
 
+        await this.bankAccountBelongControl.verifyNote({ noteId: id, bankAccountId: req.headers['bankAccountId'] })
+
         const result = await this.queryUC.queryById({ id })
 
         return result
@@ -51,6 +55,8 @@ export class NoteController {
     async update(req: Request) {
         const id = req.params['id']
 
+        await this.bankAccountBelongControl.verifyNote({ noteId: id, bankAccountId: req.headers['bankAccountId'] })
+
         const result = await this.updateUC.perform({ ...req.body, id })
 
         return result
@@ -60,6 +66,8 @@ export class NoteController {
     @Delete('/:id/remove')
     async remove(req: Request) {
         const id = req.params['id']
+
+        await this.bankAccountBelongControl.verifyNote({ noteId: id, bankAccountId: req.headers['bankAccountId'] })
 
         const result = await this.removeUC.perform({ id })
 

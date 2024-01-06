@@ -36,9 +36,8 @@ export class FinancialIncomeController {
     @Get('/:id')
     async get(req: Request) {
         const id = req.params['id']
-        const bankAccountId = req.headers['bankAccountId']
 
-        const result = await this.queryUC.queryByIdAndBankAccountId({ id, bankAccountId })
+        const result = await this.queryUC.queryByIdAndBankAccountIdWithPaymentsAndNotes({ id })
 
         return result
     }

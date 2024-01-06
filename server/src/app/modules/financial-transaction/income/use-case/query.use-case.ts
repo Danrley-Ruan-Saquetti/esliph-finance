@@ -9,7 +9,6 @@ import { FinancialIncomeRepository } from '@modules/financial-transaction/income
 const schemaNumber = ValidatorService.schema.coerce.number()
 const schemaIdAndBankAccountId = ValidatorService.schema.object({
     id: schemaNumber,
-    bankAccountId: schemaNumber,
 })
 
 @Service({ name: 'financial-income.use-case.query' })
@@ -18,10 +17,10 @@ export class FinancialIncomeQueryUseCase extends UseCase {
         super()
     }
 
-    async queryByIdAndBankAccountId(args: { id: ID, bankAccountId: ID }) {
-        const { bankAccountId, id } = this.validateDTO(args, schemaIdAndBankAccountId)
+    async queryByIdAndBankAccountIdWithPaymentsAndNotes(args: { id: ID }) {
+        const { id } = this.validateDTO(args, schemaIdAndBankAccountId)
 
-        const bankAccountResult = await this.repository.findByIdAndBankAccountId(id, bankAccountId)
+        const bankAccountResult = await this.repository.findByIdWithPaymentsAndNotes(id)
 
         if (!bankAccountResult.isSuccess()) {
             if (bankAccountResult.isErrorInOperation()) {
