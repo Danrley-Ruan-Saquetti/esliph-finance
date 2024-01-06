@@ -1,6 +1,7 @@
 import { GLOBAL_DTO } from '@global'
 
 export const GLOBAL_CATEGORY_DTO = {
+    id: GLOBAL_DTO.id.schema({ name: 'Category' }),
     name: {
         minCharacters: 3,
         maxCharacters: 45,
