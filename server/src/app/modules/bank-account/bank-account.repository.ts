@@ -44,11 +44,26 @@ export class BankAccountRepository extends Repository {
         }
     }
 
+    async findByIdWithFinancialTransactionsAndPayments(id: ID) {
+        try {
+            const bankAccount = await this.repo.findFirst({ where: { id }, include: { financialTransactions: { include: { payments: true } } } })
+
+            return this.handleResponse<BankAccountModel.BankAccountWithFinancialTransactionsAndPayments>(bankAccount, {
+                noAcceptNullable: true,
+                error: { title: 'Find Bank Account', message: 'Bank account not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<BankAccountModel.BankAccountWithFinancialTransactionsAndPayments>(err, {
+                error: { title: 'Find Bank Account', message: 'Bank account not found' },
+            })
+        }
+    }
+
     async findByIdWithoutPassword(id: ID) {
         try {
             const bankAccount = await this.repo.findFirst({
                 where: { id },
-                select: BankAccountModel.BankAccountWithoutPasswordSelect
+                select: BankAccountModel.BankAccountWithoutPasswordSelect,
             })
 
             return this.handleResponse<BankAccountModel.BankAccountWithoutPassword>(bankAccount, {
@@ -79,7 +94,7 @@ export class BankAccountRepository extends Repository {
         try {
             const bankAccount = await this.repo.findFirst({
                 where: { code },
-                select: BankAccountModel.BankAccountWithoutPasswordSelect
+                select: BankAccountModel.BankAccountWithoutPasswordSelect,
             })
 
             return this.handleResponse<BankAccountModel.BankAccountWithoutPassword>(bankAccount, {
@@ -110,7 +125,7 @@ export class BankAccountRepository extends Repository {
         try {
             const bankAccount = await this.repo.findFirst({
                 where: { code, userId },
-                select: BankAccountModel.BankAccountWithoutPasswordSelect
+                select: BankAccountModel.BankAccountWithoutPasswordSelect,
             })
 
             return this.handleResponse<BankAccountModel.BankAccountWithoutPassword>(bankAccount, {
@@ -128,7 +143,7 @@ export class BankAccountRepository extends Repository {
         try {
             const users = await this.repo.findMany({
                 where: { userId },
-                orderBy: { updatedAt: 'desc' }
+                orderBy: { updatedAt: 'desc' },
             })
 
             return this.handleResponse<BankAccountModel.BankAccount[]>(users, { error: { title: 'Find Bank Account', message: 'Bank account not found' } })
@@ -142,7 +157,7 @@ export class BankAccountRepository extends Repository {
             const bankAccounts = await this.repo.findMany({
                 where: { userId },
                 select: BankAccountModel.BankAccountWithoutPasswordSelect,
-                orderBy: { updatedAt: 'desc' }
+                orderBy: { updatedAt: 'desc' },
             })
 
             return this.handleResponse<BankAccountModel.BankAccountWithoutPassword[]>(bankAccounts, {
@@ -160,7 +175,7 @@ export class BankAccountRepository extends Repository {
             const bankAccounts = await this.repo.findMany({
                 where: { userId },
                 select: BankAccountModel.BankAccountWithoutPasswordSelectAndBalance,
-                orderBy: { updatedAt: 'desc' }
+                orderBy: { updatedAt: 'desc' },
             })
 
             return this.handleResponse<BankAccountModel.BankAccountWithoutPasswordAndBalance[]>(bankAccounts, {

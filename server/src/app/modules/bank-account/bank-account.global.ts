@@ -3,6 +3,7 @@ import { GenerateCodeOptions } from '@services/code-generator.service'
 import { MaskDataOptions } from '@services/mask-data.service'
 
 export const GLOBAL_BANK_ACCOUNT_DTO = {
+    id: GLOBAL_DTO.id.schema({ name: 'Bank Account' }),
     name: {
         minCharacters: 3,
         messageRequired: GLOBAL_DTO.required('Name'),
@@ -28,14 +29,14 @@ export const GLOBAL_BANK_ACCOUNT_DTO = {
         maskData: {
             template: 'XX*-********-*X',
             charactersToReplace: ['*'],
-            valueReplace: '*'
-        } as MaskDataOptions
+            valueReplace: '*',
+        } as MaskDataOptions,
     },
     balance: {
         maskData: {
             template: '******,**',
             charactersToReplace: [],
-            valueReplace: ''
-        } as MaskDataOptions
-    }
+            valueReplace: '',
+        } as MaskDataOptions,
+    },
 }
