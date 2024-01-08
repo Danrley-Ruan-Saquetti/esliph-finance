@@ -29,7 +29,7 @@ export type CategoryCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
 @Service({ name: 'category.use-case.create' })
 export class CategoryCreateUseCase extends UseCase {
-    constructor(@Injection.Inject('category.repository') private repository: CategoryRepository) {
+    constructor(@Injection.Inject('category.repository') private categoryRepository: CategoryRepository) {
         super()
     }
 
@@ -42,7 +42,7 @@ export class CategoryCreateUseCase extends UseCase {
     }
 
     private async registerCategory({ bankAccountId, color, name, isFavorite }: SchemaValidator.output<typeof schemaDTO>) {
-        const registerCategoryResult = await this.repository.register({ bankAccountId, color, name, isFavorite })
+        const registerCategoryResult = await this.categoryRepository.register({ bankAccountId, color, name, isFavorite })
 
         if (registerCategoryResult.isSuccess()) {
             return

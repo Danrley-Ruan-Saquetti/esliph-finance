@@ -8,12 +8,29 @@ import { FinancialTransactionModel } from '@modules/financial-transaction/financ
 import { FinancialTransactionCreateUseCase } from '@modules/financial-transaction/use-case/create.use-case'
 import { CalcDateRepeatControl } from '@modules/financial-transaction/control/calc-date-repeat.control'
 
-type IFinancialTransactionDuplicateArgs = Pick<FinancialTransactionModel.FinancialTransaction, 'id' | 'bankAccountId' | 'dateTimeCompetence' | 'description' | 'expiresIn' | 'isObservable' | 'isSendNotification' | 'priority' | 'receiver' | 'sender' | 'title' | 'type' | 'value' | 'countRepeatedOccurrences' | 'timesToRepeat'>
+type IFinancialTransactionDuplicateArgs = Pick<
+    FinancialTransactionModel.FinancialTransaction,
+    | 'id'
+    | 'bankAccountId'
+    | 'dateTimeCompetence'
+    | 'description'
+    | 'expiresIn'
+    | 'isObservable'
+    | 'isSendNotification'
+    | 'priority'
+    | 'receiver'
+    | 'sender'
+    | 'title'
+    | 'type'
+    | 'value'
+    | 'countRepeatedOccurrences'
+    | 'timesToRepeat'
+>
 
 @Service({ name: 'financial-transaction.use-case.duplicate-transactions-repeat' })
 export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseCase {
     constructor(
-        @Injection.Inject('financial-transaction.repository') private repository: FinancialTransactionRepository,
+        @Injection.Inject('financial-transaction.repository') private transactionRepository: FinancialTransactionRepository,
         @Injection.Inject('financial-transaction.use-case.create') private createUC: FinancialTransactionCreateUseCase,
         @Injection.Inject('calc-date-repeat.control') private calcDateRepeatControl: CalcDateRepeatControl,
     ) {
@@ -40,11 +57,14 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
     }
 
     private async queryTransactionToRepeat() {
-        const financialTransactionsToRepeat = await this.repository.findAllToRepeat()
+        const financialTransactionsToRepeat = await this.transactionRepository.findAllToRepeat()
 
         if (!financialTransactionsToRepeat.isSuccess()) {
             if (financialTransactionsToRepeat.isErrorInOperation()) {
-                throw new BadRequestException({ title: 'Find All Financial Transaction to Repeat', message: `Unable to find financial transactions. Error: "${financialTransactionsToRepeat.getError().message}"` })
+                throw new BadRequestException({
+                    title: 'Find All Financial Transaction to Repeat',
+                    message: `Unable to find financial transactions. Error: "${financialTransactionsToRepeat.getError().message}"`,
+                })
             }
 
             return []
@@ -55,7 +75,7 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
 
     private async duplicateTransactions(transactions: FinancialTransactionModel.FinancialTransaction[]) {
         transactions.map(async transaction => {
-            const transactionDB = this.repository.transaction()
+            const transactionDB = this.database.transaction()
 
             try {
                 await transactionDB.begin()
@@ -70,11 +90,11 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
                     return
                 }
 
-                await this.repository.getDatabase().financialTransaction.update({
+                await this.transactionRepository.getDatabase().financialTransaction.update({
                     data: {
-                        countRepeatedOccurrences: { increment: 1 }
+                        countRepeatedOccurrences: { increment: 1 },
                     },
-                    where: { id: transaction.id }
+                    where: { id: transaction.id },
                 })
 
                 await transactionDB.commit()
@@ -111,7 +131,9 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
             type: transaction.type,
             value: transaction.value,
             typeOccurrence: FinancialTransactionModel.TypeOccurrence.SINGLE,
-            notes: [{ description: `Parent Financial Transaction #${transaction.id} (${transaction.countRepeatedOccurrences + 1}/${transaction.timesToRepeat})` }]
+            notes: [
+                { description: `Parent Financial Transaction #${transaction.id} (${transaction.countRepeatedOccurrences + 1}/${transaction.timesToRepeat})` },
+            ],
         })
 
         return result.isSuccess()

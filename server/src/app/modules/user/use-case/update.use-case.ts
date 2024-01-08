@@ -25,7 +25,7 @@ export type UserUpdateDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
 @Service({ name: 'user.use-case.update' })
 export class UserUpdateUseCase extends UseCase {
-    constructor(@Injection.Inject('user.repository') private repository: UserRepository) {
+    constructor(@Injection.Inject('user.repository') private userRepository: UserRepository) {
         super()
     }
 
@@ -43,7 +43,7 @@ export class UserUpdateUseCase extends UseCase {
     }
 
     private async verifyIsExistsUser(id: ID) {
-        const userResult = await this.repository.findById(id)
+        const userResult = await this.userRepository.findById(id)
 
         if (userResult.isSuccess()) {
             return
@@ -57,7 +57,7 @@ export class UserUpdateUseCase extends UseCase {
     }
 
     private async update({ name }: UserModel.UpdateArgs, id: ID) {
-        const updateResult = await this.repository.updateById({ name }, { id })
+        const updateResult = await this.userRepository.updateById({ name }, { id })
 
         if (updateResult.isSuccess()) {
             return

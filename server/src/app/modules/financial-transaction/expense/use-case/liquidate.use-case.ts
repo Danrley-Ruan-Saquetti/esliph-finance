@@ -16,14 +16,15 @@ export type FinancialExpenseLiquidateDTOArgs = PaymentCreateDTOArgs
 @Service({ name: 'financial-expense.use-case.liquidate' })
 export class FinancialExpenseLiquidateUseCase extends UseCase {
     constructor(
-        @Injection.Inject('financial-transaction.repository') private repository: FinancialTransactionRepository,
-        @Injection.Inject('payment.use-case.create') private createUC: PaymentCreateUseCase) {
+        @Injection.Inject('financial-transaction.repository') private transactionRepository: FinancialTransactionRepository,
+        @Injection.Inject('payment.use-case.create') private createUC: PaymentCreateUseCase,
+    ) {
         super()
     }
 
     async perform(args: PaymentCreateDTOArgs) {
         const financialTransactionId = this.validateDTO(args.financialTransactionId, schemaNumber)
-        const transaction = this.repository.transaction()
+        const transaction = this.database.transaction()
 
         try {
             await transaction.begin()
@@ -58,7 +59,7 @@ export class FinancialExpenseLiquidateUseCase extends UseCase {
     }
 
     async updateSituationFinancialTransaction(financialTransactionId: ID, newSituation: FinancialTransactionModel.Situation) {
-        const resultUpdate = await this.repository.updateById({ situation: newSituation }, { id: financialTransactionId })
+        const resultUpdate = await this.transactionRepository.updateById({ situation: newSituation }, { id: financialTransactionId })
 
         if (resultUpdate.isSuccess()) {
             return

@@ -17,14 +17,14 @@ export type FinancialTransactionWhereArgs = SchemaValidator.input<typeof schemaQ
 
 @Service({ name: 'financial-transaction.use-case.query' })
 export class FinancialTransactionQueryUseCase extends UseCase {
-    constructor(@Injection.Inject('financial-transaction.repository') private repository: FinancialTransactionRepository) {
+    constructor(@Injection.Inject('financial-transaction.repository') private transactionRepository: FinancialTransactionRepository) {
         super()
     }
 
     async queryByIdWithNotes(args: { id: ID }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const financialTransactionsResult = await this.repository.findByIdWithNotes(id)
+        const financialTransactionsResult = await this.transactionRepository.findByIdWithNotes(id)
 
         if (!financialTransactionsResult.isSuccess()) {
             if (financialTransactionsResult.isErrorInOperation()) {
@@ -40,7 +40,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
     async queryByIdWithNotesAndPayments(args: { id: ID }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const financialTransactionsResult = await this.repository.findByIdWithPaymentsAndNotes(id)
+        const financialTransactionsResult = await this.transactionRepository.findByIdWithPaymentsAndNotes(id)
 
         if (!financialTransactionsResult.isSuccess()) {
             if (financialTransactionsResult.isErrorInOperation()) {
@@ -56,7 +56,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
     async queryManyByBankAccountId(args: { bankAccountId: ID }) {
         const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
 
-        const financialTransactionsResult = await this.repository.findManyByBankAccountId(bankAccountId)
+        const financialTransactionsResult = await this.transactionRepository.findManyByBankAccountId(bankAccountId)
 
         if (!financialTransactionsResult.isSuccess()) {
             if (financialTransactionsResult.isErrorInOperation()) {

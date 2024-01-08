@@ -16,7 +16,7 @@ export type NoteRemoveDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
 @Service({ name: 'note.use-case.remove' })
 export class NoteRemoveUseCase extends UseCase {
-    constructor(@Injection.Inject('note.repository') private repository: NoteRepository) {
+    constructor(@Injection.Inject('note.repository') private noteRepository: NoteRepository) {
         super()
     }
 
@@ -29,7 +29,7 @@ export class NoteRemoveUseCase extends UseCase {
     }
 
     private async removeNote(id: ID) {
-        const removeResult = await this.repository.removeById(id)
+        const removeResult = await this.noteRepository.removeById(id)
 
         if (removeResult.isSuccess()) {
             return

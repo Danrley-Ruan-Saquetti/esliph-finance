@@ -18,14 +18,14 @@ const schemaDTO = ValidatorService.schema.object({
         .min(GLOBAL_CATEGORY_DTO.name.minCharacters, { message: GLOBAL_CATEGORY_DTO.name.messageRangeCharacters })
         .max(GLOBAL_CATEGORY_DTO.name.maxCharacters, { message: GLOBAL_CATEGORY_DTO.name.messageRangeCharacters })
         .optional()
-        .transform(name => !name ? undefined : GLOBAL_DTO.text.transform(name)),
+        .transform(name => (!name ? undefined : GLOBAL_DTO.text.transform(name))),
     color: ValidatorService.schema
         .string()
         .trim()
         .max(GLOBAL_CATEGORY_DTO.color.maxCharacters, { message: GLOBAL_CATEGORY_DTO.color.messageRangeCharacters })
         .regex(GLOBAL_DTO.color.regex, { message: GLOBAL_DTO.color.messageRegex })
         .optional()
-        .transform(color => !color ? undefined : GLOBAL_DTO.color.transform(color)),
+        .transform(color => (!color ? undefined : GLOBAL_DTO.color.transform(color))),
     isFavorite: ValidatorService.schema.boolean().optional(),
 })
 
@@ -33,7 +33,7 @@ export type CategoryUpdateDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
 @Service({ name: 'category.use-case.update' })
 export class CategoryUpdateUseCase extends UseCase {
-    constructor(@Injection.Inject('category.repository') private repository: CategoryRepository) {
+    constructor(@Injection.Inject('category.repository') private categoryRepository: CategoryRepository) {
         super()
     }
 
@@ -51,7 +51,7 @@ export class CategoryUpdateUseCase extends UseCase {
     }
 
     private async verifyIsExistsCategory(id: ID) {
-        const categoryResult = await this.repository.findById(id)
+        const categoryResult = await this.categoryRepository.findById(id)
 
         if (categoryResult.isSuccess()) {
             return
@@ -65,7 +65,7 @@ export class CategoryUpdateUseCase extends UseCase {
     }
 
     private async update({ color, isFavorite, name }: CategoryModel.UpdateArgs, id: ID) {
-        const updateResult = await this.repository.updateById({ color, isFavorite, name }, { id })
+        const updateResult = await this.categoryRepository.updateById({ color, isFavorite, name }, { id })
 
         if (updateResult.isSuccess()) {
             return

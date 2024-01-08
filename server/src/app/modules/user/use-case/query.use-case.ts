@@ -9,14 +9,14 @@ const schemaNumber = ValidatorService.schema.coerce.number()
 
 @Service({ name: 'user.use-case.query' })
 export class UserQueryUseCase extends UseCase {
-    constructor(@Injection.Inject('user.repository') private repository: UserRepository) {
+    constructor(@Injection.Inject('user.repository') private userRepository: UserRepository) {
         super()
     }
 
     async queryByIdWithoutPassword(args: { id: SchemaValidator.input<typeof schemaNumber> }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const bankAccountResult = await this.repository.findByIdWithoutPassword(id)
+        const bankAccountResult = await this.userRepository.findByIdWithoutPassword(id)
 
         if (!bankAccountResult.isSuccess()) {
             if (bankAccountResult.isErrorInOperation()) {

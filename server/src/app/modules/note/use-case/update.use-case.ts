@@ -10,17 +10,14 @@ import { GLOBAL_NOTE_DTO } from '@modules/note/note.global'
 
 const schemaDTO = ValidatorService.schema.object({
     id: GLOBAL_NOTE_DTO.financialTransaction.id,
-    description: ValidatorService.schema
-        .string()
-        .trim()
-        .optional()
+    description: ValidatorService.schema.string().trim().optional(),
 })
 
 export type NoteUpdateDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
 @Service({ name: 'note.use-case.update' })
 export class NoteUpdateUseCase extends UseCase {
-    constructor(@Injection.Inject('note.repository') private repository: NoteRepository) {
+    constructor(@Injection.Inject('note.repository') private noteRepository: NoteRepository) {
         super()
     }
 
@@ -38,7 +35,7 @@ export class NoteUpdateUseCase extends UseCase {
     }
 
     private async verifyIsExistsNote(id: ID) {
-        const noteResult = await this.repository.findById(id)
+        const noteResult = await this.noteRepository.findById(id)
 
         if (noteResult.isSuccess()) {
             return
@@ -51,7 +48,7 @@ export class NoteUpdateUseCase extends UseCase {
         throw new BadRequestException({ title: 'Find Note', message: 'Note not found' })
     }
 
-    private async update({ id, description }: { id: ID, description: string }) {
+    private async update({ id, description }: { id: ID; description: string }) {
         const updateResult = await this.repository.updateById({ description }, { id })
 
         if (updateResult.isSuccess()) {

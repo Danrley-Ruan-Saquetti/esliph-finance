@@ -13,14 +13,14 @@ const schemaIdAndBankAccountId = ValidatorService.schema.object({
 
 @Service({ name: 'financial-income.use-case.query' })
 export class FinancialIncomeQueryUseCase extends UseCase {
-    constructor(@Injection.Inject('financial-income.repository') private repository: FinancialIncomeRepository) {
+    constructor(@Injection.Inject('financial-income.repository') private transactionRepository: FinancialIncomeRepository) {
         super()
     }
 
     async queryByIdAndBankAccountIdWithPaymentsAndNotes(args: { id: ID }) {
         const { id } = this.validateDTO(args, schemaIdAndBankAccountId)
 
-        const bankAccountResult = await this.repository.findByIdWithPaymentsAndNotes(id)
+        const bankAccountResult = await this.transactionRepository.findByIdWithPaymentsAndNotes(id)
 
         if (!bankAccountResult.isSuccess()) {
             if (bankAccountResult.isErrorInOperation()) {
@@ -36,7 +36,7 @@ export class FinancialIncomeQueryUseCase extends UseCase {
     async queryManyByBankAccountId(args: { bankAccountId: ID }) {
         const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
 
-        const bankAccountResult = await this.repository.findManyByBankAccountId(bankAccountId)
+        const bankAccountResult = await this.transactionRepository.findManyByBankAccountId(bankAccountId)
 
         if (!bankAccountResult.isSuccess()) {
             if (bankAccountResult.isErrorInOperation()) {

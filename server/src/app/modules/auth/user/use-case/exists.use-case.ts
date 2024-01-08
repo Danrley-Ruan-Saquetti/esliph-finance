@@ -1,13 +1,16 @@
-import { BadRequestException } from '@common/exceptions'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
+import { BadRequestException } from '@common/exceptions'
+import { UseCase } from '@common/use-case'
 import { UserQueryUseCase } from '@modules/user/use-case/query.use-case'
 
 export type AuthUserExistsDTOArgs = { userId: string }
 
 @Service({ name: 'auth.user.use-case.exists' })
-export class AuthUserExistsUseCase {
-    constructor(@Injection.Inject('user.use-case.query') private queryUC: UserQueryUseCase) { }
+export class AuthUserExistsUseCase extends UseCase {
+    constructor(@Injection.Inject('user.use-case.query') private queryUC: UserQueryUseCase) {
+        super()
+    }
 
     async perform({ userId }: AuthUserExistsDTOArgs) {
         try {

@@ -33,7 +33,7 @@ export type UserCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
 @Service({ name: 'user.use-case.create' })
 export class UserCreateUseCase extends UseCase {
     constructor(
-        @Injection.Inject('user.repository') private repository: UserRepository,
+        @Injection.Inject('user.repository') private userRepository: UserRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
         @Injection.Inject('user.use-case.generate-code') private userGenerateCodeUC: UserGenerateCodeUseCase,
     ) {
@@ -53,7 +53,7 @@ export class UserCreateUseCase extends UseCase {
     }
 
     private async validUserEmailAlreadyExists(email: string) {
-        const userAlreadyExistsResult = await this.repository.findByEmail(email)
+        const userAlreadyExistsResult = await this.userRepository.findByEmail(email)
 
         if (userAlreadyExistsResult.isSuccess()) {
             throw new BadRequestException({
@@ -88,7 +88,7 @@ export class UserCreateUseCase extends UseCase {
     }
 
     private async registerUser({ email, name, password, code }: SchemaValidator.output<typeof schemaDTO> & { code: string }) {
-        const registerUserResult = await this.repository.register({ email, name, password, code })
+        const registerUserResult = await this.userRepository.register({ email, name, password, code })
 
         if (registerUserResult.isSuccess()) {
             return

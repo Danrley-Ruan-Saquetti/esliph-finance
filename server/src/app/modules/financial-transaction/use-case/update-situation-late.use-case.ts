@@ -7,17 +7,17 @@ import { Result } from '@esliph/common'
 
 @Service({ name: 'financial-transaction.use-case.update-situation-late' })
 export class FinancialTransactionUpdateSituationLateUseCase extends UseCase {
-    constructor(@Injection.Inject('financial-transaction.repository') private repository: FinancialTransactionRepository) {
+    constructor(@Injection.Inject('financial-transaction.repository') private transactionRepository: FinancialTransactionRepository) {
         super()
     }
 
     async perform() {
-        const transaction = this.repository.transaction()
+        const transaction = this.database.transaction()
 
         try {
             await transaction.begin()
 
-            const database = this.repository.getDatabase()
+            const database = this.transactionRepository.getDatabase()
             const dateNow = this.dateService.now()
 
             await database.financialTransaction.updateMany({
@@ -25,8 +25,8 @@ export class FinancialTransactionUpdateSituationLateUseCase extends UseCase {
                 where: {
                     expiresIn: { lt: dateNow },
                     situation: {
-                        in: [FinancialTransactionModel.Situation.PENDING]
-                    }
+                        in: [FinancialTransactionModel.Situation.PENDING],
+                    },
                 },
             })
 
@@ -36,7 +36,10 @@ export class FinancialTransactionUpdateSituationLateUseCase extends UseCase {
         } catch (err: any) {
             await transaction.rollback()
 
-            return Result.failure({ title: 'Update Situations Transactions Late', message: `Cannot be update situation of the transactions. Error: "${err.message}"` })
+            return Result.failure({
+                title: 'Update Situations Transactions Late',
+                message: `Cannot be update situation of the transactions. Error: "${err.message}"`,
+            })
         }
     }
 }

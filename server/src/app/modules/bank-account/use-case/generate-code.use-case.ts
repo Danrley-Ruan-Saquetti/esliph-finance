@@ -1,19 +1,19 @@
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
+import { Result } from '@esliph/common'
 import { CodeGeneratorService } from '@services/code-generator.service'
 import { UseCase } from '@common/use-case'
 import { GenerateCode } from '@common/generate-code'
 import { BadRequestException } from '@common/exceptions'
 import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.global'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
-import { Result } from '@esliph/common'
 
 export type BankAccountGenerateCodeDTOArgs = { noValid?: boolean }
 
 @Service({ name: 'bank-account.use-case.generate-code' })
 export class BankAccountGenerateCodeUseCase extends UseCase {
     constructor(
-        @Injection.Inject('bank-account.repository') private repository: BankAccountRepository,
+        @Injection.Inject('bank-account.repository') private bankAccountRepository: BankAccountRepository,
         @Injection.Inject('code-generator') private codeGenerator: CodeGeneratorService,
     ) {
         super()
@@ -49,7 +49,7 @@ export class BankAccountGenerateCodeUseCase extends UseCase {
     }
 
     private async validCode(code: string) {
-        const bankAccountResult = await this.repository.findByCode(code)
+        const bankAccountResult = await this.bankAccountRepository.findByCode(code)
 
         if (bankAccountResult.isSuccess()) {
             return false

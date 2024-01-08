@@ -13,7 +13,7 @@ export type UserGenerateCodeDTOArgs = { noValid?: boolean }
 @Service({ name: 'user.use-case.generate-code' })
 export class UserGenerateCodeUseCase extends UseCase {
     constructor(
-        @Injection.Inject('user.repository') private repository: UserRepository,
+        @Injection.Inject('user.repository') private userRepository: UserRepository,
         @Injection.Inject('code-generator') private codeGenerator: CodeGeneratorService,
     ) {
         super()
@@ -29,7 +29,6 @@ export class UserGenerateCodeUseCase extends UseCase {
                 const userResult = await this.validCode(code)
 
                 return userResult
-
             },
             ...args,
         })
@@ -50,7 +49,7 @@ export class UserGenerateCodeUseCase extends UseCase {
     }
 
     private async validCode(code: string) {
-        const userResult = await this.repository.findByCode(code)
+        const userResult = await this.userRepository.findByCode(code)
 
         if (userResult.isSuccess()) {
             return false

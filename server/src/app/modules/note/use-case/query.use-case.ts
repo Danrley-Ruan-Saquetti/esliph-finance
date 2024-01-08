@@ -9,9 +9,9 @@ import { NoteRepository } from '@modules/note/note.repository'
 
 @Service({ name: 'note.use-case.query' })
 export class NoteQueryUseCase extends UseCase {
-    constructor(
-        @Injection.Inject('note.repository') private repository: NoteRepository,
-    ) { super() }
+    constructor(@Injection.Inject('note.repository') private noteRepository: NoteRepository) {
+        super()
+    }
 
     async queryById(args: { id: ID }) {
         const id = Number(args.id)
@@ -20,7 +20,7 @@ export class NoteQueryUseCase extends UseCase {
             return Result.failure<NoteModel.Note[]>({ title: 'Query Notes', message: 'ID Note not defined' })
         }
 
-        const noteResult = await this.repository.findById(id)
+        const noteResult = await this.noteRepository.findById(id)
 
         if (!noteResult.isSuccess()) {
             if (noteResult.isErrorInOperation()) {
@@ -40,7 +40,7 @@ export class NoteQueryUseCase extends UseCase {
             return Result.failure<NoteModel.Note[]>({ title: 'Query Notes', message: 'ID Financial Transaction not defined' })
         }
 
-        const notesResult = await this.repository.findManyByFinancialTransactionId(financialTransactionId)
+        const notesResult = await this.noteRepository.findManyByFinancialTransactionId(financialTransactionId)
 
         if (!notesResult.isSuccess()) {
             if (notesResult.isErrorInOperation()) {
