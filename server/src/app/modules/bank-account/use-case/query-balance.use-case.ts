@@ -5,13 +5,16 @@ import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { ID } from '@@types'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
-import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.global'
+import { GLOBAL_BANK_ACCOUNT_DTO, GLOBAL_BANK_ACCOUNT_RULES } from '@modules/bank-account/bank-account.global'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
 import { CompensationPaymentsControl } from '@modules/payment/control/compensation-payments.control'
+import { BalanceBankAccountControl } from '../control/balance-bank-account.control'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 
 const schemaDTO = ValidatorService.schema.object({
     bankAccountId: GLOBAL_BANK_ACCOUNT_DTO.id,
+    dateStart: ValidatorService.schema.coerce.date({ 'required_error': GLOBAL_BANK_ACCOUNT_RULES.queryBalance.dateStart.messageRequired }),
+    dateEnd: ValidatorService.schema.coerce.date({ 'required_error': GLOBAL_BANK_ACCOUNT_RULES.queryBalance.dateEnd.messageRequired }),
 })
 
 export type BankAccountQueryBalanceDTOArgs = SchemaValidator.input<typeof schemaDTO>
@@ -20,45 +23,34 @@ export type BankAccountQueryBalanceDTOArgs = SchemaValidator.input<typeof schema
 export class BankAccountQueryBalanceUseCase extends UseCase {
     constructor(
         @Injection.Inject('bank-account.repository') private bankAccountRepository: BankAccountRepository,
-        @Injection.Inject('bank-account.repository') private compensationPaymentsControl: CompensationPaymentsControl,
+        @Injection.Inject('bank-account.repository') private balanceBankAccountControl: BalanceBankAccountControl,
     ) {
         super()
     }
 
     async perform(args: BankAccountQueryBalanceDTOArgs) {
-        const { bankAccountId } = this.validateDTO(args, schemaDTO)
+        const { bankAccountId, dateStart, dateEnd } = this.validateDTO(args, schemaDTO)
 
-        const { balance } = await this.queryBankAccount(bankAccountId)
+        const { financialTransactions } = await this.queryBankAccount(bankAccountId, dateStart, dateEnd)
+        const state = this.getState(bankAccountId, financialTransactions)
 
-        return Result.success({ balance })
+        return Result.success({ ...state })
     }
 
-    private async queryBalance(bankAccountId: ID) {
-        const { financialTransactions } = await this.queryBankAccount(bankAccountId)
+    getState(bankAccountId: ID, financialTransactions: FinancialTransactionModel.FinancialTransactionWithPayments[]) {
+        this.balanceBankAccountControl.setBankAccountIdId(bankAccountId)
+        this.balanceBankAccountControl.setFinancialTransactions(financialTransactions)
+        this.balanceBankAccountControl.loadState()
 
-        const state = {
-            total: 0,
-        }
-
-        financialTransactions.map(transaction => {
-            const compensationPaymentsControl = Injection.resolve(CompensationPaymentsControl)
-
-            compensationPaymentsControl.setFinancialTransactionId(transaction.id)
-            compensationPaymentsControl.setFinancialTransaction(transaction)
-            compensationPaymentsControl.setPayments(transaction.payments)
-
-            if (transaction.type === FinancialTransactionModel.Type.INCOME) {
-                state.total += compensationPaymentsControl.getState().totalNetValuePaid
-            } else if (transaction.type === FinancialTransactionModel.Type.EXPENSE) {
-                state.total -= compensationPaymentsControl.getState().totalNetValuePaid
-            }
-        })
-
-        return Result.success({ balance: state.total })
+        return this.balanceBankAccountControl.getState()
     }
 
-    private async queryBankAccount(bankAccountId: ID) {
-        const bankAccount = await this.bankAccountRepository.findByIdWithFinancialTransactionsAndPayments(bankAccountId)
+    private async queryBankAccount(bankAccountId: ID, dateStart: Date, dateEnd: Date) {
+        const bankAccount = await this.bankAccountRepository.findByIdAndBetweenDateCompetenceWithFinancialTransactionsAndPayments(
+            bankAccountId,
+            dateStart,
+            dateEnd,
+        )
 
         if (!bankAccount.isSuccess()) {
             if (bankAccount.isErrorInOperation()) {

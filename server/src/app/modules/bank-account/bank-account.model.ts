@@ -6,7 +6,7 @@ export namespace BankAccountModel {
     export type BankAccount = Database.BankAccount
     export type Model = DocumentSimple<BankAccount>
     export type BankAccountWithoutPassword = Omit<BankAccount, 'password'>
-    export type BankAccountWithFinancialTransactionsAndPayments = Model & {
+    export type BankAccountWithFinancialTransactionsAndPayments = BankAccount & {
         financialTransactions: FinancialTransactionModel.FinancialTransactionWithPayments[]
     }
     export type BankAccountWithoutPasswordAndBalance = Omit<BankAccount, 'password' | 'balance'>

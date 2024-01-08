@@ -59,6 +59,34 @@ export class BankAccountRepository extends Repository {
         }
     }
 
+    async findByIdAndBetweenDateCompetenceWithFinancialTransactionsAndPayments(id: ID, dateStart: Date, dateEnd: Date) {
+        try {
+            const bankAccount = await this.repo.findFirst({
+                where: { id },
+                include: {
+                    financialTransactions: {
+                        where: {
+                            dateTimeCompetence: {
+                                gte: dateStart,
+                                lte: dateEnd,
+                            },
+                        },
+                        include: { payments: true },
+                    },
+                },
+            })
+
+            return this.handleResponse<BankAccountModel.BankAccountWithFinancialTransactionsAndPayments>(bankAccount, {
+                noAcceptNullable: true,
+                error: { title: 'Find Bank Account', message: 'Bank account not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<BankAccountModel.BankAccountWithFinancialTransactionsAndPayments>(err, {
+                error: { title: 'Find Bank Account', message: 'Bank account not found' },
+            })
+        }
+    }
+
     async findByIdWithoutPassword(id: ID) {
         try {
             const bankAccount = await this.repo.findFirst({

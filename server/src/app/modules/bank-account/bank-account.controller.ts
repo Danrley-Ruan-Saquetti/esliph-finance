@@ -49,8 +49,10 @@ export class BankAccountController {
     @Get('/balance')
     async getbalance(req: Request) {
         const bankAccountId = req.headers['bankAccountId']
+        const dateStart = req.params['dateStart']
+        const dateEnd = req.params['dateEnd']
 
-        const result = await this.queryBalanceUC.perform({ bankAccountId })
+        const result = await this.queryBalanceUC.perform({ bankAccountId, dateEnd, dateStart })
 
         return result
     }

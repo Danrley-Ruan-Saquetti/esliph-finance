@@ -6,19 +6,35 @@ import { Service } from '@esliph/module'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { CompensationPaymentsControl } from '@modules/payment/control/compensation-payments.control'
+import { PaymentModel } from '@modules/payment/payment.model'
 
 @Service({ name: 'balance-bank-account.control' })
 export class BalanceBankAccountControl {
+    private bankAccountId: ID
+    private financialTransactions: {
+        id: ID
+        type: FinancialTransactionModel.Type
+        situation: FinancialTransactionModel.Situation
+        value: number
+        dateTimeCompetence: Date
+        payments: (PaymentModel.Model & { id: ID })[]
+    }[]
+    private state: { total: number }
+
     constructor(@Injection.Inject('bank-account.repository') private bankAccountRepository: BankAccountRepository) {}
 
-    private async queryBalance(bankAccountId: ID) {
-        const { financialTransactions } = await this.queryBankAccount(bankAccountId)
+    async loadComponents(bankAccountId: ID) {
+        this.setBankAccountIdId(bankAccountId)
+        await this.loadBankAccountAndFinancialTransactionWithPayments()
+        this.loadState()
+    }
 
+    loadState() {
         const state = {
             total: 0,
         }
 
-        financialTransactions.map(transaction => {
+        this.financialTransactions.map(transaction => {
             const compensationPaymentsControl = Injection.resolve(CompensationPaymentsControl)
 
             compensationPaymentsControl.setFinancialTransactionId(transaction.id)
@@ -32,7 +48,28 @@ export class BalanceBankAccountControl {
             }
         })
 
-        return Result.success({ balance: state.total })
+        this.state = {
+            total: state.total,
+        }
+    }
+
+    async loadBankAccountAndFinancialTransactionWithPayments() {
+        const financialTransactionResult = await this.bankAccountRepository.findByIdWithFinancialTransactionsAndPayments(this.bankAccountId)
+
+        if (!financialTransactionResult.isSuccess()) {
+            throw new BadRequestException({ ...financialTransactionResult.getError() })
+        }
+
+        this.financialTransactions = financialTransactionResult
+            .getValue()
+            .financialTransactions.map(({ id, payments, situation, type, value, dateTimeCompetence }) => ({
+                id,
+                payments,
+                situation,
+                type,
+                value,
+                dateTimeCompetence,
+            }))
     }
 
     private async queryBankAccount(bankAccountId: ID) {
@@ -46,5 +83,35 @@ export class BalanceBankAccountControl {
         }
 
         return bankAccount.getValue()
+    }
+
+    getState() {
+        return {
+            bankAccountId: this.bankAccountId,
+            ...this.state,
+            financialTransactions: this.financialTransactions,
+        }
+    }
+
+    setBankAccountIdId(bankAccountId: ID) {
+        this.bankAccountId = bankAccountId
+    }
+    setFinancialTransactions(
+        financialTransactions: {
+            id: ID
+            type: FinancialTransactionModel.Type
+            situation: FinancialTransactionModel.Situation
+            value: number
+            payments: (PaymentModel.Model & { id: ID })[]
+        }[],
+    ) {
+        this.financialTransactions = financialTransactions.map(({ id, payments, situation, type, value, dateTimeCompetence }) => ({
+            id,
+            payments,
+            situation,
+            type,
+            value,
+            dateTimeCompetence,
+        }))
     }
 }

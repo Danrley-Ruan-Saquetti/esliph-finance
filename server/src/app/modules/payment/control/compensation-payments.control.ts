@@ -18,7 +18,7 @@ export class CompensationPaymentsControl {
     }
     private payments: (PaymentModel.Model & { id: ID })[] = []
     private state: {
-        valueFinancialTransaction: number,
+        valueFinancialTransaction: number
         totalNetValuePaid: number
         valueToPay: number
         totalPayments: {
@@ -31,7 +31,7 @@ export class CompensationPaymentsControl {
     constructor(
         @Injection.Inject('financial-transaction.repository') private repositoryFinancialTransaction: FinancialTransactionRepository,
         @Injection.Inject('payment.repository') private repositoryPayment: PaymentRepository,
-    ) { }
+    ) {}
 
     async loadComponents(financialTransactionId: ID) {
         this.setFinancialTransactionId(financialTransactionId)
@@ -49,8 +49,8 @@ export class CompensationPaymentsControl {
             {
                 value: 0,
                 discount: 0,
-                increase: 0
-            }
+                increase: 0,
+            },
         )
 
         const totalNetValuePaid = stateTotal.value - stateTotal.increase
@@ -64,25 +64,25 @@ export class CompensationPaymentsControl {
         }
     }
 
-    validCompensation({ discount, increase, value }: { value: number, discount: number, increase: number }) {
+    validCompensation({ discount, increase, value }: { value: number; discount: number; increase: number }) {
         if (!GLOBAL_FINANCIAL_TRANSACTION_RULES.paid.situationsEnableToPaid.enum.find(situation => situation == this.financialTransaction.situation)) {
             return Result.failure<{ paidInFull: boolean }>({
                 title: 'Valid Compensation',
-                message: GLOBAL_FINANCIAL_TRANSACTION_RULES.paid.situationsEnableToPaid.messageNoSituationEnableToPaid
+                message: GLOBAL_FINANCIAL_TRANSACTION_RULES.paid.situationsEnableToPaid.messageNoSituationEnableToPaid,
             })
         }
 
         if (this.state.valueToPay <= 0) {
             return Result.failure<{ paidInFull: boolean }>({
                 title: 'Valid Compensation',
-                message: 'Financial transaction already paid'
+                message: 'Financial transaction already paid',
             })
         }
 
         if (discount > this.state.valueToPay) {
             return Result.failure<{ paidInFull: boolean }>({
                 title: 'Valid Compensation',
-                message: 'Discount value cannot be higher than then value to pay'
+                message: 'Discount value cannot be higher than then value to pay',
             })
         }
 
@@ -92,7 +92,7 @@ export class CompensationPaymentsControl {
         if (netValuePayment > netValueToPaid) {
             return Result.failure<{ paidInFull: boolean }>({
                 title: 'Valid Compensation',
-                message: 'The payment value cannot be higher than the value payable'
+                message: 'The payment value cannot be higher than the value payable',
             })
         }
 
@@ -119,7 +119,14 @@ export class CompensationPaymentsControl {
             value: financialTransactionResult.getValue().value,
             situation: financialTransactionResult.getValue().situation,
         }
-        this.payments = financialTransactionResult.getValue().payments.map(({ id, financialTransactionId, value, discount, increase, paidAt }) => ({ id, financialTransactionId, value, discount, increase, paidAt }))
+        this.payments = financialTransactionResult.getValue().payments.map(({ id, financialTransactionId, value, discount, increase, paidAt }) => ({
+            id,
+            financialTransactionId,
+            value,
+            discount,
+            increase,
+            paidAt,
+        }))
     }
 
     async loadFinancialTransaction() {
@@ -142,15 +149,24 @@ export class CompensationPaymentsControl {
             throw new BadRequestException({ ...payments.getError() })
         }
 
-        this.payments = payments.getValue().map(({ id, financialTransactionId, value, discount, increase, paidAt }) => ({ id, financialTransactionId, value, discount, increase, paidAt }))
+        this.payments = payments
+            .getValue()
+            .map(({ id, financialTransactionId, value, discount, increase, paidAt }) => ({ id, financialTransactionId, value, discount, increase, paidAt }))
     }
 
-    setFinancialTransaction(financialTransaction: { situation: FinancialTransactionModel.Situation, value: number }) {
-        this.financialTransaction = financialTransaction
+    setFinancialTransaction({ situation, value }: { situation: FinancialTransactionModel.Situation; value: number }) {
+        this.financialTransaction = { situation, value }
     }
 
     setPayments(payments: (PaymentModel.Model & { id: ID })[]) {
-        this.payments = payments
+        this.payments = payments.map(({ discount, financialTransactionId, id, increase, paidAt, value }) => ({
+            discount,
+            financialTransactionId,
+            id,
+            increase,
+            paidAt,
+            value,
+        }))
     }
 
     setFinancialTransactionId(financialTransactionId: ID) {

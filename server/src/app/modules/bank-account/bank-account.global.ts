@@ -40,3 +40,14 @@ export const GLOBAL_BANK_ACCOUNT_DTO = {
         } as MaskDataOptions,
     },
 }
+
+export const GLOBAL_BANK_ACCOUNT_RULES = {
+    queryBalance: {
+        dateStart: {
+            messageRequired: 'The start date of financial transactions is required',
+        },
+        dateEnd: {
+            messageRequired: 'The end date of financial transactions is required',
+        },
+    },
+}
