@@ -19,8 +19,8 @@ export class FinancialTransactionRepository extends Repository {
             await this.database.instance.financialTransaction.create({
                 data: {
                     ...data,
-                    notes: { createMany: { data: notes } }
-                }
+                    notes: { createMany: { data: notes } },
+                },
             })
 
             return this.handleResponse<{ message: string }>(
@@ -81,7 +81,10 @@ export class FinancialTransactionRepository extends Repository {
 
     async findByIdWithPayments(id: ID) {
         try {
-            const financialTransaction = await this.database.instance.financialTransaction.findFirst({ where: { id }, include: { payments: { orderBy: { paidAt: 'desc' } } } })
+            const financialTransaction = await this.database.instance.financialTransaction.findFirst({
+                where: { id },
+                include: { payments: { orderBy: { paidAt: 'desc' } } },
+            })
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransactionWithPayments>(financialTransaction, {
                 noAcceptNullable: true,
@@ -96,7 +99,10 @@ export class FinancialTransactionRepository extends Repository {
 
     async findByIdWithNotes(id: ID) {
         try {
-            const financialTransaction = await this.database.instance.financialTransaction.findFirst({ where: { id }, include: { notes: { orderBy: { createdAt: 'desc' } } } })
+            const financialTransaction = await this.database.instance.financialTransaction.findFirst({
+                where: { id },
+                include: { notes: { orderBy: { createdAt: 'desc' } } },
+            })
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransactionWithNotes>(financialTransaction, {
                 noAcceptNullable: true,
@@ -109,9 +115,18 @@ export class FinancialTransactionRepository extends Repository {
         }
     }
 
-    async findByIdWithPaymentsAndNotes(id: ID) {
+    async findByIdWithPaymentsAndNotesAndCategories(id: ID) {
         try {
-            const financialTransaction = await this.database.instance.financialTransaction.findFirst({ where: { id }, include: { payments: { orderBy: { paidAt: 'desc' } }, notes: { orderBy: { createdAt: 'desc' } } } })
+            const financialTransaction = await this.database.instance.financialTransaction.findFirst({
+                where: { id },
+                include: {
+                    payments: { orderBy: { paidAt: 'desc' } },
+                    notes: { orderBy: { createdAt: 'desc' } },
+                },
+                orderBy: {
+                    expiresIn: 'asc',
+                },
+            })
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransactionWithPaymentsAndNotes>(financialTransaction, {
                 noAcceptNullable: true,
@@ -128,7 +143,7 @@ export class FinancialTransactionRepository extends Repository {
         try {
             const financialTransactions = await this.database.instance.financialTransaction.findMany({
                 where: { bankAccountId },
-                orderBy: { expiresIn: 'asc' }
+                orderBy: { expiresIn: 'asc' },
             })
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialTransactions, {
@@ -194,7 +209,10 @@ export class FinancialTransactionRepository extends Repository {
 
     async findAllToRepeat() {
         try {
-            const financialTransactions = await this.getDatabase().$queryRawUnsafe<FinancialTransactionModel.FinancialTransaction[]>('SELECT * FROM public.financial_transaction WHERE type_occurrence::text = $1 AND count_repeated_occurrences < times_to_repeat', FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC)
+            const financialTransactions = await this.getDatabase().$queryRawUnsafe<FinancialTransactionModel.FinancialTransaction[]>(
+                'SELECT * FROM public.financial_transaction WHERE type_occurrence::text = $1 AND count_repeated_occurrences < times_to_repeat',
+                FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC,
+            )
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(
                 financialTransactions.map(transaction => ({
@@ -217,9 +235,10 @@ export class FinancialTransactionRepository extends Repository {
                     dateTimeCompetence: transaction['date_time_competence'],
                     expiresIn: transaction['expires_in'],
                     isObservable: transaction['is_observable'],
-                    isSendNotification: transaction['is_send_notification']
+                    isSendNotification: transaction['is_send_notification'],
                 })),
-                { error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' } })
+                { error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' } },
+            )
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
                 error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
@@ -232,7 +251,7 @@ export class FinancialTransactionRepository extends Repository {
             const financialTransaction = await this.database.instance.financialTransaction.findFirst({
                 where: { ...query.where },
                 skip: this.calcSkipRegister(query.page),
-                take: query.page.limite
+                take: query.page.limite,
             })
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransaction>(financialTransaction, {
