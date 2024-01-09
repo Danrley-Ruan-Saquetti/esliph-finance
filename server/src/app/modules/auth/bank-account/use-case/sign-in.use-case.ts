@@ -63,10 +63,10 @@ export class AuthBankAccountSignInUseCase extends UseCase {
         }
 
         if (userResult.isErrorInOperation()) {
-            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'User not found. Please, try again later' })
+            throw new BadRequestException({ ...userResult.getError(), title: 'Sign-in Bank Account' })
         }
 
-        throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'User not found' })
+        throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password invalid. Please, try again later' })
     }
 
     private async queryBankAccountByCode(code: string, userId: number) {
@@ -77,17 +77,17 @@ export class AuthBankAccountSignInUseCase extends UseCase {
         }
 
         if (userResult.isErrorInOperation()) {
-            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password invalid. Please, try again later' })
+            throw new BadRequestException({ ...userResult.getError(), title: 'Sign-in Bank Account' })
         }
 
-        throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password invalid' })
+        throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password invalid. Please, try again later' })
     }
 
     private async validPasswordBankAccount(password: string, passwordHash: string) {
         const isSamePassword = await this.crypto.bcrypto.compare(password, passwordHash)
 
         if (!isSamePassword) {
-            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password invalid' })
+            throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password invalid. Please, try again later' })
         }
     }
 

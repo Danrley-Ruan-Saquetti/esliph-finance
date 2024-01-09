@@ -62,8 +62,8 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
         if (!financialTransactionsToRepeat.isSuccess()) {
             if (financialTransactionsToRepeat.isErrorInOperation()) {
                 throw new BadRequestException({
+                    ...financialTransactionsToRepeat.getError(),
                     title: 'Find All Financial Transaction to Repeat',
-                    message: `Unable to find financial transactions. Error: "${financialTransactionsToRepeat.getError().message}"`,
                 })
             }
 
@@ -101,7 +101,7 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
             } catch (err: any) {
                 await transactionDB.rollback()
 
-                return Result.failure({ title: 'Create Transactions in Repeat', message: `Cannot create transactions in repeat. Error: "${err.message}"` })
+                return Result.failure({ ...err, title: 'Create Transactions in Repeat', message: `Cannot create transactions in repeat. Error: "${err.message}"` })
             }
         })
     }

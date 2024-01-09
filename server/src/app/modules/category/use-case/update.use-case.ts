@@ -57,11 +57,7 @@ export class CategoryUpdateUseCase extends UseCase {
             return
         }
 
-        if (categoryResult.isErrorInOperation()) {
-            throw new BadRequestException({ title: 'Find Category', message: `Unable to find category. Error "${categoryResult.getError()}"` })
-        }
-
-        throw new BadRequestException({ title: 'Find Category', message: 'Category not found' })
+        throw new BadRequestException({ ...categoryResult.getError(), title: 'Find Category' })
     }
 
     private async update({ color, isFavorite, name }: CategoryModel.UpdateArgs, id: ID) {
@@ -71,6 +67,6 @@ export class CategoryUpdateUseCase extends UseCase {
             return
         }
 
-        throw new BadRequestException({ title: 'Update Category', message: `Unable to update category. Error "${updateResult.getError()}"` })
+        throw new BadRequestException({ ...updateResult.getError(), title: 'Update Category' })
     }
 }

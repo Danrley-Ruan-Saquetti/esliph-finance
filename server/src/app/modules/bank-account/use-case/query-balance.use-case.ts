@@ -1,14 +1,14 @@
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
+import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
-import { ID } from '@@types'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
-import { GLOBAL_BANK_ACCOUNT_DTO, GLOBAL_BANK_ACCOUNT_RULES } from '@modules/bank-account/bank-account.global'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
 import { BalanceBankAccountControl } from '@modules/bank-account/control/balance-bank-account.control'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
+import { GLOBAL_BANK_ACCOUNT_DTO, GLOBAL_BANK_ACCOUNT_RULES } from '@modules/bank-account/bank-account.global'
 
 const schemaDTO = ValidatorService.schema.object({
     bankAccountId: GLOBAL_BANK_ACCOUNT_DTO.id,
@@ -52,10 +52,7 @@ export class BankAccountQueryBalanceUseCase extends UseCase {
         )
 
         if (!bankAccount.isSuccess()) {
-            if (bankAccount.isErrorInOperation()) {
-                throw new BadRequestException({ title: 'Query Bank Account', message: 'Unable to query bank account' })
-            }
-            throw new BadRequestException({ title: 'Query Bank Account', message: 'Bank Account not found' })
+            throw new BadRequestException({ ...bankAccount.getError(), title: 'Query Bank Account' })
         }
 
         return bankAccount.getValue()

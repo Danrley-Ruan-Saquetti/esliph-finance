@@ -65,8 +65,6 @@ export class FinancialExpenseLiquidateUseCase extends UseCase {
             return
         }
 
-        if (!resultUpdate.isErrorInOperation()) {
-            throw new BadRequestException({ title: 'Update Financial Transaction', message: 'Cannot be updated financial transaction' })
-        }
+        throw new BadRequestException({ ...resultUpdate.getError(), title: 'Update Financial Transaction' })
     }
 }

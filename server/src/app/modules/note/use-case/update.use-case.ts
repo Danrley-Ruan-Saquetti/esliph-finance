@@ -25,7 +25,7 @@ export class NoteUpdateUseCase extends UseCase {
         const { id, description } = this.validateDTO(args, schemaDTO)
 
         if (!description) {
-            return Result.success({ message: 'Note updated successfully' })
+            return Result.success({ message: 'No data updated' })
         }
 
         await this.verifyIsExistsNote(id)
@@ -41,20 +41,22 @@ export class NoteUpdateUseCase extends UseCase {
             return
         }
 
-        if (noteResult.isErrorInOperation()) {
-            throw new BadRequestException({ title: 'Find Note', message: `Unable to find note. Error "${noteResult.getError()}"` })
-        }
-
-        throw new BadRequestException({ title: 'Find Note', message: 'Note not found' })
+        throw new BadRequestException({
+            ...noteResult.getError(),
+            title: 'Find Note',
+        })
     }
 
     private async update({ id, description }: { id: ID; description: string }) {
-        const updateResult = await this.repository.updateById({ description }, { id })
+        const updateResult = await this.noteRepository.updateById({ description }, { id })
 
         if (updateResult.isSuccess()) {
             return
         }
 
-        throw new BadRequestException({ title: 'Update Note', message: `Unable to update note. Error "${updateResult.getError()}"` })
+        throw new BadRequestException({
+            ...updateResult.getError(),
+            title: 'Update Note',
+        })
     }
 }

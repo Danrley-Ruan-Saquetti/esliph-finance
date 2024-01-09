@@ -23,11 +23,7 @@ export class FinancialExpenseQueryUseCase extends UseCase {
         const bankAccountResult = await this.transactionRepository.findByIdWithPaymentsAndNotesAndCategories(id)
 
         if (!bankAccountResult.isSuccess()) {
-            if (bankAccountResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Financial Expense', message: 'Unable to query financial expense' })
-            }
-
-            return Result.failure({ title: 'Query Financial Expense', message: 'Bank account not found' })
+            return Result.failure({ ...bankAccountResult.getError(), title: 'Query Financial Expense' })
         }
 
         return Result.success(bankAccountResult.getValue())
@@ -39,11 +35,7 @@ export class FinancialExpenseQueryUseCase extends UseCase {
         const bankAccountResult = await this.transactionRepository.findManyByBankAccountId(bankAccountId)
 
         if (!bankAccountResult.isSuccess()) {
-            if (bankAccountResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Financial Expense', message: 'Unable to query financial expense' })
-            }
-
-            return Result.failure({ title: 'Query Financial Expense', message: 'Bank account not found' })
+            return Result.failure({ ...bankAccountResult.getError(), title: 'Query Financial Expenses' })
         }
 
         return Result.success(bankAccountResult.getValue())

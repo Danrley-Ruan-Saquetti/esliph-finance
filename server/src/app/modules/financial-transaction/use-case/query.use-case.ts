@@ -27,11 +27,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
         const financialTransactionsResult = await this.transactionRepository.findByIdWithNotes(id)
 
         if (!financialTransactionsResult.isSuccess()) {
-            if (financialTransactionsResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Financial Transaction', message: 'Unable to query financial transaction' })
-            }
-
-            return Result.failure({ title: 'Query Financial Transaction', message: 'Financial transaction not found' })
+            return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transaction' })
         }
 
         return Result.success(financialTransactionsResult.getValue())
@@ -43,11 +39,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
         const financialTransactionsResult = await this.transactionRepository.findByIdWithPaymentsAndNotesAndCategories(id)
 
         if (!financialTransactionsResult.isSuccess()) {
-            if (financialTransactionsResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Financial Transaction', message: 'Unable to query financial transaction' })
-            }
-
-            return Result.failure({ title: 'Query Financial Transaction', message: 'Financial transaction not found' })
+            return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transaction' })
         }
 
         return Result.success(financialTransactionsResult.getValue())
@@ -59,9 +51,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
         const financialTransactionsResult = await this.transactionRepository.findManyByBankAccountIdWithCategories(bankAccountId)
 
         if (!financialTransactionsResult.isSuccess()) {
-            if (financialTransactionsResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Financial Transactions', message: 'Unable to query financial transactions' })
-            }
+            return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transactions' })
         }
 
         return Result.success(financialTransactionsResult.getValue() || [])
@@ -74,9 +64,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
         const financialTransactionsResult = await this.transactionRepository.findManyByBankAccountIdAndCategoryIdWithCategories(bankAccountId, categoryId)
 
         if (!financialTransactionsResult.isSuccess()) {
-            if (financialTransactionsResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Financial Transactions', message: 'Unable to query financial transactions' })
-            }
+            return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transactions' })
         }
 
         return Result.success(financialTransactionsResult.getValue() || [])

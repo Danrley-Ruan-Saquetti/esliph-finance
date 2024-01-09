@@ -35,6 +35,6 @@ export class NoteRemoveUseCase extends UseCase {
             return
         }
 
-        throw new BadRequestException({ title: 'Remove Note', message: `Unable to remove noe: Error: "${removeResult.getError().message}"` })
+        throw new BadRequestException({ ...removeResult.getError(), title: 'Remove Note' })
     }
 }

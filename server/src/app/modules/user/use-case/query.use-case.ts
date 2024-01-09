@@ -19,11 +19,9 @@ export class UserQueryUseCase extends UseCase {
         const bankAccountResult = await this.userRepository.findByIdWithoutPassword(id)
 
         if (!bankAccountResult.isSuccess()) {
-            if (bankAccountResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query User', message: 'Unable to query user' })
-            }
-
-            return Result.failure({ title: 'Query User', message: 'Bank account not found' })
+            return Result.failure({
+                ...bankAccountResult.getError(), title: 'Query User', message: `${bankAccountResult.getError().message}. Please, try again later`,
+            })
         }
 
         return Result.success(bankAccountResult.getValue())

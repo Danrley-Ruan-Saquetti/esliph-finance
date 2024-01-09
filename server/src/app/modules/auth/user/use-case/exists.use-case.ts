@@ -1,8 +1,8 @@
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { BadRequestException } from '@common/exceptions'
 import { UseCase } from '@common/use-case'
 import { UserQueryUseCase } from '@modules/user/use-case/query.use-case'
+import { Result } from '@esliph/common'
 
 export type AuthUserExistsDTOArgs = { userId: string }
 
@@ -13,16 +13,8 @@ export class AuthUserExistsUseCase extends UseCase {
     }
 
     async perform({ userId }: AuthUserExistsDTOArgs) {
-        try {
-            const userResult = await this.queryUC.queryByIdWithoutPassword({ id: Number(userId) })
+        const userResult = await this.queryUC.queryByIdWithoutPassword({ id: Number(userId) })
 
-            if (userResult.isSuccess()) {
-                return
-            }
-
-            throw new BadRequestException({ title: 'Find User', message: 'User not found' })
-        } catch (err: any) {
-            throw new BadRequestException({ title: 'Find User', message: 'Unable to find user' })
-        }
+        return Result.success({ ok: userResult.isSuccess() })
     }
 }

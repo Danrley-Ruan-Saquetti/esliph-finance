@@ -51,7 +51,6 @@ export class CategoryCreateUseCase extends UseCase {
         throw new BadRequestException({
             ...registerCategoryResult.getError(),
             title: 'Register Category',
-            message: `Unable to register category. Error: "${registerCategoryResult.getError().message}"`,
         })
     }
 }

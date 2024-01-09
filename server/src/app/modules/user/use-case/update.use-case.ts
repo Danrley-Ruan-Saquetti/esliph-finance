@@ -33,7 +33,7 @@ export class UserUpdateUseCase extends UseCase {
         const { id, name } = this.validateDTO(args, schemaDTO)
 
         if (!name) {
-            return Result.success({ message: 'User updated successfully' })
+            return Result.success({ message: 'No data updated' })
         }
 
         await this.verifyIsExistsUser(id)
@@ -49,11 +49,9 @@ export class UserUpdateUseCase extends UseCase {
             return
         }
 
-        if (userResult.isErrorInOperation()) {
-            throw new BadRequestException({ title: 'Find User', message: `Unable to find user. Error "${userResult.getError()}"` })
-        }
-
-        throw new BadRequestException({ title: 'Find User', message: 'User not found' })
+        throw new BadRequestException({
+            ...userResult.getError(), title: 'Find User',
+        })
     }
 
     private async update({ name }: UserModel.UpdateArgs, id: ID) {
@@ -63,6 +61,8 @@ export class UserUpdateUseCase extends UseCase {
             return
         }
 
-        throw new BadRequestException({ title: 'Update User', message: `Unable to update user. Error "${updateResult.getError()}"` })
+        throw new BadRequestException({
+            ...updateResult.getError(), title: 'Update User',
+        })
     }
 }

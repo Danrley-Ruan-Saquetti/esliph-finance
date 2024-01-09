@@ -59,7 +59,6 @@ export class BankAccountGenerateCodeUseCase extends UseCase {
             throw new BadRequestException({
                 ...bankAccountResult.getError(),
                 title: 'Generate Code Bank Account',
-                message: `Unable to generate code Bank Account. Error: "${bankAccountResult.getError().message}". Please, try again later`,
             })
         }
 

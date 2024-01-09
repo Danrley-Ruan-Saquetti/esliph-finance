@@ -141,7 +141,6 @@ export class FinancialTransactionCreateUseCase extends UseCase {
         throw new BadRequestException({
             ...registerFinancialTransactionResult.getError(),
             title: 'Register Financial Transaction',
-            message: `Unable to register financial transaction. Error: "${registerFinancialTransactionResult.getError().message}". Please, try again later`,
         })
     }
 }

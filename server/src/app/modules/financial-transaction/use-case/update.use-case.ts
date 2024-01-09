@@ -67,8 +67,8 @@ export class FinancialTransactionUpdateUseCase extends UseCase {
         if (!financialTransactionResult.isSuccess()) {
             if (financialTransactionResult.isErrorInOperation()) {
                 throw new BadRequestException({
+                    ...financialTransactionResult.getError(),
                     title: 'Find Financial Transaction',
-                    message: `Unable to find financial transaction. Error "${financialTransactionResult.getError()}"`,
                 })
             }
 
@@ -111,8 +111,8 @@ export class FinancialTransactionUpdateUseCase extends UseCase {
         }
 
         throw new BadRequestException({
+            ...updateResult.getError(),
             title: 'Update Financial Transaction',
-            message: `Unable to update financial transaction. Error "${updateResult.getError()}"`,
         })
     }
 }

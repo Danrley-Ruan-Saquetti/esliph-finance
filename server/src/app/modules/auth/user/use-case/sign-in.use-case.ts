@@ -51,17 +51,17 @@ export class AuthUserSignInUseCase extends UseCase {
         }
 
         if (userResult.isErrorInOperation()) {
-            throw new BadRequestException({ title: 'Sign-in User', message: 'Unable to valid e-mail or password. Please, try again later' })
+            throw new BadRequestException({ ...userResult.getError(), title: 'Sign-in User' })
         }
 
-        throw new BadRequestException({ title: 'Sign-in User', message: 'E-mail or password invalid' })
+        throw new BadRequestException({ title: 'Sign-in User', message: 'E-mail or password invalid. Please, try again later' })
     }
 
     private async validPassword(password: string, passwordHash: string) {
         const isSamePassword = await this.crypto.bcrypto.compare(password, passwordHash)
 
         if (!isSamePassword) {
-            throw new BadRequestException({ title: 'Sign-in User', message: 'E-mail or password invalid' })
+            throw new BadRequestException({ title: 'Sign-in User', message: 'E-mail or password invalid. Please, try again later' })
         }
     }
 

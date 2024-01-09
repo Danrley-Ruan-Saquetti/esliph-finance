@@ -37,6 +37,7 @@ export class FinancialTransactionUpdateSituationLateUseCase extends UseCase {
             await transaction.rollback()
 
             return Result.failure({
+                ...err,
                 title: 'Update Situations Transactions Late',
                 message: `Cannot be update situation of the transactions. Error: "${err.message}"`,
             })

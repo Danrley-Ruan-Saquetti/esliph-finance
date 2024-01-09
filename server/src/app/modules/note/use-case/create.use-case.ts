@@ -50,7 +50,6 @@ export class NoteCreateManyUseCase extends UseCase {
         throw new BadRequestException({
             ...registerNoteResult.getError(),
             title: 'Register Notes',
-            message: `Unable to register notes. Error: "${registerNoteResult.getError().message}"`,
         })
     }
 }

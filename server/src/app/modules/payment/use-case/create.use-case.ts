@@ -102,7 +102,6 @@ export class PaymentCreateUseCase extends UseCase {
         throw new BadRequestException({
             ...paymentResult.getError(),
             title: 'Register Payment',
-            message: `Unable to register payment. Error: "${paymentResult.getError().message}". Please, try again later`,
         })
     }
 }

@@ -23,11 +23,7 @@ export class NoteQueryUseCase extends UseCase {
         const noteResult = await this.noteRepository.findById(id)
 
         if (!noteResult.isSuccess()) {
-            if (noteResult.isErrorInOperation()) {
-                return Result.failure<NoteModel.Note>({ title: 'Query Note', message: 'Unable to query note' })
-            }
-
-            return Result.failure<NoteModel.Note>({ title: 'Query Note', message: 'note not found' })
+            return Result.failure<NoteModel.Note>({ ...noteResult.getError(), title: 'Query Note' })
         }
 
         return Result.success<NoteModel.Note>(noteResult.getValue())
@@ -43,11 +39,7 @@ export class NoteQueryUseCase extends UseCase {
         const notesResult = await this.noteRepository.findManyByFinancialTransactionId(financialTransactionId)
 
         if (!notesResult.isSuccess()) {
-            if (notesResult.isErrorInOperation()) {
-                return Result.failure<NoteModel.Note[]>({ title: 'Query Notes', message: 'Unable to query notes' })
-            }
-
-            return Result.failure<NoteModel.Note[]>({ title: 'Query Notes', message: 'notes not found' })
+            return Result.failure<NoteModel.Note[]>({ ...notesResult.getError(), title: 'Query Notes' })
         }
 
         return Result.success<NoteModel.Note[]>(notesResult.getValue())

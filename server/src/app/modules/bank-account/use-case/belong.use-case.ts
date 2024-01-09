@@ -23,56 +23,40 @@ export class BankAccountBelongUseCase extends UseCase {
     async isFinancialTransactionBelongBankAccount({ bankAccountId, financialTransactionId }: { financialTransactionId: ID, bankAccountId: ID }) {
         const result = await this.financialTransactionRepository.findByIdAndBankAccountId(Number(financialTransactionId), Number(bankAccountId))
 
-        if (result.isSuccess()) {
-            return Result.success({ ok: true })
+        if (result.isErrorInOperation()) {
+            throw new BadRequestException({ ...result.getError(), title: 'Verify is Transaction Belong Bank Account' })
         }
 
-        if (!result.isErrorInOperation()) {
-            return Result.success({ ok: false })
-        }
-
-        throw new BadRequestException({ title: 'Verify is Transaction Belong Bank Account', message: `Unable to verify is transaction belong a bank account. Error: "${result.getError().message}"` })
+        return Result.success({ ok: result.isSuccess() })
     }
 
     async isCategoryBelongBankAccount({ bankAccountId, categoryId }: { categoryId: ID, bankAccountId: ID }) {
         const result = await this.categoryRepository.findByIdAndBankAccountId(Number(categoryId), Number(bankAccountId))
 
-        if (result.isSuccess()) {
-            return Result.success({ ok: true })
+        if (result.isErrorInOperation()) {
+            throw new BadRequestException({ ...result.getError(), title: 'Verify is Category Belong Bank Account' })
         }
 
-        if (!result.isErrorInOperation()) {
-            return Result.success({ ok: false })
-        }
-
-        throw new BadRequestException({ title: 'Verify is Category Belong Bank Account', message: `Unable to verify is category belong a bank account. Error: "${result.getError().message}"` })
+        return Result.success({ ok: result.isSuccess() })
     }
 
     async isNoteBelongBankAccount({ bankAccountId, noteId }: { noteId: ID, bankAccountId: ID }) {
         const result = await this.noteRepository.findByIdAndBankAccountId(Number(noteId), Number(bankAccountId))
 
-        if (result.isSuccess()) {
-            return Result.success({ ok: true })
+        if (result.isErrorInOperation()) {
+            throw new BadRequestException({ ...result.getError(), title: 'Verify is Note Belong Bank Account' })
         }
 
-        if (!result.isErrorInOperation()) {
-            return Result.success({ ok: false })
-        }
-
-        throw new BadRequestException({ title: 'Verify is Note Belong Bank Account', message: `Unable to verify is note belong a bank account. Error: "${result.getError().message}"` })
+        return Result.success({ ok: result.isSuccess() })
     }
 
     async isPaymentBelongBankAccount({ bankAccountId, paymentId }: { paymentId: ID, bankAccountId: ID }) {
         const result = await this.paymentRepository.findByIdAndBankAccountId(Number(paymentId), Number(bankAccountId))
 
-        if (result.isSuccess()) {
-            return Result.success({ ok: true })
+        if (result.isErrorInOperation()) {
+            throw new BadRequestException({ ...result.getError(), title: 'Verify is Payment Belong Bank Account' })
         }
 
-        if (!result.isErrorInOperation()) {
-            return Result.success({ ok: false })
-        }
-
-        throw new BadRequestException({ title: 'Verify is Payment Belong Bank Account', message: `Unable to verify is payment belong a bank account. Error: "${result.getError().message}"` })
+        return Result.success({ ok: result.isSuccess() })
     }
 }

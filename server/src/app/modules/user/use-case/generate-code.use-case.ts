@@ -59,7 +59,6 @@ export class UserGenerateCodeUseCase extends UseCase {
             throw new BadRequestException({
                 ...userResult.getError(),
                 title: 'Generate Code User',
-                message: `Unable to generate code user. Error: "${userResult.getError().message}". Please, try again later`,
             })
         }
 

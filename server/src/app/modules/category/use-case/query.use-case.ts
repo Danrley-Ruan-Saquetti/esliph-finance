@@ -27,11 +27,7 @@ export class CategoryQueryUseCase extends UseCase {
         const categoryResult = await this.categoryRepository.findById(id)
 
         if (!categoryResult.isSuccess()) {
-            if (categoryResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Category', message: 'Unable to query category' })
-            }
-
-            return Result.failure({ title: 'Query Category', message: 'Category not found' })
+            return Result.failure({ ...categoryResult.getError(), title: 'Query Category' })
         }
 
         return Result.success(categoryResult.getValue())
@@ -43,9 +39,7 @@ export class CategoryQueryUseCase extends UseCase {
         const categoriesResult = await this.categoryRepository.findManyByBankAccountId(bankAccountId)
 
         if (!categoriesResult.isSuccess()) {
-            if (categoriesResult.isErrorInOperation()) {
-                return Result.failure({ title: 'Query Categories', message: 'Unable to query categories' })
-            }
+            return Result.failure({ ...categoriesResult.getError(), title: 'Query Categories' })
         }
 
         return Result.success(categoriesResult.getValue() || [])

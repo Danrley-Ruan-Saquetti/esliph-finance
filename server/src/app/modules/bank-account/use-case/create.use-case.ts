@@ -73,7 +73,6 @@ export class BankAccountCreateUseCase extends UseCase {
         throw new BadRequestException({
             ...registerBankAccountResult.getError(),
             title: 'Register Bank Account',
-            message: `Unable to register bank account. Error: "${registerBankAccountResult.getError().message}"`,
         })
     }
 }

@@ -58,12 +58,13 @@ export class UserCreateUseCase extends UseCase {
         if (userAlreadyExistsResult.isSuccess()) {
             throw new BadRequestException({
                 title: 'Register  User',
-                message: 'E-mail is already in use',
+                message: 'E-mail is already in use. Please, inform another email',
             })
         }
 
         if (userAlreadyExistsResult.isErrorInOperation()) {
             throw new BadRequestException({
+                ...userAlreadyExistsResult.getError(),
                 title: 'Register  User',
                 message: 'Unable to validate whether the e-mail already exists. Please, try again later',
             })
@@ -97,7 +98,6 @@ export class UserCreateUseCase extends UseCase {
         throw new BadRequestException({
             ...registerUserResult.getError(),
             title: 'Register User',
-            message: `Unable to register user. Error: "${registerUserResult.getError().message}". Please, try again later`,
         })
     }
 }

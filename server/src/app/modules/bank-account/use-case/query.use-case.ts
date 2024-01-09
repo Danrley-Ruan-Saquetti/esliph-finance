@@ -27,11 +27,7 @@ export class BankAccountQueryUseCase extends UseCase {
         const bankAccountResult = await this.bankAccountRepository.findByIdWithoutPassword(id)
 
         if (!bankAccountResult.isSuccess()) {
-            if (bankAccountResult.isErrorInOperation()) {
-                return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Unable to query bank account' })
-            }
-
-            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Bank account not found' })
+            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ ...bankAccountResult.getError(), title: 'Query Bank Account' })
         }
 
         return Result.success<BankAccountModel.BankAccountWithoutPassword>(bankAccountResult.getValue())
@@ -43,11 +39,7 @@ export class BankAccountQueryUseCase extends UseCase {
         const bankAccountResult = await this.bankAccountRepository.findByIdWithoutPassword(id)
 
         if (!bankAccountResult.isSuccess()) {
-            if (bankAccountResult.isErrorInOperation()) {
-                return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Unable to query bank account' })
-            }
-
-            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Bank account not found' })
+            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ ...bankAccountResult.getError(), title: 'Query Bank Account' })
         }
 
         return Result.success<BankAccountModel.BankAccountWithoutPassword>(
@@ -61,11 +53,7 @@ export class BankAccountQueryUseCase extends UseCase {
         const bankAccountResult = await this.bankAccountRepository.findByIdWithoutPassword(id)
 
         if (!bankAccountResult.isSuccess()) {
-            if (bankAccountResult.isErrorInOperation()) {
-                return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Unable to query bank account' })
-            }
-
-            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Bank account not found' })
+            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ ...bankAccountResult.getError(), title: 'Query Bank Account' })
         }
 
         return Result.success<BankAccountModel.BankAccountWithoutPassword>(
@@ -77,11 +65,7 @@ export class BankAccountQueryUseCase extends UseCase {
         const bankAccountResult = await this.bankAccountRepository.findByCodeWithoutPassword(args.code)
 
         if (!bankAccountResult.isSuccess()) {
-            if (bankAccountResult.isErrorInOperation()) {
-                return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Unable to query bank account' })
-            }
-
-            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Bank account not found' })
+            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ ...bankAccountResult.getError(), title: 'Query Bank Account' })
         }
 
         return Result.success<BankAccountModel.BankAccountWithoutPassword>(bankAccountResult.getValue())
@@ -91,11 +75,7 @@ export class BankAccountQueryUseCase extends UseCase {
         const bankAccountResult = await this.bankAccountRepository.findByCodeWithoutPassword(args.code)
 
         if (!bankAccountResult.isSuccess()) {
-            if (bankAccountResult.isErrorInOperation()) {
-                return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Unable to query bank account' })
-            }
-
-            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ title: 'Query Bank Account', message: 'Bank account not found' })
+            return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ ...bankAccountResult.getError(), title: 'Query Bank Account' })
         }
 
         return Result.success<BankAccountModel.BankAccountWithoutPassword>(
@@ -109,11 +89,7 @@ export class BankAccountQueryUseCase extends UseCase {
         const bankAccountsResult = await this.bankAccountRepository.findManyByUserIdWithoutPassword(userId)
 
         if (!bankAccountsResult.isSuccess()) {
-            if (bankAccountsResult.isErrorInOperation()) {
-                return Result.failure<BankAccountModel.BankAccountWithoutPassword[]>({ title: 'Query Bank Accounts', message: 'Unable to query bank accounts' })
-            }
-
-            return Result.failure<BankAccountModel.BankAccountWithoutPassword[]>({ title: 'Query Bank Accounts', message: 'Bank accounts not found' })
+            return Result.failure<BankAccountModel.BankAccountWithoutPassword[]>({ ...bankAccountsResult.getError(), title: 'Query Bank Accounts' })
         }
 
         return Result.success<BankAccountModel.BankAccountWithoutPassword[]>(
@@ -127,14 +103,10 @@ export class BankAccountQueryUseCase extends UseCase {
         const bankAccountsResult = await this.bankAccountRepository.findManyByUserIdWithoutPasswordAndBalance(userId)
 
         if (!bankAccountsResult.isSuccess()) {
-            if (bankAccountsResult.isErrorInOperation()) {
-                return Result.failure<BankAccountModel.BankAccountWithoutPasswordAndBalance[]>({
-                    title: 'Query Bank Accounts',
-                    message: 'Unable to query bank accounts',
-                })
-            }
-
-            return Result.failure<BankAccountModel.BankAccountWithoutPasswordAndBalance[]>({ title: 'Query Bank Accounts', message: 'Bank accounts not found' })
+            return Result.failure<BankAccountModel.BankAccountWithoutPasswordAndBalance[]>({
+                ...bankAccountsResult.getError(),
+                title: 'Query Bank Accounts',
+            })
         }
 
         return Result.success<BankAccountModel.BankAccountWithoutPasswordAndBalance[]>(
