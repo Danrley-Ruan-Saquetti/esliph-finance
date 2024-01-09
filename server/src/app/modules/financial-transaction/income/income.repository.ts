@@ -5,36 +5,41 @@ import { FinancialTransactionModel } from '@modules/financial-transaction/financ
 
 @Service({ name: 'financial-income.repository' })
 export class FinancialIncomeRepository extends FinancialTransactionRepository {
+    private static GLOBAL_INCOME_MESSAGE = {
+        find: {
+            title: 'Find Income Financial Transaction',
+            notFound: 'Income financial transaction not found',
+            failed: 'Unable to query income financial transaction'
+        },
+        findMany: {
+            title: 'Find Income Financial Transactions',
+            failed: 'Unable to query income financial transactions'
+        }
+    }
 
     async findByIdAndBankAccountId(id: ID, bankAccountId: ID) {
         try {
-            const financialIncome = await this.database.instance.financialTransaction.findFirst({
-                where: { id, bankAccountId, type: FinancialTransactionModel.Type.INCOME }
-            })
+            const financialIncome = await this.database.instance.financialTransaction.findFirst({ where: { id, bankAccountId, type: FinancialTransactionModel.Type.INCOME } })
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransaction>(financialIncome, {
                 noAcceptNullable: true,
-                error: { title: 'Find Financial Income', message: 'Financial income not found' },
+                error: { title: FinancialIncomeRepository.GLOBAL_INCOME_MESSAGE.find.title, message: FinancialIncomeRepository.GLOBAL_INCOME_MESSAGE.find.notFound },
             })
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction>(err, {
-                error: { title: 'Find Financial Income', message: 'Financial income not found' },
+                error: { title: FinancialIncomeRepository.GLOBAL_INCOME_MESSAGE.find.title, message: FinancialIncomeRepository.GLOBAL_INCOME_MESSAGE.find.failed },
             })
         }
     }
 
     async findManyIdBankAccount(id: ID, bankAccountId: ID) {
         try {
-            const financialIncome = await this.database.instance.financialTransaction.findMany({
-                where: { id, bankAccountId, type: FinancialTransactionModel.Type.INCOME }
-            })
+            const financialIncome = await this.database.instance.financialTransaction.findMany({ where: { id, bankAccountId, type: FinancialTransactionModel.Type.INCOME } })
 
-            return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialIncome, {
-                error: { title: 'Find Financial Income', message: 'Financial income not found' }
-            })
+            return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialIncome)
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
-                error: { title: 'Find Financial Income', message: 'Financial income not found' },
+                error: { title: FinancialIncomeRepository.GLOBAL_INCOME_MESSAGE.findMany.title, message: FinancialIncomeRepository.GLOBAL_INCOME_MESSAGE.findMany.failed },
             })
         }
     }

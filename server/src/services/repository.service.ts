@@ -51,15 +51,11 @@ export class Repository {
         return { begin, commit, rollback }
     }
 
-    calcSkipRegister({ limite, pageIndex }: RepositoryPagination) {
-        return pageIndex * limite
-    }
-
     getDatabase() {
         return this.database.instance
     }
 
-    protected handleResponse<T = any>(res: T | null, options: RepositoryHandleResponseOptions) {
+    protected handleResponse<T = any>(res: T | null, options: RepositoryHandleResponseOptions = { error: { message: '', title: '' } }) {
         if (options.noAcceptNullable) {
             if (isNull(res)) {
                 return ResultDatabase.failure<T>({ ...options.error })
@@ -72,14 +68,10 @@ export class Repository {
     protected handleError<T = any>(err: any, options: RepositoryHandleErrorOptions) {
         if (err instanceof Prisma.PrismaClientKnownRequestError) {
             return ResultDatabase.errorOperation<T>({
-                ...options.error,
                 ...err,
+                ...options.error,
                 causes: { message: err.message, origin: (err.meta as any).target.join(';') } as any,
             })
-        }
-
-        if (err instanceof Error) {
-            return ResultDatabase.errorOperation<T>({ ...err, ...options.error })
         }
 
         return ResultDatabase.errorOperation<T>({ ...err, ...options.error })

@@ -13,8 +13,8 @@ export class ResultDatabase<ResultValueModel = any> extends Result<ResultValueMo
         return new ResultDatabase<ResultValueModel>({
             ok: false,
             status: statusCode,
-            error: new ErrorResult(errorInfo),
             value: null,
+            error: new ErrorResult(errorInfo),
             hasErrorInOperation: true,
         })
     }
@@ -29,6 +29,10 @@ export class ResultDatabase<ResultValueModel = any> extends Result<ResultValueMo
 
     static inherit<ResultValueModelInherited = any>({ ok, status, value, error }: ResultModel<ResultValueModelInherited>) {
         return new ResultDatabase<ResultValueModelInherited>({ ok, status, error, value, hasErrorInOperation: false })
+    }
+
+    getResult() {
+        return Result.inherit<ResultValueModel>(this.getResponse())
     }
 
     isErrorInOperation() {

@@ -14,6 +14,28 @@ export type FinancialTransactionQuery = {
 
 @Service({ name: 'financial-transaction.repository' })
 export class FinancialTransactionRepository extends Repository {
+    private static GLOBAL_MESSAGE = {
+        create: {
+            title: 'Register Financial Transaction',
+            success: 'Financial transaction successfully registered',
+            failed: 'Failed to register financial transaction'
+        },
+        update: {
+            title: 'Update Financial Transaction',
+            success: 'Financial transaction successfully updated',
+            failed: 'Failed to update financial transaction data'
+        },
+        find: {
+            title: 'Find Financial Transaction',
+            notFound: 'Financial transaction not found',
+            failed: 'Unable to query financial transaction'
+        },
+        findMany: {
+            title: 'Find Financial Transactions',
+            failed: 'Unable to query financial transactions'
+        }
+    }
+
     async register({ data, notes = [], categories = [] }: { data: FinancialTransactionModel.Model, notes?: { description: string }[], categories?: { id: number }[] }) {
         try {
             await this.database.instance.financialTransaction.create({
@@ -24,13 +46,10 @@ export class FinancialTransactionRepository extends Repository {
                 },
             })
 
-            return this.handleResponse<{ message: string }>(
-                { message: 'Financial transaction successfully registered' },
-                { error: { title: 'Register Financial Transaction', message: 'Financial transaction successfully registered' } },
-            )
+            return this.handleResponse<{ message: string }>({ message: FinancialTransactionRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
             return this.handleError<{ message: string }>(err, {
-                error: { title: 'Register Financial Transaction', message: 'Unable to register financial transaction' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.create.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.create.failed },
             })
         }
     }
@@ -39,13 +58,10 @@ export class FinancialTransactionRepository extends Repository {
         try {
             await this.database.instance.financialTransaction.update({ where: { id: where.id }, data: args })
 
-            return this.handleResponse<{ message: string }>(
-                { message: 'Financial transaction successfully updated' },
-                { error: { title: 'Update Financial Transaction', message: 'Financial transaction successfully updated' } },
-            )
+            return this.handleResponse<{ message: string }>({ message: FinancialTransactionRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
             return this.handleError<{ message: string }>(err, {
-                error: { title: 'Update Financial Transaction', message: 'Unable to update financial transaction' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.update.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.update.failed },
             })
         }
     }
@@ -56,11 +72,11 @@ export class FinancialTransactionRepository extends Repository {
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransaction>(financialTransaction, {
                 noAcceptNullable: true,
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction>(err, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.failed },
             })
         }
     }
@@ -71,11 +87,11 @@ export class FinancialTransactionRepository extends Repository {
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransaction>(financialTransaction, {
                 noAcceptNullable: true,
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction>(err, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.failed },
             })
         }
     }
@@ -89,11 +105,11 @@ export class FinancialTransactionRepository extends Repository {
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransactionWithPayments>(financialTransaction, {
                 noAcceptNullable: true,
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransactionWithPayments>(err, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.failed },
             })
         }
     }
@@ -107,11 +123,11 @@ export class FinancialTransactionRepository extends Repository {
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransactionWithNotes>(financialTransaction, {
                 noAcceptNullable: true,
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransactionWithNotes>(err, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.failed },
             })
         }
     }
@@ -131,11 +147,11 @@ export class FinancialTransactionRepository extends Repository {
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransactionWithPaymentsAndNotes>(financialTransaction, {
                 noAcceptNullable: true,
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransactionWithPaymentsAndNotes>(err, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.failed },
             })
         }
     }
@@ -147,12 +163,10 @@ export class FinancialTransactionRepository extends Repository {
                 orderBy: { expiresIn: 'asc' },
             })
 
-            return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialTransactions, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
-            })
+            return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialTransactions)
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed },
             })
         }
     }
@@ -172,12 +186,10 @@ export class FinancialTransactionRepository extends Repository {
             return this.handleResponse<FinancialTransactionModel.FinancialTransactionWithCategories[]>(financialTransactions.map(transaction => ({
                 ...transaction,
                 categories: transaction.categories.map(({ category }) => category)
-            })), {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
-            })
+            })))
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed },
             })
         }
     }
@@ -189,12 +201,10 @@ export class FinancialTransactionRepository extends Repository {
                 orderBy: { expiresIn: 'asc' },
             })
 
-            return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialTransactions, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
-            })
+            return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialTransactions)
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed },
             })
         }
     }
@@ -206,12 +216,10 @@ export class FinancialTransactionRepository extends Repository {
                 orderBy: { expiresIn: 'asc' },
             })
 
-            return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialTransactions, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
-            })
+            return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialTransactions)
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed },
             })
         }
     }
@@ -231,12 +239,10 @@ export class FinancialTransactionRepository extends Repository {
             return this.handleResponse<FinancialTransactionModel.FinancialTransactionWithCategories[]>(financialTransactions.map(transaction => ({
                 ...transaction,
                 categories: transaction.categories.map(({ category }) => category)
-            })), {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
-            })
+            })))
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed },
             })
         }
     }
@@ -248,12 +254,10 @@ export class FinancialTransactionRepository extends Repository {
                 orderBy: { expiresIn: 'asc' },
             })
 
-            return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialTransactions, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
-            })
+            return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialTransactions)
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed },
             })
         }
     }
@@ -267,32 +271,30 @@ export class FinancialTransactionRepository extends Repository {
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(
                 financialTransactions.map(transaction => ({
-                    countRepeatedOccurrences: transaction['count_repeated_occurrences'],
-                    createdAt: transaction['created_at'],
-                    description: transaction['description'],
-                    frequency: transaction['frequency'],
-                    id: transaction['id'],
-                    priority: transaction['priority'],
-                    receiver: transaction['receiver'],
-                    sender: transaction['sender'],
-                    situation: transaction['situation'],
-                    timesToRepeat: transaction['times_to_repeat'],
-                    title: transaction['title'],
-                    type: transaction['type'],
-                    typeOccurrence: transaction['type_occurrence'],
-                    updatedAt: transaction['updated_at'],
-                    value: transaction['value'],
-                    bankAccountId: transaction['bank_account_id'],
-                    dateTimeCompetence: transaction['date_time_competence'],
-                    expiresIn: transaction['expires_in'],
-                    isObservable: transaction['is_observable'],
-                    isSendNotification: transaction['is_send_notification'],
-                })),
-                { error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' } },
-            )
+                    countRepeatedOccurrences: transaction[''],
+                    createdAt: transaction[''],
+                    description: transaction[''],
+                    frequency: transaction[''],
+                    id: transaction[''],
+                    priority: transaction[''],
+                    receiver: transaction[''],
+                    sender: transaction[''],
+                    situation: transaction[''],
+                    timesToRepeat: transaction[''],
+                    title: transaction[''],
+                    type: transaction[''],
+                    typeOccurrence: transaction[''],
+                    updatedAt: transaction[''],
+                    value: transaction[''],
+                    bankAccountId: transaction[''],
+                    dateTimeCompetence: transaction[''],
+                    expiresIn: transaction[''],
+                    isObservable: transaction[''],
+                    isSendNotification: transaction[''],
+                })))
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed },
             })
         }
     }
@@ -301,16 +303,12 @@ export class FinancialTransactionRepository extends Repository {
         try {
             const financialTransaction = await this.database.instance.financialTransaction.findFirst({
                 where: { ...query.where },
-                skip: this.calcSkipRegister(query.page),
-                take: query.page.limite,
             })
 
-            return this.handleResponse<FinancialTransactionModel.FinancialTransaction>(financialTransaction, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
-            })
+            return this.handleResponse<FinancialTransactionModel.FinancialTransaction>(financialTransaction)
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction>(err, {
-                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed },
             })
         }
     }

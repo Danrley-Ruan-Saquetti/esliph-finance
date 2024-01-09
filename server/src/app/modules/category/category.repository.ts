@@ -5,16 +5,42 @@ import { CategoryModel } from '@modules/category/category.model'
 
 @Service({ name: 'category.repository' })
 export class CategoryRepository extends Repository {
+    private static GLOBAL_MESSAGE = {
+        create: {
+            title: 'Register Category',
+            success: 'Category successfully registered',
+            failed: 'Failed to register category'
+        },
+        remove: {
+            title: 'Remove Category',
+            success: 'Category successfully removed',
+            failed: 'Failed to remove category'
+        },
+        update: {
+            title: 'Update Category',
+            success: 'Category successfully updated',
+            failed: 'Failed to update category data'
+        },
+        find: {
+            title: 'Find Category',
+            notFound: 'Category not found',
+            failed: 'Unable to query category'
+        },
+        findMany: {
+            title: 'Find Categories',
+            failed: 'Unable to query categories'
+        }
+    }
+
     async register({ bankAccountId, color, isFavorite, name }: CategoryModel.Model) {
         try {
             await this.database.instance.category.create({ data: { bankAccountId, color, isFavorite, name } })
 
-            return this.handleResponse<{ message: string }>(
-                { message: 'Category successfully registered' },
-                { error: { title: 'Register Category', message: 'Category successfully registered' } },
-            )
+            return this.handleResponse<{ message: string }>({ message: CategoryRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
-            return this.handleError<{ message: string }>(err, { error: { title: 'Register Category', message: 'Unable to register category' } })
+            return this.handleError<{ message: string }>(err, {
+                error: { title: CategoryRepository.GLOBAL_MESSAGE.create.title, message: CategoryRepository.GLOBAL_MESSAGE.create.failed }
+            })
         }
     }
 
@@ -22,12 +48,11 @@ export class CategoryRepository extends Repository {
         try {
             await this.database.instance.category.update({ where: { id: where.id }, data: args })
 
-            return this.handleResponse<{ message: string }>(
-                { message: 'Category successfully updated' },
-                { error: { title: 'Update Category', message: 'Category successfully updated' } },
-            )
+            return this.handleResponse<{ message: string }>({ message: CategoryRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
-            return this.handleError<{ message: string }>(err, { error: { title: 'Update Category', message: 'Unable to update category' } })
+            return this.handleError<{ message: string }>(err, {
+                error: { title: CategoryRepository.GLOBAL_MESSAGE.update.title, message: CategoryRepository.GLOBAL_MESSAGE.update.failed }
+            })
         }
     }
 
@@ -35,12 +60,11 @@ export class CategoryRepository extends Repository {
         try {
             await this.database.instance.category.delete({ where: { id: where.id } })
 
-            return this.handleResponse<{ message: string }>(
-                { message: 'Category removed updated' },
-                { error: { title: 'Remove Category', message: 'Category successfully removed' } },
-            )
+            return this.handleResponse<{ message: string }>({ message: CategoryRepository.GLOBAL_MESSAGE.remove.success })
         } catch (err: any) {
-            return this.handleError<{ message: string }>(err, { error: { title: 'Remove Category', message: 'Unable to remove category' } })
+            return this.handleError<{ message: string }>(err, {
+                error: { title: CategoryRepository.GLOBAL_MESSAGE.remove.title, message: CategoryRepository.GLOBAL_MESSAGE.remove.failed }
+            })
         }
     }
 
@@ -50,10 +74,12 @@ export class CategoryRepository extends Repository {
 
             return this.handleResponse<CategoryModel.Category>(category, {
                 noAcceptNullable: true,
-                error: { title: 'Find Category', message: 'Category not found' },
+                error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<CategoryModel.Category>(err, { error: { title: 'Find Category', message: 'Category not found' } })
+            return this.handleError<CategoryModel.Category>(err, {
+                error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.failed }
+            })
         }
     }
 
@@ -63,11 +89,11 @@ export class CategoryRepository extends Repository {
 
             return this.handleResponse<CategoryModel.Category>(category, {
                 noAcceptNullable: true,
-                error: { title: 'Find Category', message: 'Category not found' },
+                error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
             return this.handleError<CategoryModel.Category>(err, {
-                error: { title: 'Find Category', message: 'Category not found' },
+                error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.failed },
             })
         }
     }
@@ -76,9 +102,11 @@ export class CategoryRepository extends Repository {
         try {
             const users = await this.database.instance.category.findMany({ where: { bankAccountId } })
 
-            return this.handleResponse<CategoryModel.Category[]>(users, { error: { title: 'Find Category', message: 'Category not found' } })
+            return this.handleResponse<CategoryModel.Category[]>(users)
         } catch (err: any) {
-            return this.handleError<CategoryModel.Category[]>(err, { error: { title: 'Find Category', message: 'Unable to find category' } })
+            return this.handleError<CategoryModel.Category[]>(err, {
+                error: { title: CategoryRepository.GLOBAL_MESSAGE.findMany.title, message: CategoryRepository.GLOBAL_MESSAGE.find.failed }
+            })
         }
     }
 
@@ -86,9 +114,11 @@ export class CategoryRepository extends Repository {
         try {
             const users = await this.database.instance.category.findMany({ where: { bankAccountId }, orderBy: { isFavorite: 'asc' } })
 
-            return this.handleResponse<CategoryModel.Category[]>(users, { error: { title: 'Find Category', message: 'Category not found' } })
+            return this.handleResponse<CategoryModel.Category[]>(users)
         } catch (err: any) {
-            return this.handleError<CategoryModel.Category[]>(err, { error: { title: 'Find Category', message: 'Unable to find category' } })
+            return this.handleError<CategoryModel.Category[]>(err, {
+                error: { title: CategoryRepository.GLOBAL_MESSAGE.findMany.title, message: CategoryRepository.GLOBAL_MESSAGE.find.failed }
+            })
         }
     }
 }

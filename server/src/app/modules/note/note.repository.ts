@@ -5,16 +5,47 @@ import { NoteModel } from '@modules/note/note.model'
 
 @Service({ name: 'note.repository' })
 export class NoteRepository extends Repository {
+    private static GLOBAL_MESSAGE = {
+        create: {
+            title: 'Register Note',
+            success: 'Note successfully registered',
+            failed: 'Failed to register note'
+        },
+        createMany: {
+            title: 'Register Notes',
+            success: 'Notes successfully registered',
+            failed: 'Failed to register notes'
+        },
+        remove: {
+            title: 'Remove Note',
+            success: 'Note successfully removed',
+            failed: 'Failed to remove note'
+        },
+        update: {
+            title: 'Update Note',
+            success: 'Note successfully updated',
+            failed: 'Failed to update note data'
+        },
+        find: {
+            title: 'Find Note',
+            notFound: 'Note not found',
+            failed: 'Unable to query note'
+        },
+        findMany: {
+            title: 'Find Notes',
+            failed: 'Unable to query notes'
+        }
+    }
+
     async register({ description, financialTransactionId }: NoteModel.Model) {
         try {
             await this.database.instance.note.create({ data: { description, financialTransactionId } })
 
-            return this.handleResponse<{ message: string }>(
-                { message: 'Note successfully registered' },
-                { error: { title: 'Register Note', message: 'Note successfully registered' } },
-            )
+            return this.handleResponse<{ message: string }>({ message: NoteRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
-            return this.handleError<{ message: string }>(err, { error: { title: 'Register Note', message: 'Unable to register note' } })
+            return this.handleError<{ message: string }>(err, {
+                error: { title: NoteRepository.GLOBAL_MESSAGE.create.title, message: NoteRepository.GLOBAL_MESSAGE.create.failed }
+            })
         }
     }
 
@@ -22,12 +53,11 @@ export class NoteRepository extends Repository {
         try {
             await this.database.instance.note.createMany({ data: notes.map(note => ({ ...note, financialTransactionId })) })
 
-            return this.handleResponse<{ message: string }>(
-                { message: 'Notes successfully registered' },
-                { error: { title: 'Register Notes', message: 'Notes successfully registered' } },
-            )
+            return this.handleResponse<{ message: string }>({ message: NoteRepository.GLOBAL_MESSAGE.createMany.success })
         } catch (err: any) {
-            return this.handleError<{ message: string }>(err, { error: { title: 'Register Notes', message: 'Unable to register notes' } })
+            return this.handleError<{ message: string }>(err, {
+                error: { title: NoteRepository.GLOBAL_MESSAGE.createMany.title, message: NoteRepository.GLOBAL_MESSAGE.createMany.failed }
+            })
         }
     }
 
@@ -35,12 +65,11 @@ export class NoteRepository extends Repository {
         try {
             await this.database.instance.note.delete({ where: { id } })
 
-            return this.handleResponse<{ message: string }>(
-                { message: 'Note successfully deleted' },
-                { error: { title: 'Delete Note', message: 'Note successfully deleted' } },
-            )
+            return this.handleResponse<{ message: string }>({ message: NoteRepository.GLOBAL_MESSAGE.remove.success })
         } catch (err: any) {
-            return this.handleError<{ message: string }>(err, { error: { title: 'Delete Note', message: 'Unable to delete note' } })
+            return this.handleError<{ message: string }>(err, {
+                error: { title: NoteRepository.GLOBAL_MESSAGE.remove.title, message: NoteRepository.GLOBAL_MESSAGE.remove.failed }
+            })
         }
     }
 
@@ -48,12 +77,11 @@ export class NoteRepository extends Repository {
         try {
             await this.database.instance.note.update({ where: { id: where.id }, data: args })
 
-            return this.handleResponse<{ message: string }>(
-                { message: 'Note successfully updated' },
-                { error: { title: 'Update Note', message: 'Note successfully updated' } },
-            )
+            return this.handleResponse<{ message: string }>({ message: NoteRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
-            return this.handleError<{ message: string }>(err, { error: { title: 'Update Note', message: 'Unable to update note' } })
+            return this.handleError<{ message: string }>(err, {
+                error: { title: NoteRepository.GLOBAL_MESSAGE.update.title, message: NoteRepository.GLOBAL_MESSAGE.update.failed }
+            })
         }
     }
 
@@ -63,10 +91,12 @@ export class NoteRepository extends Repository {
 
             return this.handleResponse<NoteModel.Note>(note, {
                 noAcceptNullable: true,
-                error: { title: 'Find Note', message: 'Note not found' },
+                error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<NoteModel.Note>(err, { error: { title: 'Find Note', message: 'Note not found' } })
+            return this.handleError<NoteModel.Note>(err, {
+                error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.failed }
+            })
         }
     }
 
@@ -76,11 +106,11 @@ export class NoteRepository extends Repository {
 
             return this.handleResponse<NoteModel.Note>(note, {
                 noAcceptNullable: true,
-                error: { title: 'Find Note', message: 'Note not found' },
+                error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
             return this.handleError<NoteModel.Note>(err, {
-                error: { title: 'Find Note', message: 'Note not found' },
+                error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.failed },
             })
         }
     }
@@ -91,22 +121,27 @@ export class NoteRepository extends Repository {
 
             return this.handleResponse<NoteModel.Note>(note, {
                 noAcceptNullable: true,
-                error: { title: 'Find Note', message: 'Note not found' },
+                error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
             return this.handleError<NoteModel.Note>(err, {
-                error: { title: 'Find Note', message: 'Note not found' },
+                error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.failed },
             })
         }
     }
 
     async findManyByFinancialTransactionId(financialTransactionId: ID) {
         try {
-            const users = await this.database.instance.note.findMany({ where: { financialTransactionId }, orderBy: { createdAt: 'desc' } })
+            const users = await this.database.instance.note.findMany({
+                where: { financialTransactionId },
+                orderBy: { createdAt: 'desc' }
+            })
 
-            return this.handleResponse<NoteModel.Note[]>(users, { error: { title: 'Find Note', message: 'Note not found' } })
+            return this.handleResponse<NoteModel.Note[]>(users)
         } catch (err: any) {
-            return this.handleError<NoteModel.Note[]>(err, { error: { title: 'Find Note', message: 'Unable to find note' } })
+            return this.handleError<NoteModel.Note[]>(err, {
+                error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.failed }
+            })
         }
     }
 }

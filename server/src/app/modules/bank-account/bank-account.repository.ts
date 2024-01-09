@@ -5,16 +5,35 @@ import { BankAccountModel } from '@modules/bank-account/bank-account.model'
 
 @Service({ name: 'bank-account.repository' })
 export class BankAccountRepository extends Repository {
+    private static GLOBAL_MESSAGE = {
+        create: {
+            title: 'Register Bank Account',
+            success: 'Bank account successfully registered',
+            failed: 'Failed to register bank account'
+        },
+        update: {
+            title: 'Update Bank Account',
+            success: 'Bank account successfully updated',
+            failed: 'Failed to update bank account data'
+        },
+        find: {
+            title: 'Find Bank Account',
+            notFound: 'Bank account not found',
+            failed: 'Unable to query bank account'
+        },
+        findMany: {
+            title: 'Find Bank Accounts',
+            failed: 'Unable to query bank accounts'
+        }
+    }
+
     async register({ balance, name, password, userId, code }: BankAccountModel.Model) {
         try {
             await this.repo.create({ data: { balance, name, password, userId, code } })
 
-            return this.handleResponse<{ message: string }>(
-                { message: 'Bank account successfully registered' },
-                { error: { title: 'Register Bank Account', message: 'Failed to register bank account' } },
-            )
+            return this.handleResponse<{ message: string }>({ message: BankAccountRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
-            return this.handleError<{ message: string }>(err, { error: { title: 'Register Bank Account', message: 'Unable to register bank account' } })
+            return this.handleError<{ message: string }>(err, { error: { title: BankAccountRepository.GLOBAL_MESSAGE.create.title, message: BankAccountRepository.GLOBAL_MESSAGE.create.failed } })
         }
     }
 
@@ -22,12 +41,9 @@ export class BankAccountRepository extends Repository {
         try {
             await this.repo.update({ where: { id: where.id }, data: args })
 
-            return this.handleResponse<{ message: string }>(
-                { message: 'Bank account successfully updated' },
-                { noAcceptNullable: true, error: { title: 'Update Bank Account', message: 'Failed to updated bank account' } },
-            )
+            return this.handleResponse<{ message: string }>({ message: BankAccountRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
-            return this.handleError<{ message: string }>(err, { error: { title: 'Update Bank Account', message: 'Unable to update bank account' } })
+            return this.handleError<{ message: string }>(err, { error: { title: BankAccountRepository.GLOBAL_MESSAGE.update.title, message: BankAccountRepository.GLOBAL_MESSAGE.update.failed } })
         }
     }
 
@@ -37,10 +53,10 @@ export class BankAccountRepository extends Repository {
 
             return this.handleResponse<BankAccountModel.BankAccount>(bankAccount, {
                 noAcceptNullable: true,
-                error: { title: 'Find Bank Account', message: 'Bank account not found' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccount>(err, { error: { title: 'Find Bank Account', message: 'Bank account not found' } })
+            return this.handleError<BankAccountModel.BankAccount>(err, { error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed } })
         }
     }
 
@@ -50,11 +66,11 @@ export class BankAccountRepository extends Repository {
 
             return this.handleResponse<BankAccountModel.BankAccountWithFinancialTransactionsAndPayments>(bankAccount, {
                 noAcceptNullable: true,
-                error: { title: 'Find Bank Account', message: 'Bank account not found' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
             return this.handleError<BankAccountModel.BankAccountWithFinancialTransactionsAndPayments>(err, {
-                error: { title: 'Find Bank Account', message: 'Bank account not found' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed },
             })
         }
     }
@@ -78,11 +94,11 @@ export class BankAccountRepository extends Repository {
 
             return this.handleResponse<BankAccountModel.BankAccountWithFinancialTransactionsAndPayments>(bankAccount, {
                 noAcceptNullable: true,
-                error: { title: 'Find Bank Account', message: 'Bank account not found' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
             return this.handleError<BankAccountModel.BankAccountWithFinancialTransactionsAndPayments>(err, {
-                error: { title: 'Find Bank Account', message: 'Bank account not found' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed },
             })
         }
     }
@@ -96,11 +112,11 @@ export class BankAccountRepository extends Repository {
 
             return this.handleResponse<BankAccountModel.BankAccountWithoutPassword>(bankAccount, {
                 noAcceptNullable: true,
-                error: { title: 'Find Bank Account', message: 'Bank account not found' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
             return this.handleError<BankAccountModel.BankAccountWithoutPassword>(err, {
-                error: { title: 'Find Bank Account', message: 'Unable to find bank account' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed },
             })
         }
     }
@@ -111,10 +127,10 @@ export class BankAccountRepository extends Repository {
 
             return this.handleResponse<BankAccountModel.BankAccount>(bankAccount, {
                 noAcceptNullable: true,
-                error: { title: 'Find Bank Account', message: 'Bank account not found' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccount>(err, { error: { title: 'Find Bank Account', message: 'Bank account not found' } })
+            return this.handleError<BankAccountModel.BankAccount>(err, { error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed } })
         }
     }
 
@@ -127,11 +143,11 @@ export class BankAccountRepository extends Repository {
 
             return this.handleResponse<BankAccountModel.BankAccountWithoutPassword>(bankAccount, {
                 noAcceptNullable: true,
-                error: { title: 'Find Bank Account', message: 'Bank account not found' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
             return this.handleError<BankAccountModel.BankAccountWithoutPassword>(err, {
-                error: { title: 'Find Bank Account', message: 'Unable to find bank account' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed },
             })
         }
     }
@@ -142,10 +158,10 @@ export class BankAccountRepository extends Repository {
 
             return this.handleResponse<BankAccountModel.BankAccount>(bankAccount, {
                 noAcceptNullable: true,
-                error: { title: 'Find Bank Account', message: 'Bank account not found' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccount>(err, { error: { title: 'Find Bank Account', message: 'Bank account not found' } })
+            return this.handleError<BankAccountModel.BankAccount>(err, { error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed } })
         }
     }
 
@@ -158,11 +174,11 @@ export class BankAccountRepository extends Repository {
 
             return this.handleResponse<BankAccountModel.BankAccountWithoutPassword>(bankAccount, {
                 noAcceptNullable: true,
-                error: { title: 'Find Bank Account', message: 'Bank account not found' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
             return this.handleError<BankAccountModel.BankAccountWithoutPassword>(err, {
-                error: { title: 'Find Bank Account', message: 'Unable to find bank account' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed },
             })
         }
     }
@@ -174,9 +190,9 @@ export class BankAccountRepository extends Repository {
                 orderBy: { updatedAt: 'desc' },
             })
 
-            return this.handleResponse<BankAccountModel.BankAccount[]>(users, { error: { title: 'Find Bank Account', message: 'Bank account not found' } })
+            return this.handleResponse<BankAccountModel.BankAccount[]>(users)
         } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccount[]>(err, { error: { title: 'Find Bank Account', message: 'Unable to find bank account' } })
+            return this.handleError<BankAccountModel.BankAccount[]>(err, { error: { title: BankAccountRepository.GLOBAL_MESSAGE.findMany.title, message: BankAccountRepository.GLOBAL_MESSAGE.findMany.failed } })
         }
     }
 
@@ -188,12 +204,10 @@ export class BankAccountRepository extends Repository {
                 orderBy: { updatedAt: 'desc' },
             })
 
-            return this.handleResponse<BankAccountModel.BankAccountWithoutPassword[]>(bankAccounts, {
-                error: { title: 'Find Bank Account', message: 'Bank account not found' },
-            })
+            return this.handleResponse<BankAccountModel.BankAccountWithoutPassword[]>(bankAccounts)
         } catch (err: any) {
             return this.handleError<BankAccountModel.BankAccountWithoutPassword[]>(err, {
-                error: { title: 'Find Bank Account', message: 'Unable to find bank account' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.findMany.title, message: BankAccountRepository.GLOBAL_MESSAGE.findMany.failed },
             })
         }
     }
@@ -206,12 +220,10 @@ export class BankAccountRepository extends Repository {
                 orderBy: { updatedAt: 'desc' },
             })
 
-            return this.handleResponse<BankAccountModel.BankAccountWithoutPasswordAndBalance[]>(bankAccounts, {
-                error: { title: 'Find Bank Account', message: 'Bank account not found' },
-            })
+            return this.handleResponse<BankAccountModel.BankAccountWithoutPasswordAndBalance[]>(bankAccounts)
         } catch (err: any) {
             return this.handleError<BankAccountModel.BankAccountWithoutPassword[]>(err, {
-                error: { title: 'Find Bank Account', message: 'Unable to find bank account' },
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.findMany.title, message: BankAccountRepository.GLOBAL_MESSAGE.findMany.failed },
             })
         }
     }
