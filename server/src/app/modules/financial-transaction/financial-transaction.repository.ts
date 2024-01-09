@@ -14,12 +14,13 @@ export type FinancialTransactionQuery = {
 
 @Service({ name: 'financial-transaction.repository' })
 export class FinancialTransactionRepository extends Repository {
-    async register(data: FinancialTransactionModel.Model, notes: { description: string }[] = []) {
+    async register({ data, notes = [], categories = [] }: { data: FinancialTransactionModel.Model, notes?: { description: string }[], categories?: { id: number }[] }) {
         try {
             await this.database.instance.financialTransaction.create({
                 data: {
                     ...data,
                     notes: { createMany: { data: notes } },
+                    categories: { createMany: { data: categories.map(({ id }) => ({ categoryId: id })) } }
                 },
             })
 

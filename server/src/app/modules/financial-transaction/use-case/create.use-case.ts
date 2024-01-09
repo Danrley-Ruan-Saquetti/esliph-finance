@@ -64,6 +64,12 @@ const schemaDTO = ValidatorService.schema
             )
             .optional()
             .default([]),
+        categories: ValidatorService.schema
+            .array(
+                ValidatorService.schema.coerce.number(),
+            )
+            .optional()
+            .default([]),
     })
     .refine(({ typeOccurrence, timesToRepeat }) => typeOccurrence != FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC || !!timesToRepeat, {
         message: GLOBAL_FINANCIAL_TRANSACTION_DTO.timesToRepeat.messageMustBePositive,
@@ -86,8 +92,8 @@ export class FinancialTransactionCreateUseCase extends UseCase {
     async perform(args: FinancialTransactionCreateDTOArgs) {
         const data = this.validateDTO(args, schemaDTO)
 
-        const { financialTransaction, notes } = this.processingData(data)
-        await this.registerFinancialTransaction(financialTransaction, notes)
+        const { financialTransaction, notes, categories } = this.processingData(data)
+        await this.registerFinancialTransaction(financialTransaction, notes, categories)
 
         return Result.success({ message: 'Register financial transaction successfully' })
     }
@@ -95,6 +101,7 @@ export class FinancialTransactionCreateUseCase extends UseCase {
     private processingData(data: SchemaValidator.output<typeof schemaDTO>): {
         financialTransaction: FinancialTransactionModel.Model
         notes: { description: string }[]
+        categories: { id: number }[]
     } {
         const isAlreadyLate = this.dateService.now() < data.expiresIn
         const isProgrammatic = data.typeOccurrence === FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC
@@ -120,11 +127,12 @@ export class FinancialTransactionCreateUseCase extends UseCase {
                 frequency: isProgrammatic ? data.frequency : FinancialTransactionModel.Frequency.NULL,
             },
             notes: data.notes.filter(note => !!note.description) as { description: string }[],
+            categories: data.categories.map(id => ({ id }))
         }
     }
 
-    private async registerFinancialTransaction(data: FinancialTransactionModel.Model, notes: { description: string }[] = []) {
-        const registerFinancialTransactionResult = await this.transactionRepository.register(data, notes)
+    private async registerFinancialTransaction(data: FinancialTransactionModel.Model, notes: { description: string }[] = [], categories: { id: number }[] = []) {
+        const registerFinancialTransactionResult = await this.transactionRepository.register({ data, notes, categories })
 
         if (registerFinancialTransactionResult.isSuccess()) {
             return
