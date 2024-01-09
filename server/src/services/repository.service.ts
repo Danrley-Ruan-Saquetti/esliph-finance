@@ -21,7 +21,7 @@ export type RepositoryQuery = {
     page: RepositoryPagination
 }
 
-@Service()
+@Service({ name: 'global.service.repository' })
 export class Repository {
     constructor(
         @Injection.Inject('database') protected database: DatabaseService,

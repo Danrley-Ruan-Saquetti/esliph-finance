@@ -7,8 +7,7 @@ import { ID } from '@@types'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { GLOBAL_BANK_ACCOUNT_DTO, GLOBAL_BANK_ACCOUNT_RULES } from '@modules/bank-account/bank-account.global'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
-import { CompensationPaymentsControl } from '@modules/payment/control/compensation-payments.control'
-import { BalanceBankAccountControl } from '../control/balance-bank-account.control'
+import { BalanceBankAccountControl } from '@modules/bank-account/control/balance-bank-account.control'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 
 const schemaDTO = ValidatorService.schema.object({

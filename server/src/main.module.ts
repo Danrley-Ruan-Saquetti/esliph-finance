@@ -40,6 +40,7 @@ import { DateService } from '@services/date.service'
         { whenCall: 'jwt', use: 'global.service.jwt' },
         { whenCall: 'validator', use: 'global.service.validator' },
         { whenCall: 'database', use: 'global.service.database' },
+        { whenCall: 'repository', use: 'global.service.repository' },
         { whenCall: 'mail', use: 'global.service.mail' },
     ],
 })

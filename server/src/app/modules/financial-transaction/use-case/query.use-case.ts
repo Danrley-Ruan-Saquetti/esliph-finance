@@ -53,10 +53,25 @@ export class FinancialTransactionQueryUseCase extends UseCase {
         return Result.success(financialTransactionsResult.getValue())
     }
 
-    async queryManyByBankAccountId(args: { bankAccountId: ID }) {
+    async queryManyByBankAccountIdWithCategories(args: { bankAccountId: ID }) {
         const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
 
-        const financialTransactionsResult = await this.transactionRepository.findManyByBankAccountId(bankAccountId)
+        const financialTransactionsResult = await this.transactionRepository.findManyByBankAccountIdWithCategories(bankAccountId)
+
+        if (!financialTransactionsResult.isSuccess()) {
+            if (financialTransactionsResult.isErrorInOperation()) {
+                return Result.failure({ title: 'Query Financial Transactions', message: 'Unable to query financial transactions' })
+            }
+        }
+
+        return Result.success(financialTransactionsResult.getValue() || [])
+    }
+
+    async queryManyByBankAccountIdAndCategoryIdWithCategories(args: { bankAccountId: ID, categoryId: ID }) {
+        const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
+        const categoryId = this.validateDTO(args.categoryId, schemaNumber)
+
+        const financialTransactionsResult = await this.transactionRepository.findManyByBankAccountIdAndCategoryIdWithCategories(bankAccountId, categoryId)
 
         if (!financialTransactionsResult.isSuccess()) {
             if (financialTransactionsResult.isErrorInOperation()) {

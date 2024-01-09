@@ -156,6 +156,31 @@ export class FinancialTransactionRepository extends Repository {
         }
     }
 
+    async findManyByBankAccountIdWithCategories(bankAccountId: ID) {
+        try {
+            const financialTransactions = await this.database.instance.financialTransaction.findMany({
+                where: { bankAccountId },
+                include: {
+                    categories: {
+                        select: { category: true }
+                    }
+                },
+                orderBy: { expiresIn: 'asc' },
+            })
+
+            return this.handleResponse<FinancialTransactionModel.FinancialTransactionWithCategories[]>(financialTransactions.map(transaction => ({
+                ...transaction,
+                categories: transaction.categories.map(({ category }) => category)
+            })), {
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        }
+    }
+
     async findManyByBankAccountIdAndSituations(bankAccountId: ID, situations: FinancialTransactionModel.Situation[]) {
         try {
             const financialTransactions = await this.database.instance.financialTransaction.findMany({
@@ -181,6 +206,31 @@ export class FinancialTransactionRepository extends Repository {
             })
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(financialTransactions, {
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        } catch (err: any) {
+            return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
+                error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
+            })
+        }
+    }
+
+    async findManyByBankAccountIdAndCategoryIdWithCategories(bankAccountId: ID, categoryId: ID) {
+        try {
+            const financialTransactions = await this.database.instance.financialTransaction.findMany({
+                where: { bankAccountId, categories: { some: { categoryId } } },
+                orderBy: { expiresIn: 'asc' },
+                include: {
+                    categories: {
+                        select: { category: true }
+                    }
+                }
+            })
+
+            return this.handleResponse<FinancialTransactionModel.FinancialTransactionWithCategories[]>(financialTransactions.map(transaction => ({
+                ...transaction,
+                categories: transaction.categories.map(({ category }) => category)
+            })), {
                 error: { title: 'Find Financial Transaction', message: 'Financial transaction not found' },
             })
         } catch (err: any) {

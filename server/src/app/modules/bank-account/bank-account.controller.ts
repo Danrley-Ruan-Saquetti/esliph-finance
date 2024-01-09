@@ -12,7 +12,7 @@ export class BankAccountController {
         @Injection.Inject('bank-account.use-case.create') private createUC: BankAccountCreateUseCase,
         @Injection.Inject('bank-account.use-case.query') private queryUC: BankAccountQueryUseCase,
         @Injection.Inject('bank-account.use-case.query') private queryBalanceUC: BankAccountQueryBalanceUseCase,
-    ) {}
+    ) { }
 
     @Guard({ name: 'user.authorization' })
     @Get('')
@@ -40,14 +40,14 @@ export class BankAccountController {
     async getCurrent(req: Request) {
         const id = req.headers['bankAccountId']
 
-        const result = await this.queryUC.queryByIdCodeMaskWithoutPasswordWhitMask({ id })
+        const result = await this.queryUC.queryByIdWithoutPassword({ id })
 
         return result
     }
 
     @Guard({ name: 'bank-account.authorization' })
     @Get('/balance')
-    async getbalance(req: Request) {
+    async getBalance(req: Request) {
         const bankAccountId = req.headers['bankAccountId']
         const dateStart = req.params['dateStart']
         const dateEnd = req.params['dateEnd']

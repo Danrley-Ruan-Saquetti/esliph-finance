@@ -22,8 +22,15 @@ export class FinancialTransactionController {
     @Get('')
     async get(req: Request) {
         const bankAccountId = req.headers['bankAccountId']
+        const categoryId = req.params['categoryId']
 
-        const result = await this.queryUC.queryManyByBankAccountId({ bankAccountId })
+        if (categoryId) {
+            const result = await this.queryUC.queryManyByBankAccountIdAndCategoryIdWithCategories({ categoryId, bankAccountId })
+
+            return result
+        }
+
+        const result = await this.queryUC.queryManyByBankAccountIdWithCategories({ bankAccountId })
 
         return result
     }
