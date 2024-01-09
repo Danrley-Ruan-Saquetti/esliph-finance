@@ -5,7 +5,7 @@ import { ID } from '@@types'
 import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { ValidatorService, SchemaValidator } from '@services/validator.service'
-import { CategoryRepository } from '@modules/category/category.categoryRepository'
+import { CategoryRepository } from '@modules/category/category.repository'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
 const schemaQuery = ValidatorService.schema.object({
@@ -24,30 +24,30 @@ export class CategoryQueryUseCase extends UseCase {
     async queryById(args: { id: ID }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const financialTransactionsResult = await this.categoryRepository.findById(id)
+        const categoryResult = await this.categoryRepository.findById(id)
 
-        if (!financialTransactionsResult.isSuccess()) {
-            if (financialTransactionsResult.isErrorInOperation()) {
+        if (!categoryResult.isSuccess()) {
+            if (categoryResult.isErrorInOperation()) {
                 return Result.failure({ title: 'Query Category', message: 'Unable to query category' })
             }
 
             return Result.failure({ title: 'Query Category', message: 'Category not found' })
         }
 
-        return Result.success(financialTransactionsResult.getValue())
+        return Result.success(categoryResult.getValue())
     }
 
     async queryManyByBankAccountId(args: { bankAccountId: ID }) {
         const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
 
-        const financialTransactionsResult = await this.categoryRepository.findManyByBankAccountId(bankAccountId)
+        const categoriesResult = await this.categoryRepository.findManyByBankAccountId(bankAccountId)
 
-        if (!financialTransactionsResult.isSuccess()) {
-            if (financialTransactionsResult.isErrorInOperation()) {
+        if (!categoriesResult.isSuccess()) {
+            if (categoriesResult.isErrorInOperation()) {
                 return Result.failure({ title: 'Query Categories', message: 'Unable to query categories' })
             }
         }
 
-        return Result.success(financialTransactionsResult.getValue() || [])
+        return Result.success(categoriesResult.getValue() || [])
     }
 }
