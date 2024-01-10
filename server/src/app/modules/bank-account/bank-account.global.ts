@@ -50,4 +50,10 @@ export const GLOBAL_BANK_ACCOUNT_RULES = {
             messageRequired: 'The end date of financial transactions is required',
         },
     },
+    updateBalance: {
+        value: {
+            valueRequest: '',
+            messageMustBePositive: 'Discount must be bigger or equal a R$0,00'
+        },
+    }
 }

@@ -31,7 +31,7 @@ export class CompensationPaymentsControl {
     constructor(
         @Injection.Inject('financial-transaction.repository') private repositoryFinancialTransaction: FinancialTransactionRepository,
         @Injection.Inject('payment.repository') private repositoryPayment: PaymentRepository,
-    ) {}
+    ) { }
 
     async loadComponents(financialTransactionId: ID) {
         this.setFinancialTransactionId(financialTransactionId)

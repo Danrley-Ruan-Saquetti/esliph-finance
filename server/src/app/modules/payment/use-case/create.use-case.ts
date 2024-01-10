@@ -9,6 +9,9 @@ import { PaymentRepository } from '@modules/payment/payment.repository'
 import { GLOBAL_PAYMENT_DTO } from '@modules/payment/payment.global'
 import { PaymentModel } from '@modules/payment/payment.model'
 import { CompensationPaymentsControl } from '@modules/payment/control/compensation-payments.control'
+import { BankAccountUpdateBalanceUseCase } from '@modules/bank-account/use-case/update-balance.use-case'
+import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
+import { FinancialTransactionModel } from '../../financial-transaction/financial-transaction.model'
 
 const schemaDTO = ValidatorService.schema
     .object({
@@ -37,7 +40,8 @@ export type PaymentCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
 export class PaymentCreateUseCase extends UseCase {
     constructor(
         @Injection.Inject('payment.repository') private paymentRepository: PaymentRepository,
-        @Injection.Inject('compensation-payments.control') private compensationControl: CompensationPaymentsControl,
+        @Injection.Inject('financial-transaction.repository') private financialTransactionRepository: FinancialTransactionRepository,
+        @Injection.Inject('bank-account.use-case.update-balance') private updateBalanceUC: BankAccountUpdateBalanceUseCase,
     ) {
         super()
     }
@@ -63,8 +67,9 @@ export class PaymentCreateUseCase extends UseCase {
         const { discount, financialTransactionId, paidAt, increase, value } = this.validateDTO(args, schemaDTO)
 
         this.validPaidAt(dateCurrent, paidAt)
-        const { paidInFull } = await this.validCompensation(financialTransactionId, { discount, increase, value })
+        const { paidInFull, netValuePayment } = await this.validCompensation(financialTransactionId, { discount, increase, value })
         await this.registerPayment({ discount, financialTransactionId, paidAt, increase, value })
+        await this.updateBalanceBankAccount({ financialTransactionId, value: netValuePayment })
 
         return Result.success({ message: 'Payment registered successfully', paidInFull })
     }
@@ -81,15 +86,18 @@ export class PaymentCreateUseCase extends UseCase {
     }
 
     private async validCompensation(financialTransactionId: ID, paymentData: { value: number; discount: number; increase: number }) {
-        await this.compensationControl.loadComponents(financialTransactionId)
+        const compensationControl = Injection.resolve(CompensationPaymentsControl)
+        await compensationControl.loadComponents(financialTransactionId)
 
-        const validResult = this.compensationControl.validCompensation(paymentData)
+        const validResult = compensationControl.validCompensation(paymentData)
+
+        const netValuePayment = paymentData.value - paymentData.increase
 
         if (validResult.isSuccess()) {
-            return validResult.getValue()
+            return { ...validResult.getValue(), netValuePayment }
         }
 
-        throw new BadRequestException({ ...validResult.getError() })
+        throw new BadRequestException({ ...validResult.getError(), })
     }
 
     private async registerPayment(data: PaymentModel.Model) {
@@ -103,5 +111,28 @@ export class PaymentCreateUseCase extends UseCase {
             ...paymentResult.getError(),
             title: 'Register Payment',
         })
+    }
+
+    private async updateBalanceBankAccount({ financialTransactionId, value }: { value: number, financialTransactionId: ID }) {
+        const { type, bankAccountId } = await this.queryFinancialTransaction(financialTransactionId)
+
+        if (type == FinancialTransactionModel.Type.INCOME) {
+            await this.updateBalanceUC.receiver({ id: bankAccountId, value })
+        } else if (type == FinancialTransactionModel.Type.EXPENSE) {
+            await this.updateBalanceUC.liquidate({ id: bankAccountId, value })
+        }
+    }
+
+    private async queryFinancialTransaction(id: ID) {
+        const financialTransactionResult = await this.financialTransactionRepository.findById(id)
+
+        if (!financialTransactionResult.isSuccess()) {
+            throw new BadRequestException({
+                ...financialTransactionResult.getError(),
+                title: 'Find Financial Transaction'
+            })
+        }
+
+        return financialTransactionResult.getValue()
     }
 }

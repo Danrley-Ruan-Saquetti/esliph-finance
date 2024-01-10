@@ -15,7 +15,7 @@ export function toCapitalise(text: string, firstOccurrenceOnly = true): string {
         .join(' ')
 }
 
-export type ObjectWithoutProps<T extends object, K extends keyof T> = Omit<T, K>;
+export type ObjectWithoutProps<T extends object, K extends keyof T> = Omit<T, K>
 
 export function removeProps<T extends object, K extends keyof T>(obj: T, props: K[]): ObjectWithoutProps<T, K> {
     if (typeof obj !== 'object' || !Array.isArray(props)) {
