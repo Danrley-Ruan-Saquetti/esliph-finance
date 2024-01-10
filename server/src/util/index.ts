@@ -4,14 +4,14 @@ export * from '@util/cron'
 
 export type PartialDeep<T> = { [x in keyof T]?: T[x] extends object ? PartialDeep<T[x]> : T[x] }
 
-export function toCapitalise(text: string, firstOccurrenceOnly = false) {
-    if (!firstOccurrenceOnly) {
+export function toCapitalise(text: string, firstOccurrenceOnly = true): string {
+    if (firstOccurrenceOnly) {
         return text[0].toUpperCase() + text.substring(1)
     }
 
     return text
         .split(' ')
-        .map(word => word[0].toUpperCase() + word.substring(1))
+        .map(word => toCapitalise(word))
         .join(' ')
 }
 
