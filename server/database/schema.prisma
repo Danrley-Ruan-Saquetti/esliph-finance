@@ -71,18 +71,19 @@ enum PeopleGender {
 }
 
 model People {
-  id          Int           @id @default(autoincrement())
-  type        PeopleType    @default(NATURAL_PERSON)
-  name        String        @db.VarChar(128)
-  itinCnpj    String        @unique @map("itin_cnpj")
-  active      Boolean       @default(true)
-  gender      PeopleGender?
-  dateOfBirth DateTime?     @map("date_of_birth") @db.Timestamptz(3)
-  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt   DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
-  users       User[]
-  addresses   Address[]
-  contacts    Contact[]
+  id           Int           @id @default(autoincrement())
+  type         PeopleType    @default(NATURAL_PERSON)
+  name         String        @db.VarChar(128)
+  itinCnpj     String        @unique @map("itin_cnpj")
+  active       Boolean       @default(true)
+  gender       PeopleGender?
+  dateOfBirth  DateTime?     @map("date_of_birth") @db.Timestamptz(3)
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  users        User[]
+  addresses    Address[]
+  contacts     Contact[]
+  bankAccounts BankAccount[]
 
   @@map("people")
 }
@@ -95,16 +96,15 @@ enum UserType {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  peopleId     Int
-  type         UserType
-  code         String        @unique @default("") @db.VarChar(9)
-  login        String        @unique @db.VarChar(254)
-  password     String        @db.VarChar(120)
-  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
-  people       People        @relation(fields: [peopleId], references: [id], onDelete: Restrict)
-  bankAccounts BankAccount[]
+  id        Int      @id @default(autoincrement())
+  peopleId  Int
+  type      UserType
+  code      String   @unique @default("") @db.VarChar(9)
+  login     String   @unique @db.VarChar(254)
+  password  String   @db.VarChar(120)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  people    People   @relation(fields: [peopleId], references: [id], onDelete: Restrict)
 
   @@unique([peopleId, type])
   @@map("user")
@@ -112,14 +112,14 @@ model User {
 
 model BankAccount {
   id                    Int                    @id @default(autoincrement())
-  userId                Int                    @map("user_id")
+  bankAccountId         Int                    @map("bank_account_id")
   code                  String                 @unique @default("") @db.VarChar(15)
   name                  String                 @db.VarChar(45)
   password              String                 @map("password") @db.VarChar(120)
   balance               Float                  @default(0)
   createdAt             DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt             DateTime               @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
-  user                  User                   @relation(fields: [userId], references: [id], onDelete: Restrict)
+  people                People                 @relation(fields: [bankAccountId], references: [id], onDelete: Restrict)
   financialTransactions FinancialTransaction[]
   categories            Category[]
   notifications         Notification[]
