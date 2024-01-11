@@ -73,6 +73,7 @@ enum PeopleGender {
 model People {
   id          Int           @id @default(autoincrement())
   type        PeopleType    @default(NATURAL_PERSON)
+  name        String        @db.VarChar(128)
   itinCnpj    String        @unique @map("itin_cnpj")
   active      Boolean       @default(true)
   gender      PeopleGender?

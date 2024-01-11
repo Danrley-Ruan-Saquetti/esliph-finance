@@ -1,5 +1,6 @@
 import * as Database from '@services/database.service'
 import { DocumentSimple } from '@@types/index'
+import { PeopleModel } from '@modules/people/people.model'
 
 export namespace UserModel {
     export const {
@@ -11,7 +12,7 @@ export namespace UserModel {
     export type Model = DocumentSimple<User>
     export type UserWithoutPassword = Omit<User, 'password'>
     export type UserWithoutPasswordWithPeople = Omit<User, 'password'> & {
-        people: Database.People
+        people: PeopleModel.People
     }
     export type UpdateArgs = Partial<Pick<Model, 'password' | 'login'>>
     export const UserWithoutPasswordSelect: { [x in keyof UserWithoutPassword]: true } = {
