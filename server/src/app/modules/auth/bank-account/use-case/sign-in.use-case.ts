@@ -44,7 +44,7 @@ export class AuthBankAccountSignInUseCase extends UseCase {
         const user = await this.queryUserByUserId(userId)
         const bankAccount = await this.queryBankAccountByCode(code, userId)
         await this.validPasswordBankAccount(password, bankAccount.password)
-        const token = this.generateToken({ sub: user.id, email: user.email, name: user.name, bankAccount: bankAccount.id })
+        const token = this.generateToken({ sub: user.id, email: user.login, name: '', bankAccount: bankAccount.id })
 
         return Result.success({ token })
     }

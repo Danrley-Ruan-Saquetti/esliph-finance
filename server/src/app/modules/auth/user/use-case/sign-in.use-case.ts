@@ -36,15 +36,15 @@ export class AuthUserSignInUseCase extends UseCase {
     async perform(args: AuthSignInDTOArgs) {
         const { login, password } = this.validateDTO(args, schemaDTO)
 
-        const user = await this.queryUserByEmail(login)
+        const user = await this.queryUserByLogin(login)
         await this.validPassword(password, user.password)
-        const token = this.generateToken({ sub: user.id, email: user.email, name: user.name })
+        const token = this.generateToken({ sub: user.id, email: user.login, name: '' })
 
         return Result.success({ token })
     }
 
-    private async queryUserByEmail(email: string) {
-        const userResult = await this.userRepository.findByEmail(email)
+    private async queryUserByLogin(login: string) {
+        const userResult = await this.userRepository.findByLogin(login)
 
         if (userResult.isSuccess()) {
             return userResult.getValue()

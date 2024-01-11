@@ -105,6 +105,7 @@ model User {
   people       People        @relation(fields: [peopleId], references: [id], onDelete: Restrict)
   bankAccounts BankAccount[]
 
+  @@unique([peopleId, type])
   @@map("user")
 }
 

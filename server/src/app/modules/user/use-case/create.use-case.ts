@@ -9,26 +9,39 @@ import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 import { UserRepository } from '@modules/user/user.repository'
 import { UserGenerateCodeUseCase } from '@modules/user/use-case/generate-code.use-case'
+import { UserModel } from '../user.model'
 
-const schemaDTO = ValidatorService.schema.object({
+const baseSchemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
         .string({ 'required_error': GLOBAL_USER_DTO.name.messageRequired })
         .trim()
         .min(GLOBAL_USER_DTO.name.minCharacters, { message: GLOBAL_USER_DTO.name.messageRangeCharacters })
         .max(GLOBAL_USER_DTO.name.maxCharacters, { message: GLOBAL_USER_DTO.name.messageRangeCharacters })
         .transform(GLOBAL_DTO.text.transform),
-    email: ValidatorService.schema
-        .string({ 'required_error': GLOBAL_USER_DTO.email.messageRequired })
-        .email({ message: GLOBAL_USER_DTO.email.messageInvalid })
-        .max(GLOBAL_USER_DTO.email.maxCharacters, { message: GLOBAL_USER_DTO.email.messageRangeCharacters })
+    login: ValidatorService.schema
+        .string({ 'required_error': GLOBAL_USER_DTO.login.messageRequired })
+        .email({ message: GLOBAL_USER_DTO.login.messageInvalid })
+        .max(GLOBAL_USER_DTO.login.maxCharacters, { message: GLOBAL_USER_DTO.login.messageRangeCharacters })
         .trim(),
     password: ValidatorService.schema
         .string({ 'required_error': GLOBAL_USER_DTO.password.messageRequired })
         .trim()
         .regex(GLOBAL_USER_DTO.password.regex, { message: GLOBAL_USER_DTO.password.messageRegex }),
+    type: ValidatorService.schema
+        .enum(GLOBAL_USER_DTO.type.enum, { errorMap: () => ({ message: GLOBAL_USER_DTO.type.messageEnumInvalid }) })
+        .transform(val => val.toUpperCase()),
 })
 
-export type UserCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
+const schemaCreateUserOnlyDTO = baseSchemaDTO.extend({
+    peopleId: GLOBAL_USER_DTO.people.id,
+})
+
+const schemaCreateUserAndPeopleDTO = baseSchemaDTO.extend({
+
+})
+
+export type UserCreateUserOnlyDTOArgs = SchemaValidator.input<typeof schemaCreateUserOnlyDTO>
+export type UserCreateUserAndPeopleDTOArgs = SchemaValidator.input<typeof schemaCreateUserAndPeopleDTO>
 
 @Service({ name: 'user.use-case.create' })
 export class UserCreateUseCase extends UseCase {
@@ -40,25 +53,25 @@ export class UserCreateUseCase extends UseCase {
         super()
     }
 
-    async perform(args: UserCreateDTOArgs) {
-        const { email, name, password } = this.validateDTO(args, schemaDTO)
+    async createUserByPeopleId(args: UserCreateUserOnlyDTOArgs) {
+        const { login, password, peopleId, type } = this.validateDTO(args, schemaCreateUserOnlyDTO)
 
-        await this.validUserEmailAlreadyExists(email)
+        await this.validUserLoginAlreadyExists(login)
 
         const passwordHash = this.cryptPassword(password)
         const code = await this.generateCode()
-        await this.registerUser({ email, name, password: passwordHash, code })
+        await this.registerUser({ login, password: passwordHash, code, peopleId, type: type as UserModel.Type })
 
         return Result.success({ message: 'Register user successfully' })
     }
 
-    private async validUserEmailAlreadyExists(email: string) {
-        const userAlreadyExistsResult = await this.userRepository.findByEmail(email)
+    private async validUserLoginAlreadyExists(login: string) {
+        const userAlreadyExistsResult = await this.userRepository.findByLogin(login)
 
         if (userAlreadyExistsResult.isSuccess()) {
             throw new BadRequestException({
                 title: 'Register  User',
-                message: 'E-mail is already in use. Please, inform another email',
+                message: 'Login is already in use. Please, inform another login',
             })
         }
 
@@ -66,7 +79,7 @@ export class UserCreateUseCase extends UseCase {
             throw new BadRequestException({
                 ...userAlreadyExistsResult.getError(),
                 title: 'Register  User',
-                message: 'Unable to validate whether the e-mail already exists. Please, try again later',
+                message: 'Unable to validate whether the login already exists. Please, try again later',
             })
         }
     }
@@ -88,8 +101,8 @@ export class UserCreateUseCase extends UseCase {
         return codeResult.getValue().code
     }
 
-    private async registerUser({ email, name, password, code }: SchemaValidator.output<typeof schemaDTO> & { code: string }) {
-        const registerUserResult = await this.userRepository.register({ email, name, password, code })
+    private async registerUser({ login, password, code, peopleId, type }: UserModel.Model) {
+        const registerUserResult = await this.userRepository.register({ login, password, code, peopleId, type })
 
         if (registerUserResult.isSuccess()) {
             return

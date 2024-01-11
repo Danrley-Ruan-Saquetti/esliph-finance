@@ -1,19 +1,28 @@
 import { GLOBAL_DTO } from '@global'
 import { GenerateCodeOptions } from '@services/code-generator.service'
+import { UserModel } from './user.model'
 
 export const GLOBAL_USER_DTO = {
     id: GLOBAL_DTO.id.schema({ name: 'User' }),
+    people: {
+        id: GLOBAL_DTO.id.schema({ name: 'People' }),
+    },
     name: {
         minCharacters: 3,
         maxCharacters: 45,
         messageRequired: GLOBAL_DTO.required('Name'),
         messageRangeCharacters: 'The Name must be between 3 and 45 characters',
     },
-    email: {
+    type: {
+        enum: [UserModel.Type.ADMIN, UserModel.Type.CLIENT] as const,
+        messageRequired: GLOBAL_DTO.required('Type'),
+        messageEnumInvalid: 'Type must be Admin or Client'
+    },
+    login: {
         maxCharacters: 254,
-        messageRequired: GLOBAL_DTO.required('E-mail'),
-        messageInvalid: 'E-mail invalid',
-        messageRangeCharacters: 'The E-mail must have a maximum of 254 characters',
+        messageRequired: GLOBAL_DTO.required('Login'),
+        messageInvalid: 'Login invalid',
+        messageRangeCharacters: 'The Login must have a maximum of 254 characters',
     },
     password: {
         messageRequired: GLOBAL_DTO.required('Password'),
