@@ -112,14 +112,14 @@ model User {
 
 model BankAccount {
   id                    Int                    @id @default(autoincrement())
-  bankAccountId         Int                    @map("bank_account_id")
+  peopleId              Int                    @map("people_id")
   code                  String                 @unique @default("") @db.VarChar(15)
   name                  String                 @db.VarChar(45)
   password              String                 @map("password") @db.VarChar(120)
   balance               Float                  @default(0)
   createdAt             DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt             DateTime               @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
-  people                People                 @relation(fields: [bankAccountId], references: [id], onDelete: Restrict)
+  people                People                 @relation(fields: [peopleId], references: [id], onDelete: Restrict)
   financialTransactions FinancialTransaction[]
   categories            Category[]
   notifications         Notification[]
