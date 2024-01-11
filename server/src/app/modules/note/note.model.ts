@@ -4,4 +4,5 @@ import { DocumentSimple } from '@@types/index'
 export namespace NoteModel {
     export type Note = Database.Note
     export type Model = DocumentSimple<Note>
+    export type UpdateArgs = Partial<Pick<Model, 'description'>>
 }

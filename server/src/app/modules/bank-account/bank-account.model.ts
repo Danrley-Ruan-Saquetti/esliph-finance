@@ -5,6 +5,7 @@ import { FinancialTransactionModel } from '@modules/financial-transaction/financ
 export namespace BankAccountModel {
     export type BankAccount = Database.BankAccount
     export type Model = DocumentSimple<BankAccount>
+    export type UpdateArgs = Partial<Pick<Model, 'name' | 'password'>>
     export type BankAccountWithoutPassword = Omit<BankAccount, 'password'>
     export type BankAccountWithFinancialTransactionsAndPayments = BankAccount & {
         financialTransactions: FinancialTransactionModel.FinancialTransactionWithPayments[]
