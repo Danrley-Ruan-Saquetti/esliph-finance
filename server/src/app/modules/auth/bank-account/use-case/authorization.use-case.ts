@@ -1,7 +1,7 @@
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { PayloadJWTUserBankAccount } from '@@types'
+import { PayloadJWTCustomerBankAccount } from '@@types'
 import { GLOBAL_SERVER_JWT_TOKEN } from '@global'
 import { UseCase } from '@common/use-case'
 import { JWTService } from '@services/jwt.service'
@@ -15,7 +15,7 @@ export class AuthBankAccountAuthorizationUseCase extends UseCase {
     }
 
     perform({ AuthorizationBankAccount }: AuthSignInDTOArgs) {
-        const payloadResult = this.jwt.valid<PayloadJWTUserBankAccount>(AuthorizationBankAccount, {
+        const payloadResult = this.jwt.valid<PayloadJWTCustomerBankAccount>(AuthorizationBankAccount, {
             secretKey: GLOBAL_SERVER_JWT_TOKEN.keyBank,
             name: 'Authorization Bank Account',
         })

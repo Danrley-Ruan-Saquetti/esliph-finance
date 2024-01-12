@@ -4,6 +4,7 @@ import { Service } from '@esliph/module'
 import { BadRequestException } from '@common/exceptions'
 import { GLOBAL_DTO } from '@global'
 import { isValidCnpj, isValidItin } from '@util'
+import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { CryptoService } from '@services/crypto.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
@@ -16,10 +17,10 @@ import { PeopleModel } from '@modules/people/people.model'
 
 const baseSchemaDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
-        .string({ 'required_error': GLOBAL_USER_DTO.name.messageRequired })
+        .string({ 'required_error': GLOBAL_PEOPLE_DTO.name.messageRequired })
         .trim()
-        .min(GLOBAL_USER_DTO.name.minCharacters, { message: GLOBAL_USER_DTO.name.messageRangeCharacters })
-        .max(GLOBAL_USER_DTO.name.maxCharacters, { message: GLOBAL_USER_DTO.name.messageRangeCharacters })
+        .min(GLOBAL_PEOPLE_DTO.name.minCharacters, { message: GLOBAL_PEOPLE_DTO.name.messageRangeCharacters })
+        .max(GLOBAL_PEOPLE_DTO.name.maxCharacters, { message: GLOBAL_PEOPLE_DTO.name.messageRangeCharacters })
         .transform(GLOBAL_DTO.text.transform),
     login: ValidatorService.schema
         .string({ 'required_error': GLOBAL_USER_DTO.login.messageRequired })
@@ -40,10 +41,6 @@ const schemaCreateUserOnlyDTO = baseSchemaDTO.extend({
 })
 
 const schemaCreateUserAndPeopleDTO = baseSchemaDTO.extend({
-    name: ValidatorService.schema
-        .string({ 'required_error': GLOBAL_PEOPLE_DTO.name.messageRequired })
-        .trim()
-        .max(GLOBAL_PEOPLE_DTO.name.maxCharacter, { message: GLOBAL_PEOPLE_DTO.name.messageRangeCharacters }),
     itinCnpj: ValidatorService.schema
         .string({ 'required_error': GLOBAL_PEOPLE_DTO.itin.messageRequired })
         .trim(),
@@ -85,6 +82,7 @@ export class UserCreateUseCase extends UseCase {
     async createUserByPeopleId(args: UserCreateUserOnlyDTOArgs) {
         const { login, password, peopleId, userType } = this.validateDTO(args, schemaCreateUserOnlyDTO)
 
+        await this.validIsAlreadyHasUserTypeForPeople({ peopleId, type: userType as UserModel.Type })
         const { code, passwordHash } = await this.validateRegister({ login, password })
         await this.registerUser({ login, password: passwordHash, code, peopleId, type: userType as UserModel.Type })
 
@@ -97,6 +95,25 @@ export class UserCreateUseCase extends UseCase {
         const code = await this.generateCode()
 
         return { code, passwordHash }
+    }
+
+    private async validIsAlreadyHasUserTypeForPeople({ peopleId, type }: { peopleId: ID, type: UserModel.Type }) {
+        const userResult = await this.userRepository.findByPeopleIdAndType(peopleId, type)
+
+        if (userResult.isSuccess()) {
+            throw new BadRequestException({
+                title: 'Register  User',
+                message: `There is already a user of type ${type == UserModel.Type.ADMIN ? 'ADMIN' : type == UserModel.Type.CUSTOMER ? 'Customer' : ''} for this person`,
+            })
+        }
+
+        if (userResult.isErrorInOperation()) {
+            throw new BadRequestException({
+                ...userResult.getError(),
+                title: 'Register  User',
+                message: 'Unable to validate whether the login already exists. Please, try again later',
+            })
+        }
     }
 
     private async valUserIdLoginAlreadyExists(login: string) {

@@ -17,9 +17,9 @@ export class BankAccountController {
     @Guard({ name: 'user.authorization' })
     @Get('')
     async get(req: Request) {
-        const { userId } = req.headers
+        const { peopleId } = req.headers
 
-        const result = await this.queryUC.queryManyByUserIdWithoutPasswordAndBalance({ userId })
+        const result = await this.queryUC.queryManyByPeopleIdWithoutPasswordAndBalance({ peopleId })
 
         return result
     }
@@ -27,10 +27,10 @@ export class BankAccountController {
     @Guard({ name: 'user.authorization' })
     @Post('/create')
     async create(req: Request) {
-        const { userId } = req.headers
+        const { peopleId } = req.headers
         const { name, password } = req.body
 
-        const result = await this.createUC.perform({ name, password, userId })
+        const result = await this.createUC.perform({ name, password, peopleId })
 
         return result
     }

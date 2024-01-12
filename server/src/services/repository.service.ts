@@ -66,7 +66,7 @@ export class Repository {
     }
 
     protected handleError<T = any>(err: any, options: RepositoryHandleErrorOptions) {
-        if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err instanceof Prisma.PrismaCustomerKnownRequestError) {
             return ResultDatabase.errorOperation<T>({
                 ...err,
                 ...options.error,

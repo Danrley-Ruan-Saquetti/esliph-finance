@@ -89,7 +89,7 @@ model People {
 }
 
 enum UserType {
-  CLIENT
+  CUSTOMER
   ADMIN
 
   @@map("user_type")

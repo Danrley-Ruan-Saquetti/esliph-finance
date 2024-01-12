@@ -5,20 +5,20 @@ import { UserCreateUseCase, UserCreateUserAndPeopleDTOArgs } from '@modules/user
 import { UserModel } from '@modules/user/user.model'
 
 @Service({ name: 'auth.user.use-case.sign-up' })
-export class AuthClientSignUpUseCase extends UseCase {
+export class AuthCustomerSignUpUseCase extends UseCase {
     constructor(@Injection.Inject('user.use-case.create') private userCreateUC: UserCreateUseCase) {
         super()
     }
 
     async perform(args: Omit<UserCreateUserAndPeopleDTOArgs, 'userType'>) {
-        const createClientResult = await this.createClient(args)
+        const createCustomerResult = await this.createCustomer(args)
 
-        return createClientResult
+        return createCustomerResult
     }
 
-    private async createClient(args: Omit<UserCreateUserAndPeopleDTOArgs, 'userType'>) {
-        const createClientResult = await this.userCreateUC.createUserAndPeople({ ...args, userType: UserModel.Type.CLIENT })
+    private async createCustomer(args: Omit<UserCreateUserAndPeopleDTOArgs, 'userType'>) {
+        const createCustomerResult = await this.userCreateUC.createUserAndPeople({ ...args, userType: UserModel.Type.CUSTOMER })
 
-        return createClientResult
+        return createCustomerResult
     }
 }

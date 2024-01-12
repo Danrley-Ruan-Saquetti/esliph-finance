@@ -1,12 +1,12 @@
 export * from '@prisma/client'
-import { PrismaClient } from '@prisma/client'
+import { PrismaCustomer } from '@prisma/client'
 import { Service } from '@esliph/module'
 import { GLOBAL_FORMATTER_CONFIG, GLOBAL_LOG_CONFIG } from '@global'
 import { WriteStreamOutput } from '@services/write-stream-output.service'
 
 @Service({ name: 'global.service.database' })
 export class DatabaseService {
-    private static instance = new PrismaClient({
+    private static instance = new PrismaCustomer({
         log: [
             { level: 'error', emit: 'event' },
             { level: 'info', emit: 'event' },

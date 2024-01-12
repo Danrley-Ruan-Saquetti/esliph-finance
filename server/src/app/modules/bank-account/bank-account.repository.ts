@@ -152,9 +152,9 @@ export class BankAccountRepository extends Repository {
         }
     }
 
-    async findByCodeAndUserId(code: string, userId: ID) {
+    async findByCodeAndPeopleId(code: string, peopleId: ID) {
         try {
-            const bankAccount = await this.repo.findFirst({ where: { code, people: { users: { some: { id: userId } } } } })
+            const bankAccount = await this.repo.findFirst({ where: { code, peopleId } })
 
             return this.handleResponse<BankAccountModel.BankAccount>(bankAccount, {
                 noAcceptNullable: true,
@@ -165,10 +165,10 @@ export class BankAccountRepository extends Repository {
         }
     }
 
-    async findByCodeAndUserIdWithoutPassword(code: string, userId: ID) {
+    async findByCodeAndPeopleIdWithoutPassword(code: string, peopleId: ID) {
         try {
             const bankAccount = await this.repo.findFirst({
-                where: { code, people: { users: { some: { id: userId } } } },
+                where: { code, peopleId },
                 select: BankAccountModel.BankAccountWithoutPasswordSelect,
             })
 
@@ -212,10 +212,42 @@ export class BankAccountRepository extends Repository {
         }
     }
 
+    async findManyByPeopleIdWithoutPassword(peopleId: ID) {
+        try {
+            const bankAccounts = await this.repo.findMany({
+                where: { peopleId },
+                select: BankAccountModel.BankAccountWithoutPasswordSelect,
+                orderBy: { updatedAt: 'desc' },
+            })
+
+            return this.handleResponse<BankAccountModel.BankAccountWithoutPassword[]>(bankAccounts)
+        } catch (err: any) {
+            return this.handleError<BankAccountModel.BankAccountWithoutPassword[]>(err, {
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.findMany.title, message: BankAccountRepository.GLOBAL_MESSAGE.findMany.failed },
+            })
+        }
+    }
+
     async findManyByUserIdWithoutPasswordAndBalance(userId: ID) {
         try {
             const bankAccounts = await this.repo.findMany({
                 where: { people: { users: { some: { id: userId } } } },
+                select: BankAccountModel.BankAccountWithoutPasswordSelectAndBalance,
+                orderBy: { updatedAt: 'desc' },
+            })
+
+            return this.handleResponse<BankAccountModel.BankAccountWithoutPasswordAndBalance[]>(bankAccounts)
+        } catch (err: any) {
+            return this.handleError<BankAccountModel.BankAccountWithoutPassword[]>(err, {
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.findMany.title, message: BankAccountRepository.GLOBAL_MESSAGE.findMany.failed },
+            })
+        }
+    }
+
+    async findManyByPeopleIdWithoutPasswordAndBalance(peopleId: ID) {
+        try {
+            const bankAccounts = await this.repo.findMany({
+                where: { peopleId },
                 select: BankAccountModel.BankAccountWithoutPasswordSelectAndBalance,
                 orderBy: { updatedAt: 'desc' },
             })

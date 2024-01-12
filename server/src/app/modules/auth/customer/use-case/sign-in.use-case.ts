@@ -1,14 +1,14 @@
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { PayloadJWTUser } from '@@types'
+import { PayloadJWTCustomer } from '@@types'
 import { GLOBAL_SERVER_JWT_TOKEN } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
-import { GLOBAL_AUTH_CLIENT_DTO } from '@modules/auth/client/auth-client.global'
+import { GLOBAL_AUTH_CLIENT_DTO } from '@modules/auth/customer/auth-customer.global'
 import { UserRepository } from '@modules/user/user.repository'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 
@@ -23,8 +23,8 @@ const schemaDTO = ValidatorService.schema.object({
 
 export type AuthSignInDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
-@Service({ name: 'auth.client.use-case.sign-in' })
-export class AuthClientSignInUseCase extends UseCase {
+@Service({ name: 'auth.customer.use-case.sign-in' })
+export class AuthCustomerSignInUseCase extends UseCase {
     constructor(
         @Injection.Inject('user.repository') private userRepository: UserRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
@@ -38,7 +38,7 @@ export class AuthClientSignInUseCase extends UseCase {
 
         const user = await this.queryUserByLogin(login)
         await this.validPassword(password, user.password)
-        const token = this.generateToken({ sub: user.id, email: user.login, name: '' })
+        const token = this.generateToken({ sub: user.id, email: user.login, name: user.people.name, peopleId: user.peopleId })
 
         return Result.success({ token })
     }
@@ -65,7 +65,7 @@ export class AuthClientSignInUseCase extends UseCase {
         }
     }
 
-    private generateToken({ sub, email, name }: PayloadJWTUser) {
-        return this.jwt.encode<PayloadJWTUser>({ sub, name, email }, { exp: GLOBAL_SERVER_JWT_TOKEN.expiresTime, secret: GLOBAL_SERVER_JWT_TOKEN.keyMaster })
+    private generateToken({ sub, email, name, peopleId }: PayloadJWTCustomer) {
+        return this.jwt.encode<PayloadJWTCustomer>({ sub, name, email, peopleId }, { exp: GLOBAL_SERVER_JWT_TOKEN.expiresTime, secret: GLOBAL_SERVER_JWT_TOKEN.keyMaster })
     }
 }

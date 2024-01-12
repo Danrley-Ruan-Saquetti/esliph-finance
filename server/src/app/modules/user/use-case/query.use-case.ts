@@ -20,7 +20,21 @@ export class UserQueryUseCase extends UseCase {
 
         if (!bankAccountResult.isSuccess()) {
             return Result.failure({
-                ...bankAccountResult.getError(), title: 'Query User', message: `${bankAccountResult.getError().message}. Please, try again later`,
+                ...bankAccountResult.getError(), title: 'Query User'
+            })
+        }
+
+        return Result.success(bankAccountResult.getValue())
+    }
+
+    async queryWithPeopleByIdWithoutPassword(args: { id: SchemaValidator.input<typeof schemaNumber> }) {
+        const id = this.validateDTO(args.id, schemaNumber)
+
+        const bankAccountResult = await this.userRepository.findByIdWithoutPasswordWithPeople(id)
+
+        if (!bankAccountResult.isSuccess()) {
+            return Result.failure({
+                ...bankAccountResult.getError(), title: 'Query User'
             })
         }
 

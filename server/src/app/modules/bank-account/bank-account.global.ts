@@ -18,6 +18,9 @@ export const GLOBAL_BANK_ACCOUNT_DTO = {
     user: {
         id: GLOBAL_DTO.id.schema({ name: 'User' }),
     },
+    people: {
+        id: GLOBAL_DTO.id.schema({ name: 'People' }),
+    },
     code: {
         messageRequired: GLOBAL_DTO.required('Code'),
         template: {

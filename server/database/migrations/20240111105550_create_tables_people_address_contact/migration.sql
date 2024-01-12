@@ -22,7 +22,7 @@ CREATE TYPE "people_type" AS ENUM ('NATURAL_PERSON', 'LEGAL_ENTITY');
 CREATE TYPE "people_gender" AS ENUM ('MASCULINE', 'FEMININE');
 
 -- CreateEnum
-CREATE TYPE "user_type" AS ENUM ('CLIENT', 'ADMIN');
+CREATE TYPE "user_type" AS ENUM ('CUSTOMER', 'ADMIN');
 
 -- DropForeignKey
 ALTER TABLE "financial_transaction_category" DROP CONSTRAINT "financial_transaction_category_category_id_fkey";

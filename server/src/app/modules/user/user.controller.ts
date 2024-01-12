@@ -17,7 +17,7 @@ export class UserController {
     async get(req: Request) {
         const id = req.headers['userId']
 
-        const result = await this.queryUC.queryByIdWithoutPassword({ id })
+        const result = await this.queryUC.queryWithPeopleByIdWithoutPassword({ id })
 
         return result
     }

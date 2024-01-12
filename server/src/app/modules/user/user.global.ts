@@ -7,16 +7,10 @@ export const GLOBAL_USER_DTO = {
     people: {
         id: GLOBAL_DTO.id.schema({ name: 'People' }),
     },
-    name: {
-        minCharacters: 3,
-        maxCharacters: 45,
-        messageRequired: GLOBAL_DTO.required('Name'),
-        messageRangeCharacters: 'The Name must be between 3 and 45 characters',
-    },
     type: {
-        enum: [UserModel.Type.ADMIN, UserModel.Type.CLIENT] as const,
+        enum: [UserModel.Type.ADMIN, UserModel.Type.CUSTOMER] as const,
         messageRequired: GLOBAL_DTO.required('Type'),
-        messageEnumInvalid: 'Type must be Admin or Client'
+        messageEnumInvalid: 'Type must be Admin or Customer'
     },
     login: {
         maxCharacters: 254,

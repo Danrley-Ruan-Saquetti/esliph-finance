@@ -17,7 +17,7 @@ const schemaDTO = ValidatorService.schema.object({
         .min(GLOBAL_BANK_ACCOUNT_DTO.name.minCharacters, { message: GLOBAL_BANK_ACCOUNT_DTO.name.messageRangeCharacters })
         .max(GLOBAL_BANK_ACCOUNT_DTO.name.maxCharacters, { message: GLOBAL_BANK_ACCOUNT_DTO.name.messageRangeCharacters })
         .transform(GLOBAL_DTO.text.transform),
-    userId: GLOBAL_BANK_ACCOUNT_DTO.user.id,
+    peopleId: GLOBAL_BANK_ACCOUNT_DTO.people.id,
     password: ValidatorService.schema
         .string({ 'required_error': GLOBAL_BANK_ACCOUNT_DTO.password.messageRequired })
         .trim()
@@ -37,11 +37,11 @@ export class BankAccountCreateUseCase extends UseCase {
     }
 
     async perform(args: BankAccountCreateDTOArgs) {
-        const { name, password, userId } = this.validateDTO(args, schemaDTO)
+        const { name, password, peopleId } = this.validateDTO(args, schemaDTO)
 
         const passwordHash = this.cryptPassword(password)
         const code = await this.generateCode()
-        await this.registerBankAccount({ name, password: passwordHash, userId, code })
+        await this.registerBankAccount({ name, password: passwordHash, peopleId, code })
 
         return Result.success({ message: 'Bank account registered successfully' })
     }
@@ -63,8 +63,8 @@ export class BankAccountCreateUseCase extends UseCase {
         return codeResult.getValue().code
     }
 
-    private async registerBankAccount({ name, password, userId, code }: SchemaValidator.output<typeof schemaDTO> & { code: string }) {
-        const registerBankAccountResult = await this.bankAccountRepository.register({ balance: 0, name, password, userId, code })
+    private async registerBankAccount({ name, password, peopleId, code }: SchemaValidator.output<typeof schemaDTO> & { code: string }) {
+        const registerBankAccountResult = await this.bankAccountRepository.register({ balance: 0, name, password, peopleId, code })
 
         if (registerBankAccountResult.isSuccess()) {
             return

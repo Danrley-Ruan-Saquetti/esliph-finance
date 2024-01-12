@@ -95,9 +95,39 @@ export class UserRepository extends Repository {
         }
     }
 
+    async findByPeopleIdWithPeople(peopleId: ID) {
+        try {
+            const user = await this.database.instance.user.findFirst({ where: { peopleId }, include: { people: true } })
+
+            return this.handleResponse<UserModel.UserWithPeople>(user, {
+                noAcceptNullable: true,
+                error: { title: UserRepository.GLOBAL_MESSAGE.find.title, message: UserRepository.GLOBAL_MESSAGE.find.notFound }
+            })
+        } catch (err: any) {
+            return this.handleError<UserModel.UserWithPeople>(err, {
+                error: { title: UserRepository.GLOBAL_MESSAGE.find.title, message: UserRepository.GLOBAL_MESSAGE.find.failed }
+            })
+        }
+    }
+
     async findByIdAndPeopleId(id: ID, peopleId: ID) {
         try {
             const user = await this.database.instance.user.findFirst({ where: { id, peopleId } })
+
+            return this.handleResponse<UserModel.User>(user, {
+                noAcceptNullable: true,
+                error: { title: UserRepository.GLOBAL_MESSAGE.find.title, message: UserRepository.GLOBAL_MESSAGE.find.notFound }
+            })
+        } catch (err: any) {
+            return this.handleError<UserModel.User>(err, {
+                error: { title: UserRepository.GLOBAL_MESSAGE.find.title, message: UserRepository.GLOBAL_MESSAGE.find.failed }
+            })
+        }
+    }
+
+    async findByPeopleIdAndType(peopleId: ID, type: UserModel.Type) {
+        try {
+            const user = await this.database.instance.user.findFirst({ where: { peopleId, type } })
 
             return this.handleResponse<UserModel.User>(user, {
                 noAcceptNullable: true,
@@ -127,14 +157,14 @@ export class UserRepository extends Repository {
 
     async findByLogin(login: string) {
         try {
-            const user = await this.database.instance.user.findFirst({ where: { login } })
+            const user = await this.database.instance.user.findFirst({ where: { login }, include: { people: true } })
 
-            return this.handleResponse<UserModel.User>(user, {
+            return this.handleResponse<UserModel.UserWithPeople>(user, {
                 noAcceptNullable: true,
                 error: { title: UserRepository.GLOBAL_MESSAGE.find.title, message: UserRepository.GLOBAL_MESSAGE.find.notFound }
             })
         } catch (err: any) {
-            return this.handleError<UserModel.User>(err, {
+            return this.handleError<UserModel.UserWithPeople>(err, {
                 error: { title: UserRepository.GLOBAL_MESSAGE.find.title, message: UserRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
@@ -175,6 +205,24 @@ export class UserRepository extends Repository {
             })
         } catch (err: any) {
             return this.handleError<UserModel.UserWithoutPassword>(err, {
+                error: { title: UserRepository.GLOBAL_MESSAGE.find.title, message: UserRepository.GLOBAL_MESSAGE.find.failed }
+            })
+        }
+    }
+
+    async findByIdWithoutPasswordWithPeople(id: ID) {
+        try {
+            const user = await this.database.instance.user.findFirst({
+                where: { id },
+                select: { ...UserModel.UserWithoutPasswordSelect, people: true }
+            })
+
+            return this.handleResponse<UserModel.UserWithoutPasswordWithPeople>(user, {
+                noAcceptNullable: true,
+                error: { title: UserRepository.GLOBAL_MESSAGE.find.title, message: UserRepository.GLOBAL_MESSAGE.find.notFound },
+            })
+        } catch (err: any) {
+            return this.handleError<UserModel.UserWithoutPasswordWithPeople>(err, {
                 error: { title: UserRepository.GLOBAL_MESSAGE.find.title, message: UserRepository.GLOBAL_MESSAGE.find.failed }
             })
         }

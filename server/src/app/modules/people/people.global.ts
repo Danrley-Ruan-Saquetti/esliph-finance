@@ -9,9 +9,10 @@ export const GLOBAL_PEOPLE_DTO = {
         messageEnumInvalid: 'Gender invalid'
     },
     name: {
-        maxCharacter: 128,
-        messageRangeCharacters: 'The Name must have a maximum of 128 characters',
-        messageRequired: GLOBAL_DTO.required('Name')
+        minCharacters: 3,
+        maxCharacters: 45,
+        messageRequired: GLOBAL_DTO.required('Name'),
+        messageRangeCharacters: 'The Name must be between 3 and 45 characters',
     },
     itin: {
         messageRequired: GLOBAL_DTO.required('ITIN'),

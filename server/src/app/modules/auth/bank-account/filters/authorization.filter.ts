@@ -13,6 +13,7 @@ export class BankAccountAuthorizationFilter implements FilterPerform {
         const result = this.authorizationUC.perform({ AuthorizationBankAccount })
 
         req.headers['userId'] = result.getValue().sub
+        req.headers['peopleId'] = result.getValue().peopleId
         req.headers['bankAccountId'] = result.getValue().bankAccount
     }
 }

@@ -1,7 +1,7 @@
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { PayloadJWTUserBankAccount } from '@@types'
+import { PayloadJWTCustomerBankAccount } from '@@types'
 import { GLOBAL_SERVER_JWT_TOKEN } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
@@ -14,7 +14,7 @@ import { BankAccountRepository } from '@modules/bank-account/bank-account.reposi
 import { BankAccountGenerateCodeUseCase } from '@modules/bank-account/use-case/generate-code.use-case'
 
 const schemaDTO = ValidatorService.schema.object({
-    userId: GLOBAL_BANK_ACCOUNT_DTO.user.id,
+    peopleId: GLOBAL_BANK_ACCOUNT_DTO.people.id,
     code: ValidatorService.schema
         .string({ 'required_error': GLOBAL_BANK_ACCOUNT_DTO.code.messageRequired })
         .trim(),
@@ -38,13 +38,13 @@ export class AuthBankAccountSignInUseCase extends UseCase {
     }
 
     async perform(args: AuthSignInDTOArgs) {
-        const { code, password, userId } = this.validateDTO(args, schemaDTO)
+        const { code, password, peopleId } = this.validateDTO(args, schemaDTO)
 
         this.validCode(code)
-        const user = await this.queryUserByUserId(userId)
-        const bankAccount = await this.queryBankAccountByCode(code, userId)
+        const user = await this.queryUserByPeopleId(peopleId)
+        const bankAccount = await this.queryBankAccountByCode(code, peopleId)
         await this.validPasswordBankAccount(password, bankAccount.password)
-        const token = this.generateToken({ sub: user.id, email: user.login, name: '', bankAccount: bankAccount.id })
+        const token = this.generateToken({ sub: user.id, email: user.login, name: user.people.name, bankAccount: bankAccount.id, peopleId })
 
         return Result.success({ token })
     }
@@ -55,8 +55,8 @@ export class AuthBankAccountSignInUseCase extends UseCase {
         }
     }
 
-    private async queryUserByUserId(userId: number) {
-        const userResult = await this.userRepository.findById(userId)
+    private async queryUserByPeopleId(peopleId: number) {
+        const userResult = await this.userRepository.findByPeopleIdWithPeople(peopleId)
 
         if (userResult.isSuccess()) {
             return userResult.getValue()
@@ -69,8 +69,8 @@ export class AuthBankAccountSignInUseCase extends UseCase {
         throw new BadRequestException({ title: 'Sign-in Bank Account', message: 'Code or Password invalid. Please, try again later' })
     }
 
-    private async queryBankAccountByCode(code: string, userId: number) {
-        const userResult = await this.bankAccountRepository.findByCodeAndUserId(code, userId)
+    private async queryBankAccountByCode(code: string, peopleId: number) {
+        const userResult = await this.bankAccountRepository.findByCodeAndPeopleId(code, peopleId)
 
         if (userResult.isSuccess()) {
             return userResult.getValue()
@@ -91,9 +91,9 @@ export class AuthBankAccountSignInUseCase extends UseCase {
         }
     }
 
-    private generateToken({ sub, email, name, bankAccount }: PayloadJWTUserBankAccount) {
-        return this.jwt.encode<PayloadJWTUserBankAccount>(
-            { sub, name, email, bankAccount },
+    private generateToken({ sub, email, name, bankAccount, peopleId }: PayloadJWTCustomerBankAccount) {
+        return this.jwt.encode<PayloadJWTCustomerBankAccount>(
+            { sub, name, email, bankAccount, peopleId },
             { exp: GLOBAL_SERVER_JWT_TOKEN.expiresTime, secret: GLOBAL_SERVER_JWT_TOKEN.keyBank },
         )
     }

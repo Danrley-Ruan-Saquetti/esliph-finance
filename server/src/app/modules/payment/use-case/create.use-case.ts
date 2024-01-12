@@ -13,25 +13,24 @@ import { BankAccountUpdateBalanceUseCase } from '@modules/bank-account/use-case/
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { FinancialTransactionModel } from '../../financial-transaction/financial-transaction.model'
 
-const schemaDTO = ValidatorService.schema
-    .object({
-        financialTransactionId: GLOBAL_PAYMENT_DTO.financialTransaction.id,
-        value: ValidatorService.schema.coerce
-            .number({
-                'required_error': GLOBAL_PAYMENT_DTO.value.messageRequire,
-                'invalid_type_error': GLOBAL_PAYMENT_DTO.value.messageMustBePositive,
-            })
-            .nonnegative({ message: GLOBAL_PAYMENT_DTO.value.messageMustBePositive }),
-        discount: ValidatorService.schema.coerce
-            .number()
-            .nonnegative({ message: GLOBAL_PAYMENT_DTO.discount.messageMustBePositive })
-            .default(GLOBAL_PAYMENT_DTO.discount.default),
-        increase: ValidatorService.schema.coerce
-            .number()
-            .nonnegative({ message: GLOBAL_PAYMENT_DTO.increase.messageMustBePositive })
-            .default(GLOBAL_PAYMENT_DTO.increase.default),
-        paidAt: ValidatorService.schema.coerce.date().default(GLOBAL_PAYMENT_DTO.paidAt.default()),
-    })
+const schemaDTO = ValidatorService.schema.object({
+    financialTransactionId: GLOBAL_PAYMENT_DTO.financialTransaction.id,
+    value: ValidatorService.schema.coerce
+        .number({
+            'required_error': GLOBAL_PAYMENT_DTO.value.messageRequire,
+            'invalid_type_error': GLOBAL_PAYMENT_DTO.value.messageMustBePositive,
+        })
+        .nonnegative({ message: GLOBAL_PAYMENT_DTO.value.messageMustBePositive }),
+    discount: ValidatorService.schema.coerce
+        .number()
+        .nonnegative({ message: GLOBAL_PAYMENT_DTO.discount.messageMustBePositive })
+        .default(GLOBAL_PAYMENT_DTO.discount.default),
+    increase: ValidatorService.schema.coerce
+        .number()
+        .nonnegative({ message: GLOBAL_PAYMENT_DTO.increase.messageMustBePositive })
+        .default(GLOBAL_PAYMENT_DTO.increase.default),
+    paidAt: ValidatorService.schema.coerce.date().default(GLOBAL_PAYMENT_DTO.paidAt.default()),
+})
     .refine(({ discount, increase, value }) => discount > 0 || increase > 0 || value > 0, { message: GLOBAL_PAYMENT_DTO.super.messageNoValue })
 
 export type PaymentCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>

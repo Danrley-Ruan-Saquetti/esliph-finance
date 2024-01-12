@@ -83,6 +83,21 @@ export class PeopleRepository extends Repository {
         }
     }
 
+    async findByItinCnpj(itinCnpj: string) {
+        try {
+            const people = await this.database.instance.people.findFirst({ where: { itinCnpj } })
+
+            return this.handleResponse<PeopleModel.People>(people, {
+                noAcceptNullable: true,
+                error: { title: PeopleRepository.GLOBAL_MESSAGE.find.title, message: PeopleRepository.GLOBAL_MESSAGE.find.notFound },
+            })
+        } catch (err: any) {
+            return this.handleError<PeopleModel.People>(err, {
+                error: { title: PeopleRepository.GLOBAL_MESSAGE.find.title, message: PeopleRepository.GLOBAL_MESSAGE.find.failed }
+            })
+        }
+    }
+
     async findByUserId(userId: ID) {
         try {
             const people = await this.database.instance.people.findFirst({ where: { users: { some: { id: userId } } } })

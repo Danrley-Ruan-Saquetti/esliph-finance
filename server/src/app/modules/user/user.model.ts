@@ -10,6 +10,9 @@ export namespace UserModel {
 
     export type User = Database.User
     export type Model = DocumentSimple<User>
+    export type UserWithPeople = User & {
+        people: PeopleModel.People
+    }
     export type UserWithoutPassword = Omit<User, 'password'>
     export type UserWithoutPasswordWithPeople = Omit<User, 'password'> & {
         people: PeopleModel.People
@@ -23,5 +26,15 @@ export namespace UserModel {
         updatedAt: true,
         peopleId: true,
         type: true,
+    } as const
+    export const UserWithoutPasswordSelectWithPeople: { [x in keyof UserWithoutPasswordWithPeople]: true } = {
+        code: true,
+        createdAt: true,
+        login: true,
+        id: true,
+        updatedAt: true,
+        peopleId: true,
+        type: true,
+        people: true
     } as const
 }
