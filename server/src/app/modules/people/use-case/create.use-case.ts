@@ -6,11 +6,12 @@ import { GLOBAL_DTO } from '@global'
 import { isValidCnpj, isValidItin } from '@util'
 import { UseCase } from '@common/use-case'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { FormatterItinCnpjService } from '@services/formatter-itin-cnpj.service'
 import { GLOBAL_PEOPLE_DTO } from '@modules/people/people.global'
 import { PeopleRepository } from '@modules/people/people.repository'
 import { PeopleModel } from '@modules/people/people.model'
 
-const schemaPeoplePeopleAndPeopleDTO = ValidatorService.schema.object({
+export const schemaPeoplePeopleAndPeopleDTO = ValidatorService.schema.object({
     name: ValidatorService.schema
         .string({ 'required_error': GLOBAL_PEOPLE_DTO.name.messageRequired })
         .trim()
@@ -30,26 +31,55 @@ const schemaPeoplePeopleAndPeopleDTO = ValidatorService.schema.object({
         .refine(date => !date || date < new Date(Date.now()))
         .transform(date => date || undefined),
 })
-    .refine(({ type, itinCnpj: itin }) => type !== PeopleModel.Type.NATURAL_PERSON || isValidItin(itin), { message: GLOBAL_PEOPLE_DTO.itin.messageInvalid })
-    .refine(({ type, itinCnpj: cnpj }) => type !== PeopleModel.Type.LEGAL_ENTITY || isValidCnpj(cnpj), { message: GLOBAL_PEOPLE_DTO.cnpj.messageInvalid })
+    .refine(({ type, itinCnpj: itin }) => {
+        if (type !== PeopleModel.Type.NATURAL_PERSON) {
+            return true
+        }
 
-export type PeoplePeoplePeopleAndPeopleDTOArgs = SchemaValidator.input<typeof schemaPeoplePeopleAndPeopleDTO>
+        const formatter = Injection.resolve(FormatterItinCnpjService)
+
+        return isValidItin(itin) && formatter.validItin(itin)
+    }, { message: GLOBAL_PEOPLE_DTO.itin.messageInvalid, path: ['itinCnpj'] })
+    .refine(({ type, itinCnpj: cnpj }) => {
+        if (type !== PeopleModel.Type.LEGAL_ENTITY) {
+            return true
+        }
+
+        const formatter = Injection.resolve(FormatterItinCnpjService)
+
+        return isValidCnpj(cnpj) && formatter.validCnpj(cnpj)
+    }, { message: GLOBAL_PEOPLE_DTO.cnpj.messageInvalid, path: ['itinCnpj'] })
+
+export type PeopleCreateDTOArgs = SchemaValidator.input<typeof schemaPeoplePeopleAndPeopleDTO>
 
 @Service({ name: 'people.use-case.create' })
-export class PeoplePeopleUseCase extends UseCase {
+export class PeopleCreateUseCase extends UseCase {
     constructor(
         @Injection.Inject('people.repository') private peopleRepository: PeopleRepository,
     ) {
         super()
     }
 
-    async perform(args: PeoplePeoplePeopleAndPeopleDTOArgs) {
-        const { itinCnpj, type, dateOfBirth = null, gender = null, name } = this.validateDTO(args, schemaPeoplePeopleAndPeopleDTO)
+    async perform(args: PeopleCreateDTOArgs) {
+        const { itinCnpj, type, dateOfBirth, gender, name } = await this.validDTO(args)
 
-        await this.verifyIsAlreadyItinCnpjExists(itinCnpj, type)
         await this.registerPeople({ active: true, dateOfBirth, gender, itinCnpj, name, type })
 
         return Result.success({ message: 'Register people successfully' })
+    }
+
+    async validDTO(args: PeopleCreateDTOArgs) {
+        const { itinCnpj, type, dateOfBirth = null, gender = null, name } = this.validateDTO(args, schemaPeoplePeopleAndPeopleDTO)
+
+        await this.verifyIsAlreadyItinCnpjExists(itinCnpj, type)
+
+        return {
+            name,
+            type,
+            itinCnpj,
+            dateOfBirth,
+            gender,
+        }
     }
 
     private async verifyIsAlreadyItinCnpjExists(itinCnpj: string, type: PeopleModel.Type) {

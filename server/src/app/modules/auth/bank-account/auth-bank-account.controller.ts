@@ -10,7 +10,7 @@ export class AuthBankAccountController {
         @Injection.Inject('auth.bank-account.use-case.sign-in') private signBankAccountInUC: AuthBankAccountSignInUseCase,
     ) { }
 
-    @Guard({ name: 'user.authorization' })
+    @Guard({ name: 'customer.authorization' })
     @Post('/sign-in')
     async bankAccountSignIn(req: Request) {
         const { userId } = req.headers

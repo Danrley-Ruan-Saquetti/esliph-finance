@@ -12,17 +12,17 @@ export class UserController {
         @Injection.Inject('user.use-case.update') private updateUC: UserUpdateUseCase,
     ) { }
 
-    @Guard({ name: 'user.authorization' })
+    @Guard({ name: 'customer.authorization' })
     @Get('/current')
     async get(req: Request) {
-        const id = req.headers['userId']
+        const id = req.headers['peopleId']
 
         const result = await this.queryUC.queryWithPeopleByIdWithoutPassword({ id })
 
         return result
     }
 
-    @Guard({ name: 'user.authorization' })
+    @Guard({ name: 'customer.authorization' })
     @Put('/update')
     async update(req: Request) {
         const id = req.headers['userId']

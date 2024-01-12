@@ -26,8 +26,8 @@ export class ValidatorService {
         }
 
         return Result.failure<z.output<ZodSchema>>({
-            title: 'Validação nos Dados',
-            message: 'Erro ao validar os dados',
+            title: 'Validate Data',
+            message: 'Failed to validate data',
             causes: [{ message: err, origin: 'FormatData' }],
         })
     }
@@ -37,7 +37,7 @@ export class ValidatorService {
             return { message: _err.message, origin: _err.path.join(';') }
         })
 
-        return Result.failure<z.output<ZodSchema>>({ title: 'Validação nos Dados', message: 'Dados inválidos', causes: dataErrors })
+        return Result.failure<z.output<ZodSchema>>({ title: 'Validate Data', message: 'Data invalid', causes: dataErrors })
     }
 
     public static defaultSchemaModelTable() {

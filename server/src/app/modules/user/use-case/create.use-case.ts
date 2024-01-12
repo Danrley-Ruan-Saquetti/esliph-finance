@@ -14,14 +14,9 @@ import { UserGenerateCodeUseCase } from '@modules/user/use-case/generate-code.us
 import { UserModel } from '@modules/user/user.model'
 import { GLOBAL_PEOPLE_DTO } from '@modules/people/people.global'
 import { PeopleModel } from '@modules/people/people.model'
+import { PeopleCreateDTOArgs, PeopleCreateUseCase } from '@modules/people/use-case/create.use-case'
 
 const baseSchemaDTO = ValidatorService.schema.object({
-    name: ValidatorService.schema
-        .string({ 'required_error': GLOBAL_PEOPLE_DTO.name.messageRequired })
-        .trim()
-        .min(GLOBAL_PEOPLE_DTO.name.minCharacters, { message: GLOBAL_PEOPLE_DTO.name.messageRangeCharacters })
-        .max(GLOBAL_PEOPLE_DTO.name.maxCharacters, { message: GLOBAL_PEOPLE_DTO.name.messageRangeCharacters })
-        .transform(GLOBAL_DTO.text.transform),
     login: ValidatorService.schema
         .string({ 'required_error': GLOBAL_USER_DTO.login.messageRequired })
         .email({ message: GLOBAL_USER_DTO.login.messageInvalid })
@@ -41,37 +36,28 @@ const schemaCreateUserOnlyDTO = baseSchemaDTO.extend({
 })
 
 const schemaCreateUserAndPeopleDTO = baseSchemaDTO.extend({
-    itinCnpj: ValidatorService.schema
-        .string({ 'required_error': GLOBAL_PEOPLE_DTO.itin.messageRequired })
-        .trim(),
+    peopleId: GLOBAL_USER_DTO.people.id,
     peopleType: ValidatorService.schema
         .enum(GLOBAL_PEOPLE_DTO.type.enum, { errorMap: () => ({ message: GLOBAL_PEOPLE_DTO.type.messageEnumInvalid }) }),
-    gender: ValidatorService.schema
-        .enum(GLOBAL_PEOPLE_DTO.gender.enum, { errorMap: () => ({ message: GLOBAL_PEOPLE_DTO.gender.messageEnumInvalid }) })
-        .optional(),
-    dateOfBirth: GLOBAL_DTO.date.schema
-        .optional()
-        .refine(date => !date || date < new Date(Date.now()))
-        .transform(date => date || undefined),
 })
-    .refine(({ peopleType, itinCnpj: itin }) => peopleType !== PeopleModel.Type.NATURAL_PERSON || isValidItin(itin), { message: GLOBAL_PEOPLE_DTO.itin.messageInvalid })
-    .refine(({ peopleType, itinCnpj: cnpj }) => peopleType !== PeopleModel.Type.LEGAL_ENTITY || isValidCnpj(cnpj), { message: GLOBAL_PEOPLE_DTO.cnpj.messageInvalid })
 
 export type UserCreateUserOnlyDTOArgs = SchemaValidator.input<typeof schemaCreateUserOnlyDTO>
-export type UserCreateUserAndPeopleDTOArgs = SchemaValidator.input<typeof schemaCreateUserAndPeopleDTO>
+export type UserCreateUserAndPeopleDTOArgs = SchemaValidator.input<typeof schemaCreateUserAndPeopleDTO> & Omit<PeopleCreateDTOArgs, 'type'> & { peopleType: PeopleModel.Type }
 
 @Service({ name: 'user.use-case.create' })
 export class UserCreateUseCase extends UseCase {
     constructor(
         @Injection.Inject('user.repository') private userRepository: UserRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
+        @Injection.Inject('people.use-case.create') private peopleCreateUC: PeopleCreateUseCase,
         @Injection.Inject('user.use-case.generate-code') private userGenerateCodeUC: UserGenerateCodeUseCase,
     ) {
         super()
     }
 
     async createUserAndPeople(args: UserCreateUserAndPeopleDTOArgs) {
-        const { login, password, peopleType, name, itinCnpj, dateOfBirth, gender, userType } = this.validateDTO(args, schemaCreateUserAndPeopleDTO)
+        const { login, password, userType } = this.validateDTO(args, baseSchemaDTO)
+        const { name, itinCnpj, dateOfBirth, gender, type: peopleType } = await this.peopleCreateUC.validDTO({ ...args, type: args.peopleType })
 
         const { code, passwordHash } = await this.validateRegister({ login, password })
         await this.registerUserWithPeople({ login, password: passwordHash, code, type: userType as UserModel.Type }, { active: true, dateOfBirth, gender, itinCnpj, name, type: peopleType })

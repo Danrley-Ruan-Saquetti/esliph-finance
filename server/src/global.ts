@@ -2,6 +2,7 @@ import { Injection } from '@esliph/injection'
 import { ValidatorService } from '@services/validator.service'
 import { getEnv, toCapitalise } from '@util'
 import { DateService } from '@services/date.service'
+import { REGEX_CNPJ } from '@util'
 
 export const GLOBAL_APP = {
     name: getEnv<string>({ name: 'APP_NAME' }),
@@ -51,7 +52,7 @@ export const GLOBAL_FORMATTER_CONFIG = {
 export const GLOBAL_DTO = {
     required: (value: string) => `${toCapitalise(value)} is required`,
     text: {
-        transform: val => val.replace(/ {2}/g, ' '),
+        transform: (val: string) => val.replace(/ {2}/g, ' '),
     },
     date: {
         schema: ValidatorService.schema
@@ -89,5 +90,8 @@ export const GLOBAL_DTO = {
             limite: () => ValidatorService.schema.coerce
                 .number({ 'required_error': GLOBAL_DTO.required('Limite of the Registers'), 'invalid_type_error': 'Type Limite of the registers must be a number' }).default(15)
         }
-    }
+    },
+    cnpj: {
+        regex: REGEX_CNPJ
+    },
 }

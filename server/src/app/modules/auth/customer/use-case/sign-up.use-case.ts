@@ -4,7 +4,7 @@ import { UseCase } from '@common/use-case'
 import { UserCreateUseCase, UserCreateUserAndPeopleDTOArgs } from '@modules/user/use-case/create.use-case'
 import { UserModel } from '@modules/user/user.model'
 
-@Service({ name: 'auth.user.use-case.sign-up' })
+@Service({ name: 'auth.customer.use-case.sign-up' })
 export class AuthCustomerSignUpUseCase extends UseCase {
     constructor(@Injection.Inject('user.use-case.create') private userCreateUC: UserCreateUseCase) {
         super()

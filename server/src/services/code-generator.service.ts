@@ -1,9 +1,16 @@
 import { Service } from '@esliph/module'
+import { BadRequestException } from '../common/exceptions'
 
 export type GenerateCodeOptions = {
     template: string
     charactersToReplace: string[]
     valuesAllowed: string[]
+}
+
+export type FormatCodeOptions = {
+    template: string
+    charactersToReplace: string[]
+    values: string[]
 }
 
 @Service({ name: 'global.service.code-generator' })
@@ -12,7 +19,7 @@ export class CodeGeneratorService {
         return template
             .split('')
             .map(templateDigit => {
-                if (!charactersToReplace.find(characterToReplace => templateDigit === characterToReplace)) {
+                if (!this.isCharacterToReplace(templateDigit, charactersToReplace)) {
                     return templateDigit
                 }
 
@@ -39,6 +46,23 @@ export class CodeGeneratorService {
         }
 
         return true
+    }
+
+    formatCode({ charactersToReplace, template, values }: FormatCodeOptions) {
+        let index = -1
+        return template.split('').map(templateDigit => {
+            if (!this.isCharacterToReplace(templateDigit, charactersToReplace)) {
+                return templateDigit
+            }
+
+            index++
+
+            return values[index]
+        }).join('')
+    }
+
+    private isCharacterToReplace(character: string, charactersToReplace: string[]) {
+        return charactersToReplace.find(characterToReplace => character === characterToReplace)
     }
 
     private valideDigits(codeDigit: string, templateDigit: string, options: Omit<GenerateCodeOptions, 'template'>) {

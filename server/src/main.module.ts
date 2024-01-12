@@ -13,6 +13,7 @@ import { MaskDataService } from '@services/mask-data.service'
 import { QueryBuilderService } from '@services/query-builder.service'
 import { JobService } from '@services/job.service'
 import { DateService } from '@services/date.service'
+import { FormatterItinCnpjService } from '@services/formatter-itin-cnpj.service'
 
 @Module({
     imports: [AppModule, JobModule],
@@ -29,6 +30,8 @@ import { DateService } from '@services/date.service'
         QueryBuilderService,
         JobService,
         DateService,
+        FormatterItinCnpjService,
+        { whenCall: 'formatter-itin-cnpj', use: 'global.service.formatter-itin-cnpj' },
         { whenCall: 'date', use: 'global.service.date' },
         { whenCall: 'job', use: 'global.service.job' },
         { whenCall: 'query-builder', use: 'global.service.query-builder' },

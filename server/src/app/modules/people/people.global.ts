@@ -14,6 +14,9 @@ export const GLOBAL_PEOPLE_DTO = {
         messageRequired: GLOBAL_DTO.required('Name'),
         messageRangeCharacters: 'The Name must be between 3 and 45 characters',
     },
+    itinCnpj: {
+        messageRequired: GLOBAL_DTO.required('ITIN/CNPJ'),
+    },
     itin: {
         messageRequired: GLOBAL_DTO.required('ITIN'),
         messageInvalid: 'ITIN invalid'

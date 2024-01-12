@@ -3,7 +3,7 @@ import { Injection } from '@esliph/injection'
 import { Filter, FilterPerform } from '@esliph/module'
 import { AuthCustomerAuthorizationUseCase } from '@modules/auth/customer/use-case/authorization.use-case'
 
-@Filter({ name: 'user.filter.authorization' })
+@Filter({ name: 'customer.filter.authorization' })
 export class CustomerAuthorizationFilter implements FilterPerform {
     constructor(@Injection.Inject('auth.customer.use-case.authorization') private authorizationUC: AuthCustomerAuthorizationUseCase) { }
 
@@ -11,6 +11,8 @@ export class CustomerAuthorizationFilter implements FilterPerform {
         const { authorization } = req.headers
 
         const result = this.authorizationUC.perform({ Authorization: authorization })
+
+        console.log(authorization, result)
 
         req.headers['userId'] = result.getValue().sub
         req.headers['peopleId'] = result.getValue().peopleId

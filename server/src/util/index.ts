@@ -2,6 +2,7 @@ import 'dotenv/config'
 import { isString } from '@util'
 export * from '@util/types'
 export * from '@util/cron'
+export * from '@util/cnpj'
 
 export type PartialDeep<T> = { [x in keyof T]?: T[x] extends object ? PartialDeep<T[x]> : T[x] }
 

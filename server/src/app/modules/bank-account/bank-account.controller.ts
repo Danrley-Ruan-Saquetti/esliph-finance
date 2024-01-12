@@ -14,7 +14,7 @@ export class BankAccountController {
         @Injection.Inject('bank-account.use-case.query') private queryBalanceUC: BankAccountQueryBalanceUseCase,
     ) { }
 
-    @Guard({ name: 'user.authorization' })
+    @Guard({ name: 'customer.authorization' })
     @Get('')
     async get(req: Request) {
         const { peopleId } = req.headers
@@ -24,7 +24,7 @@ export class BankAccountController {
         return result
     }
 
-    @Guard({ name: 'user.authorization' })
+    @Guard({ name: 'customer.authorization' })
     @Post('/create')
     async create(req: Request) {
         const { peopleId } = req.headers
