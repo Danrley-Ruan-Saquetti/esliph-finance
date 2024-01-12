@@ -11,7 +11,7 @@ import { PaymentModel } from '@modules/payment/payment.model'
 import { CompensationPaymentsControl } from '@modules/payment/control/compensation-payments.control'
 import { BankAccountUpdateBalanceUseCase } from '@modules/bank-account/use-case/update-balance.use-case'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
-import { FinancialTransactionModel } from '../../financial-transaction/financial-transaction.model'
+import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 
 const schemaDTO = ValidatorService.schema.object({
     financialTransactionId: GLOBAL_PAYMENT_DTO.financialTransaction.id,

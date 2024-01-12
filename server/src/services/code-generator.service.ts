@@ -1,5 +1,4 @@
 import { Service } from '@esliph/module'
-import { BadRequestException } from '../common/exceptions'
 
 export type GenerateCodeOptions = {
     template: string

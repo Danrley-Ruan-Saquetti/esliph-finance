@@ -2,7 +2,7 @@ import { Service } from '@esliph/module'
 import { ID } from '@@types'
 import { Repository } from '@services/repository.service'
 import { UserModel } from '@modules/user/user.model'
-import { PeopleModel } from '../people/people.model'
+import { PeopleModel } from '@modules/people/people.model'
 
 @Service({ name: 'user.repository' })
 export class UserRepository extends Repository {
@@ -158,6 +158,21 @@ export class UserRepository extends Repository {
     async findByLogin(login: string) {
         try {
             const user = await this.database.instance.user.findFirst({ where: { login }, include: { people: true } })
+
+            return this.handleResponse<UserModel.UserWithPeople>(user, {
+                noAcceptNullable: true,
+                error: { title: UserRepository.GLOBAL_MESSAGE.find.title, message: UserRepository.GLOBAL_MESSAGE.find.notFound }
+            })
+        } catch (err: any) {
+            return this.handleError<UserModel.UserWithPeople>(err, {
+                error: { title: UserRepository.GLOBAL_MESSAGE.find.title, message: UserRepository.GLOBAL_MESSAGE.find.failed }
+            })
+        }
+    }
+
+    async findByLoginAndType(login: string, type: UserModel.Type) {
+        try {
+            const user = await this.database.instance.user.findFirst({ where: { login, type }, include: { people: true } })
 
             return this.handleResponse<UserModel.UserWithPeople>(user, {
                 noAcceptNullable: true,

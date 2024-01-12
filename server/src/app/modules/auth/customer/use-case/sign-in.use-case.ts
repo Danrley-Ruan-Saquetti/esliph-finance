@@ -11,6 +11,7 @@ import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { GLOBAL_AUTH_CLIENT_DTO } from '@modules/auth/customer/auth-customer.global'
 import { UserRepository } from '@modules/user/user.repository'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
+import { UserModel } from '@modules/user/user.model'
 
 const schemaDTO = ValidatorService.schema.object({
     login: ValidatorService.schema
@@ -44,7 +45,7 @@ export class AuthCustomerSignInUseCase extends UseCase {
     }
 
     private async queryUserByLogin(login: string) {
-        const userResult = await this.userRepository.findByLogin(login)
+        const userResult = await this.userRepository.findByLoginAndType(login, UserModel.Type.CUSTOMER)
 
         if (userResult.isSuccess()) {
             return userResult.getValue()

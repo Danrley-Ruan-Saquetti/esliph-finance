@@ -13,9 +13,9 @@ export class AuthBankAccountController {
     @Guard({ name: 'customer.authorization' })
     @Post('/sign-in')
     async bankAccountSignIn(req: Request) {
-        const { userId } = req.headers
+        const { peopleId } = req.headers
 
-        const result = await this.signBankAccountInUC.perform({ ...req.body, userId })
+        const result = await this.signBankAccountInUC.perform({ ...req.body, peopleId })
 
         return result
     }

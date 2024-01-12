@@ -12,8 +12,6 @@ export class CustomerAuthorizationFilter implements FilterPerform {
 
         const result = this.authorizationUC.perform({ Authorization: authorization })
 
-        console.log(authorization, result)
-
         req.headers['userId'] = result.getValue().sub
         req.headers['peopleId'] = result.getValue().peopleId
     }

@@ -1,10 +1,10 @@
-import { BadRequestException } from './../../../../common/exceptions/bad-request.exception'
 import { Service } from '@esliph/module'
-import { UseCase } from '@common/use-case'
-import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
+import { Result } from '@esliph/common'
+import { UseCase } from '@common/use-case'
 import { ID } from '@@types'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { BadRequestException } from '@common/exceptions/bad-request.exception'
 import { GLOBAL_BANK_ACCOUNT_DTO, GLOBAL_BANK_ACCOUNT_RULES } from '@modules/bank-account/bank-account.global'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
 

@@ -1,6 +1,6 @@
 import { GLOBAL_DTO } from '@global'
 import { GenerateCodeOptions } from '@services/code-generator.service'
-import { UserModel } from './user.model'
+import { UserModel } from '@modules/user/user.model'
 
 export const GLOBAL_USER_DTO = {
     id: GLOBAL_DTO.id.schema({ name: 'User' }),
