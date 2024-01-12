@@ -9,8 +9,8 @@ export namespace PeopleModel {
     export type Type = keyof typeof Type
     export type Gender = keyof typeof Gender
 
-    export type User = Database.User
     export type People = Database.People
     export type Model = DocumentSimple<People>
+    export type CreateArgs = Omit<Database.Prisma.PeopleCreateInput, 'addresses' | 'contacts' | 'users' | 'bankAccounts'>
     export type UpdateArgs = Partial<Pick<Model, 'name' | 'active' | 'dateOfBirth' | 'gender'>>
 }

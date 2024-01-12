@@ -27,9 +27,9 @@ export class BankAccountRepository extends Repository {
         }
     }
 
-    async register({ balance, name, password, userId, code }: BankAccountModel.Model) {
+    async register({ balance, name, password, peopleId, code }: BankAccountModel.Model) {
         try {
-            await this.repo.create({ data: { balance, name, password, userId, code } })
+            await this.repo.create({ data: { balance, name, password, peopleId, code } })
 
             return this.handleResponse<{ message: string }>({ message: BankAccountRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
@@ -152,9 +152,9 @@ export class BankAccountRepository extends Repository {
         }
     }
 
-    async findByCodeAndIdUser(code: string, userId: ID) {
+    async findByCodeAndUserId(code: string, userId: ID) {
         try {
-            const bankAccount = await this.repo.findFirst({ where: { code, userId } })
+            const bankAccount = await this.repo.findFirst({ where: { code, people: { users: { some: { id: userId } } } } })
 
             return this.handleResponse<BankAccountModel.BankAccount>(bankAccount, {
                 noAcceptNullable: true,
@@ -165,10 +165,10 @@ export class BankAccountRepository extends Repository {
         }
     }
 
-    async findByCodeAndIdUserWithoutPassword(code: string, userId: ID) {
+    async findByCodeAndUserIdWithoutPassword(code: string, userId: ID) {
         try {
             const bankAccount = await this.repo.findFirst({
-                where: { code, userId },
+                where: { code, people: { users: { some: { id: userId } } } },
                 select: BankAccountModel.BankAccountWithoutPasswordSelect,
             })
 
@@ -186,7 +186,7 @@ export class BankAccountRepository extends Repository {
     async findManyByUserId(userId: ID) {
         try {
             const users = await this.repo.findMany({
-                where: { userId },
+                where: { people: { users: { some: { id: userId } } } },
                 orderBy: { updatedAt: 'desc' },
             })
 
@@ -199,7 +199,7 @@ export class BankAccountRepository extends Repository {
     async findManyByUserIdWithoutPassword(userId: ID) {
         try {
             const bankAccounts = await this.repo.findMany({
-                where: { userId },
+                where: { people: { users: { some: { id: userId } } } },
                 select: BankAccountModel.BankAccountWithoutPasswordSelect,
                 orderBy: { updatedAt: 'desc' },
             })
@@ -215,7 +215,7 @@ export class BankAccountRepository extends Repository {
     async findManyByUserIdWithoutPasswordAndBalance(userId: ID) {
         try {
             const bankAccounts = await this.repo.findMany({
-                where: { userId },
+                where: { people: { users: { some: { id: userId } } } },
                 select: BankAccountModel.BankAccountWithoutPasswordSelectAndBalance,
                 orderBy: { updatedAt: 'desc' },
             })

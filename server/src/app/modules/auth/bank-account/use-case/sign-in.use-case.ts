@@ -70,7 +70,7 @@ export class AuthBankAccountSignInUseCase extends UseCase {
     }
 
     private async queryBankAccountByCode(code: string, userId: number) {
-        const userResult = await this.bankAccountRepository.findByCodeAndIdUser(code, userId)
+        const userResult = await this.bankAccountRepository.findByCodeAndUserId(code, userId)
 
         if (userResult.isSuccess()) {
             return userResult.getValue()

@@ -13,7 +13,7 @@ export namespace BankAccountModel {
     export type BankAccountWithoutPasswordAndBalance = Omit<BankAccount, 'password' | 'balance'>
     export const BankAccountWithoutPasswordSelect: { [x in keyof BankAccountWithoutPassword]: true } = {
         id: true,
-        userId: true,
+        peopleId: true,
         code: true,
         name: true,
         balance: true,
@@ -22,7 +22,7 @@ export namespace BankAccountModel {
     } as const
     export const BankAccountWithoutPasswordSelectAndBalance: { [x in keyof BankAccountWithoutPasswordAndBalance]: true } = {
         id: true,
-        userId: true,
+        peopleId: true,
         code: true,
         name: true,
         createdAt: true,

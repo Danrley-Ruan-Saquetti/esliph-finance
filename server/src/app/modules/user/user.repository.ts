@@ -2,6 +2,7 @@ import { Service } from '@esliph/module'
 import { ID } from '@@types'
 import { Repository } from '@services/repository.service'
 import { UserModel } from '@modules/user/user.model'
+import { PeopleModel } from '../people/people.model'
 
 @Service({ name: 'user.repository' })
 export class UserRepository extends Repository {
@@ -26,6 +27,35 @@ export class UserRepository extends Repository {
     async register({ login, password, code, peopleId, type }: UserModel.Model) {
         try {
             await this.database.instance.user.create({ data: { login, password, code, peopleId, type } })
+
+            return this.handleResponse<{ message: string }>({ message: UserRepository.GLOBAL_MESSAGE.create.success })
+        } catch (err: any) {
+            return this.handleError<{ message: string }>(err, {
+                error: { title: UserRepository.GLOBAL_MESSAGE.create.title, message: UserRepository.GLOBAL_MESSAGE.create.failed }
+            })
+        }
+    }
+
+    async registerWithPeople({ login, password, code, type: typeUser }: Omit<UserModel.Model, 'peopleId'>, { active, dateOfBirth, gender, itinCnpj, name, type: typePeople }: PeopleModel.CreateArgs) {
+        try {
+            await this.database.instance.user.create({
+                data: {
+                    type: typeUser,
+                    login,
+                    password,
+                    code,
+                    people: {
+                        create: {
+                            active,
+                            dateOfBirth,
+                            gender,
+                            itinCnpj,
+                            name,
+                            type: typePeople
+                        }
+                    }
+                }
+            })
 
             return this.handleResponse<{ message: string }>({ message: UserRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {

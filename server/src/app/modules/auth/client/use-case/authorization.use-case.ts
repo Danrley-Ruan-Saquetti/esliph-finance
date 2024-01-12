@@ -8,14 +8,14 @@ import { PayloadJWTUser } from '@@types'
 
 export type AuthSignInDTOArgs = { Authorization: string }
 
-@Service({ name: 'auth.user.use-case.authorization' })
-export class AuthUserAuthorizationUseCase extends UseCase {
+@Service({ name: 'auth.client.use-case.authorization' })
+export class AuthClientAuthorizationUseCase extends UseCase {
     constructor(@Injection.Inject('jwt') private jwt: JWTService) {
         super()
     }
 
     perform({ Authorization }: AuthSignInDTOArgs) {
-        const payloadResult = this.jwt.valid<PayloadJWTUser>(Authorization, { secretKey: GLOBAL_SERVER_JWT_TOKEN.keyMaster, name: 'Authorization User' })
+        const payloadResult = this.jwt.valid<PayloadJWTUser>(Authorization, { secretKey: GLOBAL_SERVER_JWT_TOKEN.keyMaster, name: 'Authorization Client' })
 
         return Result.success(payloadResult.getValue())
     }

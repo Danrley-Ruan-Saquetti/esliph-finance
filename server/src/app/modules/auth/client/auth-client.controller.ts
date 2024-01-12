@@ -2,14 +2,14 @@ import { Request } from '@esliph/http'
 import { Injection } from '@esliph/injection'
 import { Controller } from '@esliph/module'
 import { Post } from '@services/http.service'
-import { AuthUserSignUpUseCase } from '@modules/auth/user/use-case/sign-up.use-case'
-import { AuthUserSignInUseCase } from '@modules/auth/user/use-case/sign-in.use-case'
+import { AuthClientSignUpUseCase } from '@modules/auth/client/use-case/sign-up.use-case'
+import { AuthClientSignInUseCase } from '@modules/auth/client/use-case/sign-in.use-case'
 
-@Controller({ prefix: '/auth/user' })
-export class AuthUserController {
+@Controller({ prefix: '/auth/client' })
+export class AuthClientController {
     constructor(
-        @Injection.Inject('auth.user.use-case.sign-up') private signUpUC: AuthUserSignUpUseCase,
-        @Injection.Inject('auth.user.use-case.sign-in') private signInUC: AuthUserSignInUseCase,
+        @Injection.Inject('auth.client.use-case.sign-up') private signUpUC: AuthClientSignUpUseCase,
+        @Injection.Inject('auth.client.use-case.sign-in') private signInUC: AuthClientSignInUseCase,
     ) { }
 
     @Post('/sign-up')

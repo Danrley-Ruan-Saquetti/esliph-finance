@@ -12,12 +12,16 @@ import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 
 const schemaDTO = ValidatorService.schema.object({
     id: GLOBAL_USER_DTO.id,
-    name: ValidatorService.schema
+    login: ValidatorService.schema
+        .string()
+        .email({ message: GLOBAL_USER_DTO.login.messageInvalid })
+        .max(GLOBAL_USER_DTO.login.maxCharacters, { message: GLOBAL_USER_DTO.login.messageRangeCharacters })
+        .trim()
+        .optional(),
+    password: ValidatorService.schema
         .string()
         .trim()
-        .min(GLOBAL_USER_DTO.name.minCharacters, { message: GLOBAL_USER_DTO.name.messageRangeCharacters })
-        .max(GLOBAL_USER_DTO.name.maxCharacters, { message: GLOBAL_USER_DTO.name.messageRangeCharacters })
-        .transform(GLOBAL_DTO.text.transform)
+        .regex(GLOBAL_USER_DTO.password.regex, { message: GLOBAL_USER_DTO.password.messageRegex })
         .optional(),
 })
 
@@ -30,14 +34,14 @@ export class UserUpdateUseCase extends UseCase {
     }
 
     async perform(args: UserUpdateDTOArgs) {
-        const { id, name } = this.validateDTO(args, schemaDTO)
+        const { id, login, password } = this.validateDTO(args, schemaDTO)
 
-        if (!name) {
+        if (!login && !password) {
             return Result.success({ message: 'No data updated' })
         }
 
         await this.verifyIsExistsUser(id)
-        await this.update({ name }, id)
+        await this.update({ login, password }, id)
 
         return Result.success({ message: 'User updated successfully' })
     }
@@ -54,8 +58,8 @@ export class UserUpdateUseCase extends UseCase {
         })
     }
 
-    private async update({ name }: UserModel.UpdateArgs, id: ID) {
-        const updateResult = await this.userRepository.updateById({ name }, { id })
+    private async update({ login, password }: UserModel.UpdateArgs, id: ID) {
+        const updateResult = await this.userRepository.updateById({ login, password }, { id })
 
         if (updateResult.isSuccess()) {
             return

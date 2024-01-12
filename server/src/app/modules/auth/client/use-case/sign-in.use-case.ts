@@ -8,13 +8,13 @@ import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
-import { GLOBAL_AUTH_USER_DTO } from '@modules/auth/user/auth-user.global'
+import { GLOBAL_AUTH_CLIENT_DTO } from '@modules/auth/client/auth-client.global'
 import { UserRepository } from '@modules/user/user.repository'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 
 const schemaDTO = ValidatorService.schema.object({
     login: ValidatorService.schema
-        .string({ 'required_error': GLOBAL_AUTH_USER_DTO.login.messageRequired })
+        .string({ 'required_error': GLOBAL_AUTH_CLIENT_DTO.login.messageRequired })
         .trim(),
     password: ValidatorService.schema
         .string({ 'required_error': GLOBAL_USER_DTO.password.messageRequired })
@@ -23,8 +23,8 @@ const schemaDTO = ValidatorService.schema.object({
 
 export type AuthSignInDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
-@Service({ name: 'auth.user.use-case.sign-in' })
-export class AuthUserSignInUseCase extends UseCase {
+@Service({ name: 'auth.client.use-case.sign-in' })
+export class AuthClientSignInUseCase extends UseCase {
     constructor(
         @Injection.Inject('user.repository') private userRepository: UserRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,

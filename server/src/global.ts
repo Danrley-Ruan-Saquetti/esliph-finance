@@ -56,7 +56,7 @@ export const GLOBAL_DTO = {
     date: {
         schema: ValidatorService.schema
             .coerce
-            .date()
+            .date({ 'invalid_type_error': 'Date format invalid' })
             .transform(date => {
                 const dateService = Injection.resolve(DateService)
 

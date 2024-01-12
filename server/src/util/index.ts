@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import { isString } from '@util'
 export * from '@util/types'
 export * from '@util/cron'
 
@@ -67,4 +68,32 @@ export function getEnv<DefaultType>({ name, defaultValue, forceDefaultValue, def
     }
 
     return (defaultValue || envValue) as DefaultType
+}
+
+export function isValidItin(itin: string) {
+    if (!isString(itin)) { return false }
+
+    if (/[^\d]+/g.test(itin)) { return true }
+
+    if (itin.length !== 11 || !!itin.match(/(\d)\1{10}/)) { return false }
+
+    const digitsItin = itin.split('').map(el => +el)
+
+    const rest = (count: number) => (digitsItin.slice(0, count - 12).reduce((soma, el, index) => (soma + el * (count - index)), 0) * 10) % 11 % 10
+
+    return rest(10) === digitsItin[9] && rest(11) === digitsItin[10]
+}
+
+export function isValidCnpj(cnpj: string) {
+    if (!isString(cnpj)) { return false }
+
+    if (/[^\d]+/g.test(cnpj)) { return true }
+
+    if (cnpj.length !== 11 || !!cnpj.match(/(\d)\1{10}/)) { return false }
+
+    const digitsCnpj = cnpj.split('').map(el => +el)
+
+    const rest = (count: number) => (digitsCnpj.slice(0, count - 12).reduce((soma, el, index) => (soma + el * (count - index)), 0) * 10) % 11 % 10
+
+    return rest(10) === digitsCnpj[9] && rest(11) === digitsCnpj[10]
 }
