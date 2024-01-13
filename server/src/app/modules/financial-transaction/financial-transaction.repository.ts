@@ -63,28 +63,30 @@ export class FinancialTransactionRepository extends Repository {
     }
 
     async updateByIdWithCategory(args: FinancialTransactionModel.UpdateArgs, { create: categoriesToCreate = [], delete: categoriesToDelete = [] }: { create?: ID[], delete?: ID[] }, where: { id: ID }) {
+        const transaction = this.transaction()
+
         try {
+            await transaction.begin()
             await this.database.instance.financialTransaction.update({
                 where: { id: where.id },
-                data: {
-                    ...args,
-                    categories: {
-                        deleteMany: {
-                            financialTransactionId: where.id,
-                            categoryId: {
-                                in: categoriesToDelete
-                            }
-                        },
-                        createMany: {
-                            data: categoriesToCreate.map(categoryId => ({ categoryId })),
-                            skipDuplicates: true
-                        }
-                    }
-                }
+                data: args
             })
 
+            if (categoriesToCreate.length) {
+                await this.database.instance.financialTransactionCategory.createMany({
+                    data: categoriesToCreate.map(categoryId => ({ categoryId, financialTransactionId: where.id })), skipDuplicates: true
+                })
+            }
+            if (categoriesToDelete.length) {
+                await this.database.instance.financialTransactionCategory.deleteMany({
+                    where: { financialTransactionId: where.id, categoryId: { in: categoriesToDelete } }
+                })
+            }
+
+            await transaction.commit()
             return this.handleResponse<{ message: string }>({ message: FinancialTransactionRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
+            await transaction.rollback()
             return this.handleError<{ message: string }>(err, {
                 error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.update.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.update.failed },
             })

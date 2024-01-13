@@ -4,6 +4,7 @@ import { Service } from '@esliph/module'
 import { ID } from '@@types'
 import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
+import { getDistinctValuesInArray } from '@util'
 import { BadRequestException, } from '@common/exceptions'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
@@ -12,7 +13,6 @@ import { GLOBAL_CATEGORY_DTO } from '@modules/category/category.global'
 import { CategoryRepository } from '@modules/category/category.repository'
 import { FinancialCategoryRepository } from '@modules/financial-transaction/category/category.repository'
 import { GLOBAL_FINANCIAL_TRANSACTION_DTO, GLOBAL_FINANCIAL_TRANSACTION_RULES } from '@modules/financial-transaction/financial-transaction.global'
-import { getDistinctValuesInArray } from '../../../../util'
 
 const schemaDTO = ValidatorService.schema.object({
     id: GLOBAL_FINANCIAL_TRANSACTION_DTO.id,
@@ -81,6 +81,20 @@ const schemaDTO = ValidatorService.schema.object({
     })
         .optional()
         .default({ link: [], unlink: [] })
+        .transform(({ link, unlink }) => {
+            link = getDistinctValuesInArray(link)
+            unlink = getDistinctValuesInArray(unlink)
+
+            link.map((l, i) => {
+                const iU = unlink.findIndex(u => u == l)
+                if (iU < 0) { return }
+
+                link.splice(i, 1)
+                unlink.splice(iU, 1)
+            })
+
+            return { link, unlink }
+        })
 })
 
 export type FinancialTransactionUpdateDTOArgs = SchemaValidator.input<typeof schemaDTO>
@@ -116,12 +130,13 @@ export class FinancialTransactionUpdateUseCase extends UseCase {
         const categoriesCreate = await this.filterCategoriesOfTheBank(dataDTO.category.link, financialTransaction.bankAccountId)
         const categoriesRemove = await this.filterCategoriesOfTheBank(dataDTO.category.unlink, financialTransaction.bankAccountId)
         const dataToUpdate = this.processingData(dataDTO, financialTransaction)
-        await this.update(dataToUpdate, { create: categoriesCreate.categories, remove: categoriesRemove.categories }, dataDTO.id)
 
-        const categoriesNotFound = getDistinctValuesInArray([
+        await this.update(dataToUpdate, { create: categoriesCreate.categories, delete: categoriesRemove.categories }, dataDTO.id)
+
+        const categoriesNotFound = [
             ...categoriesRemove.categoriesNotFound,
             ...categoriesCreate.categoriesNotFound,
-        ])
+        ]
 
         return Result.success({ message: `Financial transaction updated successfully${categoriesNotFound.length ? ', but there are some categories that were not found' : ''}`, categoriesNotFound })
     }
@@ -175,8 +190,6 @@ export class FinancialTransactionUpdateUseCase extends UseCase {
 
         const financialCategories = await this.categoryRepository.findManyByIdsAndBankAccountId(categories, bankAccountId)
 
-        console.log(financialCategories)
-
         if (!financialCategories.isSuccess()) {
             throw new BadRequestException({ ...financialCategories.getError(), title: 'Query Categories' })
         }
@@ -186,7 +199,7 @@ export class FinancialTransactionUpdateUseCase extends UseCase {
         return { categories: financialCategories.getValue().map(({ id }) => id), categoriesNotFound }
     }
 
-    private async update(data: FinancialTransactionModel.UpdateArgs, categories: { create: ID[], remove: ID[] }, id: ID) {
+    private async update(data: FinancialTransactionModel.UpdateArgs, categories: { create: ID[], delete: ID[] }, id: ID) {
         const updateResult = await this.transactionRepository.updateByIdWithCategory(data, categories, { id })
 
         if (updateResult.isSuccess()) {
