@@ -42,7 +42,7 @@ export class FinancialTransactionController {
 
         await this.bankAccountBelongControl.verifyFinancialTransaction({ financialTransactionId: id, bankAccountId: req.headers['bankAccountId'] })
 
-        const result = await this.queryUC.queryByIdWithNotesAndPayments({ id })
+        const result = await this.queryUC.queryByIdWithNotesAndPaymentsAndCategories({ id })
 
         return result
     }

@@ -33,7 +33,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
         return Result.success(financialTransactionsResult.getValue())
     }
 
-    async queryByIdWithNotesAndPayments(args: { id: ID }) {
+    async queryByIdWithNotesAndPaymentsAndCategories(args: { id: ID }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
         const financialTransactionsResult = await this.transactionRepository.findByIdWithPaymentsAndNotesAndCategories(id)

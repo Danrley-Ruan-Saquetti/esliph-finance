@@ -98,3 +98,7 @@ export function isValidCnpj(cnpj: string) {
 
     return rest(10) === digitsCnpj[9] && rest(11) === digitsCnpj[10]
 }
+
+export function getDistinctValuesInArray<T>(values: T[]) {
+    return values.filter((value, index, self) => self.indexOf(value) === index)
+}

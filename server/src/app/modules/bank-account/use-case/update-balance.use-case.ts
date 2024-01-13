@@ -28,20 +28,20 @@ export class BankAccountUpdateBalanceUseCase extends UseCase {
     }
 
     async receiver(args: BankAccountBalanceDTOArgs) {
-        const result = await this.perform(args)
+        const { id, value } = this.validateDTO(args, schemaDTO)
+        const result = await this.perform({ id, value })
 
         return result
     }
 
     async liquidate(args: BankAccountBalanceDTOArgs) {
-        const result = await this.perform({ ...args, value: args.value * -1 })
+        const { id, value } = this.validateDTO(args, schemaDTO)
+        const result = await this.perform({ id, value: args.value * -1 })
 
         return result
     }
 
-    private async perform(args: BankAccountBalanceDTOArgs) {
-        const { id, value } = this.validateDTO(args, schemaDTO)
-
+    private async perform({ id, value }: BankAccountBalanceDTOArgs) {
         if (value == 0) {
             return Result.success({ message: 'Balance successfully updated' })
         }

@@ -21,7 +21,7 @@ export class BalanceBankAccountControl {
     }[]
     private state: { total: number }
 
-    constructor(@Injection.Inject('bank-account.repository') private bankAccountRepository: BankAccountRepository) {}
+    constructor(@Injection.Inject('bank-account.repository') private bankAccountRepository: BankAccountRepository) { }
 
     async loadComponents(bankAccountId: ID) {
         this.setBankAccountIdId(bankAccountId)
@@ -102,6 +102,7 @@ export class BalanceBankAccountControl {
             type: FinancialTransactionModel.Type
             situation: FinancialTransactionModel.Situation
             value: number
+            dateTimeCompetence: Date
             payments: (PaymentModel.Model & { id: ID })[]
         }[],
     ) {

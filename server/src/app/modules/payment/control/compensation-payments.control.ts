@@ -1,19 +1,20 @@
-import { BadRequestException } from '@common/exceptions'
+import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { ID } from '@@types'
+import { BadRequestException } from '@common/exceptions'
 import { PaymentModel } from '@modules/payment/payment.model'
 import { PaymentRepository } from '@modules/payment/payment.repository'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { GLOBAL_FINANCIAL_TRANSACTION_RULES } from '@modules/financial-transaction/financial-transaction.global'
-import { Result } from '@esliph/common'
 
 @Service({ name: 'compensation-payments.control' })
 export class CompensationPaymentsControl {
     private financialTransactionId: ID
     private financialTransaction: {
         situation: FinancialTransactionModel.Situation
+        type: FinancialTransactionModel.Type
         value: number
     }
     private payments: (PaymentModel.Model & { id: ID })[] = []
@@ -118,6 +119,7 @@ export class CompensationPaymentsControl {
         this.financialTransaction = {
             value: financialTransactionResult.getValue().value,
             situation: financialTransactionResult.getValue().situation,
+            type: financialTransactionResult.getValue().type,
         }
         this.payments = financialTransactionResult.getValue().payments.map(({ id, financialTransactionId, value, discount, increase, paidAt }) => ({
             id,
@@ -139,6 +141,7 @@ export class CompensationPaymentsControl {
         this.financialTransaction = {
             value: financialTransactionResult.getValue().value,
             situation: financialTransactionResult.getValue().situation,
+            type: financialTransactionResult.getValue().type,
         }
     }
 
@@ -154,8 +157,8 @@ export class CompensationPaymentsControl {
             .map(({ id, financialTransactionId, value, discount, increase, paidAt }) => ({ id, financialTransactionId, value, discount, increase, paidAt }))
     }
 
-    setFinancialTransaction({ situation, value }: { situation: FinancialTransactionModel.Situation; value: number }) {
-        this.financialTransaction = { situation, value }
+    setFinancialTransaction({ situation, value, type }: { type: FinancialTransactionModel.Type, situation: FinancialTransactionModel.Situation; value: number }) {
+        this.financialTransaction = { situation, value, type }
     }
 
     setPayments(payments: (PaymentModel.Model & { id: ID })[]) {

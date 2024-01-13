@@ -3,14 +3,7 @@ import { ID } from '@@types'
 import { Prisma } from '@services/database.service'
 import { Repository, RepositoryPagination } from '@services/repository.service'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
-
-export type FinancialTransactionWhereArgs = Prisma.FinancialTransactionWhereInput
-export type FinancialTransactionSelectArgs = keyof FinancialTransactionModel.FinancialTransaction
-export type FinancialTransactionQuery = {
-    where: FinancialTransactionWhereArgs
-    select: { [x in FinancialTransactionSelectArgs]?: boolean }
-    page: RepositoryPagination
-}
+import { CategoryModel } from '../category/category.model'
 
 @Service({ name: 'financial-transaction.repository' })
 export class FinancialTransactionRepository extends Repository {
@@ -56,7 +49,39 @@ export class FinancialTransactionRepository extends Repository {
 
     async updateById(args: FinancialTransactionModel.UpdateArgs, where: { id: ID }) {
         try {
-            await this.database.instance.financialTransaction.update({ where: { id: where.id }, data: args })
+            await this.database.instance.financialTransaction.update({
+                where: { id: where.id },
+                data: { ...args, categories: {} }
+            })
+
+            return this.handleResponse<{ message: string }>({ message: FinancialTransactionRepository.GLOBAL_MESSAGE.update.success })
+        } catch (err: any) {
+            return this.handleError<{ message: string }>(err, {
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.update.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.update.failed },
+            })
+        }
+    }
+
+    async updateByIdWithCategory(args: FinancialTransactionModel.UpdateArgs, { create: categoriesToCreate = [], delete: categoriesToDelete = [] }: { create?: ID[], delete?: ID[] }, where: { id: ID }) {
+        try {
+            await this.database.instance.financialTransaction.update({
+                where: { id: where.id },
+                data: {
+                    ...args,
+                    categories: {
+                        deleteMany: {
+                            financialTransactionId: where.id,
+                            categoryId: {
+                                in: categoriesToDelete
+                            }
+                        },
+                        createMany: {
+                            data: categoriesToCreate.map(categoryId => ({ categoryId })),
+                            skipDuplicates: true
+                        }
+                    }
+                }
+            })
 
             return this.handleResponse<{ message: string }>({ message: FinancialTransactionRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
@@ -137,6 +162,7 @@ export class FinancialTransactionRepository extends Repository {
             const financialTransaction = await this.database.instance.financialTransaction.findFirst({
                 where: { id },
                 include: {
+                    categories: { include: { category: true }, orderBy: { category: { isFavorite: 'asc' } } },
                     payments: { orderBy: { paidAt: 'desc' } },
                     notes: { orderBy: { createdAt: 'desc' } },
                 },
@@ -145,12 +171,17 @@ export class FinancialTransactionRepository extends Repository {
                 },
             })
 
-            return this.handleResponse<FinancialTransactionModel.FinancialTransactionWithPaymentsAndNotes>(financialTransaction, {
-                noAcceptNullable: true,
-                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.notFound },
-            })
+            const categories: CategoryModel.Category[] = financialTransaction?.categories.map(({ category }) => ({ ...category })) || []
+
+            return this.handleResponse<FinancialTransactionModel.FinancialTransactionWithPaymentsAndNotesAndCategories>(
+                // @ts-expect-error
+                { ...financialTransaction, categories },
+                {
+                    noAcceptNullable: true,
+                    error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.notFound },
+                })
         } catch (err: any) {
-            return this.handleError<FinancialTransactionModel.FinancialTransactionWithPaymentsAndNotes>(err, {
+            return this.handleError<FinancialTransactionModel.FinancialTransactionWithPaymentsAndNotesAndCategories>(err, {
                 error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.failed },
             })
         }
@@ -271,43 +302,29 @@ export class FinancialTransactionRepository extends Repository {
 
             return this.handleResponse<FinancialTransactionModel.FinancialTransaction[]>(
                 financialTransactions.map(transaction => ({
-                    countRepeatedOccurrences: transaction[''],
-                    createdAt: transaction[''],
-                    description: transaction[''],
-                    frequency: transaction[''],
-                    id: transaction[''],
-                    priority: transaction[''],
-                    receiver: transaction[''],
-                    sender: transaction[''],
-                    situation: transaction[''],
-                    timesToRepeat: transaction[''],
-                    title: transaction[''],
-                    type: transaction[''],
-                    typeOccurrence: transaction[''],
-                    updatedAt: transaction[''],
-                    value: transaction[''],
-                    bankAccountId: transaction[''],
-                    dateTimeCompetence: transaction[''],
-                    expiresIn: transaction[''],
-                    isObservable: transaction[''],
-                    isSendNotification: transaction[''],
+                    countRepeatedOccurrences: transaction['count_repeated_occurrences'],
+                    createdAt: transaction['created_at'],
+                    description: transaction['description'],
+                    frequency: transaction['frequency'],
+                    id: transaction['id'],
+                    priority: transaction['priority'],
+                    receiver: transaction['receiver'],
+                    sender: transaction['sender'],
+                    situation: transaction['situation'],
+                    timesToRepeat: transaction['times_to_repeat'],
+                    title: transaction['title'],
+                    type: transaction['type'],
+                    typeOccurrence: transaction['type_occurrence'],
+                    updatedAt: transaction['updated_at'],
+                    value: transaction['value'],
+                    bankAccountId: transaction['bank_account_id'],
+                    dateTimeCompetence: transaction['date_time_competence'],
+                    expiresIn: transaction['expires_in'],
+                    isObservable: transaction['is_observable'],
+                    isSendNotification: transaction['is_send_notification']
                 })))
         } catch (err: any) {
             return this.handleError<FinancialTransactionModel.FinancialTransaction[]>(err, {
-                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed },
-            })
-        }
-    }
-
-    async findMany(query: FinancialTransactionQuery) {
-        try {
-            const financialTransaction = await this.database.instance.financialTransaction.findFirst({
-                where: { ...query.where },
-            })
-
-            return this.handleResponse<FinancialTransactionModel.FinancialTransaction>(financialTransaction)
-        } catch (err: any) {
-            return this.handleError<FinancialTransactionModel.FinancialTransaction>(err, {
                 error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed },
             })
         }

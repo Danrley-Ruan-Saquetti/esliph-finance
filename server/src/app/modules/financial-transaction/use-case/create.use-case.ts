@@ -133,6 +133,8 @@ export class FinancialTransactionCreateUseCase extends UseCase {
     private async registerFinancialTransaction(data: FinancialTransactionModel.Model, notes: { description: string }[] = [], categories: { id: number }[] = []) {
         const registerFinancialTransactionResult = await this.transactionRepository.register({ data, notes, categories })
 
+        console.log(registerFinancialTransactionResult)
+
         if (registerFinancialTransactionResult.isSuccess()) {
             return
         }

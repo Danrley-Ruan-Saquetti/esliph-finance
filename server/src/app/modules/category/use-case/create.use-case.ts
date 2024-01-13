@@ -1,12 +1,12 @@
 import { Result } from '@esliph/common'
-import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
+import { Injection } from '@esliph/injection'
 import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
-import { CategoryRepository } from '@modules/category/category.repository'
 import { GLOBAL_CATEGORY_DTO } from '@modules/category/category.global'
+import { CategoryRepository } from '@modules/category/category.repository'
 
 const schemaDTO = ValidatorService.schema.object({
     bankAccountId: GLOBAL_CATEGORY_DTO.bankAccount.id,

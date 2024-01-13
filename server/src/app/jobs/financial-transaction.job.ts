@@ -12,12 +12,12 @@ export class FinancialTransactionJob {
         @Injection.Inject('financial-transaction.use-case.duplicate-transactions-repeat') private duplicateTransactionsRepeatUC: FinancialTransactionDuplicateTransactionsRepeatUseCase
     ) { }
 
-    @Cron({ name: 'update-situation-transactions-late', cronTime: CronExpression.EVERY_5_SECONDS })
+    @Cron({ name: 'update-situation-transactions-late', cronTime: CronExpression.EVERY_5_SECONDS, ignore: true })
     async updateTransactionsLate() {
         await this.updateSituationLateUC.perform()
     }
 
-    @Cron({ name: 'create-transaction-repeat', cronTime: CronExpression.EVERY_5_SECONDS })
+    @Cron({ name: 'create-transaction-repeat', cronTime: CronExpression.EVERY_5_SECONDS, ignore: true })
     async createTransactionsInRepeat() {
         await this.duplicateTransactionsRepeatUC.perform()
     }

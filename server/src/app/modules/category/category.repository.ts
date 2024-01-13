@@ -98,6 +98,21 @@ export class CategoryRepository extends Repository {
         }
     }
 
+    async findManyByIdsAndBankAccountId(ids: ID[], bankAccountId: ID) {
+        try {
+            const category = await this.database.instance.category.findMany({ where: { id: { in: ids }, bankAccountId } })
+
+            return this.handleResponse<CategoryModel.Category[]>(category, {
+                noAcceptNullable: true,
+                error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.notFound },
+            })
+        } catch (err: any) {
+            return this.handleError<CategoryModel.Category[]>(err, {
+                error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.failed },
+            })
+        }
+    }
+
     async findManyByBankAccountId(bankAccountId: ID) {
         try {
             const users = await this.database.instance.category.findMany({ where: { bankAccountId } })
