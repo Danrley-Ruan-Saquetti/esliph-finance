@@ -3,6 +3,7 @@ import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { ID } from '@@types'
 import { isUndefined } from '@util'
+import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
@@ -12,10 +13,21 @@ import { PeopleModel } from '@modules/people/people.model'
 
 const schemaDTO = ValidatorService.schema.object({
     id: GLOBAL_PEOPLE_DTO.id,
-    name: ValidatorService.schema.string().trim().optional(),
-    active: ValidatorService.schema.boolean().optional(),
-    dateOfBirth: ValidatorService.schema.coerce.date().optional(),
-    gender: ValidatorService.schema.enum(GLOBAL_PEOPLE_DTO.gender.enum).optional(),
+    name: ValidatorService.schema
+        .string()
+        .trim()
+        .transform(GLOBAL_DTO.text.transform)
+        .refine(name => name.split(' ').length > 1, { message: GLOBAL_PEOPLE_DTO.name.messageLastNameRequired })
+        .optional(),
+    active: ValidatorService.schema
+        .boolean()
+        .optional(),
+    dateOfBirth: ValidatorService.schema.coerce
+        .date()
+        .optional(),
+    gender: ValidatorService.schema
+        .enum(GLOBAL_PEOPLE_DTO.gender.enum)
+        .optional(),
 })
 
 export type PeopleUpdateDTOArgs = SchemaValidator.input<typeof schemaDTO>

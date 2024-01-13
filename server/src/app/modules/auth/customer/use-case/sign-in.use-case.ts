@@ -47,16 +47,20 @@ export class AuthCustomerSignInUseCase extends UseCase {
     private async queryUserByLogin(login: string) {
         const userResult = await this.userRepository.findByLoginAndType(login, UserModel.Type.CUSTOMER)
 
-        if (userResult.isSuccess()) {
-            return userResult.getValue()
+        if (!userResult.isSuccess()) {
+            if (userResult.isErrorInOperation()) {
+                throw new BadRequestException({ ...userResult.getError(), title: 'Sign-in User' })
+            }
+            throw new BadRequestException({ title: 'Sign-in User', message: 'E-mail or password invalid. Please, try again later' })
         }
 
-        if (userResult.isErrorInOperation()) {
-            throw new BadRequestException({ ...userResult.getError(), title: 'Sign-in User' })
+        if (!userResult.getValue().people.active || !userResult.getValue().active) {
+            throw new BadRequestException({ title: 'Sign-in User', message: 'You cannot log in to this account because your username has been inactivated' })
         }
 
-        throw new BadRequestException({ title: 'Sign-in User', message: 'E-mail or password invalid. Please, try again later' })
+        return userResult.getValue()
     }
+
 
     private async validPassword(password: string, passwordHash: string) {
         const isSamePassword = await this.crypto.bcrypto.compare(password, passwordHash)

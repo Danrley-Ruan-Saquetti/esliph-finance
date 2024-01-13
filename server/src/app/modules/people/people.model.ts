@@ -11,6 +11,8 @@ export namespace PeopleModel {
 
     export type People = Database.People
     export type Model = DocumentSimple<People>
+    export type Simple = Omit<People, 'active'>
+
     export type CreateArgs = Omit<Database.Prisma.PeopleCreateInput, 'addresses' | 'contacts' | 'users' | 'bankAccounts'>
     export type UpdateArgs = Partial<Pick<Model, 'name' | 'active' | 'dateOfBirth' | 'gender'>>
 }

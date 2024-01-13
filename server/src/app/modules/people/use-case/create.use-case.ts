@@ -17,7 +17,8 @@ export const schemaPeoplePeopleAndPeopleDTO = ValidatorService.schema.object({
         .trim()
         .min(GLOBAL_PEOPLE_DTO.name.minCharacters, { message: GLOBAL_PEOPLE_DTO.name.messageRangeCharacters })
         .max(GLOBAL_PEOPLE_DTO.name.maxCharacters, { message: GLOBAL_PEOPLE_DTO.name.messageRangeCharacters })
-        .transform(GLOBAL_DTO.text.transform),
+        .transform(GLOBAL_DTO.text.transform)
+        .refine(name => name.split(' ').length > 1, { message: GLOBAL_PEOPLE_DTO.name.messageLastNameRequired }),
     itinCnpj: ValidatorService.schema
         .string({ 'required_error': GLOBAL_PEOPLE_DTO.itin.messageRequired })
         .trim(),

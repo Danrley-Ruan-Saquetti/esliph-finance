@@ -52,7 +52,7 @@ export const GLOBAL_FORMATTER_CONFIG = {
 export const GLOBAL_DTO = {
     required: (value: string) => `${toCapitalise(value)} is required`,
     text: {
-        transform: (val: string) => val.replace(/ {2}/g, ' '),
+        transform: (val: string) => val.replace(/ {2,}/g, ' '),
     },
     date: {
         schema: ValidatorService.schema

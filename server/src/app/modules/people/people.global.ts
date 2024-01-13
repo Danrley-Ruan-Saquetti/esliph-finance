@@ -13,6 +13,7 @@ export const GLOBAL_PEOPLE_DTO = {
         maxCharacters: 45,
         messageRequired: GLOBAL_DTO.required('Name'),
         messageRangeCharacters: 'The Name must be between 3 and 45 characters',
+        messageLastNameRequired: GLOBAL_DTO.required('Last name')
     },
     itinCnpj: {
         messageRequired: GLOBAL_DTO.required('ITIN/CNPJ'),

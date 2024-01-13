@@ -13,16 +13,4 @@ export class PeopleQueryUseCase extends UseCase {
     constructor(@Injection.Inject('people.repository') private peopleRepository: PeopleRepository) {
         super()
     }
-
-    async queryByIdWithAddressAndContacts(args: { id: ID }) {
-        const id = this.validateDTO(args.id, schemaNumber)
-
-        const peopleResult = await this.peopleRepository.findByIdWithAddressAndContacts(id)
-
-        if (!peopleResult.isSuccess()) {
-            return Result.failure({ ...peopleResult.getError(), title: 'Query People' })
-        }
-
-        return Result.success(peopleResult.getValue())
-    }
 }

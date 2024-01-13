@@ -99,6 +99,7 @@ model User {
   id        Int      @id @default(autoincrement())
   peopleId  Int
   type      UserType
+  active    Boolean  @default(true)
   code      String   @unique @default("") @db.VarChar(9)
   login     String   @unique @db.VarChar(254)
   password  String   @db.VarChar(120)
