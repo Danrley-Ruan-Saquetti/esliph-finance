@@ -39,7 +39,7 @@ export class CategoryRepository extends Repository {
 
     async create(args: { data: Prisma.CategoryCreateInput }) {
         try {
-            await this.database.instance.category.create({ ...args, include: {} })
+            await this.database.instance.category.create({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: CategoryRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
@@ -51,7 +51,7 @@ export class CategoryRepository extends Repository {
 
     async update(args: { where: Prisma.CategoryWhereUniqueInput, data: Prisma.CategoryUpdateInput }) {
         try {
-            await this.database.instance.category.update({ ...args, include: {} })
+            await this.database.instance.category.update({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: CategoryRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
@@ -63,7 +63,7 @@ export class CategoryRepository extends Repository {
 
     async delete(args: { where: Prisma.CategoryWhereUniqueInput }) {
         try {
-            await this.database.instance.category.delete({ ...args, include: {} })
+            await this.database.instance.category.delete({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: CategoryRepository.GLOBAL_MESSAGE.remove.success })
         } catch (err: any) {

@@ -41,7 +41,7 @@ export class NoteCreateManyUseCase extends UseCase {
     }
 
     private async registerNotes({ notes, financialTransactionId }: { financialTransactionId: ID; notes: { description: string }[] }) {
-        const registerNoteResult = await this.noteRepository.registerMany({ notes, financialTransactionId })
+        const registerNoteResult = await this.noteRepository.createMany({ data: notes.map(({ description }) => ({ description, financialTransactionId })) })
 
         if (registerNoteResult.isSuccess()) {
             return

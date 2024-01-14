@@ -38,7 +38,7 @@ export class BlankRepository extends Repository {
 
     async create(args: { data: Prisma.BlankCreateInput }) {
         try {
-            await this.database.instance.blank.create({ ...args, include: {} })
+            await this.database.instance.blank.create({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: BlankRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
@@ -50,7 +50,7 @@ export class BlankRepository extends Repository {
 
     async update(args: { where: Prisma.BlankWhereUniqueInput, data: Prisma.BlankUpdateInput }) {
         try {
-            await this.database.instance.blank.update({ ...args, include: {} })
+            await this.database.instance.blank.update({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: BlankRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
@@ -62,7 +62,7 @@ export class BlankRepository extends Repository {
 
     async delete(args: { where: Prisma.BlankWhereUniqueInput }) {
         try {
-            await this.database.instance.blank.delete({ ...args, include: {} })
+            await this.database.instance.blank.delete({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: BlankRepository.GLOBAL_MESSAGE.remove.success })
         } catch (err: any) {

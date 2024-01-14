@@ -30,7 +30,7 @@ export class UserQueryUseCase extends UseCase {
     async queryWithPeopleByIdWithoutPassword(args: { id: SchemaValidator.input<typeof schemaNumber> }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const bankAccountResult = await this.userRepository.findUnique({ where: { id }, select: UserModel.UserWithoutPasswordSelect, include: { people: true } })
+        const bankAccountResult = await this.userRepository.findUnique({ where: { id }, select: { ...UserModel.UserWithoutPasswordSelect, active: false, people: { select: { ...PeopleModel.PeopleSimpleSelect, active: false } } } })
 
         if (!bankAccountResult.isSuccess()) {
             return Result.failure({ ...bankAccountResult.getError(), title: 'Query User' })

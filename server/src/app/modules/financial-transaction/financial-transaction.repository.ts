@@ -45,7 +45,7 @@ export class FinancialTransactionRepository extends Repository {
 
     async create(args: { data: Prisma.FinancialTransactionCreateInput }) {
         try {
-            await this.database.instance.financialTransaction.create({ ...args, include: {} })
+            await this.database.instance.financialTransaction.create({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: FinancialTransactionRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
@@ -57,7 +57,7 @@ export class FinancialTransactionRepository extends Repository {
 
     async update(args: { where: Prisma.FinancialTransactionWhereUniqueInput, data: Prisma.FinancialTransactionUpdateInput }) {
         try {
-            await this.database.instance.financialTransaction.update({ ...args, include: {} })
+            await this.database.instance.financialTransaction.update({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: FinancialTransactionRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
@@ -81,7 +81,7 @@ export class FinancialTransactionRepository extends Repository {
 
     async delete(args: { where: Prisma.FinancialTransactionWhereUniqueInput }) {
         try {
-            await this.database.instance.financialTransaction.delete({ ...args, include: {} })
+            await this.database.instance.financialTransaction.delete({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: FinancialTransactionRepository.GLOBAL_MESSAGE.remove.success })
         } catch (err: any) {

@@ -1,7 +1,11 @@
 import { Service } from '@esliph/module'
-import { ID } from '@@types'
+import { Prisma } from '@prisma/client'
 import { Repository } from '@services/repository.service'
-import { NoteModel } from '@modules/note/note.model'
+
+type NoteGetPayloadTypes = boolean | null | undefined | { select?: Prisma.NoteSelect | null }
+type NoteGetPayload<T extends boolean | null | undefined | { select?: Prisma.NoteSelect | null }> = Prisma.NoteGetPayload<T>
+type NotePropSelect<ArgsSelect extends NoteGetPayloadTypes> = NoteGetPayload<ArgsSelect>
+type NoteFindResponse<ArgsSelect extends NoteGetPayloadTypes> = NotePropSelect<ArgsSelect>
 
 @Service({ name: 'note.repository' })
 export class NoteRepository extends Repository {
@@ -37,9 +41,9 @@ export class NoteRepository extends Repository {
         }
     }
 
-    async register({ description, financialTransactionId }: NoteModel.Model) {
+    async create(args: { data: Prisma.NoteCreateInput }) {
         try {
-            await this.database.instance.note.create({ data: { description, financialTransactionId } })
+            await this.database.instance.note.create({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: NoteRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
@@ -49,9 +53,9 @@ export class NoteRepository extends Repository {
         }
     }
 
-    async registerMany({ financialTransactionId, notes }: { financialTransactionId: ID, notes: { description: string }[] }) {
+    async createMany(args: { data: Prisma.NoteCreateManyInput[] }) {
         try {
-            await this.database.instance.note.createMany({ data: notes.map(note => ({ ...note, financialTransactionId })) })
+            await this.database.instance.note.createMany({ ...args, skipDuplicates: true })
 
             return this.handleResponse<{ message: string }>({ message: NoteRepository.GLOBAL_MESSAGE.createMany.success })
         } catch (err: any) {
@@ -61,21 +65,9 @@ export class NoteRepository extends Repository {
         }
     }
 
-    async removeById(id: ID) {
+    async update(args: { where: Prisma.NoteWhereUniqueInput, data: Prisma.NoteUpdateInput }) {
         try {
-            await this.database.instance.note.delete({ where: { id } })
-
-            return this.handleResponse<{ message: string }>({ message: NoteRepository.GLOBAL_MESSAGE.remove.success })
-        } catch (err: any) {
-            return this.handleError<{ message: string }>(err, {
-                error: { title: NoteRepository.GLOBAL_MESSAGE.remove.title, message: NoteRepository.GLOBAL_MESSAGE.remove.failed }
-            })
-        }
-    }
-
-    async updateById(args: { description: string }, where: { id: ID }) {
-        try {
-            await this.database.instance.note.update({ where: { id: where.id }, data: args })
+            await this.database.instance.note.update({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: NoteRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
@@ -85,61 +77,58 @@ export class NoteRepository extends Repository {
         }
     }
 
-    async findById(id: ID) {
+    async delete(args: { where: Prisma.NoteWhereUniqueInput }) {
         try {
-            const note = await this.database.instance.note.findFirst({ where: { id } })
+            await this.database.instance.note.delete({ ...args })
 
-            return this.handleResponse<NoteModel.Note>(note, {
+            return this.handleResponse<{ message: string }>({ message: NoteRepository.GLOBAL_MESSAGE.remove.success })
+        } catch (err: any) {
+            return this.handleError<{ message: string }>(err, {
+                error: { title: NoteRepository.GLOBAL_MESSAGE.remove.title, message: NoteRepository.GLOBAL_MESSAGE.remove.failed }
+            })
+        }
+    }
+
+    async findFirst<Args extends Prisma.NoteFindFirstArgs>(args: Args) {
+        try {
+            const note = await this.database.instance.note.findFirst(args) as NoteFindResponse<Args>
+
+            return this.handleResponse<NoteFindResponse<Args>>(note, {
                 noAcceptNullable: true,
                 error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<NoteModel.Note>(err, {
+            return this.handleError<NoteFindResponse<Args>>(err, {
                 error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
     }
 
-    async findByIdAndFinancialTransactionId(id: ID, financialTransactionId: ID) {
+    async findUnique<Args extends Prisma.NoteFindUniqueArgs>(args: Args) {
         try {
-            const note = await this.database.instance.note.findFirst({ where: { id, financialTransactionId } })
+            const note = await this.database.instance.note.findUnique(args) as NoteFindResponse<Args>
 
-            return this.handleResponse<NoteModel.Note>(note, {
+            return this.handleResponse<NoteFindResponse<Args>>(note, {
                 noAcceptNullable: true,
                 error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<NoteModel.Note>(err, {
-                error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.failed },
+            return this.handleError<NoteFindResponse<Args>>(err, {
+                error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
     }
 
-    async findByIdAndBankAccountId(id: ID, bankAccountId: ID) {
+    async findMany<Args extends Prisma.NoteFindManyArgs>(args: Args) {
         try {
-            const note = await this.database.instance.note.findFirst({ where: { id, financialTransaction: { bankAccountId } } })
+            const note = await this.database.instance.note.findMany(args) as NoteFindResponse<Args>[]
 
-            return this.handleResponse<NoteModel.Note>(note, {
+            return this.handleResponse<NoteFindResponse<Args>[]>(note, {
                 noAcceptNullable: true,
                 error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<NoteModel.Note>(err, {
-                error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.failed },
-            })
-        }
-    }
-
-    async findManyByFinancialTransactionId(financialTransactionId: ID) {
-        try {
-            const users = await this.database.instance.note.findMany({
-                where: { financialTransactionId },
-                orderBy: { createdAt: 'desc' }
-            })
-
-            return this.handleResponse<NoteModel.Note[]>(users)
-        } catch (err: any) {
-            return this.handleError<NoteModel.Note[]>(err, {
+            return this.handleError<NoteFindResponse<Args>[]>(err, {
                 error: { title: NoteRepository.GLOBAL_MESSAGE.find.title, message: NoteRepository.GLOBAL_MESSAGE.find.failed }
             })
         }

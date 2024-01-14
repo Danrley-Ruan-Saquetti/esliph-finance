@@ -3,6 +3,12 @@ import { ID } from '@@types'
 import { Repository } from '@services/repository.service'
 import { PaymentModel } from '@modules/payment/payment.model'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
+import { Prisma } from '@prisma/client'
+
+type PaymentGetPayloadTypes = boolean | null | undefined | { select?: Prisma.PaymentSelect | null }
+type PaymentGetPayload<T extends boolean | null | undefined | { select?: Prisma.PaymentSelect | null }> = Prisma.PaymentGetPayload<T>
+type PaymentPropSelect<ArgsSelect extends PaymentGetPayloadTypes> = PaymentGetPayload<ArgsSelect>
+type PaymentFindResponse<ArgsSelect extends PaymentGetPayloadTypes> = PaymentPropSelect<ArgsSelect>
 
 @Service({ name: 'payment.repository' })
 export class PaymentRepository extends Repository {
@@ -11,6 +17,16 @@ export class PaymentRepository extends Repository {
             title: 'Register Payment',
             success: 'Payment successfully registered',
             failed: 'Failed to register payment'
+        },
+        remove: {
+            title: 'Remove Payment',
+            success: 'Payment successfully removed',
+            failed: 'Failed to remove payment'
+        },
+        removeMany: {
+            title: 'Remove Payments',
+            success: 'Payment successfully removed',
+            failed: 'Failed to remove payments'
         },
         update: {
             title: 'Update Payment',
@@ -28,9 +44,9 @@ export class PaymentRepository extends Repository {
         }
     }
 
-    async register({ discount, financialTransactionId, increase, paidAt, value }: PaymentModel.Model) {
+    async create(args: { data: Prisma.PaymentCreateInput }) {
         try {
-            await this.database.instance.payment.create({ data: { discount, financialTransactionId, increase, paidAt, value } })
+            await this.database.instance.payment.create({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: PaymentRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
@@ -40,9 +56,9 @@ export class PaymentRepository extends Repository {
         }
     }
 
-    async updateById(args: PaymentModel.Model, where: { id: number }) {
+    async update(args: { where: Prisma.PaymentWhereUniqueInput, data: Prisma.PaymentUpdateInput }) {
         try {
-            await this.database.instance.payment.update({ where: { id: where.id }, data: args })
+            await this.database.instance.payment.update({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: PaymentRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
@@ -52,95 +68,71 @@ export class PaymentRepository extends Repository {
         }
     }
 
-    async findById(id: ID) {
+    async delete(args: { where: Prisma.PaymentWhereUniqueInput }) {
         try {
-            const payment = await this.database.instance.payment.findFirst({ where: { id } })
+            await this.database.instance.payment.delete({ ...args })
 
-            return this.handleResponse<PaymentModel.Payment>(payment, {
+            return this.handleResponse<{ message: string }>({ message: PaymentRepository.GLOBAL_MESSAGE.remove.success })
+        } catch (err: any) {
+            return this.handleError<{ message: string }>(err, {
+                error: { title: PaymentRepository.GLOBAL_MESSAGE.remove.title, message: PaymentRepository.GLOBAL_MESSAGE.remove.failed }
+            })
+        }
+    }
+
+    async deleteMany(args: { where: Prisma.PaymentWhereInput }) {
+        try {
+            await this.database.instance.payment.deleteMany({ ...args })
+
+            return this.handleResponse<{ message: string }>({ message: PaymentRepository.GLOBAL_MESSAGE.remove.success })
+        } catch (err: any) {
+            return this.handleError<{ message: string }>(err, {
+                error: { title: PaymentRepository.GLOBAL_MESSAGE.remove.title, message: PaymentRepository.GLOBAL_MESSAGE.remove.failed }
+            })
+        }
+    }
+
+    async findFirst<Args extends Prisma.PaymentFindFirstArgs>(args: Args) {
+        try {
+            const payment = await this.database.instance.payment.findFirst(args) as PaymentFindResponse<Args>
+
+            return this.handleResponse<PaymentFindResponse<Args>>(payment, {
                 noAcceptNullable: true,
-                error: { title: PaymentRepository.GLOBAL_MESSAGE.find.title, message: PaymentRepository.GLOBAL_MESSAGE.find.notFound }
+                error: { title: PaymentRepository.GLOBAL_MESSAGE.find.title, message: PaymentRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<PaymentModel.Payment>(err, {
+            return this.handleError<PaymentFindResponse<Args>>(err, {
                 error: { title: PaymentRepository.GLOBAL_MESSAGE.find.title, message: PaymentRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
     }
 
-    async findByIdAndBankAccountId(id: ID, bankAccountId: ID) {
+    async findUnique<Args extends Prisma.PaymentFindUniqueArgs>(args: Args) {
         try {
-            const payment = await this.database.instance.payment.findFirst({ where: { id, financialTransaction: { bankAccountId } } })
+            const payment = await this.database.instance.payment.findUnique(args) as PaymentFindResponse<Args>
 
-            return this.handleResponse<PaymentModel.Payment>(payment, {
+            return this.handleResponse<PaymentFindResponse<Args>>(payment, {
                 noAcceptNullable: true,
-                error: { title: PaymentRepository.GLOBAL_MESSAGE.find.title, message: PaymentRepository.GLOBAL_MESSAGE.find.notFound }
+                error: { title: PaymentRepository.GLOBAL_MESSAGE.find.title, message: PaymentRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<PaymentModel.Payment>(err, {
+            return this.handleError<PaymentFindResponse<Args>>(err, {
                 error: { title: PaymentRepository.GLOBAL_MESSAGE.find.title, message: PaymentRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
     }
 
-    async findByIdAndBankAccountIdAndFinancialTransactionId(id: ID, bankAccountId: ID, financialTransactionId: ID) {
+    async findMany<Args extends Prisma.PaymentFindManyArgs>(args: Args) {
         try {
-            const payment = await this.database.instance.payment.findFirst({ where: { id, financialTransactionId, financialTransaction: { bankAccountId } } })
+            const payment = await this.database.instance.payment.findMany(args) as PaymentFindResponse<Args>[]
 
-            return this.handleResponse<PaymentModel.Payment>(payment, {
+            return this.handleResponse<PaymentFindResponse<Args>[]>(payment, {
                 noAcceptNullable: true,
-                error: { title: PaymentRepository.GLOBAL_MESSAGE.find.title, message: PaymentRepository.GLOBAL_MESSAGE.find.notFound }
+                error: { title: PaymentRepository.GLOBAL_MESSAGE.find.title, message: PaymentRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<PaymentModel.Payment>(err, {
+            return this.handleError<PaymentFindResponse<Args>[]>(err, {
                 error: { title: PaymentRepository.GLOBAL_MESSAGE.find.title, message: PaymentRepository.GLOBAL_MESSAGE.find.failed }
-            })
-        }
-    }
-
-    async findManyByBankAccountIdAndFinancialTransactionId(bankAccountId: ID, financialTransactionId: ID) {
-        try {
-            const payments = await this.database.instance.payment.findMany({ where: { financialTransactionId, financialTransaction: { bankAccountId } } })
-
-            return this.handleResponse<PaymentModel.Payment[]>(payments)
-        } catch (err: any) {
-            return this.handleError<PaymentModel.Payment[]>(err, {
-                error: { title: PaymentRepository.GLOBAL_MESSAGE.findMany.title, message: PaymentRepository.GLOBAL_MESSAGE.findMany.failed }
-            })
-        }
-    }
-
-    async findManyByBankAccountId(bankAccountId: ID) {
-        try {
-            const payments = await this.database.instance.payment.findMany({ where: { financialTransaction: { bankAccountId } } })
-
-            return this.handleResponse<PaymentModel.Payment[]>(payments)
-        } catch (err: any) {
-            return this.handleError<PaymentModel.Payment[]>(err, {
-                error: { title: PaymentRepository.GLOBAL_MESSAGE.findMany.title, message: PaymentRepository.GLOBAL_MESSAGE.findMany.failed }
-            })
-        }
-    }
-
-    async findManyByFinancialTransactionId(financialTransactionId: ID) {
-        try {
-            const payments = await this.database.instance.payment.findMany({ where: { financialTransactionId } })
-
-            return this.handleResponse<PaymentModel.Payment[]>(payments)
-        } catch (err: any) {
-            return this.handleError<PaymentModel.Payment[]>(err, {
-                error: { title: PaymentRepository.GLOBAL_MESSAGE.findMany.title, message: PaymentRepository.GLOBAL_MESSAGE.findMany.failed }
-            })
-        }
-    }
-
-    async findManyByBankAccountIdAndTypesFinancialTransaction(bankAccountId: ID, types: FinancialTransactionModel.Type[]) {
-        try {
-            const payments = await this.database.instance.payment.findMany({ where: { financialTransaction: { bankAccountId, type: { in: types } } } })
-
-            return this.handleResponse<PaymentModel.Payment[]>(payments)
-        } catch (err: any) {
-            return this.handleError<PaymentModel.Payment[]>(err, {
-                error: { title: PaymentRepository.GLOBAL_MESSAGE.findMany.title, message: PaymentRepository.GLOBAL_MESSAGE.findMany.failed }
             })
         }
     }

@@ -88,7 +88,7 @@ export const GLOBAL_DTO = {
             pageIndex: () => ValidatorService.schema.coerce
                 .number({ 'required_error': GLOBAL_DTO.required('Page Index'), 'invalid_type_error': 'Type Page Index must be a number' }).default(1),
             limite: () => ValidatorService.schema.coerce
-                .number({ 'required_error': GLOBAL_DTO.required('Limite of the Registers'), 'invalid_type_error': 'Type Limite of the registers must be a number' }).default(15)
+                .number({ 'required_error': GLOBAL_DTO.required('Limite of the Registers'), 'invalid_type_error': 'Type Limite of the registers must be a number' }).default(10)
         }
     },
     cnpj: {

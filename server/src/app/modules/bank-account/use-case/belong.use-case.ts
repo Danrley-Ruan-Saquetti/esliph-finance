@@ -41,7 +41,12 @@ export class BankAccountBelongUseCase extends UseCase {
     }
 
     async isNoteBelongBankAccount({ bankAccountId, noteId }: { noteId: ID, bankAccountId: ID }) {
-        const result = await this.noteRepository.findByIdAndBankAccountId(Number(noteId), Number(bankAccountId))
+        const result = await this.noteRepository.findUnique({
+            where: {
+                id: Number(noteId),
+                financialTransaction: { bankAccountId: Number(bankAccountId) }
+            }
+        })
 
         if (result.isErrorInOperation()) {
             throw new BadRequestException({ ...result.getError(), title: 'Verify is Note Belong Bank Account' })
@@ -51,7 +56,14 @@ export class BankAccountBelongUseCase extends UseCase {
     }
 
     async isPaymentBelongBankAccount({ bankAccountId, paymentId }: { paymentId: ID, bankAccountId: ID }) {
-        const result = await this.paymentRepository.findByIdAndBankAccountId(Number(paymentId), Number(bankAccountId))
+        const result = await this.paymentRepository.findUnique({
+            where: {
+                id: Number(paymentId),
+                financialTransaction: {
+                    bankAccountId: Number(bankAccountId)
+                }
+            }
+        })
 
         if (result.isErrorInOperation()) {
             throw new BadRequestException({ ...result.getError(), title: 'Verify is Payment Belong Bank Account' })

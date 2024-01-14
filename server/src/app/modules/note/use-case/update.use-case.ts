@@ -35,7 +35,7 @@ export class NoteUpdateUseCase extends UseCase {
     }
 
     private async verifyIsExistsNote(id: ID) {
-        const noteResult = await this.noteRepository.findById(id)
+        const noteResult = await this.noteRepository.findUnique({ where: { id } })
 
         if (noteResult.isSuccess()) {
             return
@@ -48,7 +48,7 @@ export class NoteUpdateUseCase extends UseCase {
     }
 
     private async update({ id, description }: { id: ID; description: string }) {
-        const updateResult = await this.noteRepository.updateById({ description }, { id })
+        const updateResult = await this.noteRepository.update({ where: { id }, data: { description } })
 
         if (updateResult.isSuccess()) {
             return

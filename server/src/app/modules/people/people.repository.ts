@@ -38,7 +38,7 @@ export class PeopleRepository extends Repository {
 
     async create(args: { data: Prisma.PeopleCreateInput }) {
         try {
-            await this.database.instance.people.create({ ...args, include: {} })
+            await this.database.instance.people.create({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: PeopleRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
@@ -50,7 +50,7 @@ export class PeopleRepository extends Repository {
 
     async update(args: { where: Prisma.PeopleWhereUniqueInput, data: Prisma.PeopleUpdateInput }) {
         try {
-            await this.database.instance.people.update({ ...args, include: {} })
+            await this.database.instance.people.update({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: PeopleRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {

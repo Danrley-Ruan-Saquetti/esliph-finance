@@ -99,8 +99,10 @@ export class PaymentCreateUseCase extends UseCase {
         throw new BadRequestException({ ...validResult.getError(), })
     }
 
-    private async registerPayment(data: PaymentModel.Model) {
-        const paymentResult = await this.paymentRepository.register(data)
+    private async registerPayment({ discount, financialTransactionId, increase, paidAt, value }: PaymentModel.Model) {
+        const paymentResult = await this.paymentRepository.create({
+            data: { value, discount, increase, paidAt, financialTransaction: { connect: { id: financialTransactionId } } }
+        })
 
         if (paymentResult.isSuccess()) {
             return

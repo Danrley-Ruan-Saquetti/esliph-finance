@@ -29,7 +29,7 @@ export class NoteRemoveUseCase extends UseCase {
     }
 
     private async removeNote(id: ID) {
-        const removeResult = await this.noteRepository.removeById(id)
+        const removeResult = await this.noteRepository.delete({ where: { id } })
 
         if (removeResult.isSuccess()) {
             return

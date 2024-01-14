@@ -35,7 +35,7 @@ export class BankAccountRepository extends Repository {
 
     async create(args: { data: Prisma.BankAccountCreateInput }) {
         try {
-            await this.database.instance.bankAccount.create({ ...args, include: {} })
+            await this.database.instance.bankAccount.create({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: BankAccountRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
@@ -47,7 +47,7 @@ export class BankAccountRepository extends Repository {
 
     async update(args: { where: Prisma.BankAccountWhereUniqueInput, data: Prisma.BankAccountUpdateInput }) {
         try {
-            await this.database.instance.bankAccount.update({ ...args, include: {} })
+            await this.database.instance.bankAccount.update({ ...args })
 
             return this.handleResponse<{ message: string }>({ message: BankAccountRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {

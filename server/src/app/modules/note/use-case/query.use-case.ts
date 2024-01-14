@@ -20,7 +20,7 @@ export class NoteQueryUseCase extends UseCase {
             return Result.failure<NoteModel.Note[]>({ title: 'Query Notes', message: 'ID Note not defined' })
         }
 
-        const noteResult = await this.noteRepository.findById(id)
+        const noteResult = await this.noteRepository.findUnique({ where: { id } })
 
         if (!noteResult.isSuccess()) {
             return Result.failure<NoteModel.Note>({ ...noteResult.getError(), title: 'Query Note' })
@@ -36,7 +36,7 @@ export class NoteQueryUseCase extends UseCase {
             return Result.failure<NoteModel.Note[]>({ title: 'Query Notes', message: 'ID Financial Transaction not defined' })
         }
 
-        const notesResult = await this.noteRepository.findManyByFinancialTransactionId(financialTransactionId)
+        const notesResult = await this.noteRepository.findMany({ where: { financialTransactionId } })
 
         if (!notesResult.isSuccess()) {
             return Result.failure<NoteModel.Note[]>({ ...notesResult.getError(), title: 'Query Notes' })

@@ -24,7 +24,11 @@ export class FinancialTransactionQueryUseCase extends UseCase {
     async queryByIdWithNotes(args: { id: ID }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const financialTransactionsResult = await this.transactionRepository.findUnique({ where: { id }, include: { notes: true } })
+        const financialTransactionsResult = await this.transactionRepository.findUnique({
+            where: { id },
+            include: { notes: true },
+            orderBy: { expiresIn: 'desc' }
+        })
 
         if (!financialTransactionsResult.isSuccess()) {
             return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transaction' })
@@ -36,7 +40,11 @@ export class FinancialTransactionQueryUseCase extends UseCase {
     async queryByIdWithNotesAndPaymentsAndCategories(args: { id: ID }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const financialTransactionsResult = await this.transactionRepository.findUnique({ where: { id }, include: { notes: true, payments: true, categories: true } })
+        const financialTransactionsResult = await this.transactionRepository.findUnique({
+            where: { id },
+            include: { notes: true, payments: true, categories: true },
+            orderBy: { expiresIn: 'desc' }
+        })
 
         if (!financialTransactionsResult.isSuccess()) {
             return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transaction' })
@@ -48,13 +56,17 @@ export class FinancialTransactionQueryUseCase extends UseCase {
     async queryManyByBankAccountIdWithCategories(args: { bankAccountId: ID }) {
         const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
 
-        const financialTransactionsResult = await this.transactionRepository.findMany({ where: { bankAccountId }, include: { categories: true } })
+        const financialTransactionsResult = await this.transactionRepository.findMany({
+            where: { bankAccountId },
+            include: { categories: { select: { category: true } } },
+            orderBy: { expiresIn: 'desc' }
+        })
 
         if (!financialTransactionsResult.isSuccess()) {
             return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transactions' })
         }
 
-        return Result.success(financialTransactionsResult.getValue() || [])
+        return Result.success(financialTransactionsResult.getValue().map(transaction => ({ ...transaction, categories: transaction.categories.map(({ category }) => category) })) || [])
     }
 
     async queryManyByBankAccountIdAndCategoryIdWithCategories(args: { bankAccountId: ID, categoryId: ID }) {
@@ -67,7 +79,8 @@ export class FinancialTransactionQueryUseCase extends UseCase {
                 categories: {
                     select: { category: true }
                 }
-            }
+            },
+            orderBy: { expiresIn: 'desc' }
         })
 
         if (!financialTransactionsResult.isSuccess()) {
