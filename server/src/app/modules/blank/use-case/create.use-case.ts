@@ -26,7 +26,7 @@ export class BlankCreateUseCase extends UseCase {
     }
 
     private async registerBlank(data: SchemaValidator.output<typeof schemaDTO>) {
-        const registerBlankResult = await this.blankRepository.register(data)
+        const registerBlankResult = await this.blankRepository.create({ data })
 
         if (registerBlankResult.isSuccess()) {
             return

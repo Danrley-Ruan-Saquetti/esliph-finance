@@ -73,7 +73,7 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
                     return
                 }
 
-                await this.transactionRepository.getDatabase().financialTransaction.update({
+                await this.transactionRepository.update({
                     data: {
                         countRepeatedOccurrences: { increment: 1 },
                     },

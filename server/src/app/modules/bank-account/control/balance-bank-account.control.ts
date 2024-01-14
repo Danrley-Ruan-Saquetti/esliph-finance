@@ -54,26 +54,20 @@ export class BalanceBankAccountControl {
     }
 
     async loadBankAccountAndFinancialTransactionWithPayments() {
-        const financialTransactionResult = await this.bankAccountRepository.findByIdWithFinancialTransactionsAndPayments(this.bankAccountId)
+        const financialTransactionResult = await this.queryBankAccount(this.bankAccountId)
 
-        if (!financialTransactionResult.isSuccess()) {
-            throw new BadRequestException({ ...financialTransactionResult.getError() })
-        }
-
-        this.financialTransactions = financialTransactionResult
-            .getValue()
-            .financialTransactions.map(({ id, payments, situation, type, value, dateTimeCompetence }) => ({
-                id,
-                payments,
-                situation,
-                type,
-                value,
-                dateTimeCompetence,
-            }))
+        this.financialTransactions = financialTransactionResult.financialTransactions.map(({ id, payments, situation, type, value, dateTimeCompetence }) => ({
+            id,
+            payments,
+            situation,
+            type,
+            value,
+            dateTimeCompetence,
+        }))
     }
 
     private async queryBankAccount(bankAccountId: ID) {
-        const bankAccount = await this.bankAccountRepository.findByIdWithFinancialTransactionsAndPayments(bankAccountId)
+        const bankAccount = await this.bankAccountRepository.findUnique({ where: { id: this.bankAccountId }, include: { financialTransactions: { include: { payments: true } } } })
 
         if (!bankAccount.isSuccess()) {
             if (bankAccount.isErrorInOperation()) {

@@ -20,7 +20,7 @@ export namespace BankAccountModel {
         createdAt: true,
         updatedAt: true,
     } as const
-    export const BankAccountWithoutPasswordSelectAndBalance: { [x in keyof BankAccountWithoutPasswordAndBalance]: true } = {
+    export const BankAccountWithoutPasswordAndBalanceSelect: { [x in keyof BankAccountWithoutPasswordAndBalance]: true } = {
         id: true,
         peopleId: true,
         code: true,

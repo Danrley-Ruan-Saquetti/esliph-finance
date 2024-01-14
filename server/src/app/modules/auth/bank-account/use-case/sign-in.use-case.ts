@@ -56,7 +56,10 @@ export class AuthBankAccountSignInUseCase extends UseCase {
     }
 
     private async queryUserByPeopleId(peopleId: number) {
-        const userResult = await this.userRepository.findByPeopleIdWithPeople(peopleId)
+        const userResult = await this.userRepository.findFirst({
+            where: { peopleId },
+            include: { people: true }
+        })
 
         if (userResult.isSuccess()) {
             return userResult.getValue()
@@ -70,7 +73,7 @@ export class AuthBankAccountSignInUseCase extends UseCase {
     }
 
     private async queryBankAccountByCode(code: string, peopleId: number) {
-        const userResult = await this.bankAccountRepository.findByCodeAndPeopleId(code, peopleId)
+        const userResult = await this.bankAccountRepository.findUnique({ where: { code, peopleId } })
 
         if (userResult.isSuccess()) {
             return userResult.getValue()

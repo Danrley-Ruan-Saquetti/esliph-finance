@@ -24,7 +24,7 @@ export class BankAccountQueryUseCase extends UseCase {
     async queryByIdWithoutPassword(args: { id: ID }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const bankAccountResult = await this.bankAccountRepository.findByIdWithoutPassword(id)
+        const bankAccountResult = await this.bankAccountRepository.findUnique({ where: { id }, select: BankAccountModel.BankAccountWithoutPasswordSelect })
 
         if (!bankAccountResult.isSuccess()) {
             return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ ...bankAccountResult.getError(), title: 'Query Bank Account' })
@@ -36,7 +36,7 @@ export class BankAccountQueryUseCase extends UseCase {
     async queryByIdCodeMaskWithoutPassword(args: { id: ID }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const bankAccountResult = await this.bankAccountRepository.findByIdWithoutPassword(id)
+        const bankAccountResult = await this.bankAccountRepository.findUnique({ where: { id }, select: BankAccountModel.BankAccountWithoutPasswordSelect })
 
         if (!bankAccountResult.isSuccess()) {
             return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ ...bankAccountResult.getError(), title: 'Query Bank Account' })
@@ -50,7 +50,7 @@ export class BankAccountQueryUseCase extends UseCase {
     async queryByIdCodeMaskWithoutPasswordWhitMask(args: { id: ID }, options: { masks?: (keyof BankAccountModel.BankAccountWithoutPassword)[] } = {}) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const bankAccountResult = await this.bankAccountRepository.findByIdWithoutPassword(id)
+        const bankAccountResult = await this.bankAccountRepository.findUnique({ where: { id }, select: BankAccountModel.BankAccountWithoutPasswordSelect })
 
         if (!bankAccountResult.isSuccess()) {
             return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ ...bankAccountResult.getError(), title: 'Query Bank Account' })
@@ -61,8 +61,8 @@ export class BankAccountQueryUseCase extends UseCase {
         )
     }
 
-    async queryByCodeWithoutPassword(args: { code: string }) {
-        const bankAccountResult = await this.bankAccountRepository.findByCodeWithoutPassword(args.code)
+    async queryByCodeWithoutPassword({ code }: { code: string }) {
+        const bankAccountResult = await this.bankAccountRepository.findUnique({ where: { code }, select: BankAccountModel.BankAccountWithoutPasswordSelect })
 
         if (!bankAccountResult.isSuccess()) {
             return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ ...bankAccountResult.getError(), title: 'Query Bank Account' })
@@ -71,8 +71,8 @@ export class BankAccountQueryUseCase extends UseCase {
         return Result.success<BankAccountModel.BankAccountWithoutPassword>(bankAccountResult.getValue())
     }
 
-    async queryByCodeWithoutPasswordWithMask(args: { code: string }) {
-        const bankAccountResult = await this.bankAccountRepository.findByCodeWithoutPassword(args.code)
+    async queryByCodeWithoutPasswordWithMask({ code }: { code: string }) {
+        const bankAccountResult = await this.bankAccountRepository.findUnique({ where: { code }, select: BankAccountModel.BankAccountWithoutPasswordSelect })
 
         if (!bankAccountResult.isSuccess()) {
             return Result.failure<BankAccountModel.BankAccountWithoutPassword>({ ...bankAccountResult.getError(), title: 'Query Bank Account' })
@@ -86,7 +86,7 @@ export class BankAccountQueryUseCase extends UseCase {
     async queryManyByPeopleIdWithoutPassword(args: { peopleId: ID }) {
         const peopleId = this.validateDTO(args.peopleId, schemaNumber)
 
-        const bankAccountsResult = await this.bankAccountRepository.findManyByPeopleIdWithoutPassword(peopleId)
+        const bankAccountsResult = await this.bankAccountRepository.findMany({ where: { peopleId }, select: BankAccountModel.BankAccountWithoutPasswordSelect })
 
         if (!bankAccountsResult.isSuccess()) {
             return Result.failure<BankAccountModel.BankAccountWithoutPassword[]>({ ...bankAccountsResult.getError(), title: 'Query Bank Accounts' })
@@ -100,7 +100,7 @@ export class BankAccountQueryUseCase extends UseCase {
     async queryManyByPeopleIdWithoutPasswordAndBalance(args: { peopleId: ID }) {
         const peopleId = this.validateDTO(args.peopleId, schemaNumber)
 
-        const bankAccountsResult = await this.bankAccountRepository.findManyByPeopleIdWithoutPasswordAndBalance(peopleId)
+        const bankAccountsResult = await this.bankAccountRepository.findMany({ where: { peopleId }, select: BankAccountModel.BankAccountWithoutPasswordAndBalanceSelect })
 
         if (!bankAccountsResult.isSuccess()) {
             return Result.failure<BankAccountModel.BankAccountWithoutPasswordAndBalance[]>({

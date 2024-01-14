@@ -49,7 +49,7 @@ export class BankAccountGenerateCodeUseCase extends UseCase {
     }
 
     private async validCode(code: string) {
-        const bankAccountResult = await this.bankAccountRepository.findByCode(code)
+        const bankAccountResult = await this.bankAccountRepository.findUnique({ where: { code } })
 
         if (bankAccountResult.isSuccess()) {
             return false

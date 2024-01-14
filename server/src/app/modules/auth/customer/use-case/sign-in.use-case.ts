@@ -45,7 +45,10 @@ export class AuthCustomerSignInUseCase extends UseCase {
     }
 
     private async queryUserByLogin(login: string) {
-        const userResult = await this.userRepository.findByLoginAndType(login, UserModel.Type.CUSTOMER)
+        const userResult = await this.userRepository.findFirst({
+            where: { login, type: UserModel.Type.CUSTOMER },
+            include: { people: true }
+        })
 
         if (!userResult.isSuccess()) {
             if (userResult.isErrorInOperation()) {

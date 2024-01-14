@@ -42,7 +42,7 @@ export class CategoryCreateUseCase extends UseCase {
     }
 
     private async registerCategory({ bankAccountId, color, name, isFavorite }: SchemaValidator.output<typeof schemaDTO>) {
-        const registerCategoryResult = await this.categoryRepository.register({ bankAccountId, color, name, isFavorite })
+        const registerCategoryResult = await this.categoryRepository.create({ data: { bankAccount: { connect: { id: bankAccountId } }, color, name, isFavorite } })
 
         if (registerCategoryResult.isSuccess()) {
             return

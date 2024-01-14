@@ -49,7 +49,7 @@ export class UserGenerateCodeUseCase extends UseCase {
     }
 
     private async validCode(code: string) {
-        const userResult = await this.userRepository.findByCode(code)
+        const userResult = await this.userRepository.findUnique({ where: { code } })
 
         if (userResult.isSuccess()) {
             return false

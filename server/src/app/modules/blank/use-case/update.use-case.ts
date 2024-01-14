@@ -31,7 +31,7 @@ export class BlankUpdateUseCase extends UseCase {
     }
 
     private async verifyIsExistsBlank(id: ID) {
-        const blankResult = await this.blankRepository.findById(id)
+        const blankResult = await this.blankRepository.findUnique({ where: { id } })
 
         if (blankResult.isSuccess()) {
             return
@@ -41,7 +41,7 @@ export class BlankUpdateUseCase extends UseCase {
     }
 
     private async update(data: BlankModel.UpdateArgs, id: ID) {
-        const updateResult = await this.blankRepository.updateById(data, { id })
+        const updateResult = await this.blankRepository.update({ data, where: { id } })
 
         if (updateResult.isSuccess()) {
             return

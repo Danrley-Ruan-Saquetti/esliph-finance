@@ -17,7 +17,7 @@ export class BlankQueryUseCase extends UseCase {
     async queryById(args: { id: ID }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const blankResult = await this.blankRepository.findById(id)
+        const blankResult = await this.blankRepository.findUnique({ where: { id } })
 
         if (!blankResult.isSuccess()) {
             return Result.failure({ ...blankResult.getError(), title: 'Query Blank' })
@@ -27,7 +27,7 @@ export class BlankQueryUseCase extends UseCase {
     }
 
     async queryMany() {
-        const blanksResult = await this.blankRepository.findMany()
+        const blanksResult = await this.blankRepository.findMany({})
 
         if (!blanksResult.isSuccess()) {
             return Result.failure({ ...blanksResult.getError(), title: 'Query Blanks' })

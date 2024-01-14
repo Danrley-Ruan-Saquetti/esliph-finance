@@ -131,9 +131,24 @@ export class FinancialTransactionCreateUseCase extends UseCase {
     }
 
     private async registerFinancialTransaction(data: FinancialTransactionModel.Model, notes: { description: string }[] = [], categories: { id: number }[] = []) {
-        const registerFinancialTransactionResult = await this.transactionRepository.register({ data, notes, categories })
-
-        console.log(registerFinancialTransactionResult)
+        const registerFinancialTransactionResult = await this.transactionRepository.create({
+            data: {
+                ...data,
+                bankAccount: {
+                    connect: { id: data.bankAccountId }
+                },
+                ...(notes.length && {
+                    notes: {
+                        createMany: { data: notes }
+                    }
+                }),
+                ...(categories.length && {
+                    categories: {
+                        createMany: { data: categories.map(({ id }) => ({ categoryId: id })) }
+                    }
+                })
+            }
+        })
 
         if (registerFinancialTransactionResult.isSuccess()) {
             return

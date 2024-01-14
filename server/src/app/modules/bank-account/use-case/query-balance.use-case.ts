@@ -22,7 +22,7 @@ export type BankAccountQueryBalanceDTOArgs = SchemaValidator.input<typeof schema
 export class BankAccountQueryBalanceUseCase extends UseCase {
     constructor(
         @Injection.Inject('bank-account.repository') private bankAccountRepository: BankAccountRepository,
-        @Injection.Inject('bank-account.repository') private balanceBankAccountControl: BalanceBankAccountControl,
+        @Injection.Inject('balance-bank-account.control') private balanceBankAccountControl: BalanceBankAccountControl,
     ) {
         super()
     }
@@ -45,11 +45,19 @@ export class BankAccountQueryBalanceUseCase extends UseCase {
     }
 
     private async queryBankAccount(bankAccountId: ID, dateStart: Date, dateEnd: Date) {
-        const bankAccount = await this.bankAccountRepository.findByIdAndBetweenDateCompetenceWithFinancialTransactionsAndPayments(
-            bankAccountId,
-            dateStart,
-            dateEnd,
-        )
+        const bankAccount = await this.bankAccountRepository.findUnique({
+            where: { id: bankAccountId }, include: {
+                financialTransactions: {
+                    where: {
+                        dateTimeCompetence: {
+                            gte: dateStart,
+                            lte: dateEnd,
+                        },
+                    },
+                    include: { payments: true },
+                }
+            }
+        })
 
         if (!bankAccount.isSuccess()) {
             throw new BadRequestException({ ...bankAccount.getError(), title: 'Query Bank Account' })

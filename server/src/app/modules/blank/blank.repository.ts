@@ -1,7 +1,11 @@
+import { Prisma } from '@prisma/client'
 import { Service } from '@esliph/module'
-import { ID } from '@@types'
 import { Repository } from '@services/repository.service'
-import { BlankModel } from '@modules/blank/blank.model'
+
+type BlankGetPayloadTypes = boolean | null | undefined | { select?: Prisma.BlankSelect | null }
+type BlankGetPayload<T extends boolean | null | undefined | { select?: Prisma.BlankSelect | null }> = Prisma.BlankGetPayload<T>
+type BlankPropSelect<ArgsSelect extends BlankGetPayloadTypes> = BlankGetPayload<ArgsSelect>
+type BlankFindResponse<ArgsSelect extends BlankGetPayloadTypes> = BlankPropSelect<ArgsSelect>
 
 @Service({ name: 'blank.repository' })
 export class BlankRepository extends Repository {
@@ -27,14 +31,14 @@ export class BlankRepository extends Repository {
             failed: 'Unable to query blank'
         },
         findMany: {
-            title: 'Find Blanks',
-            failed: 'Unable to query blanks'
+            title: 'Find Categories',
+            failed: 'Unable to query categories'
         }
     }
 
-    async register(data: BlankModel.Model) {
+    async create(args: { data: Prisma.BlankCreateInput }) {
         try {
-            await this.database.instance['blank'].create({ data: data })
+            await this.database.instance.blank.create({ ...args, include: {} })
 
             return this.handleResponse<{ message: string }>({ message: BlankRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
@@ -44,9 +48,9 @@ export class BlankRepository extends Repository {
         }
     }
 
-    async updateById(args: BlankModel.UpdateArgs, where: { id: number }) {
+    async update(args: { where: Prisma.BlankWhereUniqueInput, data: Prisma.BlankUpdateInput }) {
         try {
-            await this.database.instance['blank'].update({ where: { id: where.id }, data: args })
+            await this.database.instance.blank.update({ ...args, include: {} })
 
             return this.handleResponse<{ message: string }>({ message: BlankRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
@@ -56,9 +60,9 @@ export class BlankRepository extends Repository {
         }
     }
 
-    async removeById(where: { id: number }) {
+    async delete(args: { where: Prisma.BlankWhereUniqueInput }) {
         try {
-            await this.database.instance['blank'].delete({ where: { id: where.id } })
+            await this.database.instance.blank.delete({ ...args, include: {} })
 
             return this.handleResponse<{ message: string }>({ message: BlankRepository.GLOBAL_MESSAGE.remove.success })
         } catch (err: any) {
@@ -68,29 +72,47 @@ export class BlankRepository extends Repository {
         }
     }
 
-    async findById(id: ID) {
+    async findFirst<Args extends Prisma.BlankFindFirstArgs>(args: Args) {
         try {
-            const blank = await this.database.instance['blank'].findFirst({ where: { id } })
+            const blank = await this.database.instance.blank.findFirst(args) as BlankFindResponse<Args>
 
-            return this.handleResponse<BlankModel.Blank>(blank, {
+            return this.handleResponse<BlankFindResponse<Args>>(blank, {
                 noAcceptNullable: true,
                 error: { title: BlankRepository.GLOBAL_MESSAGE.find.title, message: BlankRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<BlankModel.Blank>(err, {
+            return this.handleError<BlankFindResponse<Args>>(err, {
                 error: { title: BlankRepository.GLOBAL_MESSAGE.find.title, message: BlankRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
     }
 
-    async findMany() {
+    async findUnique<Args extends Prisma.BlankFindUniqueArgs>(args: Args) {
         try {
-            const blanks = await this.database.instance['blank'].findMany({ where: {}, orderBy: {} })
+            const blank = await this.database.instance.blank.findUnique(args) as BlankFindResponse<Args>
 
-            return this.handleResponse<BlankModel.Blank[]>(blanks)
+            return this.handleResponse<BlankFindResponse<Args>>(blank, {
+                noAcceptNullable: true,
+                error: { title: BlankRepository.GLOBAL_MESSAGE.find.title, message: BlankRepository.GLOBAL_MESSAGE.find.notFound },
+            })
         } catch (err: any) {
-            return this.handleError<BlankModel.Blank[]>(err, {
-                error: { title: BlankRepository.GLOBAL_MESSAGE.findMany.title, message: BlankRepository.GLOBAL_MESSAGE.find.failed }
+            return this.handleError<BlankFindResponse<Args>>(err, {
+                error: { title: BlankRepository.GLOBAL_MESSAGE.find.title, message: BlankRepository.GLOBAL_MESSAGE.find.failed }
+            })
+        }
+    }
+
+    async findMany<Args extends Prisma.BlankFindManyArgs>(args: Args) {
+        try {
+            const blank = await this.database.instance.blank.findMany(args) as BlankFindResponse<Args>[]
+
+            return this.handleResponse<BlankFindResponse<Args>[]>(blank, {
+                noAcceptNullable: true,
+                error: { title: BlankRepository.GLOBAL_MESSAGE.find.title, message: BlankRepository.GLOBAL_MESSAGE.find.notFound },
+            })
+        } catch (err: any) {
+            return this.handleError<BlankFindResponse<Args>[]>(err, {
+                error: { title: BlankRepository.GLOBAL_MESSAGE.find.title, message: BlankRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
     }

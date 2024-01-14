@@ -24,7 +24,7 @@ export class CategoryQueryUseCase extends UseCase {
     async queryById(args: { id: ID }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const categoryResult = await this.categoryRepository.findById(id)
+        const categoryResult = await this.categoryRepository.findUnique({ where: { id } })
 
         if (!categoryResult.isSuccess()) {
             return Result.failure({ ...categoryResult.getError(), title: 'Query Category' })
@@ -36,7 +36,7 @@ export class CategoryQueryUseCase extends UseCase {
     async queryManyByBankAccountId(args: { bankAccountId: ID }) {
         const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
 
-        const categoriesResult = await this.categoryRepository.findManyByBankAccountId(bankAccountId)
+        const categoriesResult = await this.categoryRepository.findMany({ where: { bankAccountId } })
 
         if (!categoriesResult.isSuccess()) {
             return Result.failure({ ...categoriesResult.getError(), title: 'Query Categories' })

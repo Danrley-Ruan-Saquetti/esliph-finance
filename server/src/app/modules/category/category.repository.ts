@@ -1,7 +1,12 @@
+import { Prisma } from '@prisma/client'
 import { Service } from '@esliph/module'
 import { ID } from '@@types'
 import { Repository } from '@services/repository.service'
-import { CategoryModel } from '@modules/category/category.model'
+
+type CategoryGetPayloadTypes = boolean | null | undefined | { select?: Prisma.CategorySelect | null }
+type CategoryGetPayload<T extends boolean | null | undefined | { select?: Prisma.CategorySelect | null }> = Prisma.CategoryGetPayload<T>
+type CategoryPropSelect<ArgsSelect extends CategoryGetPayloadTypes> = CategoryGetPayload<ArgsSelect>
+type CategoryFindResponse<ArgsSelect extends CategoryGetPayloadTypes> = CategoryPropSelect<ArgsSelect>
 
 @Service({ name: 'category.repository' })
 export class CategoryRepository extends Repository {
@@ -32,9 +37,9 @@ export class CategoryRepository extends Repository {
         }
     }
 
-    async register({ bankAccountId, color, isFavorite, name }: CategoryModel.Model) {
+    async create(args: { data: Prisma.CategoryCreateInput }) {
         try {
-            await this.database.instance.category.create({ data: { bankAccountId, color, isFavorite, name } })
+            await this.database.instance.category.create({ ...args, include: {} })
 
             return this.handleResponse<{ message: string }>({ message: CategoryRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
@@ -44,9 +49,9 @@ export class CategoryRepository extends Repository {
         }
     }
 
-    async updateById(args: CategoryModel.UpdateArgs, where: { id: number }) {
+    async update(args: { where: Prisma.CategoryWhereUniqueInput, data: Prisma.CategoryUpdateInput }) {
         try {
-            await this.database.instance.category.update({ where: { id: where.id }, data: args })
+            await this.database.instance.category.update({ ...args, include: {} })
 
             return this.handleResponse<{ message: string }>({ message: CategoryRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
@@ -56,9 +61,9 @@ export class CategoryRepository extends Repository {
         }
     }
 
-    async removeById(where: { id: number }) {
+    async delete(args: { where: Prisma.CategoryWhereUniqueInput }) {
         try {
-            await this.database.instance.category.delete({ where: { id: where.id } })
+            await this.database.instance.category.delete({ ...args, include: {} })
 
             return this.handleResponse<{ message: string }>({ message: CategoryRepository.GLOBAL_MESSAGE.remove.success })
         } catch (err: any) {
@@ -68,71 +73,47 @@ export class CategoryRepository extends Repository {
         }
     }
 
-    async findById(id: ID) {
+    async findFirst<Args extends Prisma.CategoryFindFirstArgs>(args: Args) {
         try {
-            const category = await this.database.instance.category.findFirst({ where: { id } })
+            const category = await this.database.instance.category.findFirst(args) as CategoryFindResponse<Args>
 
-            return this.handleResponse<CategoryModel.Category>(category, {
+            return this.handleResponse<CategoryFindResponse<Args>>(category, {
                 noAcceptNullable: true,
                 error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<CategoryModel.Category>(err, {
+            return this.handleError<CategoryFindResponse<Args>>(err, {
                 error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
     }
 
-    async findByIdAndBankAccountId(id: ID, bankAccountId: ID) {
+    async findUnique<Args extends Prisma.CategoryFindUniqueArgs>(args: Args) {
         try {
-            const category = await this.database.instance.category.findFirst({ where: { id, bankAccountId } })
+            const category = await this.database.instance.category.findUnique(args) as CategoryFindResponse<Args>
 
-            return this.handleResponse<CategoryModel.Category>(category, {
+            return this.handleResponse<CategoryFindResponse<Args>>(category, {
                 noAcceptNullable: true,
                 error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<CategoryModel.Category>(err, {
-                error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.failed },
+            return this.handleError<CategoryFindResponse<Args>>(err, {
+                error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
     }
 
-    async findManyByIdsAndBankAccountId(ids: ID[], bankAccountId: ID) {
+    async findMany<Args extends Prisma.CategoryFindManyArgs>(args: Args) {
         try {
-            const category = await this.database.instance.category.findMany({ where: { id: { in: ids }, bankAccountId } })
+            const category = await this.database.instance.category.findMany(args) as CategoryFindResponse<Args>[]
 
-            return this.handleResponse<CategoryModel.Category[]>(category, {
+            return this.handleResponse<CategoryFindResponse<Args>[]>(category, {
                 noAcceptNullable: true,
                 error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<CategoryModel.Category[]>(err, {
-                error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.failed },
-            })
-        }
-    }
-
-    async findManyByBankAccountId(bankAccountId: ID) {
-        try {
-            const users = await this.database.instance.category.findMany({ where: { bankAccountId } })
-
-            return this.handleResponse<CategoryModel.Category[]>(users)
-        } catch (err: any) {
-            return this.handleError<CategoryModel.Category[]>(err, {
-                error: { title: CategoryRepository.GLOBAL_MESSAGE.findMany.title, message: CategoryRepository.GLOBAL_MESSAGE.find.failed }
-            })
-        }
-    }
-
-    async findManyByBankAccountIdOrderIsFavorite(bankAccountId: ID) {
-        try {
-            const users = await this.database.instance.category.findMany({ where: { bankAccountId }, orderBy: { isFavorite: 'asc' } })
-
-            return this.handleResponse<CategoryModel.Category[]>(users)
-        } catch (err: any) {
-            return this.handleError<CategoryModel.Category[]>(err, {
-                error: { title: CategoryRepository.GLOBAL_MESSAGE.findMany.title, message: CategoryRepository.GLOBAL_MESSAGE.find.failed }
+            return this.handleError<CategoryFindResponse<Args>[]>(err, {
+                error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
     }

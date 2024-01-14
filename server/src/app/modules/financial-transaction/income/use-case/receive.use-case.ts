@@ -59,14 +59,12 @@ export class FinancialIncomeReceiveUseCase extends UseCase {
     }
 
     async updateSituationFinancialTransaction(financialTransactionId: ID, newSituation: FinancialTransactionModel.Situation) {
-        const resultUpdate = await this.transactionRepository.updateById({ situation: newSituation }, { id: financialTransactionId })
+        const resultUpdate = await this.transactionRepository.update({ data: { situation: newSituation }, where: { id: financialTransactionId } })
 
         if (resultUpdate.isSuccess()) {
             return
         }
 
-        if (!resultUpdate.isErrorInOperation()) {
-            throw new BadRequestException({ title: 'Update Financial Transaction', message: 'Cannot be updated financial transaction' })
-        }
+        throw new BadRequestException({ ...resultUpdate.getError(), title: 'Update Financial Transaction' })
     }
 }

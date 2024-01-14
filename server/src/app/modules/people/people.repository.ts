@@ -1,7 +1,11 @@
 import { Service } from '@esliph/module'
-import { ID } from '@@types'
 import { Repository } from '@services/repository.service'
-import { PeopleModel } from '@modules/people/people.model'
+import { Prisma } from '@services/database.service'
+
+type PeopleGetPayloadTypes = boolean | null | undefined | { select?: Prisma.PeopleSelect | null }
+type PeopleGetPayload<T extends boolean | null | undefined | { select?: Prisma.PeopleSelect | null }> = Prisma.PeopleGetPayload<T>
+type PeoplePropSelect<ArgsSelect extends PeopleGetPayloadTypes> = PeopleGetPayload<ArgsSelect>
+type PeopleFindResponse<ArgsSelect extends PeopleGetPayloadTypes> = PeoplePropSelect<ArgsSelect>
 
 @Service({ name: 'people.repository' })
 export class PeopleRepository extends Repository {
@@ -11,7 +15,7 @@ export class PeopleRepository extends Repository {
             success: 'People successfully registered',
             failed: 'Failed to register people'
         },
-        remove: {
+        delete: {
             title: 'Remove People',
             success: 'People successfully removed',
             failed: 'Failed to remove people'
@@ -32,9 +36,9 @@ export class PeopleRepository extends Repository {
         }
     }
 
-    async register(data: PeopleModel.Model) {
+    async create(args: { data: Prisma.PeopleCreateInput }) {
         try {
-            await this.database.instance.people.create({ data: data })
+            await this.database.instance.people.create({ ...args, include: {} })
 
             return this.handleResponse<{ message: string }>({ message: PeopleRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
@@ -44,9 +48,9 @@ export class PeopleRepository extends Repository {
         }
     }
 
-    async updateById(args: PeopleModel.UpdateArgs, where: { id: number }) {
+    async update(args: { where: Prisma.PeopleWhereUniqueInput, data: Prisma.PeopleUpdateInput }) {
         try {
-            await this.database.instance.people.update({ where: { id: where.id }, data: args })
+            await this.database.instance.people.update({ ...args, include: {} })
 
             return this.handleResponse<{ message: string }>({ message: PeopleRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
@@ -56,79 +60,58 @@ export class PeopleRepository extends Repository {
         }
     }
 
-    async removeById(where: { id: number }) {
+    async delete(where: Prisma.PeopleWhereUniqueInput) {
         try {
-            await this.database.instance.people.delete({ where: { id: where.id } })
+            await this.database.instance.people.delete({ where })
 
-            return this.handleResponse<{ message: string }>({ message: PeopleRepository.GLOBAL_MESSAGE.remove.success })
+            return this.handleResponse<{ message: string }>({ message: PeopleRepository.GLOBAL_MESSAGE.delete.success })
         } catch (err: any) {
             return this.handleError<{ message: string }>(err, {
-                error: { title: PeopleRepository.GLOBAL_MESSAGE.remove.title, message: PeopleRepository.GLOBAL_MESSAGE.remove.failed }
+                error: { title: PeopleRepository.GLOBAL_MESSAGE.delete.title, message: PeopleRepository.GLOBAL_MESSAGE.delete.failed }
             })
         }
     }
 
-    async findById(id: ID) {
+    async findFirst<Args extends Prisma.PeopleFindFirstArgs>(args: Args) {
         try {
-            const people = await this.database.instance.people.findFirst({ where: { id } })
+            const people = await this.database.instance.people.findFirst(args) as PeopleFindResponse<Args>
 
-            return this.handleResponse<PeopleModel.People>(people, {
+            return this.handleResponse<PeopleFindResponse<Args>>(people, {
                 noAcceptNullable: true,
                 error: { title: PeopleRepository.GLOBAL_MESSAGE.find.title, message: PeopleRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<PeopleModel.People>(err, {
+            return this.handleError<PeopleFindResponse<Args>>(err, {
                 error: { title: PeopleRepository.GLOBAL_MESSAGE.find.title, message: PeopleRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
     }
 
-    async findByItinCnpj(itinCnpj: string) {
+    async findUnique<Args extends Prisma.PeopleFindUniqueArgs>(args: Args) {
         try {
-            const people = await this.database.instance.people.findFirst({ where: { itinCnpj } })
+            const people = await this.database.instance.people.findUnique(args) as PeopleFindResponse<Args>
 
-            return this.handleResponse<PeopleModel.People>(people, {
+            return this.handleResponse<PeopleFindResponse<Args>>(people, {
                 noAcceptNullable: true,
                 error: { title: PeopleRepository.GLOBAL_MESSAGE.find.title, message: PeopleRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<PeopleModel.People>(err, {
+            return this.handleError<PeopleFindResponse<Args>>(err, {
                 error: { title: PeopleRepository.GLOBAL_MESSAGE.find.title, message: PeopleRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
     }
 
-    async findByUserId(userId: ID) {
+    async findMany<Args extends Prisma.PeopleFindManyArgs>(args: Args) {
         try {
-            const people = await this.database.instance.people.findFirst({ where: { users: { some: { id: userId } } } })
+            const people = await this.database.instance.people.findMany(args) as PeopleFindResponse<Args>[]
 
-            return this.handleResponse<PeopleModel.People>(people, {
+            return this.handleResponse<PeopleFindResponse<Args>[]>(people, {
                 noAcceptNullable: true,
                 error: { title: PeopleRepository.GLOBAL_MESSAGE.find.title, message: PeopleRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<PeopleModel.People>(err, {
-                error: { title: PeopleRepository.GLOBAL_MESSAGE.find.title, message: PeopleRepository.GLOBAL_MESSAGE.find.failed }
-            })
-        }
-    }
-
-    async findByIdWithAddressAndContacts(id: ID) {
-        try {
-            const people = await this.database.instance.people.findFirst({
-                where: { id },
-                include: {
-                    addresses: true,
-                    contacts: true
-                }
-            })
-
-            return this.handleResponse<PeopleModel.People>(people, {
-                noAcceptNullable: true,
-                error: { title: PeopleRepository.GLOBAL_MESSAGE.find.title, message: PeopleRepository.GLOBAL_MESSAGE.find.notFound },
-            })
-        } catch (err: any) {
-            return this.handleError<PeopleModel.People>(err, {
+            return this.handleError<PeopleFindResponse<Args>[]>(err, {
                 error: { title: PeopleRepository.GLOBAL_MESSAGE.find.title, message: PeopleRepository.GLOBAL_MESSAGE.find.failed }
             })
         }

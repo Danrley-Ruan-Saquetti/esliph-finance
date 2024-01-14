@@ -1,7 +1,13 @@
+import { Prisma } from '@prisma/client'
 import { Service } from '@esliph/module'
 import { ID } from '@@types'
 import { Repository } from '@services/repository.service'
 import { BankAccountModel } from '@modules/bank-account/bank-account.model'
+
+type BankAccountGetPayloadTypes = boolean | null | undefined | { select?: Prisma.BankAccountSelect | null }
+type BankAccountGetPayload<T extends boolean | null | undefined | { select?: Prisma.BankAccountSelect | null }> = Prisma.BankAccountGetPayload<T>
+type BankAccountPropSelect<ArgsSelect extends BankAccountGetPayloadTypes> = BankAccountGetPayload<ArgsSelect>
+type BankAccountFindResponse<ArgsSelect extends BankAccountGetPayloadTypes> = BankAccountPropSelect<ArgsSelect>
 
 @Service({ name: 'bank-account.repository' })
 export class BankAccountRepository extends Repository {
@@ -27,240 +33,72 @@ export class BankAccountRepository extends Repository {
         }
     }
 
-    async register({ balance, name, password, peopleId, code }: BankAccountModel.Model) {
+    async create(args: { data: Prisma.BankAccountCreateInput }) {
         try {
-            await this.repo.create({ data: { balance, name, password, peopleId, code } })
+            await this.database.instance.bankAccount.create({ ...args, include: {} })
 
             return this.handleResponse<{ message: string }>({ message: BankAccountRepository.GLOBAL_MESSAGE.create.success })
         } catch (err: any) {
-            return this.handleError<{ message: string }>(err, { error: { title: BankAccountRepository.GLOBAL_MESSAGE.create.title, message: BankAccountRepository.GLOBAL_MESSAGE.create.failed } })
+            return this.handleError<{ message: string }>(err, {
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.create.title, message: BankAccountRepository.GLOBAL_MESSAGE.create.failed }
+            })
         }
     }
 
-    async updateById(args: Partial<Omit<BankAccountModel.BankAccount, 'userId'>>, where: { id: ID }) {
+    async update(args: { where: Prisma.BankAccountWhereUniqueInput, data: Prisma.BankAccountUpdateInput }) {
         try {
-            await this.repo.update({ where: { id: where.id }, data: args })
+            await this.database.instance.bankAccount.update({ ...args, include: {} })
 
             return this.handleResponse<{ message: string }>({ message: BankAccountRepository.GLOBAL_MESSAGE.update.success })
         } catch (err: any) {
-            return this.handleError<{ message: string }>(err, { error: { title: BankAccountRepository.GLOBAL_MESSAGE.update.title, message: BankAccountRepository.GLOBAL_MESSAGE.update.failed } })
+            return this.handleError<{ message: string }>(err, {
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.update.title, message: BankAccountRepository.GLOBAL_MESSAGE.update.failed }
+            })
         }
     }
 
-    async findById(id: ID) {
+    async findFirst<Args extends Prisma.BankAccountFindFirstArgs>(args: Args) {
         try {
-            const bankAccount = await this.repo.findFirst({ where: { id } })
+            const bankAccount = await this.database.instance.bankAccount.findFirst(args) as BankAccountFindResponse<Args>
 
-            return this.handleResponse<BankAccountModel.BankAccount>(bankAccount, {
+            return this.handleResponse<BankAccountFindResponse<Args>>(bankAccount, {
                 noAcceptNullable: true,
                 error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccount>(err, { error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed } })
+            return this.handleError<BankAccountFindResponse<Args>>(err, {
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed }
+            })
         }
     }
 
-    async findByIdWithFinancialTransactionsAndPayments(id: ID) {
+    async findUnique<Args extends Prisma.BankAccountFindUniqueArgs>(args: Args) {
         try {
-            const bankAccount = await this.repo.findFirst({ where: { id }, include: { financialTransactions: { include: { payments: true } } } })
+            const bankAccount = await this.database.instance.bankAccount.findUnique(args) as BankAccountFindResponse<Args>
 
-            return this.handleResponse<BankAccountModel.BankAccountWithFinancialTransactionsAndPayments>(bankAccount, {
+            return this.handleResponse<BankAccountFindResponse<Args>>(bankAccount, {
                 noAcceptNullable: true,
                 error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccountWithFinancialTransactionsAndPayments>(err, {
-                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed },
+            return this.handleError<BankAccountFindResponse<Args>>(err, {
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
     }
 
-    async findByIdAndBetweenDateCompetenceWithFinancialTransactionsAndPayments(id: ID, dateStart: Date, dateEnd: Date) {
+    async findMany<Args extends Prisma.BankAccountFindManyArgs>(args: Args) {
         try {
-            const bankAccount = await this.repo.findFirst({
-                where: { id },
-                include: {
-                    financialTransactions: {
-                        where: {
-                            dateTimeCompetence: {
-                                gte: dateStart,
-                                lte: dateEnd,
-                            },
-                        },
-                        include: { payments: true },
-                    },
-                },
-            })
+            const bankAccount = await this.database.instance.bankAccount.findMany(args) as BankAccountFindResponse<Args>[]
 
-            return this.handleResponse<BankAccountModel.BankAccountWithFinancialTransactionsAndPayments>(bankAccount, {
+            return this.handleResponse<BankAccountFindResponse<Args>[]>(bankAccount, {
                 noAcceptNullable: true,
                 error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
             })
         } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccountWithFinancialTransactionsAndPayments>(err, {
-                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed },
+            return this.handleError<BankAccountFindResponse<Args>[]>(err, {
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
-    }
-
-    async findByIdWithoutPassword(id: ID) {
-        try {
-            const bankAccount = await this.repo.findFirst({
-                where: { id },
-                select: BankAccountModel.BankAccountWithoutPasswordSelect,
-            })
-
-            return this.handleResponse<BankAccountModel.BankAccountWithoutPassword>(bankAccount, {
-                noAcceptNullable: true,
-                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
-            })
-        } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccountWithoutPassword>(err, {
-                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed },
-            })
-        }
-    }
-
-    async findByCode(code: string) {
-        try {
-            const bankAccount = await this.repo.findFirst({ where: { code } })
-
-            return this.handleResponse<BankAccountModel.BankAccount>(bankAccount, {
-                noAcceptNullable: true,
-                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
-            })
-        } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccount>(err, { error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed } })
-        }
-    }
-
-    async findByCodeWithoutPassword(code: string) {
-        try {
-            const bankAccount = await this.repo.findFirst({
-                where: { code },
-                select: BankAccountModel.BankAccountWithoutPasswordSelect,
-            })
-
-            return this.handleResponse<BankAccountModel.BankAccountWithoutPassword>(bankAccount, {
-                noAcceptNullable: true,
-                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
-            })
-        } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccountWithoutPassword>(err, {
-                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed },
-            })
-        }
-    }
-
-    async findByCodeAndPeopleId(code: string, peopleId: ID) {
-        try {
-            const bankAccount = await this.repo.findFirst({ where: { code, peopleId } })
-
-            return this.handleResponse<BankAccountModel.BankAccount>(bankAccount, {
-                noAcceptNullable: true,
-                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
-            })
-        } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccount>(err, { error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed } })
-        }
-    }
-
-    async findByCodeAndPeopleIdWithoutPassword(code: string, peopleId: ID) {
-        try {
-            const bankAccount = await this.repo.findFirst({
-                where: { code, peopleId },
-                select: BankAccountModel.BankAccountWithoutPasswordSelect,
-            })
-
-            return this.handleResponse<BankAccountModel.BankAccountWithoutPassword>(bankAccount, {
-                noAcceptNullable: true,
-                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.notFound },
-            })
-        } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccountWithoutPassword>(err, {
-                error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed },
-            })
-        }
-    }
-
-    async findManyByUserId(userId: ID) {
-        try {
-            const users = await this.repo.findMany({
-                where: { people: { users: { some: { id: userId } } } },
-                orderBy: { updatedAt: 'desc' },
-            })
-
-            return this.handleResponse<BankAccountModel.BankAccount[]>(users)
-        } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccount[]>(err, { error: { title: BankAccountRepository.GLOBAL_MESSAGE.findMany.title, message: BankAccountRepository.GLOBAL_MESSAGE.findMany.failed } })
-        }
-    }
-
-    async findManyByUserIdWithoutPassword(userId: ID) {
-        try {
-            const bankAccounts = await this.repo.findMany({
-                where: { people: { users: { some: { id: userId } } } },
-                select: BankAccountModel.BankAccountWithoutPasswordSelect,
-                orderBy: { updatedAt: 'desc' },
-            })
-
-            return this.handleResponse<BankAccountModel.BankAccountWithoutPassword[]>(bankAccounts)
-        } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccountWithoutPassword[]>(err, {
-                error: { title: BankAccountRepository.GLOBAL_MESSAGE.findMany.title, message: BankAccountRepository.GLOBAL_MESSAGE.findMany.failed },
-            })
-        }
-    }
-
-    async findManyByPeopleIdWithoutPassword(peopleId: ID) {
-        try {
-            const bankAccounts = await this.repo.findMany({
-                where: { peopleId },
-                select: BankAccountModel.BankAccountWithoutPasswordSelect,
-                orderBy: { updatedAt: 'desc' },
-            })
-
-            return this.handleResponse<BankAccountModel.BankAccountWithoutPassword[]>(bankAccounts)
-        } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccountWithoutPassword[]>(err, {
-                error: { title: BankAccountRepository.GLOBAL_MESSAGE.findMany.title, message: BankAccountRepository.GLOBAL_MESSAGE.findMany.failed },
-            })
-        }
-    }
-
-    async findManyByUserIdWithoutPasswordAndBalance(userId: ID) {
-        try {
-            const bankAccounts = await this.repo.findMany({
-                where: { people: { users: { some: { id: userId } } } },
-                select: BankAccountModel.BankAccountWithoutPasswordSelectAndBalance,
-                orderBy: { updatedAt: 'desc' },
-            })
-
-            return this.handleResponse<BankAccountModel.BankAccountWithoutPasswordAndBalance[]>(bankAccounts)
-        } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccountWithoutPassword[]>(err, {
-                error: { title: BankAccountRepository.GLOBAL_MESSAGE.findMany.title, message: BankAccountRepository.GLOBAL_MESSAGE.findMany.failed },
-            })
-        }
-    }
-
-    async findManyByPeopleIdWithoutPasswordAndBalance(peopleId: ID) {
-        try {
-            const bankAccounts = await this.repo.findMany({
-                where: { peopleId },
-                select: BankAccountModel.BankAccountWithoutPasswordSelectAndBalance,
-                orderBy: { updatedAt: 'desc' },
-            })
-
-            return this.handleResponse<BankAccountModel.BankAccountWithoutPasswordAndBalance[]>(bankAccounts)
-        } catch (err: any) {
-            return this.handleError<BankAccountModel.BankAccountWithoutPassword[]>(err, {
-                error: { title: BankAccountRepository.GLOBAL_MESSAGE.findMany.title, message: BankAccountRepository.GLOBAL_MESSAGE.findMany.failed },
-            })
-        }
-    }
-
-    private get repo() {
-        return this.database.instance.bankAccount
     }
 }

@@ -24,7 +24,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
     async queryByIdWithNotes(args: { id: ID }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const financialTransactionsResult = await this.transactionRepository.findByIdWithNotes(id)
+        const financialTransactionsResult = await this.transactionRepository.findUnique({ where: { id }, include: { notes: true } })
 
         if (!financialTransactionsResult.isSuccess()) {
             return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transaction' })
@@ -36,7 +36,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
     async queryByIdWithNotesAndPaymentsAndCategories(args: { id: ID }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const financialTransactionsResult = await this.transactionRepository.findByIdWithPaymentsAndNotesAndCategories(id)
+        const financialTransactionsResult = await this.transactionRepository.findUnique({ where: { id }, include: { notes: true, payments: true, categories: true } })
 
         if (!financialTransactionsResult.isSuccess()) {
             return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transaction' })
@@ -48,7 +48,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
     async queryManyByBankAccountIdWithCategories(args: { bankAccountId: ID }) {
         const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
 
-        const financialTransactionsResult = await this.transactionRepository.findManyByBankAccountIdWithCategories(bankAccountId)
+        const financialTransactionsResult = await this.transactionRepository.findMany({ where: { bankAccountId }, include: { categories: true } })
 
         if (!financialTransactionsResult.isSuccess()) {
             return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transactions' })
@@ -61,7 +61,14 @@ export class FinancialTransactionQueryUseCase extends UseCase {
         const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
         const categoryId = this.validateDTO(args.categoryId, schemaNumber)
 
-        const financialTransactionsResult = await this.transactionRepository.findManyByBankAccountIdAndCategoryIdWithCategories(bankAccountId, categoryId)
+        const financialTransactionsResult = await this.transactionRepository.findMany({
+            where: { bankAccountId, categories: { some: { categoryId } } },
+            include: {
+                categories: {
+                    select: { category: true }
+                }
+            }
+        })
 
         if (!financialTransactionsResult.isSuccess()) {
             return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transactions' })

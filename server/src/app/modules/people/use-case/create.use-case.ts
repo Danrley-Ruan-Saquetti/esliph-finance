@@ -84,7 +84,7 @@ export class PeopleCreateUseCase extends UseCase {
     }
 
     private async verifyIsAlreadyItinCnpjExists(itinCnpj: string, type: PeopleModel.Type) {
-        const peopleResult = await this.peopleRepository.findByItinCnpj(itinCnpj)
+        const peopleResult = await this.peopleRepository.findUnique({ where: { itinCnpj } })
 
         if (peopleResult.isSuccess()) {
             throw new BadRequestException({ title: 'Create People', message: `${type == PeopleModel.Type.LEGAL_ENTITY ? 'CNPJ' : type == PeopleModel.Type.NATURAL_PERSON ? 'ITIN' : 'ITIN/CNPJ'} is already exists` })
@@ -96,7 +96,7 @@ export class PeopleCreateUseCase extends UseCase {
     }
 
     private async registerPeople({ active, dateOfBirth, gender, itinCnpj, name, type }: PeopleModel.Model) {
-        const registerPeopleResult = await this.peopleRepository.register({ active, dateOfBirth, gender, itinCnpj, name, type })
+        const registerPeopleResult = await this.peopleRepository.create({ data: { active, dateOfBirth, gender, itinCnpj, name, type } })
 
         if (registerPeopleResult.isSuccess()) {
             return

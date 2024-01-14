@@ -36,7 +36,7 @@ export class BankAccountUpdateBalanceUseCase extends UseCase {
 
     async liquidate(args: BankAccountBalanceDTOArgs) {
         const { id, value } = this.validateDTO(args, schemaDTO)
-        const result = await this.perform({ id, value: args.value * -1 })
+        const result = await this.perform({ id, value: value * -1 })
 
         return result
     }
@@ -46,28 +46,13 @@ export class BankAccountUpdateBalanceUseCase extends UseCase {
             return Result.success({ message: 'Balance successfully updated' })
         }
 
-        const { balance } = await this.queryBankAccount(id)
-        const newValue = balance + value
-        await this.update(newValue, id)
+        await this.update(value, id)
 
         return Result.success({ message: 'Balance successfully updated' })
     }
 
-    private async queryBankAccount(id: ID) {
-        const bankAccount = await this.repositoryBankAccount.findById(id)
-
-        if (!bankAccount.isSuccess()) {
-            throw new BadRequestException({
-                ...bankAccount.getError(),
-                title: 'Find Bank Account'
-            })
-        }
-
-        return bankAccount.getValue()
-    }
-
-    private async update(newValue: number, id: ID) {
-        const updateResult = await this.repositoryBankAccount.updateById({ balance: newValue }, { id })
+    private async update(value: number, id: ID) {
+        const updateResult = await this.repositoryBankAccount.update({ where: { id }, data: { balance: { increment: value } } })
 
         if (!updateResult.isSuccess()) {
             throw new BadRequestException({

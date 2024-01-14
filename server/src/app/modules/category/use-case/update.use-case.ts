@@ -51,7 +51,7 @@ export class CategoryUpdateUseCase extends UseCase {
     }
 
     private async verifyIsExistsCategory(id: ID) {
-        const categoryResult = await this.categoryRepository.findById(id)
+        const categoryResult = await this.categoryRepository.findUnique({ where: { id } })
 
         if (categoryResult.isSuccess()) {
             return
@@ -61,7 +61,7 @@ export class CategoryUpdateUseCase extends UseCase {
     }
 
     private async update({ color, isFavorite, name }: CategoryModel.UpdateArgs, id: ID) {
-        const updateResult = await this.categoryRepository.updateById({ color, isFavorite, name }, { id })
+        const updateResult = await this.categoryRepository.update({ where: { id }, data: { color, isFavorite, name } })
 
         if (updateResult.isSuccess()) {
             return

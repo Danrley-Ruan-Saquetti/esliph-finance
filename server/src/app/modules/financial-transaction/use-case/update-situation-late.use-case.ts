@@ -16,11 +16,9 @@ export class FinancialTransactionUpdateSituationLateUseCase extends UseCase {
 
         try {
             await transaction.begin()
-
-            const database = this.transactionRepository.getDatabase()
             const dateNow = this.dateService.now()
 
-            await database.financialTransaction.updateMany({
+            await this.transactionRepository.updateMany({
                 data: { situation: FinancialTransactionModel.Situation.LATE },
                 where: {
                     expiresIn: { lt: dateNow },

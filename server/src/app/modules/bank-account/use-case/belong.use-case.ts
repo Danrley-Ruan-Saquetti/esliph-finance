@@ -21,7 +21,7 @@ export class BankAccountBelongUseCase extends UseCase {
     }
 
     async isFinancialTransactionBelongBankAccount({ bankAccountId, financialTransactionId }: { financialTransactionId: ID, bankAccountId: ID }) {
-        const result = await this.financialTransactionRepository.findByIdAndBankAccountId(Number(financialTransactionId), Number(bankAccountId))
+        const result = await this.financialTransactionRepository.findUnique({ where: { bankAccountId: Number(bankAccountId), id: Number(financialTransactionId) } })
 
         if (result.isErrorInOperation()) {
             throw new BadRequestException({ ...result.getError(), title: 'Verify is Transaction Belong Bank Account' })
@@ -31,7 +31,7 @@ export class BankAccountBelongUseCase extends UseCase {
     }
 
     async isCategoryBelongBankAccount({ bankAccountId, categoryId }: { categoryId: ID, bankAccountId: ID }) {
-        const result = await this.categoryRepository.findByIdAndBankAccountId(Number(categoryId), Number(bankAccountId))
+        const result = await this.categoryRepository.findFirst({ where: { bankAccountId: Number(bankAccountId), id: Number(categoryId) } })
 
         if (result.isErrorInOperation()) {
             throw new BadRequestException({ ...result.getError(), title: 'Verify is Category Belong Bank Account' })

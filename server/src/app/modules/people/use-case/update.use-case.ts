@@ -52,7 +52,7 @@ export class PeopleUpdateUseCase extends UseCase {
     }
 
     private async verifyIsExistsPeople(id: ID) {
-        const peopleResult = await this.peopleRepository.findById(id)
+        const peopleResult = await this.peopleRepository.findUnique({ where: { id } })
 
         if (peopleResult.isSuccess()) {
             return
@@ -62,7 +62,7 @@ export class PeopleUpdateUseCase extends UseCase {
     }
 
     private async update(data: PeopleModel.UpdateArgs, id: ID) {
-        const updateResult = await this.peopleRepository.updateById(data, { id })
+        const updateResult = await this.peopleRepository.update({ where: { id }, data: { ...data } })
 
         if (updateResult.isSuccess()) {
             return

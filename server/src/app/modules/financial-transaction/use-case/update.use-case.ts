@@ -11,7 +11,6 @@ import { FinancialTransactionRepository } from '@modules/financial-transaction/f
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { GLOBAL_CATEGORY_DTO } from '@modules/category/category.global'
 import { CategoryRepository } from '@modules/category/category.repository'
-import { FinancialCategoryRepository } from '@modules/financial-transaction/category/category.repository'
 import { GLOBAL_FINANCIAL_TRANSACTION_DTO, GLOBAL_FINANCIAL_TRANSACTION_RULES } from '@modules/financial-transaction/financial-transaction.global'
 
 const schemaDTO = ValidatorService.schema.object({
@@ -104,7 +103,6 @@ export class FinancialTransactionUpdateUseCase extends UseCase {
     constructor(
         @Injection.Inject('financial-transaction.repository') private transactionRepository: FinancialTransactionRepository,
         @Injection.Inject('category.repository') private categoryRepository: CategoryRepository,
-        @Injection.Inject('financial-category.repository') private transactionCategoryRepository: FinancialCategoryRepository,
     ) {
         super()
     }
@@ -142,7 +140,7 @@ export class FinancialTransactionUpdateUseCase extends UseCase {
     }
 
     private async verifyIsExistsFinancialTransaction(id: ID) {
-        const financialTransactionResult = await this.transactionRepository.findById(id)
+        const financialTransactionResult = await this.transactionRepository.findUnique({ where: { id } })
 
         if (!financialTransactionResult.isSuccess()) {
             if (financialTransactionResult.isErrorInOperation()) {
@@ -188,7 +186,12 @@ export class FinancialTransactionUpdateUseCase extends UseCase {
             return { categories: [], categoriesNotFound: [] }
         }
 
-        const financialCategories = await this.categoryRepository.findManyByIdsAndBankAccountId(categories, bankAccountId)
+        const financialCategories = await this.categoryRepository.findMany({
+            where: {
+                bankAccountId,
+                id: { in: categories }
+            }
+        })
 
         if (!financialCategories.isSuccess()) {
             throw new BadRequestException({ ...financialCategories.getError(), title: 'Query Categories' })

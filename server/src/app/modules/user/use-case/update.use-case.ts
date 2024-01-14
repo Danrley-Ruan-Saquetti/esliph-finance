@@ -47,7 +47,7 @@ export class UserUpdateUseCase extends UseCase {
     }
 
     private async verifyIsExistsUser(id: ID) {
-        const userResult = await this.userRepository.findById(id)
+        const userResult = await this.userRepository.findUnique({ where: { id } })
 
         if (userResult.isSuccess()) {
             return
@@ -59,7 +59,7 @@ export class UserUpdateUseCase extends UseCase {
     }
 
     private async update({ login, password }: UserModel.UpdateArgs, id: ID) {
-        const updateResult = await this.userRepository.updateById({ login, password }, { id })
+        const updateResult = await this.userRepository.update({ where: { id }, data: { login, password } })
 
         if (updateResult.isSuccess()) {
             return

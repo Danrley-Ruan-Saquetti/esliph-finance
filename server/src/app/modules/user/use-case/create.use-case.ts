@@ -60,7 +60,7 @@ export class UserCreateUseCase extends UseCase {
         const { name, itinCnpj, dateOfBirth, gender, type: peopleType } = await this.peopleCreateUC.validDTO({ ...args, type: args.peopleType })
 
         const { code, passwordHash } = await this.validateRegister({ login, password })
-        await this.registerUserWithPeople({ login, password: passwordHash, code, type: userType as UserModel.Type }, { active: true, dateOfBirth, gender, itinCnpj, name, type: peopleType })
+        await this.registerUserWithPeople({ login, password: passwordHash, code, type: userType as UserModel.Type, active: true }, { active: true, dateOfBirth, gender, itinCnpj, name, type: peopleType })
 
         return Result.success({ message: 'Register user successfully' })
     }
@@ -70,7 +70,7 @@ export class UserCreateUseCase extends UseCase {
 
         await this.validIsAlreadyHasUserTypeForPeople({ peopleId, type: userType as UserModel.Type })
         const { code, passwordHash } = await this.validateRegister({ login, password })
-        await this.registerUser({ login, password: passwordHash, code, peopleId, type: userType as UserModel.Type })
+        await this.registerUser({ login, password: passwordHash, code, peopleId, type: userType as UserModel.Type, active: true })
 
         return Result.success({ message: 'Register user successfully' })
     }
@@ -84,7 +84,7 @@ export class UserCreateUseCase extends UseCase {
     }
 
     private async validIsAlreadyHasUserTypeForPeople({ peopleId, type }: { peopleId: ID, type: UserModel.Type }) {
-        const userResult = await this.userRepository.findByPeopleIdAndType(peopleId, type)
+        const userResult = await this.userRepository.findFirst({ where: { peopleId, type } })
 
         if (userResult.isSuccess()) {
             throw new BadRequestException({
@@ -103,7 +103,7 @@ export class UserCreateUseCase extends UseCase {
     }
 
     private async valUserIdLoginAlreadyExists(login: string) {
-        const userAlreadyExistsResult = await this.userRepository.findByLogin(login)
+        const userAlreadyExistsResult = await this.userRepository.findUnique({ where: { login } })
 
         if (userAlreadyExistsResult.isSuccess()) {
             throw new BadRequestException({
@@ -139,7 +139,7 @@ export class UserCreateUseCase extends UseCase {
     }
 
     private async registerUser({ login, password, code, peopleId, type }: UserModel.Model) {
-        const registerUserResult = await this.userRepository.register({ login, password, code, peopleId, type })
+        const registerUserResult = await this.userRepository.create({ data: { login, password, code, people: { connect: { id: peopleId } }, type } })
 
         if (registerUserResult.isSuccess()) {
             return
@@ -152,7 +152,14 @@ export class UserCreateUseCase extends UseCase {
     }
 
     private async registerUserWithPeople(userData: Omit<UserModel.Model, 'peopleId'>, peopleData: PeopleModel.CreateArgs) {
-        const registerUserResult = await this.userRepository.registerWithPeople(userData, peopleData)
+        const registerUserResult = await this.userRepository.create({
+            data: {
+                ...userData,
+                people: {
+                    create: { ...peopleData }
+                }
+            }
+        })
 
         if (registerUserResult.isSuccess()) {
             return

@@ -110,7 +110,7 @@ export class CompensationPaymentsControl {
     }
 
     async loadFinancialTransactionAndPayments() {
-        const financialTransactionResult = await this.repositoryFinancialTransaction.findByIdWithPayments(this.financialTransactionId)
+        const financialTransactionResult = await this.repositoryFinancialTransaction.findUnique({ where: { id: this.financialTransactionId }, include: { payments: true } })
 
         if (!financialTransactionResult.isSuccess()) {
             throw new BadRequestException({ ...financialTransactionResult.getError() })
@@ -132,7 +132,7 @@ export class CompensationPaymentsControl {
     }
 
     async loadFinancialTransaction() {
-        const financialTransactionResult = await this.repositoryFinancialTransaction.findById(this.financialTransactionId)
+        const financialTransactionResult = await this.repositoryFinancialTransaction.findUnique({ where: { id: this.financialTransactionId } })
 
         if (!financialTransactionResult.isSuccess()) {
             throw new BadRequestException({ ...financialTransactionResult.getError() })

@@ -123,7 +123,7 @@ export class PaymentCreateUseCase extends UseCase {
     }
 
     private async queryFinancialTransaction(id: ID) {
-        const financialTransactionResult = await this.financialTransactionRepository.findById(id)
+        const financialTransactionResult = await this.financialTransactionRepository.findUnique({ where: { id } })
 
         if (!financialTransactionResult.isSuccess()) {
             throw new BadRequestException({
