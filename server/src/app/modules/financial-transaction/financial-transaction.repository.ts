@@ -40,6 +40,10 @@ export class FinancialTransactionRepository extends Repository {
         findMany: {
             title: 'Find Financial Transactions',
             failed: 'Unable to query financial transactions'
+        },
+        count: {
+            title: 'Count Financial Transactions',
+            failed: 'Unable to count financial transactions'
         }
     }
 
@@ -125,12 +129,21 @@ export class FinancialTransactionRepository extends Repository {
         try {
             const financialTransaction = await this.database.instance.financialTransaction.findMany(args) as FinancialTransactionFindResponse<Args>[]
 
-            return this.handleResponse<FinancialTransactionFindResponse<Args>[]>(financialTransaction, {
-                noAcceptNullable: true,
-                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.notFound },
-            })
+            return this.handleResponse<FinancialTransactionFindResponse<Args>[]>(financialTransaction)
         } catch (err: any) {
             return this.handleError<FinancialTransactionFindResponse<Args>[]>(err, {
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.failed }
+            })
+        }
+    }
+
+    async count(args: Prisma.FinancialTransactionCountArgs) {
+        try {
+            const financialTransaction = await this.database.instance.financialTransaction.count(args)
+
+            return this.handleResponse<number>(financialTransaction)
+        } catch (err: any) {
+            return this.handleError<number>(err, {
                 error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.failed }
             })
         }

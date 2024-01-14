@@ -31,4 +31,12 @@ export class BankAccountBelongControl {
             throw new BadRequestException({ title: 'Verify Payment of the Bank Account', message: 'Payment not found' })
         }
     }
+
+    async verifyCategory({ bankAccountId, categoryId }: { bankAccountId: ID, categoryId: ID }) {
+        const result = await this.belongUC.isCategoryBelongBankAccount({ bankAccountId, categoryId })
+
+        if (result.isSuccess() && !result.getValue().ok) {
+            throw new BadRequestException({ title: 'Verify Category of the Bank Account', message: 'Category not found' })
+        }
+    }
 }

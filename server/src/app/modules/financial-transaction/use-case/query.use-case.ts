@@ -6,19 +6,79 @@ import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { ValidatorService, SchemaValidator } from '@services/validator.service'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
+import { GLOBAL_FINANCIAL_TRANSACTION_DTO } from '@modules/financial-transaction/financial-transaction.global'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
 const schemaQuery = ValidatorService.schema.object({
     pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
     limite: GLOBAL_DTO.query.pagination.limite(),
+    categoryId: ValidatorService.schema.coerce.number().optional(),
+    expireStart: ValidatorService.schema.coerce.date().optional(),
+    expireEnd: ValidatorService.schema.coerce.date().optional(),
+    situation: ValidatorService.schema
+        .enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.situation.enum, {
+            errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.situation.messageEnumInvalid }),
+        }).optional(),
+    frequency: ValidatorService.schema
+        .enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.enum, {
+            errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.messageEnumInvalid }),
+        }).optional(),
+    typeOccurrence: ValidatorService.schema
+        .enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum, {
+            errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.messageEnumInvalid }),
+        }).optional(),
 })
 
-export type FinancialTransactionWhereArgs = SchemaValidator.input<typeof schemaQuery>
+export type FinancialTransactionFilterArgs = SchemaValidator.input<typeof schemaQuery>
 
 @Service({ name: 'financial-transaction.use-case.query' })
 export class FinancialTransactionQueryUseCase extends UseCase {
     constructor(@Injection.Inject('financial-transaction.repository') private transactionRepository: FinancialTransactionRepository) {
         super()
+    }
+
+    // Query method main
+    async queryManyByBankAccountIdWithCategories(args: { bankAccountId: ID }, filters: FinancialTransactionFilterArgs = {}) {
+        const { limite, pageIndex, categoryId, expireEnd, expireStart, situation, frequency, typeOccurrence } = this.validateDTO(filters, schemaQuery)
+        const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
+
+        const filtersQuery = {
+            bankAccountId,
+            ...(categoryId && { categories: { some: { categoryId } } }),
+            expiresIn: { ...(expireStart && { gte: expireStart }), ...(expireEnd && { lte: expireEnd }) },
+            ...(situation && { situation }),
+            ...(frequency && { frequency }),
+            ...(typeOccurrence && { typeOccurrence }),
+        }
+
+        const totalResult = await this.transactionRepository.count({
+            where: filtersQuery
+        })
+
+        if (!totalResult.isSuccess()) {
+            return Result.failure({ ...totalResult.getError(), title: 'Count Financial Transactions' })
+        }
+
+        const financialTransactionsResult = await this.transactionRepository.findMany({
+            where: { ...filtersQuery },
+            include: { categories: { select: { category: true } } },
+            orderBy: { expiresIn: 'desc' },
+            skip: pageIndex * limite,
+            take: limite
+        })
+
+        if (!financialTransactionsResult.isSuccess()) {
+            return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transactions' })
+        }
+
+        const result = {
+            financialTransactions: financialTransactionsResult.getValue().map(transaction => ({ ...transaction, categories: transaction.categories.map(({ category }) => category) })) || [],
+            pageIndex,
+            limite,
+            total: totalResult.getValue()
+        }
+
+        return Result.success(result)
     }
 
     async queryByIdWithNotes(args: { id: ID }) {
@@ -51,22 +111,6 @@ export class FinancialTransactionQueryUseCase extends UseCase {
         }
 
         return Result.success(financialTransactionsResult.getValue())
-    }
-
-    async queryManyByBankAccountIdWithCategories(args: { bankAccountId: ID }) {
-        const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
-
-        const financialTransactionsResult = await this.transactionRepository.findMany({
-            where: { bankAccountId },
-            include: { categories: { select: { category: true } } },
-            orderBy: { expiresIn: 'desc' }
-        })
-
-        if (!financialTransactionsResult.isSuccess()) {
-            return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transactions' })
-        }
-
-        return Result.success(financialTransactionsResult.getValue().map(transaction => ({ ...transaction, categories: transaction.categories.map(({ category }) => category) })) || [])
     }
 
     async queryManyByBankAccountIdAndCategoryIdWithCategories(args: { bankAccountId: ID, categoryId: ID }) {

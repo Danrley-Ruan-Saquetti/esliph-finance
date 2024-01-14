@@ -84,11 +84,19 @@ export const GLOBAL_DTO = {
                 .positive({ message: `Invalid ID ${toCapitalise(name)}` }),
     },
     query: {
+        limitePerPage: 100,
         pagination: {
-            pageIndex: () => ValidatorService.schema.coerce
-                .number({ 'required_error': GLOBAL_DTO.required('Page Index'), 'invalid_type_error': 'Type Page Index must be a number' }).default(1),
-            limite: () => ValidatorService.schema.coerce
-                .number({ 'required_error': GLOBAL_DTO.required('Limite of the Registers'), 'invalid_type_error': 'Type Limite of the registers must be a number' }).default(10)
+            pageIndex: () => ValidatorService.schema
+                .coerce
+                .number({ 'required_error': GLOBAL_DTO.required('Page Index'), 'invalid_type_error': 'Type Page Index must be a number' })
+                .min(0, { message: 'Page index must be biggest than 0' })
+                .default(0),
+            limite: () => ValidatorService.schema
+                .coerce
+                .number({ 'required_error': GLOBAL_DTO.required('Limite of the Registers'), 'invalid_type_error': 'Type Limite of the registers must be a number' })
+                .min(0, { message: 'The limit of the registers must be biggest than 0' })
+                .max(GLOBAL_DTO.query.limitePerPage, { message: `The limit of the registers must be less than ${GLOBAL_DTO.query.limitePerPage}` })
+                .default(10)
         }
     },
     cnpj: {
