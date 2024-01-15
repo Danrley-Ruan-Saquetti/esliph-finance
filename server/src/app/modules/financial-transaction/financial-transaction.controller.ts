@@ -24,7 +24,7 @@ export class FinancialTransactionController {
         const bankAccountId = req.headers['bankAccountId']
         const filters = req.params
 
-        const result = await this.queryUC.queryManyByBankAccountIdWithCategories({ bankAccountId }, filters)
+        const result = await this.queryUC.queryManyByBankAccountIdWithCategories({ ...filters, bankAccountId })
 
         return result
     }

@@ -10,6 +10,7 @@ import { GLOBAL_FINANCIAL_TRANSACTION_DTO } from '@modules/financial-transaction
 
 const schemaNumber = ValidatorService.schema.coerce.number()
 const schemaQuery = ValidatorService.schema.object({
+    bankAccountId: GLOBAL_FINANCIAL_TRANSACTION_DTO.bankAccount.id,
     pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
     limite: GLOBAL_DTO.query.pagination.limite(),
     categoryId: ValidatorService.schema.coerce.number().optional(),
@@ -38,9 +39,8 @@ export class FinancialTransactionQueryUseCase extends UseCase {
     }
 
     // Query method main
-    async queryManyByBankAccountIdWithCategories(args: { bankAccountId: ID }, filters: FinancialTransactionFilterArgs = {}) {
-        const { limite, pageIndex, categoryId, expireEnd, expireStart, situation, frequency, typeOccurrence } = this.validateDTO(filters, schemaQuery)
-        const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
+    async queryManyByBankAccountIdWithCategories(filters: FinancialTransactionFilterArgs) {
+        const { bankAccountId, limite, pageIndex, categoryId, expireEnd, expireStart, situation, frequency, typeOccurrence } = this.validateDTO(filters, schemaQuery)
 
         const filtersQuery = {
             bankAccountId,
