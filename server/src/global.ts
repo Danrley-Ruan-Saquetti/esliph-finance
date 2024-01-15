@@ -16,12 +16,7 @@ export const GLOBAL_SERVER_JWT_TOKEN = {
 }
 
 export const GLOBAL_MAIL_CONFIG = {
-    host: getEnv<string>({ name: 'MAIL_CONFIG_HOST' }),
-    port: getEnv<number>({ name: 'MAIL_CONFIG_PORT', defaultValue: 0 }),
-    secure: getEnv<boolean>({ name: 'MAIL_CONFIG_SECURE', defaultValue: true }),
-    service: getEnv<string>({ name: 'MAIL_CONFIG_SERVICE' }),
-    mail: getEnv<string>({ name: 'MAIL_CONFIG_EMAIL' }),
-    pass: getEnv<string>({ name: 'MAIL_CONFIG_PASS' }),
+    apiKey: getEnv<string>({ name: 'MAIL_API_KEY' }),
 }
 
 export const GLOBAL_OUTPUT = {
