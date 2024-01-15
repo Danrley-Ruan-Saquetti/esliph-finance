@@ -14,12 +14,6 @@
       ],
       "@*": [
         "./src/*"
-      ],
-      "@modules/*": [
-        "./src/server/app/modules/*"
-      ],
-      "@@types/*": [
-        "./src/server/@types/*"
       ]
     }
   },

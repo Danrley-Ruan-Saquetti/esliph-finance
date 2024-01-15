@@ -11,6 +11,7 @@ import { FinancialTransactionRepository } from '@modules/financial-transaction/f
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { GLOBAL_CATEGORY_DTO } from '@modules/category/category.global'
 import { CategoryRepository } from '@modules/category/category.repository'
+import { GLOBAL_NOTE_DTO } from '@modules/note/note.global'
 import { GLOBAL_FINANCIAL_TRANSACTION_DTO, GLOBAL_FINANCIAL_TRANSACTION_RULES } from '@modules/financial-transaction/financial-transaction.global'
 
 const schemaDTO = ValidatorService.schema.object({
@@ -70,6 +71,22 @@ const schemaDTO = ValidatorService.schema.object({
         .date()
         .transform(GLOBAL_DTO.date.transform)
         .optional(),
+    notes: ValidatorService.schema.object({
+        create: ValidatorService.schema.array(ValidatorService.schema.object({
+            description: ValidatorService.schema
+                .string()
+                .trim()
+                .max(GLOBAL_NOTE_DTO.description.maxCharacters, { message: GLOBAL_NOTE_DTO.description.messageRangeCharacters })
+                .optional(),
+        }))
+            .optional()
+            .default([]),
+        remove: ValidatorService.schema.array(GLOBAL_CATEGORY_DTO.id)
+            .optional()
+            .default([]),
+    })
+        .optional()
+        .default({ create: [], remove: [] }),
     category: ValidatorService.schema.object({
         link: ValidatorService.schema.array(GLOBAL_CATEGORY_DTO.id)
             .optional()
@@ -128,8 +145,17 @@ export class FinancialTransactionUpdateUseCase extends UseCase {
         const categoriesCreate = await this.filterCategoriesOfTheBank(dataDTO.category.link, financialTransaction.bankAccountId)
         const categoriesRemove = await this.filterCategoriesOfTheBank(dataDTO.category.unlink, financialTransaction.bankAccountId)
         const dataToUpdate = this.processingData(dataDTO, financialTransaction)
-
-        await this.update(dataToUpdate, { create: categoriesCreate.categories, delete: categoriesRemove.categories }, dataDTO.id)
+        await this.update({
+            data: dataToUpdate,
+            categories: {
+                create: categoriesCreate.categories,
+                delete: categoriesRemove.categories
+            },
+            notes: {
+                create: dataDTO.notes.create.filter(({ description }) => !!description) as any,
+                delete: dataDTO.notes.remove || [],
+            }
+        }, dataDTO.id)
 
         const categoriesNotFound = [
             ...categoriesRemove.categoriesNotFound,
@@ -202,8 +228,46 @@ export class FinancialTransactionUpdateUseCase extends UseCase {
         return { categories: financialCategories.getValue().map(({ id }) => id), categoriesNotFound }
     }
 
-    private async update(data: FinancialTransactionModel.UpdateArgs, categories: { create: ID[], delete: ID[] }, id: ID) {
-        const updateResult = await this.transactionRepository.updateByIdWithCategory(data, categories, { id })
+    private async update({ categories, data, notes }: { data: FinancialTransactionModel.UpdateArgs, categories: { create: ID[], delete: ID[] }, notes: { create: { description: string }[], delete: ID[] } }, id: ID) {
+        const updateResult = await this.transactionRepository.update({
+            where: { id },
+            data: {
+                ...data,
+                categories: {
+                    ...(categories.create.length && {
+                        createMany: {
+                            data: categories.create.map(categoryId => ({
+                                categoryId
+                            })),
+                            skipDuplicates: true
+                        }
+                    }),
+                    ...(categories.delete.length && {
+                        deleteMany: {
+                            categoryId: {
+                                in: categories.delete
+                            }
+                        }
+                    })
+                },
+                notes: {
+                    ...(notes.create.length && {
+                        createMany: {
+                            data: notes.create.map(({ description }) => ({
+                                description
+                            })),
+                        }
+                    }),
+                    ...(notes.delete.length && {
+                        deleteMany: {
+                            id: {
+                                in: notes.delete
+                            }
+                        }
+                    })
+                }
+            }
+        })
 
         if (updateResult.isSuccess()) {
             return

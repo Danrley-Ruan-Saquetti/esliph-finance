@@ -4,16 +4,13 @@ module.exports = function (api) {
         presets: ['babel-preset-expo'],
         plugins: [
             'expo-router/babel',
-            'nativewind/babel',
-            [
+            'nativewind/babel', [
                 'module-resolver',
                 {
                     root: ['.'],
                     alias: {
                         '@router': './src/app',
                         '@': './src',
-                        '@modules': './src/server/app/modules',
-                        '@@types': './src/server/@types',
                     },
                 },
             ],
