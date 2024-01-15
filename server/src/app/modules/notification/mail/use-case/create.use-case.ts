@@ -16,8 +16,6 @@ const schemaDTO = ValidatorService.schema.object({
         .string({ 'required_error': GLOBAL_NOTIFICATION_DTO.content.messageRequired }),
     subject: ValidatorService.schema
         .string({ 'required_error': GLOBAL_NOTIFICATION_DTO.subject.messageRequired }),
-    type: ValidatorService.schema
-        .enum(GLOBAL_NOTIFICATION_DTO.type.enum, { errorMap: () => ({ message: GLOBAL_NOTIFICATION_DTO.type.messageEnumInvalid }) }),
     recipient: ValidatorService.schema
         .string({ 'required_error': GLOBAL_MAIL_DTO.recipient.messageRequired }),
     sender: ValidatorService.schema
