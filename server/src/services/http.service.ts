@@ -1,4 +1,8 @@
 import Fastify, { FastifyRequest } from 'fastify'
+import fastifyCsrf from '@fastify/csrf-protection'
+import fastifyHelmet from '@fastify/helmet'
+import fastifyCompression from '@fastify/compress'
+import fastifyCookie from '@fastify/cookie'
 import { ApplicationModule, Service } from '@esliph/module'
 import { EventsRouter, Server } from '@esliph/http'
 import { FastifyAdapter } from '@esliph/adapter-fastify'
@@ -16,6 +20,11 @@ export class HttpService extends FastifyAdapter {
 
     static onLoad() {
         HttpService.loadInstance(Fastify())
+
+        HttpService.instance.register(fastifyCompression, { encodings: ['gzip', 'deflate'] })
+        HttpService.instance.register(fastifyCookie, { secret: 'my-secret' })
+        HttpService.instance.register(fastifyCsrf)
+        HttpService.instance.register(fastifyHelmet)
 
         HttpService.instance.decorate('notFound', (request: FastifyRequest, reply) => {
             const result = Result.failure({ title: 'Router Not Found', message: `Router ${request.method} "${request.url}" not found` }, 404)
