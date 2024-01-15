@@ -4,35 +4,35 @@ import { Result } from '@esliph/common'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { ValidatorService } from '@services/validator.service'
-import { BlankRepository } from '@modules/blank/blank.repository'
+import { NotificationRepository } from '@modules/notification/notification.repository'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
 
-@Service({ name: 'blank.use-case.query' })
-export class BlankQueryUseCase extends UseCase {
-    constructor(@Injection.Inject('blank.repository') private blankRepository: BlankRepository) {
+@Service({ name: 'notification.use-case.query' })
+export class NotificationQueryUseCase extends UseCase {
+    constructor(@Injection.Inject('notification.repository') private notificationRepository: NotificationRepository) {
         super()
     }
 
     async queryById(args: { id: ID }) {
         const id = this.validateDTO(args.id, schemaNumber)
 
-        const blankResult = await this.blankRepository.findUnique({ where: { id } })
+        const notificationResult = await this.notificationRepository.findUnique({ where: { id } })
 
-        if (!blankResult.isSuccess()) {
-            return Result.failure({ ...blankResult.getError(), title: 'Query Blank' })
+        if (!notificationResult.isSuccess()) {
+            return Result.failure({ ...notificationResult.getError(), title: 'Query Notification' })
         }
 
-        return Result.success(blankResult.getValue())
+        return Result.success(notificationResult.getValue())
     }
 
     async queryMany() {
-        const blanksResult = await this.blankRepository.findMany({})
+        const notificationsResult = await this.notificationRepository.findMany({})
 
-        if (!blanksResult.isSuccess()) {
-            return Result.failure({ ...blanksResult.getError(), title: 'Query Blanks' })
+        if (!notificationsResult.isSuccess()) {
+            return Result.failure({ ...notificationsResult.getError(), title: 'Query Notifications' })
         }
 
-        return Result.success(blanksResult.getValue() || [])
+        return Result.success(notificationsResult.getValue() || [])
     }
 }

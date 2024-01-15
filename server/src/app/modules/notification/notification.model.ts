@@ -13,5 +13,5 @@ export namespace NotificationModel {
     export type Notification = Database.Notification
     export type Model = DocumentSimple<Notification>
     export type UpdateArgs = Partial<Omit<Model, 'bankAccountId' | 'content' | 'subject'>>
-    export type CreateArgs = Database.Prisma.NotificationCreateInput
+    export type CreateArgs = Pick<Model, 'bankAccountId' | 'content' | 'subject' | 'type'>
 }

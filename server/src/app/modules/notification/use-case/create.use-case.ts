@@ -9,8 +9,14 @@ import { NotificationRepository } from '@modules/notification/notification.repos
 import { NotificationModel } from '@modules/notification/notification.model'
 import { GLOBAL_NOTIFICATION_DTO } from '@modules/notification/notification.global'
 
-const schemaDTO = ValidatorService.schema.object({
+export const schemaDTO = ValidatorService.schema.object({
     bankAccountId: GLOBAL_NOTIFICATION_DTO.bankAccount.id,
+    content: ValidatorService.schema
+        .string({ 'required_error': GLOBAL_NOTIFICATION_DTO.content.messageRequired }),
+    subject: ValidatorService.schema
+        .string({ 'required_error': GLOBAL_NOTIFICATION_DTO.subject.messageRequired }),
+    type: ValidatorService.schema
+        .enum(GLOBAL_NOTIFICATION_DTO.type.enum, { errorMap: () => ({ message: GLOBAL_NOTIFICATION_DTO.type.messageEnumInvalid }) })
 })
 
 export type NotificationCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
@@ -22,9 +28,9 @@ export class NotificationCreateUseCase extends UseCase {
     }
 
     async perform(args: NotificationCreateDTOArgs) {
-        const { } = this.validateDTO(args, schemaDTO)
+        const { bankAccountId, content, subject, type } = this.validateDTO(args, schemaDTO)
 
-        await this.registerNotification({})
+        await this.registerNotification({ bankAccountId, content, subject, type })
 
         return Result.success({ message: 'Notification registered successfully' })
     }

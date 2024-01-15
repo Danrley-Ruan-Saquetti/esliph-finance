@@ -31,8 +31,8 @@ export class BlankRepository extends Repository {
             failed: 'Unable to query blank'
         },
         findMany: {
-            title: 'Find Categories',
-            failed: 'Unable to query categories'
+            title: 'Find Blanks',
+            failed: 'Unable to query blanks'
         }
     }
 

@@ -1,11 +1,12 @@
 import { Module } from '@esliph/module'
-import { BlankController } from '@modules/blank/blank.controller'
-import { BlankRepository } from '@modules/blank/blank.repository'
-import { BlankUseCaseModule } from '@modules/blank/use-case/use-case.module'
+import { NotificationController } from '@modules/notification/notification.controller'
+import { NotificationRepository } from '@modules/notification/notification.repository'
+import { NotificationUseCaseModule } from '@modules/notification/use-case/use-case.module'
+import { MailModule } from '@modules/notification/mail/mail.module'
 
 @Module({
-    imports: [BlankUseCaseModule],
-    controllers: [BlankController],
-    providers: [BlankRepository],
+    imports: [NotificationUseCaseModule, MailModule],
+    controllers: [NotificationController],
+    providers: [NotificationRepository],
 })
-export class BlankModule { }
+export class NotificationModule { }

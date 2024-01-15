@@ -31,8 +31,8 @@ export class NotificationRepository extends Repository {
             failed: 'Unable to query notification'
         },
         findMany: {
-            title: 'Find Categories',
-            failed: 'Unable to query categories'
+            title: 'Find Notifications',
+            failed: 'Unable to query notifications'
         }
     }
 
