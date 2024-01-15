@@ -6,7 +6,7 @@ import fastifyCookie from '@fastify/cookie'
 import { ApplicationModule, Service } from '@esliph/module'
 import { EventsRouter, Server } from '@esliph/http'
 import { FastifyAdapter } from '@esliph/adapter-fastify'
-import { GLOBAL_LOG_CONFIG } from '@global'
+import { GLOBAL_LOG_CONFIG, GLOBAL_SERVER } from '@global'
 import { getEnv } from '@util'
 import { WriteStreamOutput } from '@services/write-stream-output.service'
 import { Result } from '@esliph/common'
@@ -22,7 +22,7 @@ export class HttpService extends FastifyAdapter {
         HttpService.loadInstance(Fastify())
 
         HttpService.instance.register(fastifyCompression, { encodings: ['gzip', 'deflate'] })
-        HttpService.instance.register(fastifyCookie, { secret: 'my-secret' })
+        HttpService.instance.register(fastifyCookie, { secret: GLOBAL_SERVER.key })
         HttpService.instance.register(fastifyCsrf)
         HttpService.instance.register(fastifyHelmet)
 

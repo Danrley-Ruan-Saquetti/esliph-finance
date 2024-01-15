@@ -9,6 +9,10 @@ export const GLOBAL_APP = {
     mail: getEnv<string>({ name: 'APP_MAIL' }),
 }
 
+export const GLOBAL_SERVER = {
+    key: getEnv<string>({ name: 'SERVER_KEY' }),
+}
+
 export const GLOBAL_SERVER_JWT_TOKEN = {
     keyMaster: getEnv<string>({ name: 'SERVER_JWT_TOKEN_KEY_MASTER' }),
     keyBank: getEnv<string>({ name: 'SERVER_JWT_TOKEN_KEY_BANK' }),
