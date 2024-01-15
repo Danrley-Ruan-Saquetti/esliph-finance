@@ -17,6 +17,7 @@ export const GLOBAL_SERVER_JWT_TOKEN = {
 
 export const GLOBAL_MAIL_CONFIG = {
     apiKey: getEnv<string>({ name: 'MAIL_API_KEY' }),
+    domain: getEnv<string>({ name: 'MAIL_DOMAIN' })
 }
 
 export const GLOBAL_OUTPUT = {

@@ -1,6 +1,6 @@
 import { Module } from '@esliph/module'
-import { AppModule } from '@app/app.module'
-import { JobModule } from '@app/job.module'
+import { AppModule } from '@app.module'
+import { JobModule } from '@job.module'
 import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
 import { ValidatorService } from '@services/validator.service'

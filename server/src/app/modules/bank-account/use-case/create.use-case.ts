@@ -2,7 +2,7 @@ import { ID } from '@@types'
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { GLOBAL_APP, GLOBAL_DTO } from '@global'
+import { GLOBAL_APP, GLOBAL_DTO, GLOBAL_MAIL_CONFIG } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
@@ -13,6 +13,7 @@ import { BankAccountGenerateCodeUseCase } from '@modules/bank-account/use-case/g
 import { MailCreateUseCase } from '@modules/notification/mail/use-case/create.use-case'
 import { UserRepository } from '@modules/user/user.repository'
 import { UserModel } from '@modules/user/user.model'
+import { BankAccountCreateTemplate } from '@templates/bank-account-create'
 
 const schemaDTO = ValidatorService.schema.object({
     peopleId: GLOBAL_BANK_ACCOUNT_DTO.people.id,
@@ -98,7 +99,7 @@ export class BankAccountCreateUseCase extends UseCase {
     }
 
     private async createMail({ peopleId }: { peopleId: ID }) {
-        const { id, code, people: { users, name } } = await this.queryCustomerPeople(peopleId)
+        const { id, code, name: bankAccountName, people: { users, name } } = await this.queryCustomerPeople(peopleId)
 
         const user = users[0]
 
@@ -106,12 +107,18 @@ export class BankAccountCreateUseCase extends UseCase {
             throw new BadRequestException({ title: 'Query User', message: 'User not registered to this people' })
         }
 
+        const resultTemplate = BankAccountCreateTemplate({ peopleName: name, bankAccountCode: code, bankAccountName })
+
+        if (!resultTemplate.isSuccess()) {
+            throw new BadRequestException({ title: 'Create E-mail', message: 'Unable to create a e-mail' })
+        }
+
         const result = await this.mailCreateUC.perform({
             bankAccountId: id,
-            sender: `${GLOBAL_APP.name} <${GLOBAL_APP.mail}>`,
-            recipient: user.login,
+            sender: `${GLOBAL_APP.name} <${GLOBAL_MAIL_CONFIG.domain}>`,
+            recipient: `${name} <${user.login}>`,
             subject: 'Financial Portal: Creating a new bank account',
-            content: '',
+            content: resultTemplate.getValue(),
         })
 
         if (!result.isSuccess()) {

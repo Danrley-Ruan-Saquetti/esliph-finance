@@ -1,0 +1,3 @@
+<h1>{{ peopleName }}, new bank account registered</h1>
+
+<p>Bank Account {{ bankAccountName }} - {{ bankAccountCode }}</p>

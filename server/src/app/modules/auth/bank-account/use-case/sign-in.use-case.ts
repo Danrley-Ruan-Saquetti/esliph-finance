@@ -2,7 +2,7 @@ import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { ID, PayloadJWTCustomerBankAccount } from '@@types'
-import { GLOBAL_APP, GLOBAL_SERVER_JWT_TOKEN } from '@global'
+import { GLOBAL_APP, GLOBAL_MAIL_CONFIG, GLOBAL_SERVER_JWT_TOKEN } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
@@ -13,7 +13,8 @@ import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.glob
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
 import { BankAccountGenerateCodeUseCase } from '@modules/bank-account/use-case/generate-code.use-case'
 import { MailCreateUseCase } from '@modules/notification/mail/use-case/create.use-case'
-import { UserModel } from '../../../user/user.model'
+import { UserModel } from '@modules/user/user.model'
+import { BankAccountSignInTemplate } from '@templates/bank-account-sing-in'
 
 const schemaDTO = ValidatorService.schema.object({
     peopleId: GLOBAL_BANK_ACCOUNT_DTO.people.id,
@@ -120,7 +121,7 @@ export class AuthBankAccountSignInUseCase extends UseCase {
     }
 
     private async createMail({ peopleId }: { peopleId: ID }) {
-        const { id, code, people: { users, name } } = await this.queryCustomerPeople(peopleId)
+        const { id, people: { users, name }, name: bankAccountName } = await this.queryCustomerPeople(peopleId)
 
         const user = users[0]
 
@@ -128,12 +129,18 @@ export class AuthBankAccountSignInUseCase extends UseCase {
             throw new BadRequestException({ title: 'Query User', message: 'User not registered to this people' })
         }
 
+        const resultTemplate = BankAccountSignInTemplate({ bankAccountName })
+
+        if (!resultTemplate.isSuccess()) {
+            throw new BadRequestException({ title: 'Create E-mail', message: 'Unable to create a e-mail' })
+        }
+
         const result = await this.mailCreateUC.perform({
             bankAccountId: id,
-            sender: `${GLOBAL_APP.name} <${GLOBAL_APP.mail}>`,
-            recipient: user.login,
-            subject: 'Financial Portal: Creating a new bank account',
-            content: '',
+            sender: `${GLOBAL_APP.name} <${GLOBAL_MAIL_CONFIG.domain}>`,
+            recipient: `${name} <${user.login}>`,
+            subject: 'Financial Portal: Sign-in a bank account',
+            content: resultTemplate.getValue(),
         })
 
         if (!result.isSuccess()) {

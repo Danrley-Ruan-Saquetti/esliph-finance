@@ -34,11 +34,9 @@
         "strict": true,
         "resolveJsonModule": true,
         "paths": {
-            "@modules/*": [
-                "src/app/modules/*"
-            ],
             "@*": [
-                "src/*"
+                "src/*",
+                "src/app/*"
             ]
         }
     },

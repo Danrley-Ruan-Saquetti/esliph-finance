@@ -1,9 +1,11 @@
 import { Module } from '@esliph/module'
-import { FinancialTransactionJob } from '@app/jobs/financial-transaction.job'
+import { FinancialTransactionJob } from '@jobs/financial-transaction.job'
+import { MailJob } from '@jobs/mail.job'
 
 @Module({
-    providers: [FinancialTransactionJob]
+    providers: [
+        FinancialTransactionJob,
+        MailJob
+    ]
 })
-export class JobModule {
-
-}
+export class JobModule { }
