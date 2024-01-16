@@ -8,6 +8,7 @@ import { PaymentModule } from '@modules/payment/payment.module'
 import { FinancialTransactionModule } from '@modules/financial-transaction/financial-transaction.module'
 import { NoteModule } from '@modules/note/note.module'
 import { NotificationModule } from '@modules/notification/notification.module'
+import { AddressModule } from '@modules/address/address.module'
 
 @Module({
     imports: [
@@ -20,6 +21,7 @@ import { NotificationModule } from '@modules/notification/notification.module'
         PaymentModule,
         NoteModule,
         NotificationModule,
+        AddressModule,
     ],
 })
 export class AppModule { }

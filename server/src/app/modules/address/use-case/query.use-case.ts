@@ -16,6 +16,9 @@ export class AddressQueryUseCase extends UseCase {
     }
 
     async queryByIdAndPeopleId({ id, peopleId }: { id: ID, peopleId: ID }) {
+        peopleId = this.validateDTO(peopleId, schemaNumber)
+        id = this.validateDTO(id, schemaNumber)
+
         const addressResult = await this.addressRepository.findUnique({ where: { id, peopleId } })
 
         if (!addressResult.isSuccess()) {
@@ -28,7 +31,7 @@ export class AddressQueryUseCase extends UseCase {
     async queryManyByPeopleId({ peopleId }: { peopleId: ID }) {
         peopleId = this.validateDTO(peopleId, schemaNumber)
 
-        const addressesResult = await this.addressRepository.findMany({ where: { peopleId }, select: AddressModel.AddressSimpleSelect })
+        const addressesResult = await this.addressRepository.findMany({ where: { peopleId } })
 
         if (!addressesResult.isSuccess()) {
             return Result.failure({ ...addressesResult.getError(), title: 'Query Addresses' })
