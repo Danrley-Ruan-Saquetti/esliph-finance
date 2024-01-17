@@ -1,7 +1,7 @@
 import { Request } from '@esliph/http'
-import { Get, Post, Put } from '@esliph/adapter-fastify'
 import { Injection } from '@esliph/injection'
 import { Controller, Guard } from '@esliph/module'
+import { Get, Post, Put } from '@esliph/adapter-fastify'
 import { PeopleUpdateUseCase } from '@modules/people/use-case/update.use-case'
 import { AddressQueryUseCase } from '@modules/address/use-case/query.use-case'
 
