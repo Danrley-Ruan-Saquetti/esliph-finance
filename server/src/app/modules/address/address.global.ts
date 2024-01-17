@@ -1,5 +1,5 @@
 import { GLOBAL_DTO } from '@global'
-import { AddressModel } from './address.model'
+import { AddressModel } from '@modules/address/address.model'
 
 export const GLOBAL_ADDRESS_DTO = {
     id: GLOBAL_DTO.id.schema({ name: 'Address' }),
@@ -9,6 +9,7 @@ export const GLOBAL_ADDRESS_DTO = {
     type: {
         enum: [AddressModel.Type.COMMERCIAL, AddressModel.Type.RESIDENTIAL] as const,
         messageRequired: GLOBAL_DTO.required('Type'),
-        messageEnumInvalid: 'Type must be Commercial or Residential'
+        messageEnumInvalid: 'Type must be Commercial or Residential',
+        default: AddressModel.Type.RESIDENTIAL
     },
 }

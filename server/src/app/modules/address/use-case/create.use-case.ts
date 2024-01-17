@@ -2,33 +2,35 @@ import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
 import { UseCase } from '@common/use-case'
+import { GLOBAL_DTO } from '@global'
 import { BadRequestException } from '@common/exceptions'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { AddressRepository } from '@modules/address/address.repository'
 import { GLOBAL_ADDRESS_DTO } from '@modules/address/address.global'
-import { AddressModel } from '../address.model'
+import { AddressModel } from '@modules/address/address.model'
 
-const SchemaString = ValidatorService.schema
+const SchemaString = (name: string, isRequired = false) => ValidatorService.schema
     .coerce
-    .string()
+    .string(isRequired ? { 'required_error': GLOBAL_DTO.required(name) } : {})
     .trim()
 
 const schemaDTO = ValidatorService.schema.object({
     addresses: ValidatorService.schema.array(ValidatorService.schema.object({
         peopleId: GLOBAL_ADDRESS_DTO.people.id,
-        zipCode: SchemaString,
-        city: SchemaString,
-        street: SchemaString,
-        state: SchemaString,
-        neighborhood: SchemaString,
-        complement: SchemaString
+        zipCode: SchemaString('ZIP Code', true),
+        city: SchemaString('City', true),
+        street: SchemaString('Street', true),
+        state: SchemaString('State', true),
+        neighborhood: SchemaString('Neighborhood', true),
+        complement: SchemaString('Complement')
             .optional(),
         type: ValidatorService.schema
             .enum(GLOBAL_ADDRESS_DTO.type.enum, { errorMap: () => ({ message: GLOBAL_ADDRESS_DTO.type.messageEnumInvalid }) })
+            .default(GLOBAL_ADDRESS_DTO.type.default)
             .transform(val => val.toUpperCase()),
-        reference: SchemaString
+        reference: SchemaString('Reference')
             .optional(),
-        number: SchemaString
+        number: SchemaString('Number')
             .optional(),
     }))
         .optional()

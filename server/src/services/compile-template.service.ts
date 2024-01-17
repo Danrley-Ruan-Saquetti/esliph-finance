@@ -1,7 +1,6 @@
 import fs from 'node:fs'
 import Handlebars from 'handlebars'
 import { Service } from '@esliph/module'
-import { BadRequestException } from '../common/exceptions'
 import { Result } from '@esliph/common'
 
 @Service({ name: 'global.service.compile-template' })

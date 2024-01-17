@@ -5,7 +5,6 @@ import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { ValidatorService } from '@services/validator.service'
 import { AddressRepository } from '@modules/address/address.repository'
-import { AddressModel } from '@modules/address/address.model'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
 

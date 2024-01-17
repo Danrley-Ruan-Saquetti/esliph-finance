@@ -9,9 +9,27 @@ import { AddressRepository } from '@modules/address/address.repository'
 import { GLOBAL_ADDRESS_DTO } from '@modules/address/address.global'
 import { AddressModel } from '@modules/address/address.model'
 
+const SchemaString = ValidatorService.schema
+    .coerce
+    .string()
+    .trim()
+    .optional()
+
 const schemaDTO = ValidatorService.schema.object({
-    peopleId: GLOBAL_ADDRESS_DTO.people.id,
     id: GLOBAL_ADDRESS_DTO.id,
+    peopleId: GLOBAL_ADDRESS_DTO.people.id,
+    zipCode: SchemaString,
+    city: SchemaString,
+    street: SchemaString,
+    state: SchemaString,
+    neighborhood: SchemaString,
+    complement: SchemaString,
+    type: ValidatorService.schema
+        .enum(GLOBAL_ADDRESS_DTO.type.enum, { errorMap: () => ({ message: GLOBAL_ADDRESS_DTO.type.messageEnumInvalid }) })
+        .optional()
+        .transform(val => val ? val.toUpperCase() : undefined),
+    reference: SchemaString,
+    number: SchemaString,
 })
 
 export type AddressUpdateDTOArgs = SchemaValidator.input<typeof schemaDTO>
