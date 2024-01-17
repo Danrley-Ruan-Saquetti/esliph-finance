@@ -14,6 +14,7 @@ export const GLOBAL_SERVER = {
 }
 
 export const GLOBAL_SERVER_JWT_TOKEN = {
+    keyCustomer: getEnv<string>({ name: 'SERVER_JWT_TOKEN_KEY_CUSTOMER' }),
     keyMaster: getEnv<string>({ name: 'SERVER_JWT_TOKEN_KEY_MASTER' }),
     keyBank: getEnv<string>({ name: 'SERVER_JWT_TOKEN_KEY_BANK' }),
     expiresTime: getEnv<string>({ name: 'SERVER_JWT_TOKEN_EXPIRES_TIME' }),

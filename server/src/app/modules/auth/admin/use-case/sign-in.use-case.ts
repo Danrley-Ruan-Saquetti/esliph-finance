@@ -1,14 +1,14 @@
 import { Result } from '@esliph/common'
 import { Injection } from '@esliph/injection'
 import { Service } from '@esliph/module'
-import { PayloadJWTCustomer } from '@@types'
+import { PayloadJWTAdmin } from '@@types'
 import { GLOBAL_SERVER_JWT_TOKEN } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
-import { GLOBAL_AUTH_CLIENT_DTO } from '@modules/auth/customer/auth-customer.global'
+import { GLOBAL_AUTH_CLIENT_DTO } from '@modules/auth/admin/auth-admin.global'
 import { UserRepository } from '@modules/user/user.repository'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 import { UserModel } from '@modules/user/user.model'
@@ -24,8 +24,8 @@ const schemaDTO = ValidatorService.schema.object({
 
 export type AuthSignInDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
-@Service({ name: 'auth.customer.use-case.sign-in' })
-export class AuthCustomerSignInUseCase extends UseCase {
+@Service({ name: 'auth.admin.use-case.sign-in' })
+export class AuthAdminSignInUseCase extends UseCase {
     constructor(
         @Injection.Inject('user.repository') private userRepository: UserRepository,
         @Injection.Inject('crypto') private crypto: CryptoService,
@@ -73,7 +73,7 @@ export class AuthCustomerSignInUseCase extends UseCase {
         }
     }
 
-    private generateToken({ sub, email, name, peopleId }: PayloadJWTCustomer) {
-        return this.jwt.encode<PayloadJWTCustomer>({ sub, name, email, peopleId }, { exp: GLOBAL_SERVER_JWT_TOKEN.expiresTime, secret: GLOBAL_SERVER_JWT_TOKEN.keyCustomer })
+    private generateToken({ sub, email, name, peopleId }: PayloadJWTAdmin) {
+        return this.jwt.encode<PayloadJWTAdmin>({ sub, name, email, peopleId }, { exp: GLOBAL_SERVER_JWT_TOKEN.expiresTime, secret: GLOBAL_SERVER_JWT_TOKEN.keyMaster })
     }
 }
