@@ -41,16 +41,16 @@ export class AddressUpdateUseCase extends UseCase {
     }
 
     async perform(args: AddressUpdateDTOArgs) {
-        const { id, peopleId } = this.validateDTO(args, schemaDTO)
+        const { id, peopleId, city, complement, neighborhood, number, reference, state, street, type, zipCode } = this.validateDTO(args, schemaDTO)
 
-        await this.verifyIsExistsAddress(id)
-        await this.update({}, { id, peopleId })
+        await this.verifyIsExistsAddress({ id, peopleId })
+        await this.update({ city, complement, neighborhood, number, reference, state, street, type: type as AddressModel.Type, zipCode }, { id, peopleId })
 
         return Result.success({ message: 'Address updated successfully' })
     }
 
-    private async verifyIsExistsAddress(id: ID) {
-        const addressResult = await this.addressRepository.findUnique({ where: { id } })
+    private async verifyIsExistsAddress({ id, peopleId }: { id: ID, peopleId: ID }) {
+        const addressResult = await this.addressRepository.findUnique({ where: { id, peopleId } })
 
         if (addressResult.isSuccess()) {
             return
