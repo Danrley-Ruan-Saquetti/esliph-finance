@@ -1,7 +1,7 @@
-import { Request } from '@esliph/http'
+import { HttpStatusCodes, Request } from '@esliph/http'
 import { Injection } from '@esliph/injection'
 import { Controller } from '@esliph/module'
-import { Post } from '@services/http.service'
+import { Post, HttpStatusCode } from '@services/http.service'
 import { AuthCustomerSignUpUseCase } from '@modules/auth/customer/use-case/sign-up.use-case'
 import { AuthCustomerSignInUseCase } from '@modules/auth/customer/use-case/sign-in.use-case'
 
@@ -13,6 +13,7 @@ export class AuthCustomerController {
     ) { }
 
     @Post('/sign-up')
+    @HttpStatusCode(HttpStatusCodes.CREATED)
     async signUp(req: Request) {
         const result = await this.signUpUC.perform(req.body)
 

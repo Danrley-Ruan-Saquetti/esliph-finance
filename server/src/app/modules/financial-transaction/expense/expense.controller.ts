@@ -1,6 +1,6 @@
-import { Request } from '@esliph/http'
+import { HttpStatusCodes, Request } from '@esliph/http'
 import { Injection } from '@esliph/injection'
-import { Controller, Guard } from '@esliph/module'
+import { Controller, Guard, HttpStatusCode } from '@esliph/module'
 import { Get, Post } from '@services/http.service'
 import { FinancialExpenseCreateUseCase } from '@modules/financial-transaction/expense/use-case/create.use-case'
 import { FinancialExpenseLiquidateUseCase } from '@modules/financial-transaction/expense/use-case/liquidate.use-case'
@@ -25,6 +25,7 @@ export class FinancialExpenseController {
     }
 
     @Guard({ name: 'bank-account.authorization' })
+    @HttpStatusCode(HttpStatusCodes.CREATED)
     @Post('/create')
     async create(req: Request) {
         const result = await this.createUC.perform({ ...req.body, ...req.headers })

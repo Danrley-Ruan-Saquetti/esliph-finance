@@ -1,7 +1,7 @@
-import { Request } from '@esliph/http'
+import { HttpStatusCodes, Request } from '@esliph/http'
 import { Get, Post, Put } from '@esliph/adapter-fastify'
 import { Injection } from '@esliph/injection'
-import { Controller, Guard } from '@esliph/module'
+import { Controller, Guard, HttpStatusCode } from '@esliph/module'
 import { CategoryCreateUseCase } from '@modules/category/use-case/create.use-case'
 import { CategoryQueryUseCase } from '@modules/category/use-case/query.use-case'
 import { CategoryUpdateUseCase } from '@modules/category/use-case/update.use-case'
@@ -36,6 +36,7 @@ export class CategoryController {
 
     @Guard({ name: 'bank-account.authorization' })
     @Post('/create')
+    @HttpStatusCode(HttpStatusCodes.CREATED)
     async create(req: Request) {
         const bankAccountId = req.headers['bankAccountId']
 
