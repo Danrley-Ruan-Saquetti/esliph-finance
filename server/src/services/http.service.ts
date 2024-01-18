@@ -9,7 +9,7 @@ import { FastifyAdapter } from '@esliph/adapter-fastify'
 import { Result } from '@esliph/common'
 import { getEnv } from '@util'
 import { GLOBAL_LOG_CONFIG, GLOBAL_SERVER } from '@global'
-import { WriteStreamOutput } from '@services/write-stream-output.service'
+import { WriteStreamOutputService } from '@services/write-stream-output.service'
 
 export { HttpStatusCode } from '@esliph/module'
 export { HttpStatusCodes, Request, Response, ResultHttp, ResultHttpModel, Method } from '@esliph/http'
@@ -42,7 +42,7 @@ export class HttpService extends FastifyAdapter {
     }
 
     static listen({ port }: { port: number }) {
-        const writer = WriteStreamOutput.newInstance(`${GLOBAL_LOG_CONFIG.path}/http.log`)
+        const writer = WriteStreamOutputService.newInstance(`${GLOBAL_LOG_CONFIG.path}/http.log`)
 
         HttpService.instance.listen({ port }, (err: Error | null, address: string) => {
             if (err) {

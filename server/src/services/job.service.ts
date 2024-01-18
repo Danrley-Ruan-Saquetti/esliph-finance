@@ -3,7 +3,7 @@ import { JobOptions, Job as EsliphJob, CronOptions, Cron as EsliphCron, Bootstra
 import { ClassConstructor } from '@@types'
 import { isInstance } from '@util'
 import { GLOBAL_LOG_CONFIG } from '@global'
-import { WriteStreamOutput } from '@services/write-stream-output.service'
+import { WriteStreamOutputService } from '@services/write-stream-output.service'
 export * from '@esliph/job'
 
 export function Job(options: JobOptions) {
@@ -27,7 +27,7 @@ export class JobService {
     constructor() { }
 
     static onStart() {
-        const writer = WriteStreamOutput.newInstance(`${GLOBAL_LOG_CONFIG.path}/job.log`)
+        const writer = WriteStreamOutputService.newInstance(`${GLOBAL_LOG_CONFIG.path}/job.log`)
 
         const jobsProviders = ApplicationModule.getProviders().filter(provider => isInstance(provider)).filter(provider => isJob(provider)) as ClassConstructor[]
 

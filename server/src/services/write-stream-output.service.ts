@@ -27,9 +27,9 @@ class WriteStreamInstance {
 }
 
 @Service({ name: 'global.service.write-stream-output' })
-export class WriteStreamOutput {
+export class WriteStreamOutputService {
     static onLoad() {
-        const writer = WriteStreamOutput.newInstance(`${GLOBAL_LOG_CONFIG.path}/app.log`)
+        const writer = WriteStreamOutputService.newInstance(`${GLOBAL_LOG_CONFIG.path}/app.log`)
 
         ApplicationModule.logger.on('log', msg => {
             writer.write(msg)

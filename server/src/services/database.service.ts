@@ -2,7 +2,7 @@ export * from '@prisma/client'
 import { PrismaClient } from '@prisma/client'
 import { Service } from '@esliph/module'
 import { GLOBAL_FORMATTER_CONFIG, GLOBAL_LOG_CONFIG } from '@global'
-import { WriteStreamOutput } from '@services/write-stream-output.service'
+import { WriteStreamOutputService } from '@services/write-stream-output.service'
 
 @Service({ name: 'global.service.database' })
 export class DatabaseService {
@@ -16,7 +16,7 @@ export class DatabaseService {
     })
 
     static onLoad() {
-        const writer = WriteStreamOutput.newInstance(`${GLOBAL_LOG_CONFIG.path}/db.log`)
+        const writer = WriteStreamOutputService.newInstance(`${GLOBAL_LOG_CONFIG.path}/db.log`)
 
         this.instance.$on('error', args => {
             writer.write(`#  ${GLOBAL_FORMATTER_CONFIG.date.format()}  [ERROR]: ${args.message}`)
