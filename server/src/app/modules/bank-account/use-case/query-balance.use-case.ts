@@ -55,6 +55,7 @@ export class BankAccountQueryBalanceUseCase extends UseCase {
                         },
                     },
                     include: { payments: true },
+                    orderBy: {}
                 }
             }
         })

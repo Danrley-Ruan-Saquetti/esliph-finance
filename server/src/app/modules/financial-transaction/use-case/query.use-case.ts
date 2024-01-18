@@ -80,9 +80,12 @@ export class FinancialTransactionQueryUseCase extends UseCase {
 
         const result = {
             financialTransactions: financialTransactionsResult.getValue().map(transaction => ({ ...transaction, categories: transaction.categories.map(({ category }) => category) })) || [],
-            pageIndex,
-            limite,
-            total: totalResult.getValue()
+            metadata: {
+                currentPage: pageIndex,
+                itemsPerPage: limite,
+                totalOfItens: totalResult.getValue(),
+                totalOfPages: totalResult.getValue() / limite,
+            }
         }
 
         return Result.success(result)

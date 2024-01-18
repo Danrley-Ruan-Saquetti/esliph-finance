@@ -29,11 +29,10 @@ export class NoteController {
     @Guard({ name: 'bank-account.authorization' })
     @Get('/:id')
     async getOne(req: Request) {
+        const bankAccountId = req.headers['bankAccountId']
         const id = req.params['id']
 
-        await this.bankAccountBelongControl.verifyNote({ noteId: id, bankAccountId: req.headers['bankAccountId'] })
-
-        const result = await this.queryUC.queryById({ id })
+        const result = await this.queryUC.queryByIdAndBankAccountId({ id, bankAccountId })
 
         return result
     }
@@ -51,7 +50,7 @@ export class NoteController {
     }
 
     @Guard({ name: 'bank-account.authorization' })
-    @Delete('/:id/remove')
+    @Delete('/:id')
     async remove(req: Request) {
         const id = req.params['id']
 

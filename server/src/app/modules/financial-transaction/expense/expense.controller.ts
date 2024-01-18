@@ -26,7 +26,7 @@ export class FinancialExpenseController {
 
     @Guard({ name: 'bank-account.authorization' })
     @HttpStatusCode(HttpStatusCodes.CREATED)
-    @Post('/create')
+    @Post('')
     async create(req: Request) {
         const result = await this.createUC.perform({ ...req.body, ...req.headers })
 

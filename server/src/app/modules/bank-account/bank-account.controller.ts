@@ -1,5 +1,5 @@
-import { Controller, Guard } from '@esliph/module'
-import { Request } from '@esliph/http'
+import { Controller, Guard, HttpStatusCode } from '@esliph/module'
+import { HttpStatusCodes, Request } from '@esliph/http'
 import { Injection } from '@esliph/injection'
 import { Get, Post } from '@services/http.service'
 import { BankAccountCreateUseCase } from '@modules/bank-account/use-case/create.use-case'
@@ -25,7 +25,8 @@ export class BankAccountController {
     }
 
     @Guard({ name: 'customer.authorization' })
-    @Post('/create')
+    @Post('')
+    @HttpStatusCode(HttpStatusCodes.CREATED)
     async create(req: Request) {
         const { peopleId } = req.headers
         const { name, password } = req.body

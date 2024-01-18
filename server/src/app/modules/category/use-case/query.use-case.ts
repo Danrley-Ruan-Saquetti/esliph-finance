@@ -8,12 +8,6 @@ import { ValidatorService, SchemaValidator } from '@services/validator.service'
 import { CategoryRepository } from '@modules/category/category.repository'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
-const schemaQuery = ValidatorService.schema.object({
-    pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
-    limite: GLOBAL_DTO.query.pagination.limite(),
-})
-
-export type CategoryWhereArgs = SchemaValidator.input<typeof schemaQuery>
 
 @Service({ name: 'category.use-case.query' })
 export class CategoryQueryUseCase extends UseCase {
@@ -25,6 +19,19 @@ export class CategoryQueryUseCase extends UseCase {
         const id = this.validateDTO(args.id, schemaNumber)
 
         const categoryResult = await this.categoryRepository.findUnique({ where: { id } })
+
+        if (!categoryResult.isSuccess()) {
+            return Result.failure({ ...categoryResult.getError(), title: 'Query Category' })
+        }
+
+        return Result.success(categoryResult.getValue())
+    }
+
+    async queryByIdAndBankAccountId(args: { id: ID, bankAccountId: ID }) {
+        const id = this.validateDTO(args.id, schemaNumber)
+        const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
+
+        const categoryResult = await this.categoryRepository.findUnique({ where: { id, bankAccountId } })
 
         if (!categoryResult.isSuccess()) {
             return Result.failure({ ...categoryResult.getError(), title: 'Query Category' })

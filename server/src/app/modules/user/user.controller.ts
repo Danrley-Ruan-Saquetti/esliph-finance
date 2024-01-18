@@ -23,7 +23,7 @@ export class UserController {
     }
 
     @Guard({ name: 'customer.authorization' })
-    @Put('/update')
+    @Put('')
     async update(req: Request) {
         const id = req.headers['userId']
 

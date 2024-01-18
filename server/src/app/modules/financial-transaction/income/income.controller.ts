@@ -5,6 +5,8 @@ import { Get, Post } from '@services/http.service'
 import { FinancialIncomeCreateUseCase } from '@modules/financial-transaction/income/use-case/create.use-case'
 import { FinancialIncomeQueryUseCase } from '@modules/financial-transaction/income/use-case/query.use-case'
 import { FinancialIncomeReceiveUseCase } from '@modules/financial-transaction/income/use-case/receive.use-case'
+import { create } from 'handlebars'
+import { get } from 'http'
 
 @Controller({ prefix: '/financial-transactions/income' })
 export class FinancialIncomeController {
@@ -25,7 +27,7 @@ export class FinancialIncomeController {
     }
 
     @Guard({ name: 'bank-account.authorization' })
-    @Post('/create')
+    @Post('')
     @HttpStatusCode(HttpStatusCodes.CREATED)
     async create(req: Request) {
         const result = await this.createUC.perform({ ...req.body, bankAccountId: req.headers['bankAccountId'] })

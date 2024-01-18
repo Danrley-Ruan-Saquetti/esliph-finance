@@ -14,6 +14,18 @@ export class AddressQueryUseCase extends UseCase {
         super()
     }
 
+    async queryById({ id }: { id: ID }) {
+        id = this.validateDTO(id, schemaNumber)
+
+        const addressResult = await this.addressRepository.findUnique({ where: { id } })
+
+        if (!addressResult.isSuccess()) {
+            return Result.failure({ ...addressResult.getError(), title: 'Query Address' })
+        }
+
+        return Result.success(addressResult.getValue() || [])
+    }
+
     async queryByIdAndPeopleId({ id, peopleId }: { id: ID, peopleId: ID }) {
         peopleId = this.validateDTO(peopleId, schemaNumber)
         id = this.validateDTO(id, schemaNumber)

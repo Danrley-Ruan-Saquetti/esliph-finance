@@ -15,11 +15,12 @@ const SchemaString = (name: string, isRequired = false) => ValidatorService.sche
     .trim()
 
 const schemaDTO = ValidatorService.schema.object({
+    peopleId: GLOBAL_ADDRESS_DTO.people.id,
     addresses: ValidatorService.schema.array(ValidatorService.schema.object({
-        peopleId: GLOBAL_ADDRESS_DTO.people.id,
         zipCode: SchemaString('ZIP Code', true),
         city: SchemaString('City', true),
         street: SchemaString('Street', true),
+        country: SchemaString('Country', true),
         state: SchemaString('State', true),
         neighborhood: SchemaString('Neighborhood', true),
         complement: SchemaString('Complement')
@@ -60,15 +61,29 @@ export class AddressCreateUseCase extends UseCase {
     }
 
     async performUC(args: AddressCreateDTOArgs) {
-        const { addresses } = this.validateDTO(args, schemaDTO)
+        const { addresses, peopleId } = this.validateDTO(args, schemaDTO)
 
-        await this.registerAddress(addresses as AddressModel.CreateArgs[])
+        await this.registerAddress(addresses.map(address => ({ ...address, type: address.type as AddressModel.Type, peopleId })))
 
         return Result.success({ message: 'Address registered successfully' })
     }
 
     private async registerAddress(addresses: AddressModel.CreateArgs[]) {
-        const registerAddressResult = await this.addressRepository.createMany({ data: addresses })
+        const registerAddressResult = await this.addressRepository.createMany({
+            data: addresses.map(({ city, country, neighborhood, peopleId, state, street, zipCode, complement, number, reference, type }) => ({
+                city,
+                country,
+                neighborhood,
+                peopleId,
+                state,
+                street,
+                zipCode,
+                complement,
+                number,
+                reference,
+                type
+            }))
+        })
 
         if (registerAddressResult.isSuccess()) {
             return

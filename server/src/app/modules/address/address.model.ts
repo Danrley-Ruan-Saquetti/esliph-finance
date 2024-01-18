@@ -24,6 +24,7 @@ export namespace AddressModel {
         type: true,
         updatedAt: true,
         street: true,
+        country: true,
         zipCode: true,
     } as const
 }

@@ -3,42 +3,19 @@ import { Injection } from '@esliph/injection'
 import { Controller, Guard } from '@esliph/module'
 import { Get, Post, Put } from '@esliph/adapter-fastify'
 import { PeopleUpdateUseCase } from '@modules/people/use-case/update.use-case'
-import { AddressQueryUseCase } from '@modules/address/use-case/query.use-case'
 
 @Controller({ prefix: '/peoples' })
 export class PeopleController {
     constructor(
         @Injection.Inject('people.use-case.update') private updateUC: PeopleUpdateUseCase,
-        @Injection.Inject('address.use-case.query') private queryAddressUC: AddressQueryUseCase
     ) { }
 
     @Guard({ name: 'customer.authorization' })
-    @Put('/current/update')
+    @Put('/current')
     async update(req: Request) {
         const peopleId = req.headers['peopleId']
 
         const result = await this.updateUC.perform({ ...req.body, id: peopleId })
-
-        return result
-    }
-
-    @Guard({ name: 'customer.authorization' })
-    @Get('/current/addresses')
-    async getAddress(req: Request) {
-        const peopleId = req.headers['peopleId']
-
-        const result = await this.queryAddressUC.queryManyByPeopleId({ peopleId })
-
-        return result
-    }
-
-    @Guard({ name: 'customer.authorization' })
-    @Get('/current/addresses/:id')
-    async getUniqueAddress(req: Request) {
-        const peopleId = req.headers['peopleId']
-        const id = req.params['id']
-
-        const result = await this.queryAddressUC.queryByIdAndPeopleId({ id, peopleId })
 
         return result
     }

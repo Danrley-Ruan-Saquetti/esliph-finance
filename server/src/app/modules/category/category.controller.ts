@@ -27,15 +27,16 @@ export class CategoryController {
     @Guard({ name: 'bank-account.authorization' })
     @Get('/:id')
     async getOne(req: Request) {
+        const bankAccountId = req.headers['bankAccountId']
         const id = req.params['id']
 
-        const result = await this.queryUC.queryById({ id })
+        const result = await this.queryUC.queryByIdAndBankAccountId({ bankAccountId, id })
 
         return result
     }
 
     @Guard({ name: 'bank-account.authorization' })
-    @Post('/create')
+    @Post('')
     @HttpStatusCode(HttpStatusCodes.CREATED)
     async create(req: Request) {
         const bankAccountId = req.headers['bankAccountId']
@@ -46,7 +47,7 @@ export class CategoryController {
     }
 
     @Guard({ name: 'bank-account.authorization' })
-    @Put('/:id/update')
+    @Put('/:id')
     async update(req: Request) {
         const id = req.params['id']
 

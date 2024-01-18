@@ -29,6 +29,19 @@ export class NoteQueryUseCase extends UseCase {
         return Result.success<NoteModel.Note>(noteResult.getValue())
     }
 
+    async queryByIdAndBankAccountId(args: { id: ID, bankAccountId: ID }) {
+        const id = Number(args.id)
+        const bankAccountId = Number(args.bankAccountId)
+
+        const noteResult = await this.noteRepository.findUnique({ where: { id, financialTransaction: { bankAccountId } } })
+
+        if (!noteResult.isSuccess()) {
+            return Result.failure<NoteModel.Note>({ ...noteResult.getError(), title: 'Query Note' })
+        }
+
+        return Result.success<NoteModel.Note>(noteResult.getValue())
+    }
+
     async queryManyByUFinancialTransactionId(args: { financialTransactionId: ID }) {
         const financialTransactionId = Number(args.financialTransactionId)
 
