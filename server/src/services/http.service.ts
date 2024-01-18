@@ -44,7 +44,7 @@ export class HttpService extends FastifyAdapter {
     static listen({ port }: { port: number }) {
         const writer = WriteStreamOutputService.newInstance(`${GLOBAL_LOG_CONFIG.path}/http.log`)
 
-        HttpService.instance.listen({ port }, (err: Error | null, address: string) => {
+        HttpService.instance.listen({ port, host: '0.0.0.0' }, (err: Error | null, address: string) => {
             if (err) {
                 console.log(err)
 

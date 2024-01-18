@@ -1,66 +1,41 @@
 import { Result } from '@esliph/common'
 import { Service } from '@esliph/module'
-import axios, { AxiosDefaults, AxiosHeaderValue, AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults } from 'axios'
+import axios, { AxiosDefaults, AxiosHeaderValue, AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, HttpStatusCode, Method } from 'axios'
 
 @Service({ name: 'global.service.api' })
 export class ApiService {
     private api: AxiosInstance
 
     constructor() {
-        this.api = axios.create()
+        this.api = axios.create({})
     }
 
-    setOptions(config: Partial<Omit<AxiosDefaults<any>, 'headers'> & { headers: HeadersDefaults & { [key: string]: AxiosHeaderValue } }>) {
-        console.log(this.api.defaults)
-        this.api.defaults = {
-            ...this.api.defaults,
-            ...config
-        }
-        console.log(this.api.defaults)
+    async get<T = any, R = AxiosResponse<T>, D = any>(URL: string, config?: AxiosRequestConfig<D>) {
+        const response = await this.performRequest<T, R, D>('GET', URL, undefined, config)
+
+        return response
     }
 
-    async get<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>) {
-        try {
-            const response = await this.api.get<T, R, D>(url, config)
+    async post<T = any, R = AxiosResponse<T>, D = any>(URL: string, data?: D, config?: AxiosRequestConfig<D>) {
+        const response = await this.performRequest<T, R, D>('POST', URL, data, config)
 
-            return Result.success<AxiosResponse<T, any>>(response as any)
-        } catch (err: any) {
-            return Result.failure({ title: 'Request API', ...err })
-        }
+        return response
     }
 
-    async post<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>) {
-        try {
-            const response = await this.api.post<T, R, D>(url, data, config)
+    async delete<T = any, R = AxiosResponse<T>, D = any>(URL: string, config?: AxiosRequestConfig<D>) {
+        const response = await this.performRequest<T, R, D>('DELETE', URL, undefined, config)
 
-            return Result.success<AxiosResponse<T, any>>(response as any)
-        } catch (err: any) {
-            return Result.failure({ title: 'Request API', ...err })
-        }
+        return response
     }
 
-    async delete<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>) {
-        try {
-            const response = await this.api.delete<T, R, D>(url, config)
+    async put<T = any, R = AxiosResponse<T>, D = any>(URL: string, data?: D, config?: AxiosRequestConfig<D>) {
+        const response = await this.performRequest<T, R, D>('PUT', URL, data, config)
 
-            return Result.success<AxiosResponse<T, any>>(response as any)
-        } catch (err: any) {
-            return Result.failure({ title: 'Request API', ...err })
-        }
+        return response
     }
 
-    async put<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>) {
-        try {
-            const response = await this.api.put<T, R, D>(url, data, config)
-
-            return Result.success<AxiosResponse<T, any>>(response as any)
-        } catch (err: any) {
-            return Result.failure({ title: 'Request API', ...err })
-        }
-    }
-
-    getUri(config?: AxiosRequestConfig) {
-        const response = this.api.getUri(config)
+    async head<T = any, R = AxiosResponse<T>, D = any>(URL: string, config?: AxiosRequestConfig<D>) {
+        const response = await this.performRequest<T, R, D>('HEAD', URL, undefined, config)
 
         return response
     }
@@ -71,47 +46,66 @@ export class ApiService {
 
             return Result.success<AxiosResponse<T, any>>(response as any)
         } catch (err: any) {
-            return Result.failure({ title: 'Request API', ...err })
+            return Result.failure<AxiosResponse<T, any>>({ title: 'Request API', ...err })
         }
     }
 
-    async head<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>) {
+    async postForm<T = any, R = AxiosResponse<T>, D = any>(URL: string, data?: D, config?: AxiosRequestConfig<D>) {
         try {
-            const response = await this.api.head<T, R, D>(url, config)
+            const response = await this.api.postForm<T, R, D>(URL, data, config)
 
             return Result.success<AxiosResponse<T, any>>(response as any)
         } catch (err: any) {
-            return Result.failure({ title: 'Request API', ...err })
+            return Result.failure<AxiosResponse<T, any>>({ title: 'Request API', ...err })
         }
     }
 
-    async postForm<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>) {
+    async putForm<T = any, R = AxiosResponse<T>, D = any>(URL: string, data?: D, config?: AxiosRequestConfig<D>) {
         try {
-            const response = await this.api.postForm<T, R, D>(url, data, config)
+            const response = await this.api.putForm<T, R, D>(URL, data, config)
 
             return Result.success<AxiosResponse<T, any>>(response as any)
         } catch (err: any) {
-            return Result.failure({ title: 'Request API', ...err })
+            return Result.failure<AxiosResponse<T, any>>({ title: 'Request API', ...err })
         }
     }
 
-    async putForm<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>) {
+    async patchForm<T = any, R = AxiosResponse<T>, D = any>(URL: string, data?: D, config?: AxiosRequestConfig<D>) {
         try {
-            const response = await this.api.putForm<T, R, D>(url, data, config)
+            const response = await this.api.patchForm<T, R, D>(URL, data, config)
 
             return Result.success<AxiosResponse<T, any>>(response as any)
         } catch (err: any) {
-            return Result.failure({ title: 'Request API', ...err })
+            return Result.failure<AxiosResponse<T, any>>({ title: 'Request API', ...err })
         }
     }
 
-    async patchForm<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>) {
+    private async performRequest<T = any, R = AxiosResponse<T>, D = any>(method: Method, url: string, data?: D, config?: AxiosRequestConfig<D>) {
         try {
-            const response = await this.api.patchForm<T, R, D>(url, data, config)
+            const response = await this.api.request<T, R, D>({
+                method,
+                url,
+                data,
+                ...this.api.defaults as any,
+                ...config
+            })
 
-            return Result.success<AxiosResponse<T, any>>(response as any)
+            return Result.success<AxiosResponse<T, D>>(response as any)
         } catch (err: any) {
-            return Result.failure({ title: 'Request API', ...err })
+            return Result.failure<AxiosResponse<T, D>>({ title: 'Request API', ...err })
+        }
+    }
+
+    getUri(config?: AxiosRequestConfig) {
+        const response = this.api.getUri(config)
+
+        return response
+    }
+
+    setOptions(config: Partial<Omit<AxiosDefaults<any>, 'headers'> & { headers: HeadersDefaults & { [key: string]: AxiosHeaderValue } }>) {
+        this.api.defaults = {
+            ...this.api.defaults,
+            ...config
         }
     }
 }
