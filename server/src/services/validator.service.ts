@@ -1,6 +1,5 @@
 import { z } from 'zod'
-import { Result } from '@core'
-import { Service } from '@core'
+import { Result, Service } from '@core'
 import { ResultException } from '@common/exceptions'
 export * as SchemaValidator from 'zod'
 

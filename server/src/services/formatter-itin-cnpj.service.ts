@@ -1,5 +1,4 @@
-import { Injection } from '@core'
-import { Service } from '@core'
+import { Injection, Service } from '@core'
 import { CodeGeneratorService, GenerateCodeOptions } from '@services/code-generator.service'
 
 @Service({ name: 'global.service.formatter-itin-cnpj' })

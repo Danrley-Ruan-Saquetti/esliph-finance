@@ -1,7 +1,6 @@
 import fs from 'node:fs'
 import Handlebars from 'handlebars'
-import { Service } from '@core'
-import { Result } from '@core'
+import { Service, Result } from '@core'
 
 @Service({ name: 'global.service.compile-template' })
 export class CompileTemplateService {

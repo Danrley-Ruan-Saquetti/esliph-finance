@@ -1,9 +1,6 @@
-import { Injection } from '@core'
-import { Service } from '@core'
-import { Result } from '@core'
+import { Injection, Service, Result } from '@core'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
-import { ValidatorService } from '@services/validator.service'
 import { NoteModel } from '@modules/note/note.model'
 import { NoteRepository } from '@modules/note/note.repository'
 

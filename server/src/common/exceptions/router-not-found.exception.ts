@@ -1,5 +1,4 @@
-import { HttpStatusCodes } from '@core'
-import { ResultExceptionArgs } from '@core'
+import { HttpStatusCodes, ResultExceptionArgs } from '@core'
 import { HttpException } from '@common/exceptions/http.exception'
 
 const ERROR_INFO_DEFAULT = {

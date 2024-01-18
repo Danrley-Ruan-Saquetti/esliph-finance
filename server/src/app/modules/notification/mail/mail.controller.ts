@@ -1,7 +1,4 @@
-import { Request } from '@core'
-import { Get, Post, Put } from '@esliph/adapter-fastify'
-import { Injection } from '@core'
-import { Controller, Guard } from '@core'
+import { Request, Get, Post, Put, Injection, Controller, Guard } from '@core'
 
 @Controller({ prefix: '/mails' })
 export class MailController {

@@ -1,9 +1,5 @@
-import { Result } from '@core'
-import { Injection } from '@core'
-import { Service } from '@core'
+import { Result, Injection, Service } from '@core'
 import { ApiService } from '@services/api.service'
-import { WriteStreamOutputService } from '@services/write-stream-output.service'
-import { GLOBAL_LOG_CONFIG } from '@global'
 
 export namespace PlaceModel {
     export type State = {

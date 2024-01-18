@@ -1,6 +1,4 @@
-import { Service } from '@core'
-import { Injection } from '@core'
-import { Result } from '@core'
+import { Service, Injection, Result } from '@core'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { ID } from '@@types'

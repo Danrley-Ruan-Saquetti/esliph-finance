@@ -1,5 +1,4 @@
-import { Service } from '@core'
-import { Result } from '@core'
+import { Service, Result } from '@core'
 import { Resend } from 'resend'
 import { GLOBAL_MAIL_CONFIG } from '@global'
 

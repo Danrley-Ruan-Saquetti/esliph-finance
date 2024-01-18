@@ -1,7 +1,4 @@
-import { Request } from '@core'
-import { Injection } from '@core'
-import { Controller, Guard } from '@core'
-import { Get, Post, Put } from '@esliph/adapter-fastify'
+import { Request, Injection, Controller, Guard, Get, Post, Put } from '@core'
 import { PeopleUpdateUseCase } from '@modules/people/use-case/update.use-case'
 
 @Controller({ prefix: '/peoples' })

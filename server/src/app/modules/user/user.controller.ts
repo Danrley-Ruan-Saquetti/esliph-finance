@@ -1,7 +1,5 @@
-import { Request } from '@core'
+import { Request, Injection, Controller, Guard } from '@core'
 import { Get, Put } from '@services/http.service'
-import { Injection } from '@core'
-import { Controller, Guard } from '@core'
 import { UserQueryUseCase } from '@modules/user/use-case/query.use-case'
 import { UserUpdateUseCase } from '@modules/user/use-case/update.use-case'
 

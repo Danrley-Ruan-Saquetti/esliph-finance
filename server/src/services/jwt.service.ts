@@ -1,7 +1,6 @@
-import { Service } from '@core'
 import JWT from 'jsonwebtoken'
+import { Service, Result } from '@core'
 import { BadRequestException, ServerInternalErrorException, UnauthorizedException } from '@common/exceptions'
-import { Result } from '@core'
 
 export type PayloadJWT<PayloadBody extends object = {}> = PayloadBody & {
     iat: number

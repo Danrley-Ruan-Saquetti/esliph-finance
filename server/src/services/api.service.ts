@@ -1,5 +1,4 @@
-import { Result } from '@core'
-import { Service } from '@core'
+import { Result, Service } from '@core'
 import axios, { AxiosDefaults, AxiosHeaderValue, AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, HttpStatusCode, Method } from 'axios'
 
 @Service({ name: 'global.service.api' })

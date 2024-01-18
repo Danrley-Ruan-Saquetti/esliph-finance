@@ -1,6 +1,4 @@
-import { Result } from '@core'
-import { Injection } from '@core'
-import { Service } from '@core'
+import { Result, Injection, Service } from '@core'
 import { ID } from '@@types'
 import { BadRequestException } from '@common/exceptions'
 import { PaymentModel } from '@modules/payment/payment.model'

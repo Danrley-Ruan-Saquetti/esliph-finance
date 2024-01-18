@@ -1,5 +1,4 @@
-import { ResultExceptionArgs } from '@core'
-import { HttpStatusCodes } from '@core'
+import { ResultExceptionArgs, HttpStatusCodes } from '@core'
 import { Exception } from '@common/exceptions/exception'
 
 export class ResultException extends Exception {

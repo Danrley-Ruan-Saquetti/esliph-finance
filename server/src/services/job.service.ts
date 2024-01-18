@@ -1,5 +1,4 @@
-import { Service, ApplicationModule } from '@core'
-import { JobOptions, Job as EsliphJob, CronOptions, Cron as EsliphCron, Bootstrap as JobBootstrap, isJob } from '@core'
+import { Service, ApplicationModule, JobOptions, Job as EsliphJob, CronOptions, Cron as EsliphCron, BootstrapJob, isJob } from '@core'
 import { ClassConstructor } from '@@types'
 import { isInstance } from '@util'
 import { GLOBAL_LOG_CONFIG } from '@global'
@@ -41,6 +40,6 @@ export class JobService {
             writer.write(`Job "${data.name}" error: "${data.error.message}"`)
         })
 
-        JobBootstrap(jobsProviders)
+        BootstrapJob(jobsProviders)
     }
 }

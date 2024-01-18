@@ -1,5 +1,4 @@
-import { Console } from '@core'
-import { Service } from '@core'
+import { Console, Service } from '@core'
 
 const TEMPLATE_LOG =
     '<prefix?value="#"&styles=italic>  <dateTime>  <method?background=blue>  <_?value="["&color=green&styles=bold><context?color=green&styles=bold><-?value="]"&color=green&styles=bold>: <message>'

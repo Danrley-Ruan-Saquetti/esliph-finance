@@ -1,6 +1,4 @@
-import { Result } from '@core'
-import { Injection } from '@core'
-import { Service } from '@core'
+import { Result, Injection, Service } from '@core'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'

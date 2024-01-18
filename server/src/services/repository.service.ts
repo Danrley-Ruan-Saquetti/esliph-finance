@@ -1,10 +1,8 @@
-import { Injection } from '@core'
-import { Service } from '@core'
-import { ErrorResultInfo } from '@core'
-import { DatabaseService, Prisma } from '@services/database.service'
+import { Injection, Service, ErrorResultInfo } from '@core'
 import { isNull } from '@util'
 import { ResultDatabase } from '@common/result.database'
 import { CodeGeneratorService } from '@services/code-generator.service'
+import { DatabaseService, Prisma } from '@services/database.service'
 
 export type RepositoryHandleResponseOptions = { noAcceptNullable?: boolean, error: ErrorResultInfo }
 export type RepositoryHandleErrorOptions = { error: ErrorResultInfo }

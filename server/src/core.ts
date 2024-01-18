@@ -1,11 +1,13 @@
 import { ControllerConfig } from '@esliph/module'
 
 export * from '@esliph/http'
+export * from '@esliph/adapter-fastify'
 export * from '@esliph/common'
 export * from '@esliph/console'
 export * from '@esliph/decorator'
 export * from '@esliph/injection'
 export * from '@esliph/job'
+export { Bootstrap as BootstrapJob } from '@esliph/job'
 export * from '@esliph/metadata'
 export * from '@esliph/observer'
 export {
