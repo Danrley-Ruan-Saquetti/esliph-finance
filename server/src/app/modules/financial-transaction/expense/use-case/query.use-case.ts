@@ -4,7 +4,8 @@ import { Result } from '@esliph/common'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { ValidatorService } from '@services/validator.service'
-import { FinancialExpenseRepository } from '@modules/financial-transaction/expense/expense.repository'
+import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
+import { FinancialTransactionModel } from '../../financial-transaction.model'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
 const schemaIdAndBankAccountId = ValidatorService.schema.object({
@@ -13,14 +14,20 @@ const schemaIdAndBankAccountId = ValidatorService.schema.object({
 
 @Service({ name: 'financial-expense.use-case.query' })
 export class FinancialExpenseQueryUseCase extends UseCase {
-    constructor(@Injection.Inject('financial-expense.repository') private transactionRepository: FinancialExpenseRepository) {
+    constructor(@Injection.Inject('financial-expense.repository') private transactionRepository: FinancialTransactionRepository) {
         super()
     }
 
     async queryByIdAndBankAccountIdWithPaymentsAndNotes(args: { id: ID }) {
         const { id } = this.validateDTO(args, schemaIdAndBankAccountId)
 
-        const bankAccountResult = await this.transactionRepository.findByIdWithPaymentsAndNotesAndCategories(id)
+        const bankAccountResult = await this.transactionRepository.findUnique({
+            where: { id, type: FinancialTransactionModel.Type.EXPENSE },
+            include: {
+                payments: true,
+                notes: true
+            }
+        })
 
         if (!bankAccountResult.isSuccess()) {
             return Result.failure({ ...bankAccountResult.getError(), title: 'Query Financial Expense' })
@@ -32,7 +39,9 @@ export class FinancialExpenseQueryUseCase extends UseCase {
     async queryManyByBankAccountId(args: { bankAccountId: ID }) {
         const bankAccountId = this.validateDTO(args.bankAccountId, schemaNumber)
 
-        const bankAccountResult = await this.transactionRepository.findManyByBankAccountId(bankAccountId)
+        const bankAccountResult = await this.transactionRepository.findMany({
+            where: { bankAccountId, type: FinancialTransactionModel.Type.EXPENSE }
+        })
 
         if (!bankAccountResult.isSuccess()) {
             return Result.failure({ ...bankAccountResult.getError(), title: 'Query Financial Expenses' })

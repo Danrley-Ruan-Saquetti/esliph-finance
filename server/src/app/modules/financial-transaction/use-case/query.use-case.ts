@@ -14,6 +14,7 @@ const schemaQuery = ValidatorService.schema.object({
     pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
     limite: GLOBAL_DTO.query.pagination.limite(),
     categoryId: ValidatorService.schema.coerce.number().optional(),
+    title: ValidatorService.schema.coerce.string().trim().optional(),
     expireStart: ValidatorService.schema.coerce.date().optional(),
     expireEnd: ValidatorService.schema.coerce.date().optional(),
     situation: ValidatorService.schema
@@ -40,7 +41,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
 
     // Query method main
     async queryManyByBankAccountIdWithCategories(filters: FinancialTransactionFilterArgs) {
-        const { bankAccountId, limite, pageIndex, categoryId, expireEnd, expireStart, situation, frequency, typeOccurrence } = this.validateDTO(filters, schemaQuery)
+        const { bankAccountId, limite, pageIndex, categoryId, expireEnd, expireStart, situation, frequency, typeOccurrence, title } = this.validateDTO(filters, schemaQuery)
 
         const filtersQuery = {
             bankAccountId,
@@ -49,10 +50,11 @@ export class FinancialTransactionQueryUseCase extends UseCase {
             ...(situation && { situation }),
             ...(frequency && { frequency }),
             ...(typeOccurrence && { typeOccurrence }),
+            ...(title && { title: { contains: title, mode: 'insensitive' as any } }),
         }
 
         const totalResult = await this.transactionRepository.count({
-            where: filtersQuery
+            where: { ...filtersQuery }
         })
 
         if (!totalResult.isSuccess()) {
