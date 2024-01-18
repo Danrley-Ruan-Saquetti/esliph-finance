@@ -14,7 +14,7 @@ const schemaIdAndBankAccountId = ValidatorService.schema.object({
 
 @Service({ name: 'financial-expense.use-case.query' })
 export class FinancialExpenseQueryUseCase extends UseCase {
-    constructor(@Injection.Inject('financial-expense.repository') private transactionRepository: FinancialTransactionRepository) {
+    constructor(@Injection.Inject('financial-transaction.repository') private transactionRepository: FinancialTransactionRepository) {
         super()
     }
 

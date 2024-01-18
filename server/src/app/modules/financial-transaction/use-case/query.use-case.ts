@@ -9,7 +9,7 @@ import { FinancialTransactionRepository } from '@modules/financial-transaction/f
 import { GLOBAL_FINANCIAL_TRANSACTION_DTO } from '@modules/financial-transaction/financial-transaction.global'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
-const schemaQuery = ValidatorService.schema.object({
+export const schemaQuery = ValidatorService.schema.object({
     bankAccountId: GLOBAL_FINANCIAL_TRANSACTION_DTO.bankAccount.id,
     pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
     limite: GLOBAL_DTO.query.pagination.limite(),
@@ -17,6 +17,10 @@ const schemaQuery = ValidatorService.schema.object({
     title: ValidatorService.schema.coerce.string().trim().optional(),
     expireStart: ValidatorService.schema.coerce.date().optional(),
     expireEnd: ValidatorService.schema.coerce.date().optional(),
+    type: ValidatorService.schema
+        .enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.type.enum, {
+            errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.type.messageEnumInvalid }),
+        }).optional(),
     situation: ValidatorService.schema
         .enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.situation.enum, {
             errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.situation.messageEnumInvalid }),
@@ -41,7 +45,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
 
     // Query method main
     async queryManyByBankAccountIdWithCategories(filters: FinancialTransactionFilterArgs) {
-        const { bankAccountId, limite, pageIndex, categoryId, expireEnd, expireStart, situation, frequency, typeOccurrence, title } = this.validateDTO(filters, schemaQuery)
+        const { bankAccountId, type, limite, pageIndex, categoryId, expireEnd, expireStart, situation, frequency, typeOccurrence, title } = this.validateDTO(filters, schemaQuery)
 
         const filtersQuery = {
             bankAccountId,
@@ -49,6 +53,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
             expiresIn: { ...(expireStart && { gte: expireStart }), ...(expireEnd && { lte: expireEnd }) },
             ...(situation && { situation }),
             ...(frequency && { frequency }),
+            ...(type && { type }),
             ...(typeOccurrence && { typeOccurrence }),
             ...(title && { title: { contains: title, mode: 'insensitive' as any } }),
         }
