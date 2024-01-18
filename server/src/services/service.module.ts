@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
 import { ValidatorService } from '@services/validator.service'

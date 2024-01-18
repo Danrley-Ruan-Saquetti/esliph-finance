@@ -1,7 +1,5 @@
+import { Result, Injection, Service } from '@core'
 import { ID } from '@@types'
-import { Result } from '@esliph/common'
-import { Injection } from '@esliph/injection'
-import { Service } from '@esliph/module'
 import { GLOBAL_APP, GLOBAL_DTO, GLOBAL_MAIL_CONFIG } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'

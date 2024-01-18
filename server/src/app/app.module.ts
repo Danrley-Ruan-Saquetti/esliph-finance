@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { PeopleModule } from '@modules/people/people.module'
 import { UserModule } from '@modules/user/user.module'
 import { BankAccountModule } from '@modules/bank-account/bank-account.module'

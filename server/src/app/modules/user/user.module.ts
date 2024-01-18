@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { UserController } from '@modules/user/user.controller'
 import { UserRepository } from '@modules/user/user.repository'
 import { UserUseCaseModule } from '@modules/user/use-case/use-case.module'

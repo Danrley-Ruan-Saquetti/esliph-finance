@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { PaymentController } from '@modules/payment/payment.controller'
 import { PaymentRepository } from '@modules/payment/payment.repository'
 import { PaymentUseCaseModule } from '@modules/payment/use-case/use-case.module'

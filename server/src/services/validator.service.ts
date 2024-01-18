@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { Result } from '@esliph/common'
-import { Service } from '@esliph/module'
+import { Result } from '@core'
+import { Service } from '@core'
 import { ResultException } from '@common/exceptions'
 export * as SchemaValidator from 'zod'
 

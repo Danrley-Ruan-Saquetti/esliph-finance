@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'
-import { Service } from '@esliph/module'
+import { Service } from '@core'
 import { ID } from '@@types'
 import { Repository } from '@services/repository.service'
 

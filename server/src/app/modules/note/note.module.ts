@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { NoteController } from '@modules/note/note.controller'
 import { NoteRepository } from '@modules/note/note.repository'
 import { NoteUseCaseModule } from '@modules/note/use-case/use-case.module'

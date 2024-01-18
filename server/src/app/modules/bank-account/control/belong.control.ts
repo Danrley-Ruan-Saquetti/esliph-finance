@@ -1,5 +1,4 @@
-import { Injection } from '@esliph/injection'
-import { Service } from '@esliph/module'
+import { Injection, Service } from '@core'
 import { ID } from '@@types'
 import { BadRequestException } from '@common/exceptions'
 import { BankAccountBelongUseCase } from '@modules/bank-account/use-case/belong.use-case'

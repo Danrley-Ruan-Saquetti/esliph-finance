@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { Injection } from '@esliph/injection'
-import { Service } from '@esliph/module'
+import { Injection } from '@core'
+import { Service } from '@core'
 import { ValidatorService } from '@services/validator.service'
 import { MaskDataOptions, MaskDataService } from '@services/mask-data.service'
 import { DateService } from '@services/date.service'

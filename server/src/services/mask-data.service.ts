@@ -1,4 +1,4 @@
-import { Service } from '@esliph/module'
+import { Service } from '@core'
 
 export type MaskDataOptions = {
     template: string

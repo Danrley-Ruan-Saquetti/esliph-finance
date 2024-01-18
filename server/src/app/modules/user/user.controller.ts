@@ -1,7 +1,7 @@
-import { Request } from '@esliph/http'
+import { Request } from '@core'
 import { Get, Put } from '@services/http.service'
-import { Injection } from '@esliph/injection'
-import { Controller, Guard } from '@esliph/module'
+import { Injection } from '@core'
+import { Controller, Guard } from '@core'
 import { UserQueryUseCase } from '@modules/user/use-case/query.use-case'
 import { UserUpdateUseCase } from '@modules/user/use-case/update.use-case'
 

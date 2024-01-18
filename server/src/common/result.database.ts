@@ -1,4 +1,4 @@
-import { ErrorResult, ErrorResultInfo, Result, ResultModel } from '@esliph/common'
+import { ErrorResult, ErrorResultInfo, Result, ResultModel } from '@core'
 
 export class ResultDatabase<ResultValueModel = any> extends Result<ResultValueModel> {
     protected hasErrorInOperation: boolean

@@ -1,6 +1,4 @@
-import { Injection } from '@esliph/injection'
-import { Service } from '@esliph/module'
-import { Result } from '@esliph/common'
+import { Injection, Service, Result } from '@core'
 import { CodeGeneratorService } from '@services/code-generator.service'
 import { UseCase } from '@common/use-case'
 import { GenerateCode } from '@common/generate-code'

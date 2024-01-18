@@ -1,5 +1,5 @@
-import { ResultExceptionArgs } from '@esliph/common'
-import { HttpStatusCodes } from '@esliph/http'
+import { ResultExceptionArgs } from '@core'
+import { HttpStatusCodes } from '@core'
 import { Exception } from '@common/exceptions/exception'
 
 export class ResultException extends Exception {

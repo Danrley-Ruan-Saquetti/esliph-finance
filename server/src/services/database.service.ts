@@ -1,6 +1,6 @@
 export * from '@prisma/client'
 import { PrismaClient } from '@prisma/client'
-import { Service } from '@esliph/module'
+import { Service } from '@core'
 import { GLOBAL_FORMATTER_CONFIG, GLOBAL_LOG_CONFIG } from '@global'
 import { WriteStreamOutputService } from '@services/write-stream-output.service'
 

@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { NoteQueryUseCase } from '@modules/note/use-case/query.use-case'
 import { NoteCreateManyUseCase } from '@modules/note/use-case/create.use-case'
 import { NoteRemoveUseCase } from '@modules/note/use-case/remove.use-case'

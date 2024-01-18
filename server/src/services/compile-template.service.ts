@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import Handlebars from 'handlebars'
-import { Service } from '@esliph/module'
-import { Result } from '@esliph/common'
+import { Service } from '@core'
+import { Result } from '@core'
 
 @Service({ name: 'global.service.compile-template' })
 export class CompileTemplateService {

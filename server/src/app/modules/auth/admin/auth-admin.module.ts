@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { AuthAdminController } from '@modules/auth/admin/auth-admin.controller'
 import { AdminAuthorizationFilter } from '@modules/auth/admin/filters/authorization.filter'
 import { AuthAdminUseCaseModule } from '@modules/auth/admin/use-case/use-case.module'

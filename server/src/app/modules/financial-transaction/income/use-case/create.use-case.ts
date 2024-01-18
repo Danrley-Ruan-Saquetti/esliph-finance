@@ -1,5 +1,4 @@
-import { Injection } from '@esliph/injection'
-import { Service } from '@esliph/module'
+import { Injection, Service } from '@core'
 import { UseCase } from '@common/use-case'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { GLOBAL_FINANCIAL_TRANSACTION_DTO } from '@modules/financial-transaction/financial-transaction.global'

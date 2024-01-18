@@ -1,7 +1,4 @@
-import { Request } from '@esliph/http'
-import { Injection } from '@esliph/injection'
-import { Delete, Get, Post, Put } from '@esliph/adapter-fastify'
-import { Controller, Guard } from '@esliph/module'
+import { Request, Injection, Delete, Get, Post, Put, Controller, Guard } from '@core'
 import { NoteQueryUseCase } from '@modules/note/use-case/query.use-case'
 import { NoteRemoveUseCase } from '@modules/note/use-case/remove.use-case'
 import { NoteUpdateUseCase } from '@modules/note/use-case/update.use-case'

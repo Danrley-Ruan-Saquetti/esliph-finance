@@ -1,7 +1,7 @@
-import { Request } from '@esliph/http'
+import { Request } from '@core'
 import { Get, Post, Put } from '@esliph/adapter-fastify'
-import { Injection } from '@esliph/injection'
-import { Controller, Guard } from '@esliph/module'
+import { Injection } from '@core'
+import { Controller, Guard } from '@core'
 
 @Controller({ prefix: '/notifications' })
 export class NotificationController {

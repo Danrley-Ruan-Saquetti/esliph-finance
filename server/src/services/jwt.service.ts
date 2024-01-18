@@ -1,7 +1,7 @@
-import { Service } from '@esliph/module'
+import { Service } from '@core'
 import JWT from 'jsonwebtoken'
 import { BadRequestException, ServerInternalErrorException, UnauthorizedException } from '@common/exceptions'
-import { Result } from '@esliph/common'
+import { Result } from '@core'
 
 export type PayloadJWT<PayloadBody extends object = {}> = PayloadBody & {
     iat: number

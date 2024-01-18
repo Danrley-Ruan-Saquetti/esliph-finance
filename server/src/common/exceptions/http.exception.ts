@@ -1,4 +1,4 @@
-import { Result, ResultExceptionArgs } from '@esliph/common'
+import { Result, ResultExceptionArgs } from '@core'
 import { Exception } from '@common/exceptions/exception'
 
 export class HttpException extends Exception {

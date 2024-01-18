@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { FinancialTransactionCreateUseCase } from '@modules/financial-transaction/use-case/create.use-case'
 import { FinancialTransactionQueryUseCase } from '@modules/financial-transaction/use-case/query.use-case'
 import { FinancialTransactionUpdateSituationLateUseCase } from '@modules/financial-transaction/use-case/update-situation-late.use-case'

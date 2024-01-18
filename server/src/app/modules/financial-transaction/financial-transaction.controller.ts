@@ -1,7 +1,4 @@
-import { Request } from '@esliph/http'
-import { Injection } from '@esliph/injection'
-import { Get, Put } from '@esliph/adapter-fastify'
-import { Controller, Guard } from '@esliph/module'
+import { Request, Injection, Get, Put, Controller, Guard } from '@core'
 import { PaymentQueryCompensationUseCase } from '@modules/payment/use-case/query-compensation.use-case'
 import { FinancialTransactionQueryUseCase } from '@modules/financial-transaction/use-case/query.use-case'
 import { FinancialTransactionUpdateUseCase } from '@modules/financial-transaction/use-case/update.use-case'

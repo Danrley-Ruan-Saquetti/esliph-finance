@@ -1,4 +1,4 @@
-import { Service } from '@esliph/module'
+import { Service } from '@core'
 import crypto from 'node:crypto'
 import bcrypto from 'bcrypt'
 

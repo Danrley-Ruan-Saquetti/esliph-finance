@@ -1,10 +1,10 @@
-import { Service, ApplicationModule } from '@esliph/module'
-import { JobOptions, Job as EsliphJob, CronOptions, Cron as EsliphCron, Bootstrap as JobBootstrap, isJob } from '@esliph/job'
+import { Service, ApplicationModule } from '@core'
+import { JobOptions, Job as EsliphJob, CronOptions, Cron as EsliphCron, Bootstrap as JobBootstrap, isJob } from '@core'
 import { ClassConstructor } from '@@types'
 import { isInstance } from '@util'
 import { GLOBAL_LOG_CONFIG } from '@global'
 import { WriteStreamOutputService } from '@services/write-stream-output.service'
-export * from '@esliph/job'
+export * from '@core'
 
 export function Job(options: JobOptions) {
     return (constructor: any) => {

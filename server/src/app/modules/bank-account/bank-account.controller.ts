@@ -1,6 +1,4 @@
-import { Controller, Guard, HttpStatusCode } from '@esliph/module'
-import { HttpStatusCodes, Request } from '@esliph/http'
-import { Injection } from '@esliph/injection'
+import { Controller, Guard, HttpStatusCode, HttpStatusCodes, Request, Injection } from '@core'
 import { Get, Post } from '@services/http.service'
 import { BankAccountCreateUseCase } from '@modules/bank-account/use-case/create.use-case'
 import { BankAccountQueryUseCase } from '@modules/bank-account/use-case/query.use-case'

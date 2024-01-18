@@ -1,9 +1,7 @@
-import { Injection } from '@esliph/injection'
-import { Service } from '@esliph/module'
+import { Injection, Service, Result } from '@core'
 import { UseCase } from '@common/use-case'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
-import { Result } from '@esliph/common'
 
 @Service({ name: 'financial-transaction.use-case.update-situation-late' })
 export class FinancialTransactionUpdateSituationLateUseCase extends UseCase {

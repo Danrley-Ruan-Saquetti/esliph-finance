@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { BankAccountUseCaseModule } from '@modules/bank-account/use-case/use-case.module'
 import { BankAccountController } from '@modules/bank-account/bank-account.controller'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
@@ -10,4 +10,4 @@ import { BalanceBankAccountControl } from '@modules/bank-account/control/balance
     controllers: [BankAccountController],
     providers: [BankAccountRepository, BankAccountBelongControl, BalanceBankAccountControl],
 })
-export class BankAccountModule {}
+export class BankAccountModule { }

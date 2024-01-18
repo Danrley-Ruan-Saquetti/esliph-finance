@@ -1,5 +1,4 @@
-import { Injection } from '@esliph/injection'
-import { Service } from '@esliph/module'
+import { Injection, Service } from '@core'
 import { UseCase } from '@common/use-case'
 import { UserCreateUseCase, UserCreateUserAndPeopleDTOArgs } from '@modules/user/use-case/create.use-case'
 import { UserModel } from '@modules/user/user.model'

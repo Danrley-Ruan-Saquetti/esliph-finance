@@ -1,12 +1,10 @@
-import { Injection } from '@esliph/injection'
-import { Service } from '@esliph/module'
-import { Result } from '@esliph/common'
+import { Injection, Service, Result } from '@core'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { ValidatorService } from '@services/validator.service'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
-import { schemaQuery as SchemaQuery, FinancialTransactionFilterArgs } from '@modules/financial-transaction/use-case/query.use-case'
+import { FinancialTransactionFilterArgs } from '@modules/financial-transaction/use-case/query.use-case'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
 const schemaIdAndBankAccountId = ValidatorService.schema.object({

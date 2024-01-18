@@ -1,5 +1,5 @@
 import { WriteStream, createWriteStream } from 'node:fs'
-import { ApplicationModule, Service } from '@esliph/module'
+import { ApplicationModule, Service } from '@core'
 import { GLOBAL_LOG_CONFIG } from '@global'
 
 class WriteStreamInstance {

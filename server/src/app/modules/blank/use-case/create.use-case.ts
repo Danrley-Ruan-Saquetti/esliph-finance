@@ -1,6 +1,4 @@
-import { Result } from '@esliph/common'
-import { Injection } from '@esliph/injection'
-import { Service } from '@esliph/module'
+import { Result, Injection, Service } from '@core'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'

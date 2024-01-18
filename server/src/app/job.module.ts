@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { FinancialTransactionJob } from '@jobs/financial-transaction.job'
 import { MailJob } from '@jobs/mail.job'
 

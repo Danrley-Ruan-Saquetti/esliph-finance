@@ -1,6 +1,6 @@
-import { Result } from '@esliph/common'
-import { Injection } from '@esliph/injection'
-import { Service } from '@esliph/module'
+import { Result } from '@core'
+import { Injection } from '@core'
+import { Service } from '@core'
 import { toCapitalise } from '@util'
 import { CodeGeneratorService, GenerateCodeOptions } from '@services/code-generator.service'
 

@@ -1,5 +1,5 @@
-import { HttpStatusCodes } from '@esliph/http'
-import { ResultException, ResultExceptionArgs } from '@esliph/common'
+import { HttpStatusCodes } from '@core'
+import { ResultException, ResultExceptionArgs } from '@core'
 
 export class Exception extends ResultException {
     constructor(errorInfo: Partial<ResultExceptionArgs>, status = HttpStatusCodes.BAD_REQUEST) {

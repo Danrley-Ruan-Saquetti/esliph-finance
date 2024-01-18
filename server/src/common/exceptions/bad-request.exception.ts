@@ -1,5 +1,5 @@
-import { ResultExceptionArgs } from '@esliph/common'
-import { HttpStatusCodes } from '@esliph/http'
+import { ResultExceptionArgs } from '@core'
+import { HttpStatusCodes } from '@core'
 import { HttpException } from '@common/exceptions/http.exception'
 
 const ERROR_INFO_DEFAULT = {

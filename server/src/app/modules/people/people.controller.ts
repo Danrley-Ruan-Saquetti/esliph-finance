@@ -1,6 +1,6 @@
-import { Request } from '@esliph/http'
-import { Injection } from '@esliph/injection'
-import { Controller, Guard } from '@esliph/module'
+import { Request } from '@core'
+import { Injection } from '@core'
+import { Controller, Guard } from '@core'
 import { Get, Post, Put } from '@esliph/adapter-fastify'
 import { PeopleUpdateUseCase } from '@modules/people/use-case/update.use-case'
 

@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { AppModule } from '@app.module'
 import { JobModule } from '@job.module'
 import { ServiceModule } from '@services/service.module'

@@ -1,5 +1,5 @@
-import { Injection } from '@esliph/injection'
-import { Service } from '@esliph/module'
+import { Injection } from '@core'
+import { Service } from '@core'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'

@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { FinancialIncomeController } from '@modules/financial-transaction/income/income.controller'
 import { FinancialIncomeUseCaseModule } from '@modules/financial-transaction/income/use-case/use-case.module'
 

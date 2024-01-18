@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { AuthController } from '@modules/auth/auth.controller'
 import { AuthAdminModule } from '@modules/auth/admin/auth-admin.module'
 import { AuthCustomerModule } from '@modules/auth/customer/auth-customer.module'

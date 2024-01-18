@@ -1,6 +1,4 @@
-import { Request, Response } from '@esliph/http'
-import { Injection } from '@esliph/injection'
-import { Filter, FilterPerform } from '@esliph/module'
+import { Request, Response, Injection, Filter, FilterPerform } from '@core'
 import { AuthBankAccountAuthorizationUseCase } from '@modules/auth/bank-account/use-case/authorization.use-case'
 
 @Filter({ name: 'bank-account.filter.authorization' })

@@ -1,4 +1,4 @@
-import { Injection } from '@esliph/injection'
+import { Injection } from '@core'
 import { ValidatorService } from '@services/validator.service'
 import { getEnv, toCapitalise } from '@util'
 import { DateService } from '@services/date.service'

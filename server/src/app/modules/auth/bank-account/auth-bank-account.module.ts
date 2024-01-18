@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { BankAccountAuthorizationFilter } from '@modules/auth/bank-account/filters/authorization.filter'
 import { AuthBankAccountUseCaseModule } from '@modules/auth/bank-account/use-case/use-case.module'
 import { AuthBankAccountController } from '@modules/auth/bank-account/auth-bank-account.controller'

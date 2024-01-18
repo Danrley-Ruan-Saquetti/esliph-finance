@@ -1,4 +1,4 @@
-import { Injection } from '@esliph/injection'
+import { Injection } from '@core'
 import { Cron, Job } from '@services/job.service'
 import { CronExpression } from '@util'
 import { FinancialTransactionUpdateSituationLateUseCase } from '@modules/financial-transaction/use-case/update-situation-late.use-case'

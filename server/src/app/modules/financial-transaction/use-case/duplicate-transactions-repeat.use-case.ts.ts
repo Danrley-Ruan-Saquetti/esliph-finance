@@ -1,6 +1,4 @@
-import { Injection } from '@esliph/injection'
-import { Result } from '@esliph/common'
-import { Service } from '@esliph/module'
+import { Injection, Result, Service } from '@core'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'

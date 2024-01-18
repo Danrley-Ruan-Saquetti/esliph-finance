@@ -1,4 +1,4 @@
-import { Service } from '@esliph/module'
+import { Service } from '@core'
 import { ID } from '@@types'
 import { Repository } from '@services/repository.service'
 import { UserModel } from '@modules/user/user.model'

@@ -1,6 +1,4 @@
-import { Result } from '@esliph/common'
-import { Injection } from '@esliph/injection'
-import { Service } from '@esliph/module'
+import { Result, Injection, Service } from '@core'
 import { JWTService } from '@services/jwt.service'
 import { GLOBAL_SERVER_JWT_TOKEN } from '@global'
 import { UseCase } from '@common/use-case'

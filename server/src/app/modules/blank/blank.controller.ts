@@ -1,7 +1,4 @@
-import { Request } from '@esliph/http'
-import { Get, Post, Put } from '@esliph/adapter-fastify'
-import { Injection } from '@esliph/injection'
-import { Controller, Guard } from '@esliph/module'
+import { Request, Get, Post, Put, Injection, Controller, Guard } from '@core'
 
 @Controller({ prefix: '/blanks' })
 export class BlankController {

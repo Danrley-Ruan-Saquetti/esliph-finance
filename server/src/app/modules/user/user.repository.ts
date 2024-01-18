@@ -1,4 +1,4 @@
-import { Service } from '@esliph/module'
+import { Service } from '@core'
 import { Prisma } from '@services/database.service'
 import { Repository } from '@services/repository.service'
 

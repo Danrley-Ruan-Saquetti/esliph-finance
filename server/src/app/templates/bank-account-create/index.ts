@@ -1,4 +1,4 @@
-import { Injection } from '@esliph/injection'
+import { Injection } from '@core'
 import { CompileTemplateService } from '@services/compile-template.service'
 import { getPath } from '@util'
 

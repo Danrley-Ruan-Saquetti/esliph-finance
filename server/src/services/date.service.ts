@@ -1,4 +1,4 @@
-import { Service } from '@esliph/module'
+import { Service } from '@core'
 import { DateTime } from 'luxon'
 
 @Service({ name: 'global.service.date' })

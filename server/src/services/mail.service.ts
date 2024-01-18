@@ -1,5 +1,5 @@
-import { Service } from '@esliph/module'
-import { Result } from '@esliph/common'
+import { Service } from '@core'
+import { Result } from '@core'
 import { Resend } from 'resend'
 import { GLOBAL_MAIL_CONFIG } from '@global'
 

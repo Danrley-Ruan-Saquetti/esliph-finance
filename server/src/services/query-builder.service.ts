@@ -1,4 +1,4 @@
-import { Service } from '@esliph/module'
+import { Service } from '@core'
 import { Document } from '@@types'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 

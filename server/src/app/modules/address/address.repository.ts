@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'
-import { Service } from '@esliph/module'
+import { Service } from '@core'
 import { Repository } from '@services/repository.service'
 
 type AddressGetPayloadTypes = boolean | null | undefined | { select?: Prisma.AddressSelect | null }

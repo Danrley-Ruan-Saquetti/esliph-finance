@@ -1,6 +1,4 @@
-import { Request } from '@esliph/http'
-import { Injection } from '@esliph/injection'
-import { Controller, Guard } from '@esliph/module'
+import { Request, Injection, Controller, Guard } from '@core'
 import { Post } from '@services/http.service'
 import { AuthBankAccountSignInUseCase } from '@modules/auth/bank-account/use-case/sign-in.use-case'
 

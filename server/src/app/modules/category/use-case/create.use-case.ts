@@ -1,6 +1,4 @@
-import { Result } from '@esliph/common'
-import { Service } from '@esliph/module'
-import { Injection } from '@esliph/injection'
+import { Result, Service, Injection } from '@core'
 import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'

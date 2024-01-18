@@ -1,12 +1,10 @@
+import { Injection, Service } from '@core'
 import { ID } from '@@types'
 import { BadRequestException } from '@common/exceptions'
-import { Result } from '@esliph/common'
-import { Injection } from '@esliph/injection'
-import { Service } from '@esliph/module'
+import { PaymentModel } from '@modules/payment/payment.model'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { CompensationPaymentsControl } from '@modules/payment/control/compensation-payments.control'
-import { PaymentModel } from '@modules/payment/payment.model'
 
 @Service({ name: 'balance-bank-account.control' })
 export class BalanceBankAccountControl {

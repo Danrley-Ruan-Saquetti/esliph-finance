@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { FinancialCategoryQueryUseCase } from '@modules/financial-transaction/category/use-case/query.use-case'
 
 @Module({

@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { AuthCustomerController } from '@modules/auth/customer/auth-customer.controller'
 import { CustomerAuthorizationFilter } from '@modules/auth/customer/filters/authorization.filter'
 import { AuthCustomerUseCaseModule } from '@modules/auth/customer/use-case/use-case.module'

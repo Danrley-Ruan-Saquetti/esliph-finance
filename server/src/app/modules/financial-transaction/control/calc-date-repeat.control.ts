@@ -1,5 +1,4 @@
-import { Service } from '@esliph/module'
-import { Injection } from '@esliph/injection'
+import { Service, Injection } from '@core'
 import { DateService } from '@services/date.service'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { GLOBAL_FINANCIAL_TRANSACTION_RULES } from '@modules/financial-transaction/financial-transaction.global'

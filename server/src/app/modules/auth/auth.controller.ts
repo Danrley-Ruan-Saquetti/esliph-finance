@@ -1,4 +1,4 @@
-import { Controller } from '@esliph/module'
+import { Controller } from '@core'
 
 @Controller({ prefix: '/auth' })
 export class AuthController {

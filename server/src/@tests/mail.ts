@@ -1,4 +1,4 @@
-import { Injection } from '@esliph/injection'
+import { Injection } from '@core'
 import { MailService } from '@services/mail.service'
 
 const mailService = Injection.resolve(MailService)

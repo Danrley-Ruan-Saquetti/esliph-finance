@@ -1,4 +1,4 @@
-import { Module } from '@esliph/module'
+import { Module } from '@core'
 import { NotificationController } from '@modules/notification/notification.controller'
 import { NotificationRepository } from '@modules/notification/notification.repository'
 import { NotificationUseCaseModule } from '@modules/notification/use-case/use-case.module'
