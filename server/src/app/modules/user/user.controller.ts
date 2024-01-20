@@ -1,9 +1,9 @@
-import { Request, Injection, Controller, Guard } from '@core'
+import { Request, Injection, Controller, Guard, Domain } from '@core'
 import { Get, Put } from '@services/http.service'
 import { UserQueryUseCase } from '@modules/user/use-case/query.use-case'
 import { UserUpdateUseCase } from '@modules/user/use-case/update.use-case'
 
-@Controller({ prefix: '/users' })
+@Controller({ prefix: '/users', domain: Domain.CUSTOMER })
 export class UserController {
     constructor(
         @Injection.Inject('user.use-case.query') private queryUC: UserQueryUseCase,

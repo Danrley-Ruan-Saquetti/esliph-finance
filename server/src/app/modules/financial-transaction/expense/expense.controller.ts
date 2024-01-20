@@ -1,10 +1,10 @@
-import { HttpStatusCodes, Request, Injection, Controller, Guard, HttpStatusCode } from '@core'
+import { HttpStatusCodes, Request, Injection, Controller, Guard, HttpStatusCode, Domain } from '@core'
 import { Get, Post } from '@services/http.service'
 import { FinancialExpenseCreateUseCase } from '@modules/financial-transaction/expense/use-case/create.use-case'
 import { FinancialExpenseLiquidateUseCase } from '@modules/financial-transaction/expense/use-case/liquidate.use-case'
 import { FinancialExpenseQueryUseCase } from '@modules/financial-transaction/expense/use-case/query.use-case'
 
-@Controller({ prefix: '/financial-transactions/expense' })
+@Controller({ prefix: '/financial-transactions/expense', domain: Domain.CUSTOMER })
 export class FinancialExpenseController {
     constructor(
         @Injection.Inject('financial-expense.use-case.create') private createUC: FinancialExpenseCreateUseCase,

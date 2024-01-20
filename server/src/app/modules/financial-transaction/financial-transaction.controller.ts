@@ -1,10 +1,10 @@
-import { Request, Injection, Get, Put, Controller, Guard } from '@core'
+import { Request, Injection, Get, Put, Controller, Guard, Domain } from '@core'
 import { PaymentQueryCompensationUseCase } from '@modules/payment/use-case/query-compensation.use-case'
 import { FinancialTransactionQueryUseCase } from '@modules/financial-transaction/use-case/query.use-case'
 import { FinancialTransactionUpdateUseCase } from '@modules/financial-transaction/use-case/update.use-case'
 import { BankAccountBelongControl } from '@modules/bank-account/control/belong.control'
 
-@Controller({ prefix: '/financial-transactions' })
+@Controller({ prefix: '/financial-transactions', domain: Domain.CUSTOMER })
 export class FinancialTransactionController {
     constructor(
         @Injection.Inject('bank-account.control.belong') private bankAccountBelongControl: BankAccountBelongControl,

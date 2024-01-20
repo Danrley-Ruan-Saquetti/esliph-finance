@@ -1,8 +1,8 @@
-import { Request, Get, Post, Put, Injection, Controller, Guard } from '@core'
+import { Request, Get, Post, Put, Injection, Controller, Guard, Domain } from '@core'
 import { AddressQueryUseCase } from '@modules/address/use-case/query.use-case'
 import { AddressCreateUseCase } from '@modules/address/use-case/create.use-case'
 
-@Controller({ prefix: '/address' })
+@Controller({ prefix: '/address', domain: Domain.CUSTOMER })
 export class AddressController {
     constructor(
         @Injection.Inject('address.use-case.create') private createUC: AddressCreateUseCase,

@@ -1,6 +1,6 @@
-import { Request, Get, Post, Put, Injection, Controller, Guard } from '@core'
+import { Request, Get, Post, Put, Injection, Controller, Guard, Domain } from '@core'
 
-@Controller({ prefix: '/notifications' })
+@Controller({ prefix: '/notifications', domain: Domain.CUSTOMER })
 export class NotificationController {
     constructor() { }
 

@@ -1,10 +1,10 @@
-import { Request, Injection, Delete, Get, Post, Put, Controller, Guard } from '@core'
+import { Request, Injection, Delete, Get, Post, Put, Controller, Guard, Domain } from '@core'
 import { NoteQueryUseCase } from '@modules/note/use-case/query.use-case'
 import { NoteRemoveUseCase } from '@modules/note/use-case/remove.use-case'
 import { NoteUpdateUseCase } from '@modules/note/use-case/update.use-case'
 import { BankAccountBelongControl } from '@modules/bank-account/control/belong.control'
 
-@Controller({ prefix: '/notes' })
+@Controller({ prefix: '/notes', domain: Domain.CUSTOMER })
 export class NoteController {
     constructor(
         @Injection.Inject('bank-account.control.belong') private bankAccountBelongControl: BankAccountBelongControl,

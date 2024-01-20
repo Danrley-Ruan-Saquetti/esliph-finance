@@ -1,7 +1,7 @@
-import { Request, Injection, Controller, Guard, Get, Post, Put } from '@core'
+import { Request, Injection, Controller, Guard, Get, Post, Put, Domain } from '@core'
 import { PeopleUpdateUseCase } from '@modules/people/use-case/update.use-case'
 
-@Controller({ prefix: '/peoples' })
+@Controller({ prefix: '/peoples', domain: Domain.CUSTOMER })
 export class PeopleController {
     constructor(
         @Injection.Inject('people.use-case.update') private updateUC: PeopleUpdateUseCase,

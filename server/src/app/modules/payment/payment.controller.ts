@@ -1,6 +1,6 @@
-import { Controller } from '@core'
+import { Controller, Domain } from '@core'
 
-@Controller({ prefix: '/payments' })
+@Controller({ prefix: '/payments', domain: Domain.CUSTOMER })
 export class PaymentController {
     constructor() { }
 }

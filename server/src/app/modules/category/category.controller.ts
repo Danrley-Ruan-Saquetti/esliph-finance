@@ -1,9 +1,9 @@
-import { HttpStatusCodes, Request, Get, Post, Put, Injection, Controller, Guard, HttpStatusCode } from '@core'
+import { HttpStatusCodes, Request, Get, Post, Put, Injection, Controller, Guard, HttpStatusCode, Domain } from '@core'
 import { CategoryCreateUseCase } from '@modules/category/use-case/create.use-case'
 import { CategoryQueryUseCase } from '@modules/category/use-case/query.use-case'
 import { CategoryUpdateUseCase } from '@modules/category/use-case/update.use-case'
 
-@Controller({ prefix: '/categories' })
+@Controller({ prefix: '/categories', domain: Domain.CUSTOMER })
 export class CategoryController {
     constructor(
         @Injection.Inject('category.use-case.create') private createUC: CategoryCreateUseCase,

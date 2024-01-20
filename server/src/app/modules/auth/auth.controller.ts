@@ -1,6 +1,6 @@
-import { Controller } from '@core'
+import { Controller, Domain } from '@core'
 
-@Controller({ prefix: '/auth' })
+@Controller({ prefix: '/auth', domain: Domain.CUSTOMER })
 export class AuthController {
     constructor() { }
 }

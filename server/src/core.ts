@@ -45,7 +45,7 @@ export enum Domain {
     ADMIN = '/admin',
 }
 
-export function Controller(options?: ControllerConfig & { domain?: Domain }) {
+export function Controller(options?: ControllerConfig & { domain: Domain }) {
     const prefix = (options?.domain || '' as string) + (options?.prefix || '')
 
     return ControllerModule({ ...options, prefix: prefix })

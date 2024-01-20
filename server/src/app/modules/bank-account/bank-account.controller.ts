@@ -1,10 +1,10 @@
-import { Controller, Guard, HttpStatusCode, HttpStatusCodes, Request, Injection } from '@core'
+import { Controller, Guard, HttpStatusCode, HttpStatusCodes, Request, Injection, Domain } from '@core'
 import { Get, Post } from '@services/http.service'
 import { BankAccountCreateUseCase } from '@modules/bank-account/use-case/create.use-case'
 import { BankAccountQueryUseCase } from '@modules/bank-account/use-case/query.use-case'
 import { BankAccountQueryBalanceUseCase } from '@modules/bank-account/use-case/query-balance.use-case'
 
-@Controller({ prefix: '/bank-accounts' })
+@Controller({ prefix: '/bank-accounts', domain: Domain.CUSTOMER })
 export class BankAccountController {
     constructor(
         @Injection.Inject('bank-account.use-case.create') private createUC: BankAccountCreateUseCase,
