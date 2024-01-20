@@ -13,8 +13,10 @@ export const schemaQuery = ValidatorService.schema.object({
     limite: GLOBAL_DTO.query.pagination.limite(),
     categoryId: ValidatorService.schema.coerce.number().optional(),
     title: ValidatorService.schema.coerce.string().trim().optional(),
-    expireStart: ValidatorService.schema.coerce.date().optional(),
-    expireEnd: ValidatorService.schema.coerce.date().optional(),
+    expiresStart: ValidatorService.schema.coerce.date().optional(),
+    expiresEnd: ValidatorService.schema.coerce.date().optional(),
+    competenceStart: ValidatorService.schema.coerce.date().optional(),
+    competenceEnd: ValidatorService.schema.coerce.date().optional(),
     type: ValidatorService.schema
         .enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.type.enum, {
             errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.type.messageEnumInvalid }),
@@ -43,12 +45,13 @@ export class FinancialTransactionQueryUseCase extends UseCase {
 
     // Query method main
     async queryManyByBankAccountIdWithCategories(filters: FinancialTransactionFilterArgs) {
-        const { bankAccountId, type, limite, pageIndex, categoryId, expireEnd, expireStart, situation, frequency, typeOccurrence, title } = this.validateDTO(filters, schemaQuery)
+        const { competenceStart, competenceEnd, bankAccountId, type, limite, pageIndex, categoryId, expiresEnd, expiresStart, situation, frequency, typeOccurrence, title } = this.validateDTO(filters, schemaQuery)
 
         const filtersQuery = {
             bankAccountId,
             ...(categoryId && { categories: { some: { categoryId } } }),
-            expiresIn: { ...(expireStart && { gte: expireStart }), ...(expireEnd && { lte: expireEnd }) },
+            expiresIn: { ...(expiresStart && { gte: expiresStart }), ...(expiresEnd && { lte: expiresEnd }) },
+            dateTimeCompetence: { ...(competenceStart && { gte: competenceStart }), ...(competenceEnd && { lte: competenceEnd }) },
             ...(situation && { situation }),
             ...(frequency && { frequency }),
             ...(type && { type }),
