@@ -9,6 +9,7 @@ import { FinancialTransactionModule } from '@modules/financial-transaction/finan
 import { NoteModule } from '@modules/note/note.module'
 import { NotificationModule } from '@modules/notification/notification.module'
 import { AddressModule } from '@modules/address/address.module'
+import { PlaceModule } from '@modules/place/place.module'
 
 @Module({
     imports: [
@@ -22,6 +23,7 @@ import { AddressModule } from '@modules/address/address.module'
         NoteModule,
         NotificationModule,
         AddressModule,
+        PlaceModule,
     ],
 })
 export class AppModule { }

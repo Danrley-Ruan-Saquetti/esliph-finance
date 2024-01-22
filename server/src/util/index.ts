@@ -103,3 +103,16 @@ export function isValidCnpj(cnpj: string) {
 export function getDistinctValuesInArray<T>(values: T[]) {
     return values.filter((value, index, self) => self.indexOf(value) === index)
 }
+
+export function replaceSpecialCharacters(str: string) {
+    str = str.replace(/[ÀÁÂÃÄÅ]/g, 'A')
+    str = str.replace(/[àáâãäå]/g, 'a')
+    str = str.replace(/[ÈÉÊË]/g, 'E')
+    str = str.replace(/[èéêë]/g, 'e')
+    str = str.replace(/[ÒÓÔÖ]/g, 'O')
+    str = str.replace(/[òóôö]/g, 'o')
+    str = str.replace(/[Ç]/g, 'C')
+    str = str.replace(/[ç]/g, 'c')
+
+    return str.replace(/[^a-z0-9]/gi, '')
+}

@@ -1,7 +1,6 @@
 import { ControllerConfig } from '@esliph/module'
 
 export * from '@esliph/http'
-export * from '@esliph/adapter-fastify'
 export * from '@esliph/common'
 export * from '@esliph/console'
 export * from '@esliph/decorator'
@@ -16,33 +15,28 @@ export {
     Bootstrap,
     BootstrapOptions,
     ControllerConfig,
-    Delete,
     Emitter,
     Filter,
     FilterConfig,
     FilterPerform,
-    Get,
     Guard,
     GuardConfig,
-    Head,
     HttpStatusCode,
     Listener,
     Logger,
     Module,
     ModuleConfig,
-    Options,
-    Patch,
-    Post,
-    Put,
     Service,
     ServiceConfig
 } from '@esliph/module'
+export { Delete, Get, FastifyAdapter, Head, Options, Patch, Post, Put } from '@esliph/adapter-fastify'
 
 import { Controller as ControllerModule } from '@esliph/module'
 
 export enum Domain {
     CUSTOMER = '/customer',
     ADMIN = '/admin',
+    PUBLIC = '/v1'
 }
 
 export function Controller(options?: ControllerConfig & { domain: Domain }) {
