@@ -18,7 +18,7 @@ export namespace FinancialTransactionModel {
 
     export type FinancialTransaction = Database.FinancialTransaction
     export type Model = DocumentSimple<FinancialTransaction>
-    export type UpdateArgs = Partial<Omit<Model, 'bankAccountId' | 'countRepeatedOccurrences' | 'type' | 'value'>>
+    export type UpdateArgs = Partial<Omit<Model, 'bankAccountId' | 'countRepeatedOccurrences' | 'type' | 'value' | 'timesToRepeat' | 'countRepeatedOccurrences' | 'typeOccurrence' | 'frequency'>>
     export type FinancialTransactionWithPayments = FinancialTransaction & {
         payments: PaymentModel.Payment[]
     }

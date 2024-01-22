@@ -35,21 +35,10 @@ const schemaDTO = ValidatorService.schema.object({
     isSendNotification: ValidatorService.schema
         .boolean()
         .optional(),
-    timesToRepeat: ValidatorService.schema
-        .number()
-        .optional(),
-    typeOccurrence: ValidatorService.schema
-        .enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum, {
-            errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.messageEnumInvalid }),
-        })
-        .optional(),
     situation: ValidatorService.schema
         .enum(GLOBAL_FINANCIAL_TRANSACTION_RULES.update.situationsEnableToUpdate.enum, {
             errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_RULES.update.situationsEnableToUpdate.messageInvalidSituationToUpdate }),
         })
-        .optional(),
-    frequency: ValidatorService.schema
-        .enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.enum, { errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.messageEnumInvalid }) })
         .optional(),
     receiver: ValidatorService.schema
         .string()
@@ -182,9 +171,6 @@ export class FinancialTransactionUpdateUseCase extends UseCase {
 
     private processingData(data: SchemaValidator.output<typeof schemaDTO>, original: FinancialTransactionModel.Model): FinancialTransactionModel.UpdateArgs {
         const isAlreadyLate = !!data.expiresIn && this.dateService.now() < data.expiresIn
-        const isProgrammatic =
-            (!data.typeOccurrence && original.typeOccurrence === FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC) ||
-            data.typeOccurrence === FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC
 
         const dataTransactions: FinancialTransactionModel.UpdateArgs = {
             title: data.title,
@@ -193,13 +179,10 @@ export class FinancialTransactionUpdateUseCase extends UseCase {
             sender: original.type == FinancialTransactionModel.Type.INCOME ? data.sender : undefined,
             dateTimeCompetence: data.dateTimeCompetence,
             expiresIn: data.expiresIn,
-            frequency: isProgrammatic ? data.frequency : undefined,
             isObservable: data.isObservable,
             isSendNotification: data.isSendNotification,
             priority: data.priority,
             situation: isAlreadyLate ? FinancialTransactionModel.Situation.CANCELED : data.situation,
-            timesToRepeat: isProgrammatic ? data.timesToRepeat : undefined,
-            typeOccurrence: data.typeOccurrence,
         }
 
         return dataTransactions
