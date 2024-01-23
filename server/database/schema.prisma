@@ -101,7 +101,7 @@ model User {
   peopleId  Int
   type      UserType
   active    Boolean  @default(true)
-  code      String   @unique @default("") @db.VarChar(9)
+  code      String   @unique @db.VarChar(9)
   login     String   @unique @db.VarChar(254)
   password  String   @db.VarChar(120)
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
@@ -115,7 +115,7 @@ model User {
 model BankAccount {
   id                    Int                    @id @default(autoincrement())
   peopleId              Int                    @map("people_id")
-  code                  String                 @unique @default("") @db.VarChar(15)
+  code                  String                 @unique @db.VarChar(15)
   name                  String                 @db.VarChar(45)
   password              String                 @map("password") @db.VarChar(120)
   balance               Float                  @default(0)
