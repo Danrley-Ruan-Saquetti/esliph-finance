@@ -52,11 +52,15 @@ export class FinancialTransactionUpdateSituationLateUseCase extends UseCase {
 
         const financialTransactionsLated = await this.transactionRepository.findMany({
             where: {
+                isSendNotification: true,
                 expiresIn: { lt: dateNow },
                 situation: {
                     in: [FinancialTransactionModel.Situation.PENDING],
                 },
             },
+            orderBy: {
+                priority: 'desc'
+            }
         })
 
         if (!financialTransactionsLated.isSuccess()) {
@@ -105,7 +109,15 @@ export class FinancialTransactionUpdateSituationLateUseCase extends UseCase {
             return Result.failure({ title: 'Send Mail About Transaction Lated', message: 'People has\'nt a e-mail contact' })
         }
 
-        const subjectResult = FinancialTransactionModel.Type.INCOME ? FinancialTransactionIncomeLatedTemplate({}) : FinancialTransactionIncomeLatedTemplate({})
+        const subjectResult = FinancialTransactionModel.Type.INCOME ?
+            FinancialTransactionIncomeLatedTemplate({
+                peopleName: people.name,
+                transactionName: financialTransaction.title,
+            }) :
+            FinancialTransactionIncomeLatedTemplate({
+                peopleName: people.name,
+                transactionName: financialTransaction.title,
+            })
 
         if (!subjectResult.isSuccess()) {
             return Result.failure({ title: 'Send Mail About Transaction Lated', message: 'Unable to generate e-mail content' })

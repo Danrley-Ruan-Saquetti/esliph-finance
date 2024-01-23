@@ -6,11 +6,13 @@ const TEMPLATE_PATH_INCOME = getPath(...__dirname.split(/[\\/]/g), 'template-inc
 const TEMPLATE_PATH_EXPENSE = getPath(...__dirname.split(/[\\/]/g), 'template-expense.txt')
 
 export type FinancialTransactionIncomeLatedTemplateArgs = {
-
+    peopleName: string
+    transactionName: string
 }
 
 export type FinancialTransactionExpenseLatedTemplateArgs = {
-
+    peopleName: string
+    transactionName: string
 }
 
 export function FinancialTransactionIncomeLatedTemplate(args: FinancialTransactionIncomeLatedTemplateArgs) {
