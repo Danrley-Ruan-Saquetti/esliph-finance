@@ -73,8 +73,7 @@ const schemaDTO = ValidatorService.schema.object({
         path: ['timesToRepeat'],
     })
     .refine(
-        ({ typeOccurrence, frequency }) =>
-            typeOccurrence != FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC || (!!frequency && frequency != FinancialTransactionModel.Frequency.NULL),
+        ({ typeOccurrence, frequency }) => typeOccurrence != FinancialTransactionModel.TypeOccurrence.PROGRAMMATIC || (!!frequency && frequency != FinancialTransactionModel.Frequency.NULL),
         { message: GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.messageEnumInvalid, path: ['frequency'] },
     )
 

@@ -23,7 +23,7 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
         do {
             await this.performDuplicate()
             i++
-        } while (i < 1)
+        } while (i < 3)
     }
 
     async performDuplicate() {
@@ -55,20 +55,20 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
     }
 
     private async duplicateTransactions(transactions: FinancialTransactionModel.FinancialTransaction[]) {
-        transactions.map(async transaction => {
+        return transactions.map(async transaction => {
             const transactionDB = this.database.transaction()
 
             try {
                 await transactionDB.begin()
 
                 if (!this.validDuplicate(transaction)) {
-                    return
+                    return Result.success({ message: `Ignore transaction #${transaction.id}` })
                 }
 
-                const isSuccess = await this.duplicateTransaction(transaction)
+                const duplicateResult = await this.duplicateTransaction(transaction)
 
-                if (!isSuccess) {
-                    return
+                if (!duplicateResult.isSuccess()) {
+                    return duplicateResult
                 }
 
                 await this.transactionRepository.update({
@@ -79,6 +79,8 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
                 })
 
                 await transactionDB.commit()
+
+                return Result.success({ message: `Repeat successfully transaction #${transaction.id}` })
             } catch (err: any) {
                 await transactionDB.rollback()
 
@@ -117,6 +119,6 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
             ],
         })
 
-        return result.isSuccess()
+        return result
     }
 }
