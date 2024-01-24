@@ -1,5 +1,5 @@
 import { Injection, Service, ErrorResultInfo } from '@core'
-import { isNull } from '@util'
+import { isArray, isNull } from '@util'
 import { ResultDatabase } from '@common/result.database'
 import { CodeGeneratorService, GenerateCodeOptions } from '@services/code-generator.service'
 import { DatabaseService, Prisma } from '@services/database.service'
@@ -55,10 +55,12 @@ export class Repository {
 
     protected handleError<T = any>(err: any, options: RepositoryHandleErrorOptions) {
         if (err instanceof Prisma.PrismaClientKnownRequestError) {
+            const target = (err.meta as any).target
+
             return ResultDatabase.errorOperation<T>({
                 ...err,
                 ...options.error,
-                causes: { message: err.message, origin: (err.meta as any).target.join(';') } as any,
+                causes: { message: err.meta?.cause || err.message, origin: err.meta?.modelName || (isArray(target) ? target : [target]).join(';') } as any,
             })
         }
 
