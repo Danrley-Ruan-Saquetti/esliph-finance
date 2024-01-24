@@ -1,26 +1,20 @@
 import { Injection, Service, ErrorResultInfo } from '@core'
 import { isNull } from '@util'
 import { ResultDatabase } from '@common/result.database'
-import { CodeGeneratorService } from '@services/code-generator.service'
+import { CodeGeneratorService, GenerateCodeOptions } from '@services/code-generator.service'
 import { DatabaseService, Prisma } from '@services/database.service'
 
 export type RepositoryHandleResponseOptions = { noAcceptNullable?: boolean, error: ErrorResultInfo }
 export type RepositoryHandleErrorOptions = { error: ErrorResultInfo }
 
-export type RepositoryWhereArgs = {}
-export type RepositorySelectArgs = ''
-export type RepositoryPagination = {
-    pageIndex: number
-    limite: number
-}
-export type RepositoryQuery = {
-    where: RepositoryWhereArgs
-    select: { [x in RepositorySelectArgs]?: boolean }
-    page: RepositoryPagination
-}
-
 @Service({ name: 'global.service.repository' })
 export class Repository {
+    private static TEMPLATE_CODE_TRANSACTION: GenerateCodeOptions = {
+        template: 'XXXXX',
+        charactersToReplace: ['X'],
+        valuesAllowed: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    }
+
     constructor(
         @Injection.Inject('database') protected database: DatabaseService,
         @Injection.Inject('code-generator') protected codeGeneratorService: CodeGeneratorService,
@@ -28,11 +22,7 @@ export class Repository {
 
     transaction() {
         const db = this.database.instance
-        const code = this.codeGeneratorService.generateCode({
-            template: 'XXXXX',
-            charactersToReplace: ['X'],
-            valuesAllowed: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-        })
+        const code = this.codeGeneratorService.generateCode(Repository.TEMPLATE_CODE_TRANSACTION)
 
         async function begin() {
             await db.$executeRawUnsafe('BEGIN', code)

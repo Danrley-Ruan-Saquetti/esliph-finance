@@ -2,7 +2,7 @@ import { Request, Get, Post, Put, Injection, Controller, Guard, Domain } from '@
 import { AddressQueryUseCase } from '@modules/address/use-case/query.use-case'
 import { AddressCreateUseCase } from '@modules/address/use-case/create.use-case'
 
-@Controller({ prefix: '/address', domain: Domain.CUSTOMER })
+@Controller({ prefix: '/addresses', domain: Domain.CUSTOMER })
 export class AddressController {
     constructor(
         @Injection.Inject('address.use-case.create') private createUC: AddressCreateUseCase,
@@ -35,7 +35,7 @@ export class AddressController {
     async create(req: Request) {
         const peopleId = req.headers['peopleId']
 
-        const result = await this.createUC.perform({ addresses: [{ ...req.body }], peopleId })
+        const result = await this.createUC.perform({ ...req.body, peopleId })
 
         return result
     }

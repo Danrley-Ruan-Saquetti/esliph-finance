@@ -12,4 +12,8 @@ export const GLOBAL_ADDRESS_DTO = {
         messageEnumInvalid: 'Type must be Commercial or Residential',
         default: AddressModel.Type.RESIDENTIAL
     },
+    zipCode: {
+        regex: /^\d{8}$|^\d{5}-\d{3}$/gm,
+        messageInvalid: 'Format ZIP Code invalid'
+    }
 }
