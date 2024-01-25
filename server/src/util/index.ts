@@ -4,6 +4,7 @@ export * from '@util/types'
 export * from '@util/cron'
 export * from '@util/cnpj'
 export * from '@util/path'
+export * from '@util/json'
 
 export type PartialDeep<T> = { [x in keyof T]?: T[x] extends object ? PartialDeep<T[x]> : T[x] }
 

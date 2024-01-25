@@ -1,6 +1,7 @@
 import { Injection, Service, Result } from '@core'
 import { ID } from '@@types'
 import { GLOBAL_DTO } from '@global'
+import { isUndefined } from '@util'
 import { UseCase } from '@common/use-case'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { CategoryRepository } from '@modules/category/category.repository'
@@ -61,7 +62,8 @@ export class CategoryQueryUseCase extends UseCase {
                 itemsPerPage: limite,
                 totalOfItens: totalResult.getValue(),
                 totalOfPages: Math.ceil(totalResult.getValue() / limite),
-            }
+            },
+            filtersQuery
         }
 
         return Result.success(result)

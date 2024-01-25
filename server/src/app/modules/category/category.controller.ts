@@ -1,4 +1,5 @@
 import { HttpStatusCodes, Request, Get, Post, Put, Injection, Controller, Guard, HttpStatusCode, Domain } from '@core'
+import { Json, isUndefined } from '@util'
 import { CategoryCreateUseCase } from '@modules/category/use-case/create.use-case'
 import { CategoryQueryUseCase } from '@modules/category/use-case/query.use-case'
 import { CategoryUpdateUseCase } from '@modules/category/use-case/update.use-case'
@@ -16,8 +17,17 @@ export class CategoryController {
     async get(req: Request) {
         const bankAccountId = req.headers['bankAccountId']
         const filters = req.params
+        const isFavoriteResult = Json.parse<boolean>(filters.isFavorite)
 
-        const result = await this.queryUC.queryMany({ ...filters, bankAccountId })
+        if (!isFavoriteResult.isSuccess()) {
+            return isFavoriteResult
+        }
+
+        const result = await this.queryUC.queryMany({
+            ...filters,
+            isFavorite: !isUndefined(filters.isFavorite) ? isFavoriteResult.getValue() : undefined,
+            bankAccountId
+        })
 
         return result
     }
