@@ -117,4 +117,16 @@ export class CategoryRepository extends Repository {
             })
         }
     }
+
+    async count(args: Prisma.CategoryCountArgs) {
+        try {
+            const financialTransaction = await this.database.instance.category.count(args)
+
+            return this.handleResponse<number>(financialTransaction)
+        } catch (err: any) {
+            return this.handleError<number>(err, {
+                error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.failed }
+            })
+        }
+    }
 }

@@ -85,7 +85,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
                 currentPage: pageIndex,
                 itemsPerPage: limite,
                 totalOfItens: totalResult.getValue(),
-                totalOfPages: totalResult.getValue() / limite,
+                totalOfPages: Math.ceil(totalResult.getValue() / limite),
             }
         }
 
