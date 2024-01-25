@@ -22,9 +22,20 @@ export class AddressRemoveUseCase extends UseCase {
     async perform(args: AddressRemoveDTOArgs) {
         const { id, peopleId } = this.validateDTO(args, schemaDTO)
 
+        await this.isExistsAddress({ id, peopleId })
         await this.removeAddress({ id, peopleId })
 
         return Result.success({ message: 'Address removed successfully' })
+    }
+
+    async isExistsAddress({ id, peopleId }: { id: ID, peopleId: ID }) {
+        const removeResult = await this.addressRepository.findUnique({ where: { id, peopleId } })
+
+        if (removeResult.isSuccess()) {
+            return
+        }
+
+        throw new BadRequestException({ ...removeResult.getError(), title: 'Query Address' })
     }
 
     private async removeAddress({ id, peopleId }: { id: ID, peopleId: ID }) {

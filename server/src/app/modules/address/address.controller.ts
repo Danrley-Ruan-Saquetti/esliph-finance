@@ -53,7 +53,6 @@ export class AddressController {
         return result
     }
 
-    @Guard({ name: 'block-router' })
     @Guard({ name: 'customer.authorization' })
     @Delete('/:id')
     async delete(req: Request) {
