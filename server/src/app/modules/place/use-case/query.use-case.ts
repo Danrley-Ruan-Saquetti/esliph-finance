@@ -57,4 +57,14 @@ export class PlaceQueryUseCase extends UseCase {
 
         return Result.success(placeResult.getValue())
     }
+
+    async queryCityByZipCode({ zipCode = '' }: { zipCode: string }) {
+        const placeResult = await this.placeRepository.queryCityByZipCode({ zipCode })
+
+        if (!placeResult.isSuccess()) {
+            return Result.failure({ ...placeResult.getError(), title: 'Query city' })
+        }
+
+        return Result.success(placeResult.getValue())
+    }
 }

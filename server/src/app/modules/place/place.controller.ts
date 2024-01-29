@@ -41,4 +41,13 @@ export class PlaceController {
 
         return result
     }
+
+    @Get('/cities/:zipCode')
+    async getCityByZipCode(req: Request) {
+        const zipCode = req.params['zipCode']
+
+        const result = await this.queryUC.queryCityByZipCode({ zipCode })
+
+        return result
+    }
 }
