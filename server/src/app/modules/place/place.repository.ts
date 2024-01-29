@@ -8,19 +8,28 @@ export namespace PlaceModel {
         state: string,
         name: string,
     }
-    export type City = {
+    export type CitySimple = {
         id: number,
         name: string
+    }
+
+    export type City = {
+        UF: string
+        zipCode: string
+        street: string
+        neighborhood: string
+        city: string
     }
 }
 
 @Service({ name: 'place.repository' })
 export class PlaceRepository {
-    constructor(@Injection.Inject('global.service.api') private api: ApiService) {
-        this.api.setOptions({
-            baseURL: 'https://servicodados.ibge.gov.br/api/v1/localidades',
-        })
+    private static BASE_URL_ORIGINS = {
+        ZIP_CODE: 'https://viacep.com.br/ws',
+        PLACE: 'https://servicodados.ibge.gov.br/api/v1/localidades'
     }
+
+    constructor(@Injection.Inject('global.service.api') private api: ApiService) { }
 
     async queryStatesByUFAndName(UF: string, name: string) {
         const stateResult = await this.queryStatesByName(name)
@@ -69,7 +78,7 @@ export class PlaceRepository {
     }
 
     async queryStates() {
-        const statesResult = await this.API.get<any[]>('/estados?orderBy=nome')
+        const statesResult = await this.API.get<any[]>('/estados?orderBy=nome', { baseURL: PlaceRepository.BASE_URL_ORIGINS.PLACE })
 
         if (!statesResult.isSuccess()) {
             return Result.failure<PlaceModel.State[]>({ ...statesResult.getError() })
@@ -85,25 +94,53 @@ export class PlaceRepository {
             return Result.failure<any[]>({ title: 'Query Cities', message: 'State not found' })
         }
 
-        const statesResult = await this.API.get<any[]>(`/estados/${UF}/municipios?orderBy=nome&?view=nivelado`)
+        const statesResult = await this.API.get<any[]>(`/estados/${UF}/municipios?orderBy=nome&?view=nivelado`, { baseURL: PlaceRepository.BASE_URL_ORIGINS.PLACE })
 
         if (!statesResult.isSuccess()) {
-            return Result.failure<PlaceModel.City[]>({ ...statesResult.getError(), title: 'Query Cities' })
+            return Result.failure<PlaceModel.CitySimple[]>({ ...statesResult.getError(), title: 'Query Cities' })
         }
 
         const states = statesResult.getValue().data.filter(({ nome: nameState }) => replaceSpecialCharacters(nameState).toLowerCase().includes(replaceSpecialCharacters(name).toLowerCase()))
 
-        return Result.success<PlaceModel.City[]>(states.map(({ id, nome: name }) => ({ id, name })))
+        return Result.success<PlaceModel.CitySimple[]>(states.map(({ id, nome: name }) => ({ id, name })))
     }
 
     async queryCity({ id }: { id: number }) {
-        const statesResult = await this.API.get<any>(`/municipios/${id}`)
+        const statesResult = await this.API.get<any>(`/municipios/${id}`, { baseURL: PlaceRepository.BASE_URL_ORIGINS.PLACE })
 
         if (!statesResult.isSuccess()) {
-            return Result.failure<PlaceModel.City>({ ...statesResult.getError(), title: 'Query Cities' })
+            return Result.failure<PlaceModel.CitySimple>({ ...statesResult.getError(), title: 'Query Cities' })
         }
 
-        return Result.success<PlaceModel.City>({ id: statesResult.getValue().data.id, name: statesResult.getValue().data.nome })
+        return Result.success<PlaceModel.CitySimple>({ id: statesResult.getValue().data.id, name: statesResult.getValue().data.nome })
+    }
+
+    async queryZipCode({ UF = '', city = '', street = '' }: { UF: string, city: string, street: string }) {
+        const statesResult = await this.API.get<any[]>(`/${UF.trim()}/${city.trim()}/${street.trim()}/json`, { baseURL: PlaceRepository.BASE_URL_ORIGINS.ZIP_CODE })
+
+        if (!statesResult.isSuccess()) {
+            return Result.failure<PlaceModel.City[]>({ ...statesResult.getError(), title: 'Query ZIP Code' })
+        }
+
+        return Result.success<PlaceModel.City[]>((statesResult.getValue().data || []).map(({ cep: zipCode, logradouro: street, bairro: neighborhood, localidade: city, uf: UF }) => ({
+            UF,
+            city,
+            zipCode,
+            neighborhood,
+            street,
+        })))
+    }
+
+    async queryCityByZipCode({ zipCode = '' }: { zipCode: string }) {
+        const statesResult = await this.API.get<any>(`/${zipCode.trim()}/json`, { baseURL: PlaceRepository.BASE_URL_ORIGINS.ZIP_CODE })
+
+        if (!statesResult.isSuccess()) {
+            return Result.failure<PlaceModel.City>({ ...statesResult.getError(), title: 'Query City' })
+        }
+
+        return Result.success<PlaceModel.City>({
+            zipCode: statesResult.getValue().data.cep, street: statesResult.getValue().data.logradouro, neighborhood: statesResult.getValue().data.bairro, city: statesResult.getValue().data.localidade, UF: statesResult.getValue().data.uf
+        })
     }
 
     get API() {

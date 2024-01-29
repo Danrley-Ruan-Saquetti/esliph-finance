@@ -1,0 +1,5 @@
+GET viacep.com.br/ws/89140000/json/
+
+###
+
+GET https://viacep.com.br/ws/RS/Porto%20Alegre/Domingos/json/
