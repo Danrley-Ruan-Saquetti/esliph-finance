@@ -1,6 +1,5 @@
 import { Result, Injection, Service } from '@core'
 import { UseCase } from '@common/use-case'
-import { GLOBAL_DTO } from '@global'
 import { BadRequestException } from '@common/exceptions'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { AddressRepository } from '@modules/address/address.repository'
@@ -11,23 +10,23 @@ const schemaDTO = ValidatorService.schema.object({
     peopleId: GLOBAL_ADDRESS_DTO.people.id,
     addresses: ValidatorService.schema.array(ValidatorService.schema.object({
         zipCode: ValidatorService.schema
-            .string({ 'required_error': GLOBAL_DTO.required('ZIP') })
+            .string({ 'required_error': GLOBAL_ADDRESS_DTO.zipCode.messageRequired })
             .regex(GLOBAL_ADDRESS_DTO.zipCode.regex, { message: GLOBAL_ADDRESS_DTO.zipCode.messageInvalid })
             .trim(),
         city: ValidatorService.schema
-            .string({ 'required_error': GLOBAL_DTO.required('City') })
+            .string({ 'required_error': GLOBAL_ADDRESS_DTO.city.messageRequired })
             .trim(),
         street: ValidatorService.schema
-            .string({ 'required_error': GLOBAL_DTO.required('Street') })
+            .string({ 'required_error': GLOBAL_ADDRESS_DTO.street.messageRequired })
             .trim(),
         country: ValidatorService.schema
-            .string({ 'required_error': GLOBAL_DTO.required('Country') })
+            .string({ 'required_error': GLOBAL_ADDRESS_DTO.country.messageRequired })
             .trim(),
         state: ValidatorService.schema
-            .string({ 'required_error': GLOBAL_DTO.required('State') })
+            .string({ 'required_error': GLOBAL_ADDRESS_DTO.state.messageRequired })
             .trim(),
         neighborhood: ValidatorService.schema
-            .string({ 'required_error': GLOBAL_DTO.required('Neighborhood') })
+            .string({ 'required_error': GLOBAL_ADDRESS_DTO.neighborhood.messageRequired })
             .trim(),
         complement: ValidatorService.schema
             .string()

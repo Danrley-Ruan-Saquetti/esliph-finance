@@ -14,6 +14,22 @@ export const GLOBAL_ADDRESS_DTO = {
     },
     zipCode: {
         regex: /^\d{8}$|^\d{5}-\d{3}$/gm,
-        messageInvalid: 'Format ZIP Code invalid'
-    }
+        messageInvalid: 'Format ZIP Code invalid',
+        messageRequired: GLOBAL_DTO.required('ZIP Code')
+    },
+    city: {
+        messageRequired: GLOBAL_DTO.required('City')
+    },
+    street: {
+        messageRequired: GLOBAL_DTO.required('Street')
+    },
+    country: {
+        messageRequired: GLOBAL_DTO.required('Country')
+    },
+    state: {
+        messageRequired: GLOBAL_DTO.required('State')
+    },
+    neighborhood: {
+        messageRequired: GLOBAL_DTO.required('Neighborhood')
+    },
 }
