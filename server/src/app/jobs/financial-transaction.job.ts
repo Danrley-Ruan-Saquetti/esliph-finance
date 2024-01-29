@@ -6,7 +6,6 @@ import { FinancialTransactionDuplicateTransactionsRepeatUseCase } from '@modules
 
 @Job({ name: 'job.financial-transaction' })
 export class FinancialTransactionJob {
-
     constructor(
         @Injection.Inject('financial-transaction.use-case.update-situation-late') private updateSituationLateUC: FinancialTransactionUpdateSituationLateUseCase,
         @Injection.Inject('financial-transaction.use-case.duplicate-transactions-repeat') private duplicateTransactionsRepeatUC: FinancialTransactionDuplicateTransactionsRepeatUseCase

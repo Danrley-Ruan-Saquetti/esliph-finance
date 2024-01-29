@@ -288,3 +288,16 @@ model Payment {
 
     @@map("payment")
 }
+
+model logError {
+    id          Int      @id @default(autoincrement())
+    title       String
+    message     String
+    description String   @default("")
+    stack       String   @default("")
+    causes      Json[]   @default([])
+    dateTime    DateTime @default(now()) @map("date_time") @db.Timestamptz(3)
+    createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+    @@map("log_error")
+}

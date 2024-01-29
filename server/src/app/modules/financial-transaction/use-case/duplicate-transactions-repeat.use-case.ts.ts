@@ -1,4 +1,5 @@
 import { Injection, Result, Service } from '@core'
+import { GLOBAL_RULES_BUSINESS } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
@@ -23,7 +24,7 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
         do {
             await this.performDuplicate()
             i++
-        } while (i < 3)
+        } while (i < GLOBAL_RULES_BUSINESS.repeatTransactionPerTime)
     }
 
     async performDuplicate() {

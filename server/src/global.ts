@@ -104,3 +104,7 @@ export const GLOBAL_DTO = {
         regex: REGEX_CNPJ
     },
 }
+
+export const GLOBAL_RULES_BUSINESS = {
+    repeatTransactionPerTime: 3
+}
