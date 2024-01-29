@@ -13,6 +13,8 @@ import { JobService } from '@services/job.service'
 import { DateService } from '@services/date.service'
 import { FormatterItinCnpjService } from '@services/formatter-itin-cnpj.service'
 import { ApiService } from '@services/api.service'
+import { EmitterEventService } from '@services/emitter-event.service'
+import { ListenerEventService } from '@services/listener-event.service'
 
 @Module({
     providers: [
@@ -30,6 +32,10 @@ import { ApiService } from '@services/api.service'
         DateService,
         FormatterItinCnpjService,
         ApiService,
+        EmitterEventService,
+        ListenerEventService,
+        { whenCall: 'listener-event', use: 'global.service.listener-event' },
+        { whenCall: 'emitter-event', use: 'global.service.emitter-event' },
         { whenCall: 'api', use: 'global.service.api' },
         { whenCall: 'formatter-itin-cnpj', use: 'global.service.formatter-itin-cnpj' },
         { whenCall: 'date', use: 'global.service.date' },

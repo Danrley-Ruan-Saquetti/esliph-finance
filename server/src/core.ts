@@ -29,6 +29,7 @@ export {
     Service,
     ServiceConfig
 } from '@esliph/module'
+export * as CoreModule from '@esliph/module'
 export { Delete, Get, FastifyAdapter, Head, Options, Patch, Post, Put } from '@esliph/adapter-fastify'
 
 import { Controller as ControllerModule } from '@esliph/module'
@@ -36,7 +37,8 @@ import { Controller as ControllerModule } from '@esliph/module'
 export enum Domain {
     CUSTOMER = '/customer',
     ADMIN = '/admin',
-    PUBLIC = '/v1'
+    PUBLIC = '/v1',
+    LOCAL = '/local',
 }
 
 export function Controller(options?: ControllerConfig & { domain: Domain }) {
