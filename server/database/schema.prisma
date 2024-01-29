@@ -289,10 +289,11 @@ model Payment {
     @@map("payment")
 }
 
-model logError {
+model LogError {
     id          Int      @id @default(autoincrement())
     title       String
     message     String
+    origin      String
     description String   @default("")
     stack       String   @default("")
     causes      Json[]   @default([])

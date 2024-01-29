@@ -10,6 +10,7 @@ import { NoteModule } from '@modules/note/note.module'
 import { NotificationModule } from '@modules/notification/notification.module'
 import { AddressModule } from '@modules/address/address.module'
 import { PlaceModule } from '@modules/place/place.module'
+import { LogModule } from '@modules/log/log.module'
 
 @Module({
     imports: [
@@ -24,6 +25,7 @@ import { PlaceModule } from '@modules/place/place.module'
         NotificationModule,
         AddressModule,
         PlaceModule,
+        LogModule
     ],
 })
 export class AppModule { }
