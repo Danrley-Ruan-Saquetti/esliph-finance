@@ -116,20 +116,24 @@ export class FinancialTransactionUpdateSituationLateUseCase extends UseCase {
     }
 
     private async sendMailTransactionsLate(financialTransactions: FinancialTransactionModel.Model[]) {
+        const results: Result[] = []
+
         for (let i = 0; i < financialTransactions.length; i++) {
             const transaction = financialTransactions[i]
 
             try {
                 const result = await this.sendMail(transaction)
-                return result
+                results.push(result)
             } catch (err: any) {
-                return Result.failure({
+                results.push(Result.failure({
                     title: 'Send Mail About Transaction Lated',
                     ...err,
                     message: `Cannot be send mail of the transactions lated. Error: "${err.message || ''}"`,
-                })
+                }))
             }
         }
+
+        return results
     }
 
     private async sendMail(financialTransaction: FinancialTransactionModel.Model) {

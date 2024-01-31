@@ -56,20 +56,25 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
     }
 
     private async duplicateTransactions(transactions: FinancialTransactionModel.FinancialTransaction[]) {
-        return transactions.map(async transaction => {
+        const results: Result<{ message: string }>[] = []
+
+        for (let i = 0; i < transactions.length; i++) {
+            const transaction = transactions[i]
             const transactionDB = this.database.transaction()
 
             try {
                 await transactionDB.begin()
 
                 if (!this.validDuplicate(transaction)) {
-                    return Result.success({ message: `Ignore transaction #${transaction.id}` })
+                    results.push(Result.success({ message: `Ignore transaction #${transaction.id}` }))
+                    continue
                 }
 
-                const duplicateResult = await this.duplicateTransaction(transaction)
+                const duplicateResult = await this.registerTransactionDuplicated(transaction)
 
                 if (!duplicateResult.isSuccess()) {
-                    return duplicateResult
+                    results.push(duplicateResult)
+                    continue
                 }
 
                 await this.transactionRepository.update({
@@ -81,13 +86,15 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
 
                 await transactionDB.commit()
 
-                return Result.success({ message: `Repeat successfully transaction #${transaction.id}` })
+                results.push(Result.success({ message: `Repeat successfully transaction #${transaction.id}` }))
             } catch (err: any) {
                 await transactionDB.rollback()
 
-                return Result.failure({ ...err, title: 'Create Transactions in Repeat', message: `Cannot create transactions in repeat. Error: "${err.message}"` })
+                results.push(Result.failure({ ...err, title: 'Create Transactions in Repeat', message: `Cannot create transactions in repeat. Error: "${err.message}"` }))
             }
-        })
+        }
+
+        return results
     }
 
     private validDuplicate(transaction: FinancialTransactionModel.FinancialTransaction) {
@@ -100,7 +107,7 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
         return nextDate <= now
     }
 
-    private async duplicateTransaction(transaction: IFinancialTransactionDuplicateArgs) {
+    private async registerTransactionDuplicated(transaction: IFinancialTransactionDuplicateArgs) {
         const result = await this.createUC.perform({
             bankAccountId: transaction.bankAccountId,
             dateTimeCompetence: transaction.dateTimeCompetence,
