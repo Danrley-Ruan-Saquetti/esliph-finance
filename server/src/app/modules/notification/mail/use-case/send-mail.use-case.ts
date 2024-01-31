@@ -24,6 +24,31 @@ export class MailSendMailUseCase extends UseCase {
         })
     }
 
+    async sendMailsManually({ ids = [] }: { ids: ID[] }) {
+        const mails = await this.queryMailsByIds(ids)
+
+        mails.map(async mail => {
+            await this.sendMail(mail)
+        })
+    }
+
+    private async queryMailsByIds(ids: ID[]) {
+        const mailsResult = await this.mailRepository.findMany({
+            where: {
+                id: { in: ids }
+            },
+            include: {
+                notification: true
+            }
+        })
+
+        if (!mailsResult.isSuccess()) {
+            throw new BadRequestException({ ...mailsResult.getError(), title: 'Query Mails' })
+        }
+
+        return mailsResult.getValue()
+    }
+
     private async queryMailsInQueue() {
         const mailsResult = await this.mailRepository.findMany({
             where: {
