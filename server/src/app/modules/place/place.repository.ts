@@ -29,7 +29,9 @@ export class PlaceRepository {
         PLACE: 'https://servicodados.ibge.gov.br/api/v1/localidades'
     }
 
-    constructor(@Injection.Inject('global.service.api') private api: ApiService) { }
+    constructor(@Injection.Inject('global.service.api') private api: ApiService) {
+        this.api.setOptions({ name: 'Place' })
+    }
 
     async queryStatesByUFAndName(UF: string, name: string) {
         const stateResult = await this.queryStatesByName(name)
