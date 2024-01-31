@@ -40,14 +40,44 @@ export class FinancialTransactionUpdateSituationLateUseCase extends UseCase {
     }
 
     private async performUC() {
-        const financialTransactionsLated = await this.queryFinancialTransactionLated()
+        const financialTransactionsLated = await this.queryFinancialTransactionsLated()
+        await this.performManual({ ids: financialTransactionsLated.map(({ id }) => id) })
+        await this.sendMailTransactionsLate(financialTransactionsLated)
+
+        return Result.success({ message: 'Update situations of the transactions successfully' })
+    }
+
+    async performManual({ ids }: { ids: ID[], isSendNotification?: boolean }) {
+        const financialTransactionsLated = await this.queryFinancialTransactionsLatedByIds(ids)
         await this.update(financialTransactionsLated.map(({ id }) => id))
         await this.sendMailTransactionsLate(financialTransactionsLated)
 
         return Result.success({ message: 'Update situations of the transactions successfully' })
     }
 
-    private async queryFinancialTransactionLated() {
+    private async queryFinancialTransactionsLatedByIds(ids: ID[]) {
+        const dateNow = this.dateService.now()
+
+        const financialTransactionsLated = await this.transactionRepository.findMany({
+            where: {
+                id: {
+                    in: ids
+                },
+                expiresIn: { lt: dateNow },
+            },
+            orderBy: {
+                priority: 'desc'
+            }
+        })
+
+        if (!financialTransactionsLated.isSuccess()) {
+            throw new BadRequestException({ ...financialTransactionsLated.getError(), title: 'Query Financial Transactions' })
+        }
+
+        return financialTransactionsLated.getValue()
+    }
+
+    private async queryFinancialTransactionsLated() {
         const dateNow = this.dateService.now()
 
         const financialTransactionsLated = await this.transactionRepository.findMany({
@@ -86,7 +116,9 @@ export class FinancialTransactionUpdateSituationLateUseCase extends UseCase {
     }
 
     private async sendMailTransactionsLate(financialTransactions: FinancialTransactionModel.Model[]) {
-        return financialTransactions.map(async transaction => {
+        for (let i = 0; i < financialTransactions.length; i++) {
+            const transaction = financialTransactions[i]
+
             try {
                 const result = await this.sendMail(transaction)
                 return result
@@ -97,7 +129,7 @@ export class FinancialTransactionUpdateSituationLateUseCase extends UseCase {
                     message: `Cannot be send mail of the transactions lated. Error: "${err.message || ''}"`,
                 })
             }
-        })
+        }
     }
 
     private async sendMail(financialTransaction: FinancialTransactionModel.Model) {

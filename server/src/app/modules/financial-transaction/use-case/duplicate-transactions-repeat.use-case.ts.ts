@@ -116,7 +116,9 @@ export class FinancialTransactionDuplicateTransactionsRepeatUseCase extends UseC
             value: transaction.value,
             typeOccurrence: FinancialTransactionModel.TypeOccurrence.SINGLE,
             notes: [
-                { description: `Parent Financial Transaction #${transaction.id} (${transaction.countRepeatedOccurrences + 1}/${transaction.timesToRepeat})` },
+                {
+                    description: `Duplicate Financial Transaction of #${transaction.id} "${transaction.title}"\n(${transaction.countRepeatedOccurrences + 1}/${transaction.timesToRepeat})`
+                },
             ],
         })
 
