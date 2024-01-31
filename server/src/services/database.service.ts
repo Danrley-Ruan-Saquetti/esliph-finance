@@ -1,8 +1,9 @@
 export * from '@prisma/client'
 import { PrismaClient } from '@prisma/client'
-import { Service } from '@core'
+import { Injection, Service, Result } from '@core'
 import { GLOBAL_FORMATTER_CONFIG, GLOBAL_LOG_CONFIG } from '@global'
 import { WriteStreamOutputService } from '@services/write-stream-output.service'
+import { EmitterEventService } from './emitter-event.service'
 
 @Service({ name: 'global.service.database' })
 export class DatabaseService {
@@ -18,7 +19,16 @@ export class DatabaseService {
     static onLoad() {
         const writer = WriteStreamOutputService.newInstance(`${GLOBAL_LOG_CONFIG.path}/db.log`)
 
-        this.instance.$on('error', args => {
+        this.instance.$on('error', async args => {
+            const emitter = Injection.resolve(EmitterEventService)
+            await emitter.emit('/local/errors/create', {
+                ...Result.failure({
+                    title: 'Database Exception',
+                    ...args,
+                }).getError(),
+                origin: 'Database'
+            })
+
             writer.write(`#  ${GLOBAL_FORMATTER_CONFIG.date.format()}  [ERROR]: ${args.message}`)
         })
         this.instance.$on('info', args => {
@@ -33,7 +43,12 @@ export class DatabaseService {
     }
 
     static async onStart() {
-        await this.instance.$connect()
+        try {
+            await this.instance.$connect()
+        } catch (err: any) {
+            console.error(err)
+            process.exit(1)
+        }
     }
 
     get instance() {

@@ -1,9 +1,10 @@
+import { EmitterEventService } from '@services/emitter-event.service'
 import Fastify, { FastifyRequest } from 'fastify'
 import fastifyCompression from '@fastify/compress'
 import fastifyCookie from '@fastify/cookie'
 import fastifyHelmet from '@fastify/helmet'
 import fastifyCsrf from '@fastify/csrf-protection'
-import { ApplicationModule, Service, EventsRouter, Server, FastifyAdapter, Result, Client } from '@core'
+import { ApplicationModule, Service, EventsRouter, Server, FastifyAdapter, Result, Client, Injection } from '@core'
 import { getEnv } from '@util'
 import { GLOBAL_LOG_CONFIG, GLOBAL_SERVER } from '@global'
 import { WriteStreamOutputService } from '@services/write-stream-output.service'
@@ -39,6 +40,7 @@ export class HttpService extends FastifyAdapter {
 
     static listen({ port }: { port: number }) {
         const writer = WriteStreamOutputService.newInstance(`${GLOBAL_LOG_CONFIG.path}/http.log`)
+        const emitter = Injection.resolve(EmitterEventService)
 
         HttpService.instance.listen({ port, host: '0.0.0.0' }, (err: Error | null, address: string) => {
             if (err) {
@@ -55,6 +57,10 @@ export class HttpService extends FastifyAdapter {
 
                 writer.write(JSON.stringify(args, null, 2))
                 writer.write(message)
+            })
+
+            Server.on('request/error', async (args: EventsRouter['request/error']) => {
+                await emitter.emit('/local/errors/create', { ...args.response.getError(), origin: 'Request HTTP' })
             })
 
             ApplicationModule.logger.log(`Server running on address ${address}`, {}, { context: 'HTTP' })
