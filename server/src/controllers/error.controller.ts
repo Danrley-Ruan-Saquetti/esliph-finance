@@ -1,11 +1,16 @@
-import { Controller, CoreModule, Domain } from '@core'
+import { Controller, CoreModule, Domain, Injection } from '@core'
+import { LogErrorCreateUseCase } from '@modules/log/error/use-case/create.use-case'
 
-@Controller({ prefix: '/errors', domain: Domain.LOCAL })
+@Controller()
 export class ErrorController {
-    constructor() { }
+    constructor(@Injection.Inject('log-error.use-case.create') private errorCreateUC: LogErrorCreateUseCase) { }
 
-    @CoreModule.Post('/create')
+    @CoreModule.OnEvent(`${Domain.LOCAL}/errors/create`)
     async dispatchError(data: any) {
-        console.log(data)
+        try {
+            await this.errorCreateUC.perform(data)
+        } catch (err: any) {
+            return
+        }
     }
 }

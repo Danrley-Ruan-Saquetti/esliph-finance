@@ -6,7 +6,7 @@ import { DatabaseService } from '@services/database.service'
 import { MailService } from '@services/mail.service'
 import { CodeGeneratorService } from '@services/code-generator.service'
 import { WriteStreamOutputService } from '@services/write-stream-output.service'
-import { HttpService } from '@services/http.service'
+import { HttpLocal, HttpService } from '@services/http.service'
 import { MaskDataService } from '@services/mask-data.service'
 import { QueryBuilderService } from '@services/query-builder.service'
 import { JobService } from '@services/job.service'
@@ -34,6 +34,8 @@ import { ListenerEventService } from '@services/listener-event.service'
         ApiService,
         EmitterEventService,
         ListenerEventService,
+        HttpLocal,
+        { whenCall: 'http-local', use: 'global.service.http-local' },
         { whenCall: 'listener-event', use: 'global.service.listener-event' },
         { whenCall: 'emitter-event', use: 'global.service.emitter-event' },
         { whenCall: 'api', use: 'global.service.api' },

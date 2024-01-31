@@ -47,9 +47,9 @@ const schemaDTO = ValidatorService.schema.object({
 
 export type LogErrorCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>
 
-@Service({ name: 'blank.use-case.create' })
+@Service({ name: 'log-error.use-case.create' })
 export class LogErrorCreateUseCase extends UseCase {
-    constructor(@Injection.Inject('blank.repository') private blankRepository: LogErrorRepository) {
+    constructor(@Injection.Inject('log-error.repository') private logErrorRepository: LogErrorRepository) {
         super()
     }
 
@@ -62,7 +62,7 @@ export class LogErrorCreateUseCase extends UseCase {
     }
 
     private async registerLogError(data: LogErrorModel.CreateArgs) {
-        const registerLogErrorResult = await this.blankRepository.create({ data })
+        const registerLogErrorResult = await this.logErrorRepository.create({ data })
 
         if (registerLogErrorResult.isSuccess()) {
             return

@@ -3,7 +3,7 @@ import fastifyCompression from '@fastify/compress'
 import fastifyCookie from '@fastify/cookie'
 import fastifyHelmet from '@fastify/helmet'
 import fastifyCsrf from '@fastify/csrf-protection'
-import { ApplicationModule, Service, EventsRouter, Server, FastifyAdapter, Result } from '@core'
+import { ApplicationModule, Service, EventsRouter, Server, FastifyAdapter, Result, Client } from '@core'
 import { getEnv } from '@util'
 import { GLOBAL_LOG_CONFIG, GLOBAL_SERVER } from '@global'
 import { WriteStreamOutputService } from '@services/write-stream-output.service'
@@ -59,5 +59,12 @@ export class HttpService extends FastifyAdapter {
 
             ApplicationModule.logger.log(`Server running on address ${address}`, {}, { context: 'HTTP' })
         })
+    }
+}
+
+@Service({ name: 'global.service.http-local' })
+export class HttpLocal extends Client<any> {
+    constructor() {
+        super()
     }
 }
