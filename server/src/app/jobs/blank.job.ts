@@ -6,8 +6,6 @@ export class BlankJob {
 
     constructor() { }
 
-    @Cron({ name: 'foo', cronTime: CronExpression.EVERY_SECOND })
-    async foo() {
-
-    }
+    @Cron({ name: 'foo', cronTime: CronExpression.EVERY_SECOND, ignore: true })
+    async foo() { }
 }

@@ -1,8 +1,9 @@
-import { Service, ApplicationModule, JobOptions, Job as EsliphJob, CronOptions, Cron as EsliphCron, BootstrapJob, isJob } from '@core'
+import { Service, ApplicationModule, JobOptions, Job as EsliphJob, CronOptions, Cron as EsliphCron, BootstrapJob, isJob, Injection, Result } from '@core'
 import { ClassConstructor } from '@@types'
 import { isInstance } from '@util'
 import { GLOBAL_LOG_CONFIG } from '@global'
 import { WriteStreamOutputService } from '@services/write-stream-output.service'
+import { EmitterEventService } from './emitter-event.service'
 export * from '@core'
 
 export function Job(options: JobOptions) {
@@ -27,6 +28,7 @@ export class JobService {
 
     static onStart() {
         const writer = WriteStreamOutputService.newInstance(`${GLOBAL_LOG_CONFIG.path}/job.log`)
+        const emitter = Injection.resolve(EmitterEventService)
 
         const jobsProviders = ApplicationModule.getProviders().filter(provider => isInstance(provider)).filter(provider => isJob(provider)) as ClassConstructor[]
 
@@ -36,7 +38,8 @@ export class JobService {
         ApplicationModule.listener.on('job/end', data => {
             writer.write(`Job "${data.name}" end`)
         })
-        ApplicationModule.listener.on('job/error', data => {
+        ApplicationModule.listener.on('job/error', async data => {
+            await emitter.emit('/local/errors/create', { title: `JOB - ${data.name}`, ...data, ...data.error, origin: 'JOB' })
             writer.write(`Job "${data.name}" error: "${data.error.message}"`)
         })
 
