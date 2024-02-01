@@ -39,6 +39,8 @@ export enum Domain {
     ADMIN = '/admin',
     PUBLIC = '/v1',
     LOCAL = '/local',
+    DOCS = '/docs',
+    BASE = ''
 }
 
 export function Controller(options?: ControllerConfig & { domain: Domain }) {

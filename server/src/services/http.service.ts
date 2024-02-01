@@ -1,13 +1,16 @@
-import { EmitterEventService } from '@services/emitter-event.service'
 import Fastify, { FastifyRequest } from 'fastify'
+import swagger from '@fastify/swagger'
+import swaggerUI from '@fastify/swagger-ui'
 import fastifyCompression from '@fastify/compress'
 import fastifyCookie from '@fastify/cookie'
 import fastifyHelmet from '@fastify/helmet'
 import fastifyCsrf from '@fastify/csrf-protection'
-import { ApplicationModule, Service, EventsRouter, Server, FastifyAdapter, Result, Client, Injection } from '@core'
+import { ApplicationModule, Service, EventsRouter, Server, FastifyAdapter, Result, Client, Injection, Domain } from '@core'
 import { getEnv } from '@util'
 import { GLOBAL_LOG_CONFIG, GLOBAL_SERVER } from '@global'
+import { EmitterEventService } from '@services/emitter-event.service'
 import { WriteStreamOutputService } from '@services/write-stream-output.service'
+import console from 'console'
 
 export { HttpStatusCode, HttpStatusCodes, Request, Response, ResultHttp, ResultHttpModel, Method } from '@core'
 export * from '@esliph/adapter-fastify'
@@ -17,9 +20,32 @@ const PORT = getEnv<number>({ name: 'PORT', defaultValue: 8080 })
 @Service({ name: 'global.service.http' })
 export class HttpService extends FastifyAdapter {
 
-    static onLoad() {
+    static async onLoad() {
         HttpService.loadInstance(Fastify())
 
+        // @ts-expect-error
+        await HttpService.instance.register(swagger, {
+            mode: 'static',
+            specification: {
+                path: './docs/api.yaml'
+            },
+
+        })
+        await HttpService.instance.register(swaggerUI, {
+            routePrefix: `${Domain.DOCS}/api`,
+            staticCSP: true,
+            uiConfig: {
+                docExpansion: 'list',
+                deepLinking: false
+            },
+            uiHooks: {
+                onRequest: function (request, reply, next) { next() },
+                preHandler: function (request, reply, next) { next() }
+            },
+            transformStaticCSP: (header) => header,
+            transformSpecification: (swaggerObject, request, reply) => { return swaggerObject },
+            transformSpecificationClone: true
+        })
         HttpService.instance.register(fastifyCompression, { encodings: ['gzip', 'deflate'] })
         HttpService.instance.register(fastifyCookie, { secret: GLOBAL_SERVER.key })
         HttpService.instance.register(fastifyCsrf)

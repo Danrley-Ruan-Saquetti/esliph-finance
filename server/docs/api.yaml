@@ -1,0 +1,49 @@
+openapi: "3.0.2"
+info:
+    title: Financial Portal API
+    description: Documentation for the financial portal API
+    version: "1.0.0"
+    contact:
+        email: danrsaquetti@gmail.com
+        name: Dan Ruan
+servers:
+    - url: http://localhost:8080
+components:
+    schemas:
+        People:
+            type: object
+            properties:
+                type:
+                    type: string
+                    enum:
+                        - NATURAL_PERSON
+                        - LEGAL_ENTITY
+paths:
+    /customer/auth/customer/sign-up:
+        #  name: string;
+        # login: string;
+        # password: string;
+        # peopleType: PeopleModel.Type;
+        # itinCnpj: string;
+        # gender?: "MASCULINE" | "FEMININE" | undefined;
+        # dateOfBirth?: Date | undefined;
+        post:
+            description: Create a customer account
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: "object"
+                            properties:
+                                name:
+                                    type: "string"
+                                login:
+                                    type: "string"
+                                password:
+                                    type: "string"
+                                itinCnpj:
+                                    type: "string"
+            responses:
+                "201":
+                    description: OK

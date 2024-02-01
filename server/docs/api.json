@@ -1,0 +1,65 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "Documentation for the financial portal API",
+        "version": "1.0.0",
+        "title": "Financial Portal API",
+        "contact": {
+            "email": "danrsaquetti@gmail.com",
+            "name": "Dan Ruan"
+        }
+    },
+    "security": [],
+    "tags": [],
+    "servers": [],
+    "components": {},
+    "paths": {
+        "/status": {
+            "post": {
+                "description": "Status route, so we can check if server is alive",
+                "tags": [
+                    "Status"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "teste": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Server is alive",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "health": {
+                                            "type": "boolean"
+                                        },
+                                        "date": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "health": true,
+                                        "date": "2018-02-19T15:36:46.758Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
