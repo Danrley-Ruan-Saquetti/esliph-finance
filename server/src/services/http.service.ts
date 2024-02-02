@@ -27,7 +27,7 @@ export class HttpService extends FastifyAdapter {
         await HttpService.instance.register(swagger, {
             mode: 'static',
             specification: {
-                path: './docs/api.yaml'
+                path: './docs/api.json'
             },
 
         })

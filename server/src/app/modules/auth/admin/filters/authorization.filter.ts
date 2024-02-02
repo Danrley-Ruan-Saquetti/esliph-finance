@@ -6,7 +6,7 @@ export class AdminAuthorizationFilter implements FilterPerform {
     constructor(@Injection.Inject('auth.admin.use-case.authorization') private authorizationUC: AuthAdminAuthorizationUseCase) { }
 
     async perform(req: Request<any>, res: Response<any>) {
-        const { authorization } = req.headers
+        const authorization = req.headers['authorization'] || req.headers['Authorization']
 
         const result = this.authorizationUC.perform({ Authorization: authorization })
 

@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.2",
     "info": {
-        "title": "Financial Portal API",
+        "title": "Financial Portal API JSON",
         "description": "Documentation for the financial portal API",
         "version": "1.0.0",
         "contact": {
@@ -11,15 +11,50 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8080/customer"
+            "url": "http://localhost:8080"
         }
     ],
     "tags": [
         {
             "name": "Auth"
+        },
+        {
+            "name": "Users"
         }
     ],
     "components": {
+        "securitySchemes": {
+            "AuthorizationCustomer": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "description": "Authorization Token Customer"
+            },
+            "AuthorizationBankAccount": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "AuthorizationBankAccount",
+                "description": "Authorization Token Bank Account"
+            }
+        },
+        "parameters": {
+            "Authorization": {
+                "in": "header",
+                "name": "Authorization",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "AuthorizationBankAccount": {
+                "in": "header",
+                "name": "AuthorizationBankAccount",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            }
+        },
         "schemas": {
             "Result": {
                 "type": "object",
@@ -78,7 +113,7 @@
                     "LEGAL_ENTITY"
                 ]
             },
-            "Gender": {
+            "PeopleGender": {
                 "type": "string",
                 "enum": [
                     "MASCULINE",
@@ -88,8 +123,37 @@
             "People": {
                 "type": "object",
                 "properties": {
+                    "id": {
+                        "type": "number"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "itinCnpj": {
+                        "type": "string"
+                    },
                     "type": {
                         "$ref": "#/components/schemas/PeopleType"
+                    },
+                    "gender": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/PeopleGender"
+                            },
+                            {
+                                "nullable": true
+                            }
+                        ]
+                    },
+                    "dateOfBirth": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
                     }
                 }
             }
@@ -97,6 +161,33 @@
         "responses": {
             "400": {
                 "description": "There was an error in the operation",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "value": {
+                                            "nullable": true,
+                                            "default": null,
+                                            "example": null
+                                        },
+                                        "error": {
+                                            "nullable": false
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "401": {
+                "description": "Unauthorized request",
                 "content": {
                     "application/json": {
                         "schema": {
@@ -182,7 +273,7 @@
                                         "type": "string"
                                     },
                                     "gender": {
-                                        "$ref": "#/components/schemas/Gender"
+                                        "$ref": "#/components/schemas/PeopleGender"
                                     },
                                     "dateOfBirth": {
                                         "type": "string"
@@ -304,6 +395,213 @@
                     },
                     "400": {
                         "$ref": "#/components/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
+        "/customer/auth/bank-account/sign-in": {
+            "post": {
+                "description": "Sign in to the bank account",
+                "security": [
+                    {
+                        "AuthorizationCustomer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/Authorization"
+                    }
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "code": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "code",
+                                    "password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Signed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/Result"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "status": {
+                                                    "type": "number",
+                                                    "default": 200
+                                                },
+                                                "value": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "token": {
+                                                            "type": "string",
+                                                            "description": "JWT Token"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
+        "/customer/users/current": {
+            "get": {
+                "description": "Get logged in user data",
+                "tags": [
+                    "Users"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Signed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/Result"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "status": {
+                                                    "type": "number",
+                                                    "default": 200
+                                                },
+                                                "value": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "token": {
+                                                            "type": "string",
+                                                            "description": "JWT Token"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
+        "/customer/users": {
+            "put": {
+                "description": "Sign in to the bank account",
+                "tags": [
+                    "Users"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "code": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "code",
+                                    "password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Signed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/Result"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "status": {
+                                                    "type": "number",
+                                                    "default": 200
+                                                },
+                                                "value": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "token": {
+                                                            "type": "string",
+                                                            "description": "JWT Token"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
                     },
                     "500": {
                         "$ref": "#/components/responses/500"
