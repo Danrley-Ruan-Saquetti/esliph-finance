@@ -1,9 +1,8 @@
-import Fastify, { FastifyRequest, FastifyReply } from 'fastify'
+import Fastify, { FastifyRequest } from 'fastify'
 import fastifyCompression from '@fastify/compress'
 import fastifyCookie from '@fastify/cookie'
 import fastifyHelmet from '@fastify/helmet'
 import fastifyCsrf from '@fastify/csrf-protection'
-import fastifyStatic from '@fastify/static'
 import { ApplicationModule, Service, EventsRouter, Server, FastifyAdapter, Result, Client, Injection, Domain } from '@core'
 import { getEnv } from '@util'
 import { GLOBAL_LOG_CONFIG, GLOBAL_SERVER } from '@global'
@@ -23,32 +22,6 @@ export class HttpService extends FastifyAdapter {
     static async onLoad() {
         HttpService.loadInstance(Fastify({ logger: false }))
 
-        // await HttpService.instance.register(swagger, {
-        //     mode: 'static',
-        //     specification: {
-        //         path: './docs/api.json'
-        //     },
-
-        // })
-        // await HttpService.instance.register(swaggerUI, {
-        //     routePrefix: `${Domain.DOCS}/api`,
-        //     staticCSP: true,
-        //     uiConfig: {
-        //         docExpansion: 'list',
-        //         deepLinking: false
-        //     },
-        //     uiHooks: {
-        //         onRequest: function (request, reply, next) { next() },
-        //         preHandler: function (request, reply, next) { next() }
-        //     },
-        //     transformStaticCSP: (header) => header,
-        //     transformSpecification: (swaggerObject, request, reply) => { return swaggerObject },
-        //     transformSpecificationClone: true
-        // })
-        HttpService.instance.register(fastifyStatic, {
-            root: path.join(__dirname, '..', '..', 'public', 'docs-api'),
-            prefix: '/docs/api',
-        })
         HttpService.instance.register(fastifyCompression, { encodings: ['gzip', 'deflate'] })
         HttpService.instance.register(fastifyCookie, { secret: GLOBAL_SERVER.key })
         HttpService.instance.register(fastifyCsrf)
@@ -61,10 +34,6 @@ export class HttpService extends FastifyAdapter {
         })
 
         HttpService.instance.setNotFoundHandler(HttpService.instance['notFound'])
-
-        HttpService.instance.get('/docs/api', (req, res: FastifyReply) => {
-            return res.sendFile('index.html')
-        })
     }
 
     static onStart() {
