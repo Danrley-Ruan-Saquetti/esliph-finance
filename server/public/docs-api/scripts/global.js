@@ -1,4 +1,4 @@
 const ROUTERS = [
-	// { title: 'Home', name: 'home', isActive: true },
-	// { title: 'Customer', name: 'customer', isActive: false },
+	{ title: 'Home', name: 'home' },
+	{ title: 'Customer', name: 'customer' },
 ]

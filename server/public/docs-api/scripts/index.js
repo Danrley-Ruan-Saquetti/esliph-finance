@@ -7,9 +7,11 @@ function loadRouters() {
 
 	const url = new URL(window.location.href)
 
-	const currentRouterActive = url.searchParams.get('router')
+	const paramRouterName = url.searchParams.get('router')
 
-	ROUTERS.map(({ title, name, isActive = false }) => {
+	const currentRouter = ROUTERS.find(({ name }) => name == paramRouterName) ? paramRouterName : 'home'
+
+	ROUTERS.map(({ title, name }) => {
 		const itemElement = document.createElement('a')
 
 		itemElement.setAttribute('data-content-name', name)
@@ -21,7 +23,7 @@ function loadRouters() {
 
 		menuWrapperElement.appendChild(itemElement)
 
-		if (currentRouterActive == name) {
+		if (currentRouter == name) {
 			toggleContent(name)
 		}
 	})
@@ -29,8 +31,12 @@ function loadRouters() {
 
 async function toggleContent(name) {
 	toggleContentMenu(name)
-	toggleMainContent(name)
-	// addOrUpdateUrlParam('router', name)
+	addOrUpdateUrlParam('router', name)
+	const result = await getContent(name)
+
+	document.querySelector('main.content').innerHTML = result.content
+
+	document.title = `Portal Esliph - API | ${toCapitalise(name)}`
 }
 
 function toggleContentMenu(name) {
@@ -46,10 +52,8 @@ function toggleContentMenu(name) {
 	}
 }
 
-async function toggleMainContent(name) {
-	const content = await getContentInHtml(name)
-
-	document.querySelector('.app .content').innerHTML = content
+function addOrUpdateUrlParam(name, value) {
+	window.history.pushState('object or string', 'Title', `/docs/api/index.html?${name}=${value}`)
 }
 
 window.onload = App

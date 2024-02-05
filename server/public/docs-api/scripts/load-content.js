@@ -1,29 +1,11 @@
-const md = markdownit()
-
-async function getContentInHtml(name) {
-	const result = await getContent(name)
-
-	if (!result.ok) {
-		throw new Error(result.error)
-	}
-
-	const content = converterMarkdownToHtml(result.content)
-
-	return content
-}
-
 async function getContent(name) {
 	try {
-		const result = await fetch(`/docs-api/content/${name}.md`).then(res => res.text())
+		const result = await fetch(`/docs/api/content/${name}`).then(res => res.json())
 
-		return { ok: true, content: result, error: null }
+		return { ok: true, content: result.value.content, error: null }
 	} catch (err) {
 		console.log(err)
 
 		return { ok: false, content: 'Not Found', error: err }
 	}
-}
-
-function converterMarkdownToHtml(content) {
-	return md.render(content)
 }

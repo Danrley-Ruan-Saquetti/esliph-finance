@@ -1,5 +1,5 @@
 # Hello
 
-```js
+```javascript
 const hello = 'world'
 ```
