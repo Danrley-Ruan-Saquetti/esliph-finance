@@ -5,6 +5,10 @@ async function App() {
 function loadRouters() {
 	const menuWrapperElement = document.querySelector('.sidebar .menu-wrapper')
 
+	const url = new URL(window.location.href)
+
+	const currentRouterActive = url.searchParams.get('router')
+
 	ROUTERS.map(({ title, name, isActive = false }) => {
 		const itemElement = document.createElement('a')
 
@@ -17,7 +21,7 @@ function loadRouters() {
 
 		menuWrapperElement.appendChild(itemElement)
 
-		if (isActive) {
+		if (currentRouterActive == name) {
 			toggleContent(name)
 		}
 	})
@@ -26,6 +30,7 @@ function loadRouters() {
 async function toggleContent(name) {
 	toggleContentMenu(name)
 	toggleMainContent(name)
+	// addOrUpdateUrlParam('router', name)
 }
 
 function toggleContentMenu(name) {
