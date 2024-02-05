@@ -5,3 +5,19 @@
 .flex-column {
     flex-direction: column;
 }
+
+.line-horizontal {
+    width: 80%;
+    height: 2px;
+    border: 2px solid #dedede;
+    border-radius: .3rem;
+    margin: 3rem auto;
+}
+
+.center {
+    margin-inline: auto;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

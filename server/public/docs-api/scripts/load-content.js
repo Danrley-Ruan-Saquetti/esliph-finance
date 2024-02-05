@@ -20,7 +20,7 @@ async function getContent(name) {
 	} catch (err) {
 		console.log(err)
 
-		return { ok: false, content: '', error: err }
+		return { ok: false, content: 'Not Found', error: err }
 	}
 }
 
