@@ -8,7 +8,7 @@ import { NotificationModel } from '@modules/notification/notification.model'
 import { GLOBAL_NOTIFICATION_DTO } from '@modules/notification/notification.global'
 
 export const schemaDTO = ValidatorService.schema.object({
-    bankAccountId: GLOBAL_NOTIFICATION_DTO.bankAccount.id,
+    bankAccountId: GLOBAL_NOTIFICATION_DTO.bankAccount.id.optional(),
     content: ValidatorService.schema
         .string({ 'required_error': GLOBAL_NOTIFICATION_DTO.content.messageRequired }),
     subject: ValidatorService.schema
@@ -33,10 +33,10 @@ export class NotificationCreateUseCase extends UseCase {
         return Result.success({ message: 'Notification registered successfully' })
     }
 
-    private async registerNotification({ bankAccountId, content, subject, type }: { bankAccountId: ID, content: string, type: NotificationModel.Type, subject: string }) {
+    private async registerNotification({ bankAccountId, content, subject, type }: { bankAccountId?: ID, content: string, type: NotificationModel.Type, subject: string }) {
         const registerNotificationResult = await this.notificationRepository.create({
             data: {
-                bankAccount: { connect: { id: bankAccountId } },
+                ...(bankAccountId && { bankAccount: { connect: { id: bankAccountId } } }),
                 situation: NotificationModel.Situation.IN_QUEUE,
                 content,
                 type,

@@ -6,5 +6,7 @@ export type DocumentSimple<ModelType extends object = {}> = Omit<ModelType, keyo
 export type ClassConstructor<T = any> = new (...args: any[]) => T
 
 export type PayloadJWTAdmin = { sub: ID, peopleId: ID, email: string, name: string }
-export type PayloadJWTCustomer = { sub: ID, peopleId: ID, email: string, name: string }
+export type PayloadJWTCustomer = PayloadJWTAdmin
 export type PayloadJWTCustomerBankAccount = PayloadJWTCustomer & { bankAccount: number }
+
+export type PayloadJWTCustomerResetPassword = { sub: ID, email: string, name: string }

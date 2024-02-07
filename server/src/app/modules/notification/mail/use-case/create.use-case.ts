@@ -9,7 +9,7 @@ import { NotificationModel } from '@modules/notification/notification.model'
 import { MailModel } from '@modules/notification/mail/mail.model'
 
 const schemaDTO = ValidatorService.schema.object({
-    bankAccountId: GLOBAL_NOTIFICATION_DTO.bankAccount.id,
+    bankAccountId: GLOBAL_NOTIFICATION_DTO.bankAccount.id.optional(),
     content: ValidatorService.schema
         .string({ 'required_error': GLOBAL_NOTIFICATION_DTO.content.messageRequired }),
     subject: ValidatorService.schema
@@ -31,7 +31,7 @@ export class MailCreateUseCase extends UseCase {
     async perform(args: MailCreateDTOArgs) {
         const { bankAccountId, content, recipient, sender, subject } = this.validateDTO(args, schemaDTO)
 
-        await this.registerMail({ bankAccountId, content, recipient, sender, subject })
+        await this.registerMail({ bankAccountId: bankAccountId || null, content, recipient, sender, subject })
 
         return Result.success({ message: 'Mail registered successfully' })
     }
@@ -43,9 +43,11 @@ export class MailCreateUseCase extends UseCase {
                 sender,
                 notification: {
                     create: {
-                        bankAccount: {
-                            connect: { id: bankAccountId }
-                        },
+                        ...(bankAccountId && {
+                            bankAccount: {
+                                connect: { id: bankAccountId }
+                            }
+                        }),
                         subject,
                         content,
                         situation: NotificationModel.Situation.IN_QUEUE,

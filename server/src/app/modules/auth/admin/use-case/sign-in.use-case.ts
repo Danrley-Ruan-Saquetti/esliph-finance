@@ -72,6 +72,6 @@ export class AuthAdminSignInUseCase extends UseCase {
     }
 
     private generateToken({ sub, email, name, peopleId }: PayloadJWTAdmin) {
-        return this.jwt.encode<PayloadJWTAdmin>({ sub, name, email, peopleId }, { exp: GLOBAL_SERVER_JWT_TOKEN.expiresTime, secret: GLOBAL_SERVER_JWT_TOKEN.keyMaster })
+        return this.jwt.encode<PayloadJWTAdmin>({ sub, name, email, peopleId }, { exp: GLOBAL_SERVER_JWT_TOKEN.authenticationExpiresTime, secret: GLOBAL_SERVER_JWT_TOKEN.keyMaster })
     }
 }

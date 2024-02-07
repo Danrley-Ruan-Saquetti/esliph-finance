@@ -114,7 +114,7 @@ export class AuthBankAccountSignInUseCase extends UseCase {
     private generateToken({ sub, email, name, bankAccount, peopleId }: PayloadJWTCustomerBankAccount) {
         return this.jwt.encode<PayloadJWTCustomerBankAccount>(
             { sub, name, email, bankAccount, peopleId },
-            { exp: GLOBAL_SERVER_JWT_TOKEN.expiresTime, secret: GLOBAL_SERVER_JWT_TOKEN.keyBank },
+            { exp: GLOBAL_SERVER_JWT_TOKEN.authenticationExpiresTime, secret: GLOBAL_SERVER_JWT_TOKEN.keyBank },
         )
     }
 

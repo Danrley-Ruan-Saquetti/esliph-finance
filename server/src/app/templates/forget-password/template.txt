@@ -1,0 +1,13 @@
+Redefine password.
+Hello <b>{{ name }}</b>,
+
+A request was made to set the password for the email <b>{{ email }}</b>.
+
+Click the link below to reset your password:
+
+{{token}}
+
+If you have not asked to change your password, please disregard this email.
+
+Att,
+Esliph - Financial Portal

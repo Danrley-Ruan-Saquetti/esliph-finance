@@ -41,7 +41,6 @@ export class JWTService {
 
             return token
         } catch (err: any) {
-            console.log(err)
             throw new BadRequestException({ title: 'Generate Token', message: 'Unable to generate token' })
         }
     }

@@ -17,7 +17,9 @@ export const GLOBAL_SERVER_JWT_TOKEN = {
     keyCustomer: getEnv<string>({ name: 'SERVER_JWT_TOKEN_KEY_CUSTOMER' }),
     keyMaster: getEnv<string>({ name: 'SERVER_JWT_TOKEN_KEY_MASTER' }),
     keyBank: getEnv<string>({ name: 'SERVER_JWT_TOKEN_KEY_BANK' }),
-    expiresTime: getEnv<string>({ name: 'SERVER_JWT_TOKEN_EXPIRES_TIME' }),
+    keyResetPassword: getEnv<string>({ name: 'SERVER_JWT_TOKEN_KEY_RESET_PASSWORD' }),
+    authenticationExpiresTime: getEnv<string>({ name: 'SERVER_JWT_TOKEN_AUTHENTICATION_EXPIRES_TIME' }),
+    resetPasswordExpiresTime: getEnv<string>({ name: 'SERVER_JWT_TOKEN_RESET_PASSWORD_EXPIRES_TIME' }),
 }
 
 export const GLOBAL_MAIL_CONFIG = {
@@ -103,6 +105,11 @@ export const GLOBAL_DTO = {
     cnpj: {
         regex: REGEX_CNPJ
     },
+    email: {
+        mas: {
+
+        }
+    }
 }
 
 export const GLOBAL_RULES_BUSINESS = {
