@@ -3,6 +3,7 @@ import { Post, HttpStatusCode } from '@services/http.service'
 import { AuthCustomerSignUpUseCase } from '@modules/auth/customer/use-case/sign-up.use-case'
 import { AuthCustomerSignInUseCase } from '@modules/auth/customer/use-case/sign-in.use-case'
 import { AuthCustomerForgetPasswordUseCase } from '@modules/auth/customer/use-case/forget-password.use-case'
+import { AuthCustomerResetPasswordUseCase } from '@modules/auth/customer/use-case/reset-password.use-case'
 
 @Controller({ prefix: '/auth/customer', domain: Domain.CLIENT })
 export class AuthCustomerController {
@@ -10,6 +11,7 @@ export class AuthCustomerController {
         @Injection.Inject('auth.customer.use-case.sign-up') private signUpUC: AuthCustomerSignUpUseCase,
         @Injection.Inject('auth.customer.use-case.sign-in') private signInUC: AuthCustomerSignInUseCase,
         @Injection.Inject('auth.customer.use-case.forget-password') private forgetPasswordUC: AuthCustomerForgetPasswordUseCase,
+        @Injection.Inject('auth.customer.use-case.reset-password') private resetPasswordUC: AuthCustomerResetPasswordUseCase,
     ) { }
 
     @Post('/sign-up')
@@ -34,8 +36,12 @@ export class AuthCustomerController {
         return result
     }
 
-    @Post('/reset-password/:token')
+    @Post('/reset-password')
     async resetPassword(req: Request) {
-        return { ok: true }
+        const token = req.params['token'] || ''
+
+        const result = await this.resetPasswordUC.perform({ ...req.body, token })
+
+        return result
     }
 }

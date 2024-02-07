@@ -58,7 +58,7 @@ export class UserCreateUseCase extends UseCase {
         const { name, itinCnpj, dateOfBirth, gender, type: peopleType } = await this.peopleCreateUC.validDTO({ ...args, type: args.peopleType })
 
         const { code, passwordHash } = await this.validateRegister({ login, password })
-        // await this.registerUserWithPeople({ login, password: passwordHash, code, type: userType as UserModel.Type, active: true }, { active: true, dateOfBirth, gender, itinCnpj, name, type: peopleType })
+        await this.registerUserWithPeople({ login, password: passwordHash, code, type: userType as UserModel.Type, active: true }, { active: true, dateOfBirth, gender, itinCnpj, name, type: peopleType })
 
         return Result.success({ message: 'Register user successfully' })
     }
