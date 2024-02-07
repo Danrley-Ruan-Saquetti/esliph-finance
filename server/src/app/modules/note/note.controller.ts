@@ -4,7 +4,7 @@ import { NoteRemoveUseCase } from '@modules/note/use-case/remove.use-case'
 import { NoteUpdateUseCase } from '@modules/note/use-case/update.use-case'
 import { BankAccountBelongControl } from '@modules/bank-account/control/belong.control'
 
-@Controller({ prefix: '/notes', domain: Domain.CUSTOMER })
+@Controller({ prefix: '/notes', domain: Domain.CLIENT })
 export class NoteController {
     constructor(
         @Injection.Inject('bank-account.control.belong') private bankAccountBelongControl: BankAccountBelongControl,

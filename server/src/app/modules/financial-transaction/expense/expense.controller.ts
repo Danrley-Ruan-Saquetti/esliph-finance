@@ -4,7 +4,7 @@ import { FinancialExpenseCreateUseCase } from '@modules/financial-transaction/ex
 import { FinancialExpenseLiquidateUseCase } from '@modules/financial-transaction/expense/use-case/liquidate.use-case'
 import { FinancialExpenseQueryUseCase } from '@modules/financial-transaction/expense/use-case/query.use-case'
 
-@Controller({ prefix: '/financial-transactions/expense', domain: Domain.CUSTOMER })
+@Controller({ prefix: '/financial-transactions/expense', domain: Domain.CLIENT })
 export class FinancialExpenseController {
     constructor(
         @Injection.Inject('financial-expense.use-case.create') private createUC: FinancialExpenseCreateUseCase,

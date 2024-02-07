@@ -4,7 +4,7 @@ import { FinancialTransactionQueryUseCase } from '@modules/financial-transaction
 import { FinancialTransactionUpdateUseCase } from '@modules/financial-transaction/use-case/update.use-case'
 import { BankAccountBelongControl } from '@modules/bank-account/control/belong.control'
 
-@Controller({ prefix: '/financial-transactions', domain: Domain.CUSTOMER })
+@Controller({ prefix: '/financial-transactions', domain: Domain.CLIENT })
 export class FinancialTransactionController {
     constructor(
         @Injection.Inject('bank-account.control.belong') private bankAccountBelongControl: BankAccountBelongControl,

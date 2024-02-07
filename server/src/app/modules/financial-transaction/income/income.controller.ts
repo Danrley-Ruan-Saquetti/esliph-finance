@@ -4,7 +4,7 @@ import { FinancialIncomeCreateUseCase } from '@modules/financial-transaction/inc
 import { FinancialIncomeQueryUseCase } from '@modules/financial-transaction/income/use-case/query.use-case'
 import { FinancialIncomeReceiveUseCase } from '@modules/financial-transaction/income/use-case/receive.use-case'
 
-@Controller({ prefix: '/financial-transactions/income', domain: Domain.CUSTOMER })
+@Controller({ prefix: '/financial-transactions/income', domain: Domain.CLIENT })
 export class FinancialIncomeController {
     constructor(
         @Injection.Inject('financial-income.use-case.create') private createUC: FinancialIncomeCreateUseCase,

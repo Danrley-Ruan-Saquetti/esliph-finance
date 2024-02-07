@@ -1,4 +1,4 @@
 const ROUTERS = [
 	{ title: 'Home', name: 'home' },
-	{ title: 'Customer', name: 'customer' },
+	{ title: 'Client', name: 'client' },
 ]

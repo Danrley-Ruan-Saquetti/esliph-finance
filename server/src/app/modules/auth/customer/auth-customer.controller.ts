@@ -3,7 +3,7 @@ import { Post, HttpStatusCode } from '@services/http.service'
 import { AuthCustomerSignUpUseCase } from '@modules/auth/customer/use-case/sign-up.use-case'
 import { AuthCustomerSignInUseCase } from '@modules/auth/customer/use-case/sign-in.use-case'
 
-@Controller({ prefix: '/auth/customer', domain: Domain.CUSTOMER })
+@Controller({ prefix: '/auth/customer', domain: Domain.CLIENT })
 export class AuthCustomerController {
     constructor(
         @Injection.Inject('auth.customer.use-case.sign-up') private signUpUC: AuthCustomerSignUpUseCase,

@@ -4,7 +4,7 @@ import { BankAccountCreateUseCase } from '@modules/bank-account/use-case/create.
 import { BankAccountQueryUseCase } from '@modules/bank-account/use-case/query.use-case'
 import { BankAccountQueryBalanceUseCase } from '@modules/bank-account/use-case/query-balance.use-case'
 
-@Controller({ prefix: '/bank-accounts', domain: Domain.CUSTOMER })
+@Controller({ prefix: '/bank-accounts', domain: Domain.CLIENT })
 export class BankAccountController {
     constructor(
         @Injection.Inject('bank-account.use-case.create') private createUC: BankAccountCreateUseCase,

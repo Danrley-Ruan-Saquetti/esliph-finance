@@ -3,7 +3,7 @@ import { Get, Put } from '@services/http.service'
 import { UserQueryUseCase } from '@modules/user/use-case/query.use-case'
 import { UserUpdateUseCase } from '@modules/user/use-case/update.use-case'
 
-@Controller({ prefix: '/users', domain: Domain.CUSTOMER })
+@Controller({ prefix: '/users', domain: Domain.CLIENT })
 export class UserController {
     constructor(
         @Injection.Inject('user.use-case.query') private queryUC: UserQueryUseCase,

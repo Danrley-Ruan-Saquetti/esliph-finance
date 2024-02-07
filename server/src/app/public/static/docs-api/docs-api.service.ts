@@ -1,6 +1,6 @@
 import path from 'node:path'
 import fs from 'node:fs'
-import { Marked } from 'marked'
+import marked, { Marked } from 'marked'
 import { markedHighlight } from 'marked-highlight'
 import hljs from 'highlight.js'
 import fastifyStatic from '@fastify/static'

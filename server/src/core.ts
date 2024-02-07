@@ -35,7 +35,7 @@ export { Delete, Get, FastifyAdapter, Head, Options, Patch, Post, Put } from '@e
 import { Controller as ControllerModule } from '@esliph/module'
 
 export enum Domain {
-    CUSTOMER = '/customer',
+    CLIENT = '/client',
     ADMIN = '/admin',
     PUBLIC = '/v1',
     LOCAL = '/local',

@@ -3,3 +3,78 @@ pre {
     padding: 1rem;
     border-radius: .52rem;
 }
+
+.link {
+    color: #0037a8;
+    text-decoration: underline;
+}
+
+summary {
+    cursor: pointer;
+}
+
+details.card {
+    background-color: #f3f3f3;
+    border-radius: .7rem;
+    border: 1px solid #b4b4b4;
+    box-shadow: .2rem .2rem 5px rgba(0, 0, 0, .2);
+}
+
+details.card>summary {
+    padding: 1.5rem;
+}
+
+details .details-content {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+}
+
+.router .router-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.router .method {
+    padding: .3rem 2rem;
+}
+
+
+/* GET */
+
+.router.get[open] .router-info {
+    border-bottom: 1px solid #61affe;
+    margin-bottom: 1.5rem;
+}
+
+.router.get {
+    border: 1px solid #61affe;
+    border-radius: .4rem;
+    background-color: #61b0fe31;
+}
+
+.router.get .method {
+    background-color: #61affe;
+    color: #fff;
+    border-radius: .4rem;
+}
+
+
+/* POST */
+
+.router.post[open] .router-info {
+    border-bottom: 1px solid #3db780;
+    margin-bottom: 1.5rem;
+}
+
+.router.post {
+    border: 1px solid #3db780;
+    border-radius: .4rem;
+    background-color: #49cc911f;
+}
+
+.router.post .method {
+    background-color: #3db780;
+    color: #fff;
+    border-radius: .4rem;
+}

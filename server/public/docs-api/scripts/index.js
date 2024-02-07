@@ -34,9 +34,9 @@ async function toggleContent(name) {
 	addOrUpdateUrlParam('router', name)
 	const result = await getContent(name)
 
-	document.querySelector('main.content').innerHTML = result.content
+	document.querySelector('main.content-wrapper .content').innerHTML = result.content
 
-	document.title = `Portal Esliph - API | ${toCapitalise(name)}`
+	document.title = `Financial Portal - API | ${toCapitalise(name)}`
 }
 
 function toggleContentMenu(name) {
