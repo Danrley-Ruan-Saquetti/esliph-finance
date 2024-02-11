@@ -1,11 +1,14 @@
+import { Link } from 'expo-router'
 import { View, Text } from 'react-native'
 
 export default function Home() {
 
     return (
         <>
-            <View>
-                <Text className='top-10 text-pink-50'>Hello World</Text>
+            <View className='top-10'>
+                <Text className='text-pink-50'>Hello World</Text>
+
+                <Link href={'/auth/sign-in/'}>Login</Link>
             </View>
         </>
     )
