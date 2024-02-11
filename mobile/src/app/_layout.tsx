@@ -22,7 +22,7 @@ export default function Layout() {
     }
 
     return (
-        <SafeAreaView className='flex-1 bg-slate-800'>
+        <SafeAreaView className='flex-1 bg-slate-800 pt-8'>
             <Slot />
         </SafeAreaView>
     )

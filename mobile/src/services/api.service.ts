@@ -64,13 +64,13 @@ export class ApiService {
                 ...options
             }) as any
 
-            return Result.success<AxiosResponse<T, D>>(response.data.value, response.data.status)
+            return Result.success<T>(response.data.value, response.data.status)
         } catch (err: any) {
             if (err instanceof AxiosError) {
-                return Result.failure<AxiosResponse<T, D>>({ ...err, ...err.response?.data, ...err, ...err.response?.data?.error }, err.response?.data?.status)
+                return Result.failure<T>({ ...err, ...err.response?.data, ...err, ...err.response?.data?.error }, err.response?.data?.status)
             }
 
-            return Result.failure<AxiosResponse<T, D>>({ ...err })
+            return Result.failure<T>({ ...err })
         }
     }
 
