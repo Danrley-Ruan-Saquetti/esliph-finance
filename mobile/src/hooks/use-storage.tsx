@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { StorageService } from '@services/storage.service'
+import { Result } from '@lib/common'
 
-export function useStorage(key: string, valueInitial: any = null) {
+export function useStorage<T = any>(key: string, valueInitial?: T) {
     const storage = StorageService.useStorage(key)
-    const [valueState, setValueState] = useState(valueInitial)
+    const [valueState, setValueState] = useState<T>(valueInitial as any)
 
-    const setItem = async (value: any) => {
+    const setItem = async (value: T): Promise<Result<T>> => {
         const result = await storage.set(value)
 
         if (result.isSuccess()) {
@@ -18,6 +19,8 @@ export function useStorage(key: string, valueInitial: any = null) {
     const updateInitial = async () => {
         const result = await storage.get()
 
+        console.log(result)
+
         if (result.isSuccess()) {
             setValueState(result.getValue())
         }
@@ -27,5 +30,7 @@ export function useStorage(key: string, valueInitial: any = null) {
         updateInitial()
     }, [])
 
-    return [valueState, setItem]
+    console.log(valueState)
+
+    return [valueState, setItem] as const
 }

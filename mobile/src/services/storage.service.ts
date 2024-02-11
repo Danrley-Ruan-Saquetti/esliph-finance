@@ -26,9 +26,13 @@ export class StorageService {
         try {
             const result = await AsyncStorage.getItem(key) as any
 
+            if (result == null) {
+                return Result.failure<T>({ title: `Get value in "${key}" item`, message: 'Value not fount' })
+            }
+
             return Result.success<T>(JSON.parse(result))
         } catch (err: any) {
-            return Result.failure<T>({ title: `Save value in "${key}" item`, ...err })
+            return Result.failure<T>({ title: `Get value in "${key}" item`, ...err })
         }
     }
 
