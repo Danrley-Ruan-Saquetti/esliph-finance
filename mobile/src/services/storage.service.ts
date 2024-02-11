@@ -51,6 +51,17 @@ export class StorageService {
             return Result.failure({ title: 'Clear storage', ...err })
         }
     }
+
+    static useStorage(key: string) {
+        const storage = new StorageService()
+
+        return {
+            update: async (value: any) => storage.update(key, value),
+            set: async (value: any) => storage.set(key, value),
+            get: async () => storage.get(key),
+            delete: async () => storage.delete(key),
+        }
+    }
 }
 
 export const storageService = new StorageService()
