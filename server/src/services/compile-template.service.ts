@@ -12,7 +12,7 @@ export class CompileTemplateService {
 
             return this.compile(template, args)
         } catch (err: any) {
-            return Result.failure({ title: 'Compile Template', message: `Template "${path}" file not found` })
+            return Result.failure<string>({ title: 'Compile Template', message: `Template "${path}" file not found` })
         }
     }
 
@@ -20,7 +20,7 @@ export class CompileTemplateService {
         try {
             const result = this.instance.compile(template)(args)
 
-            return Result.success(result)
+            return Result.success<string>(result)
         } catch (err: any) {
             return Result.failure<string>({ ...err, title: 'Compile Template' })
         }
