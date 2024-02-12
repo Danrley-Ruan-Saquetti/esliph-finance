@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "start:clean": "expo start --clear",
     "start:server": "tsx watch src/server/index.ts",
@@ -29,6 +29,7 @@
     "expo": "~50.0.6",
     "expo-font": "~11.10.2",
     "expo-linking": "~6.2.2",
+    "expo-localization": "~14.8.3",
     "expo-router": "~3.4.7",
     "expo-splash-screen": "~0.26.4",
     "expo-status-bar": "~1.11.1",

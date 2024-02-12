@@ -2,11 +2,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'expo-router'
 import { storageService } from '@services/storage.service'
 import { APIPortal } from '@repositories/portal-finance-api.repository'
-
-const credentials = {
-    'login': 'danrsaquetti@gmail.com',
-    'password': 'Ab12345'
-}
+import '@config'
 
 export default function Home() {
     const router = useRouter()
