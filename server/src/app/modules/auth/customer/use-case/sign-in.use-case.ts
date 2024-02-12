@@ -38,7 +38,7 @@ export class AuthCustomerSignInUseCase extends UseCase {
     async perform(args: AuthSignInDTOArgs) {
         const { login, password } = this.validateDTO(args, schemaDTO)
 
-        const user = await this.queryUserByLogin(login)
+        const user = await this.queryUserByLoginOrCodeOrItinCnpj(login)
         await this.validPassword(password, user.password)
         const token = this.generateToken({ sub: user.id, email: user.login, name: user.people.name, peopleId: user.peopleId })
         await this.createMail(user)
@@ -46,9 +46,16 @@ export class AuthCustomerSignInUseCase extends UseCase {
         return Result.success({ token })
     }
 
-    private async queryUserByLogin(login: string) {
+    private async queryUserByLoginOrCodeOrItinCnpj(login: string) {
         const userResult = await this.userRepository.findFirst({
-            where: { login, type: UserModel.Type.CUSTOMER },
+            where: {
+                type: UserModel.Type.CUSTOMER,
+                OR: [
+                    { login },
+                    { code: login },
+                    { people: { itinCnpj: login } },
+                ]
+            },
             include: { people: true }
         })
 
