@@ -2,7 +2,7 @@ import { StorageService } from "@services/storage.service";
 import { GLOBAL_KEYS } from '@global';
 
 export class TokenService {
-    private storage = new StorageService()
+    protected storage = new StorageService()
 
     async setTokenCustomer(token: string) {
         const result = await this.storage.set(GLOBAL_KEYS.TOKEN_CUSTOMER, token)

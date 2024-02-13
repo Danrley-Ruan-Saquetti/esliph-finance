@@ -5,7 +5,7 @@ export type ApiOptions<D = any> = AxiosRequestConfig<D>
 
 export class ApiService {
     static globalOptions: ApiOptions = { headers: { 'Content-Type': 'application/json' } }
-    private api: AxiosInstance
+    protected api: AxiosInstance
 
     constructor(options: ApiOptions = {}) {
         this.api = axios.create({

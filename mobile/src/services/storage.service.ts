@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Result } from '../lib/common'
+import { Result } from '@lib/common'
 
 export class StorageService {
     async update(key: string, value: any) {
@@ -8,7 +8,7 @@ export class StorageService {
 
             return Result.success({ message: `Item "${key}" successfully updated` })
         } catch (err: any) {
-            return Result.failure({ title: `Update value in "${key}" item`, ...err })
+            return Result.failureOperational({ title: `Update value in "${key}" item`, ...err })
         }
     }
 
@@ -18,7 +18,7 @@ export class StorageService {
 
             return Result.success<{ message: string }>({ message: `Item "${key}" successfully saved` })
         } catch (err: any) {
-            return Result.failure<{ message: string }>({ title: `Save value in "${key}" item`, ...err })
+            return Result.failureOperational<{ message: string }>({ title: `Save value in "${key}" item`, ...err })
         }
     }
 
@@ -32,7 +32,17 @@ export class StorageService {
 
             return Result.success<T>(JSON.parse(result))
         } catch (err: any) {
-            return Result.failure<T>({ title: `Get value in "${key}" item`, ...err })
+            return Result.failureOperational<T>({ title: `Get value in "${key}" item`, ...err })
+        }
+    }
+
+    async getAllKeys() {
+        try {
+            const keys = await AsyncStorage.getAllKeys()
+
+            return Result.success(keys)
+        } catch (err: any) {
+            return Result.failure<string[]>({ title: `Get all keys`, ...err })
         }
     }
 
@@ -42,7 +52,7 @@ export class StorageService {
 
             return Result.success({ message: `Item "${key}" successfully removed` })
         } catch (err: any) {
-            return Result.failure({ title: `Remove value in "${key}" item`, ...err })
+            return Result.failureOperational({ title: `Remove value in "${key}" item`, ...err })
         }
     }
 
@@ -52,7 +62,7 @@ export class StorageService {
 
             return Result.success({ message: 'Storage successfully cleaned' })
         } catch (err: any) {
-            return Result.failure({ title: 'Clear storage', ...err })
+            return Result.failureOperational({ title: 'Clear storage', ...err })
         }
     }
 

@@ -2,7 +2,7 @@ import { TokenService } from "@services/token.service"
 import { ApiService } from "@services/api.service"
 
 export class AuthenticationService {
-    private tokenService = new TokenService()
+    protected tokenService = new TokenService()
 
     async setTokenCustomer(token: string) {
         const result = await this.tokenService.setTokenCustomer(token)

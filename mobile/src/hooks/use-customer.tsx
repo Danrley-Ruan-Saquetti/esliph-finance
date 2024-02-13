@@ -3,7 +3,6 @@ const credentials = {
     'password': 'Ab12345'
 }
 
-
 export function useCustomer() {
 
 }

@@ -6,7 +6,7 @@ export function useStorage<T = any>(key: string, valueInitial?: T) {
     const storage = StorageService.useStorage(key)
     const [valueState, setValueState] = useState<T>(valueInitial as any)
 
-    const setItem = async (value: T): Promise<Result<T>> => {
+    const setItem = async (value: T): Promise<Result<{ message: string }>> => {
         const result = await storage.set(value)
 
         if (result.isSuccess()) {
@@ -29,8 +29,6 @@ export function useStorage<T = any>(key: string, valueInitial?: T) {
     useEffect(() => {
         updateInitial()
     }, [])
-
-    console.log(valueState)
 
     return [valueState, setItem] as const
 }
