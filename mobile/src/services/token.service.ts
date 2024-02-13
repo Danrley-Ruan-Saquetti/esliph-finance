@@ -1,70 +1,41 @@
 import { StorageService } from "@services/storage.service";
-import { ApiService } from "./api.service";
-
-const KEY_TOKEN_CUSTOMER = 'global.key.token.customer'
-const KEY_TOKEN_BANK_ACCOUNT = 'global.key.token.bank-account'
+import { GLOBAL_KEYS } from '@global';
 
 export class TokenService {
     private storage = new StorageService()
 
     async setTokenCustomer(token: string) {
-        const result = await this.storage.set(KEY_TOKEN_CUSTOMER, token)
-
-        if (result.isSuccess()) {
-            if (!ApiService.globalOptions.headers) {
-                ApiService.globalOptions.headers = {}
-            }
-            ApiService.globalOptions.headers['Authorization'] = `Bearer ${token}`
-        }
+        const result = await this.storage.set(GLOBAL_KEYS.TOKEN_CUSTOMER, token)
 
         return result
     }
 
     async getTokenCustomer() {
-        const result = await this.storage.get<string>(KEY_TOKEN_CUSTOMER)
+        const result = await this.storage.get<string>(GLOBAL_KEYS.TOKEN_CUSTOMER)
 
         return result
     }
 
     async deleteTokenCustomer() {
-        const result = await this.storage.delete(KEY_TOKEN_CUSTOMER)
-
-        if (result.isSuccess()) {
-            if (ApiService.globalOptions.headers) {
-                delete ApiService.globalOptions.headers['Authorization']
-            }
-        }
+        const result = await this.storage.delete(GLOBAL_KEYS.TOKEN_CUSTOMER)
 
         return result
     }
 
     async setTokenBankAccount(token: string) {
-        const result = await this.storage.set(KEY_TOKEN_BANK_ACCOUNT, token)
-
-        if (result.isSuccess()) {
-            if (!ApiService.globalOptions.headers) {
-                ApiService.globalOptions.headers = {}
-            }
-            ApiService.globalOptions.headers['AuthorizationBankAccount'] = `Bearer ${token}`
-        }
+        const result = await this.storage.set(GLOBAL_KEYS.TOKEN_BANK_ACCOUNT, token)
 
         return result
     }
 
     async getTokenBankAccount() {
-        const result = await this.storage.get<string>(KEY_TOKEN_BANK_ACCOUNT)
+        const result = await this.storage.get<string>(GLOBAL_KEYS.TOKEN_BANK_ACCOUNT)
 
         return result
     }
 
     async deleteTokenBankAccount() {
-        const result = await this.storage.delete(KEY_TOKEN_BANK_ACCOUNT)
-
-        if (result.isSuccess()) {
-            if (ApiService.globalOptions.headers) {
-                delete ApiService.globalOptions.headers['AuthorizationBankAccount']
-            }
-        }
+        const result = await this.storage.delete(GLOBAL_KEYS.TOKEN_BANK_ACCOUNT)
 
         return result
     }
