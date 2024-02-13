@@ -1,5 +1,5 @@
 import { Slot } from 'expo-router'
-import { SafeAreaView } from 'react-native'
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
     Inter_400Regular,
     Inter_500Medium,
@@ -21,9 +21,11 @@ export default function Layout() {
         return <Loading />
     }
 
+    const insets = useSafeAreaInsets();
+
     return (
-        <SafeAreaView className='flex-1 bg-slate-800 pt-8'>
+        <SafeAreaProvider className={`pt-{${insets.top}}`}>
             <Slot />
-        </SafeAreaView>
+        </SafeAreaProvider>
     )
 }

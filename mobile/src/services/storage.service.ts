@@ -16,9 +16,9 @@ export class StorageService {
         try {
             await AsyncStorage.setItem(key, JSON.stringify(value))
 
-            return Result.success({ message: `Item "${key}" successfully saved` })
+            return Result.success<{ message: string }>({ message: `Item "${key}" successfully saved` })
         } catch (err: any) {
-            return Result.failure({ title: `Save value in "${key}" item`, ...err })
+            return Result.failure<{ message: string }>({ title: `Save value in "${key}" item`, ...err })
         }
     }
 

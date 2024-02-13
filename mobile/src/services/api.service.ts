@@ -4,10 +4,16 @@ import { Result } from '@lib/common'
 export type ApiOptions<D = any> = AxiosRequestConfig<D>
 
 export class ApiService {
+    static globalOptions: ApiOptions = { headers: { 'Content-Type': 'application/json' } }
     private api: AxiosInstance
 
     constructor(options: ApiOptions = {}) {
-        this.api = axios.create({ headers: { 'Content-Type': 'application/json' }, ...options })
+        this.api = axios.create({
+            ...ApiService.globalOptions, ...options, headers: {
+                ...ApiService.globalOptions.headers,
+                ...options.headers
+            }
+        })
     }
 
     async get<T = any, R = AxiosResponse<T>, D = any>(URL: string, config?: ApiOptions<D>) {
@@ -42,7 +48,7 @@ export class ApiService {
 
     async request<T = any, R = AxiosResponse<T>, D = any>(config: ApiOptions<D>) {
         try {
-            const response = await this.api.request<T, R, D>(config)
+            const response = await this.api.request<T, R, D>({ ...ApiService.globalOptions, ...config })
 
             return Result.success<AxiosResponse<T, any>>(response as any)
         } catch (err: any) {
@@ -52,6 +58,7 @@ export class ApiService {
 
     private async performRequest<T = any, R = AxiosResponse<T>, D = any>(method: Method, url: string, data?: D, config?: ApiOptions<D>) {
         const options = {
+            ...ApiService.globalOptions,
             ...this.api.defaults as any,
             ...config
         }
@@ -81,8 +88,8 @@ export class ApiService {
     }
 
     setOptions(config: Partial<Omit<AxiosDefaults<any>, 'headers'> & { headers: HeadersDefaults & { [key: string]: AxiosHeaderValue } }>) {
-
         this.api.defaults = {
+            ...ApiService.globalOptions,
             ...this.api.defaults,
             ...config
         }
