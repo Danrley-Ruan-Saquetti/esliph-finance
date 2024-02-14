@@ -6,3 +6,7 @@ export const GLOBAL_KEYS = {
     BANK_ACCOUNTS_IN_DEVICE: `${GLOBAL_KEY_PREFIX}.bank-accounts.in-device`,
     CUSTOMER_IN_DEVICE: `${GLOBAL_KEY_PREFIX}.customer.in-device`,
 }
+
+export const GLOBAL_ENV = {
+    URL_API: process.env['EXPO_PUBLIC_URL_API']
+}

@@ -1,0 +1,6 @@
+{
+	"extends": [
+		"./../.eslint.json",
+		"eslint-plugin-react-hooks"
+	]
+}
