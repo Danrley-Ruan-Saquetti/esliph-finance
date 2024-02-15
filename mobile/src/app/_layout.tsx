@@ -1,7 +1,10 @@
-import { Slot } from 'expo-router'
-import { P } from '@expo/html-elements'
+
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context'
-import * as InterFont from '@expo-google-fonts/inter'
+import { P } from '@expo/html-elements'
+import { Slot } from 'expo-router'
+import InterFont from '@expo-google-fonts/inter'
+import { AuthenticationProvider } from '@contexts/authentication'
+import { ValidAuthenticate } from '@components/valid-authenticate'
 
 export default function Layout() {
     const [isLoaded] = InterFont.useFonts({
@@ -15,7 +18,9 @@ export default function Layout() {
 
     return (
         <SafeAreaProvider className={`pt-{${insets.top}}`}>
-            {isLoaded ? <Slot /> : <P>Loading...</P>}
-        </SafeAreaProvider>
+            <AuthenticationProvider>
+                {isLoaded ? <ValidAuthenticate><Slot /></ValidAuthenticate> : <P>Loading...</P>}
+            </AuthenticationProvider>
+        </SafeAreaProvider >
     )
 }

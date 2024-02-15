@@ -12,9 +12,9 @@ import { MailCreateUseCase } from '@modules/notification/mail/use-case/create.us
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 
 const schemaDTO = ValidatorService.schema.object({
-    email: ValidatorService.schema
-        .string({ 'required_error': GLOBAL_USER_DTO.email.messageRequired })
-        .email({ message: GLOBAL_USER_DTO.email.messageInvalid })
+    login: ValidatorService.schema
+        .string({ 'required_error': GLOBAL_USER_DTO.login.messageRequired })
+        .max(GLOBAL_USER_DTO.login.maxCharacters, { message: GLOBAL_USER_DTO.login.messageRangeCharacters })
         .trim(),
 })
 
@@ -31,14 +31,14 @@ export class AuthCustomerForgetPasswordUseCase extends UseCase {
     }
 
     async perform(data: AuthCustomerForgetPasswordDTOArgs) {
-        const { email } = this.validateDTO(data, schemaDTO)
+        const { login } = this.validateDTO(data, schemaDTO)
 
-        const user = await this.queryCustomerByEmail(email)
+        const user = await this.queryCustomerByLoginOrCodeOrItinCnpj(login)
 
         const token = this.generateToken({ sub: user.id, email: user.login, name: user.people.name })
 
         const contentResult = CustomerForgetPasswordTemplate({
-            email,
+            email: user.login,
             token,
             name: user.people.name
         })
@@ -49,12 +49,12 @@ export class AuthCustomerForgetPasswordUseCase extends UseCase {
 
         await this.mailCreate.perform({
             sender: `${GLOBAL_APP.name} <${GLOBAL_MAIL_CONFIG.domain}>`,
-            recipient: email,
+            recipient: user.login,
             subject: 'Reset your password',
             content: contentResult.getValue()
         })
 
-        const emailMask = this.maskDataService.between(email, {
+        const emailMask = this.maskDataService.between(user.login, {
             character: '*',
             indexStart: 3,
             indexEnd: 3
@@ -72,8 +72,18 @@ export class AuthCustomerForgetPasswordUseCase extends UseCase {
         return token
     }
 
-    private async queryCustomerByEmail(email: string) {
-        const customerResult = await this.customerRepository.findUnique({ where: { type: UserModel.Type.CUSTOMER, login: email }, select: { ...UserModel.UserWithoutPasswordSelectWithPeople } })
+    private async queryCustomerByLoginOrCodeOrItinCnpj(login: string) {
+        const customerResult = await this.customerRepository.findFirst({
+            where: {
+                type: UserModel.Type.CUSTOMER,
+                OR: [
+                    { login },
+                    { code: login },
+                    { people: { itinCnpj: login } }
+                ]
+            },
+            select: { ...UserModel.UserWithoutPasswordSelectWithPeople }
+        })
 
         if (!customerResult.isSuccess()) {
             if (customerResult.isErrorInOperation()) {

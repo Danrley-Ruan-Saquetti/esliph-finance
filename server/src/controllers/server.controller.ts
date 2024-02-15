@@ -5,7 +5,7 @@ export class ServerController {
     constructor() { }
 
     @Get('/status')
-    health() {
+    health(req) {
         return Result.success({ ok: true, date: new Date(Date.now()) })
     }
 }

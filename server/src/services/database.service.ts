@@ -18,9 +18,9 @@ export class DatabaseService {
 
     static onLoad() {
         const writer = WriteStreamOutputService.newInstance(`${GLOBAL_LOG_CONFIG.path}/db.log`)
+        const emitter = Injection.resolve(EmitterEventService)
 
         this.instance.$on('error', async args => {
-            const emitter = Injection.resolve(EmitterEventService)
             await emitter.emit('/local/errors/create', {
                 ...Result.failure({
                     title: 'Database Exception',

@@ -57,7 +57,7 @@ export class HttpService extends FastifyAdapter {
 
                 ApplicationModule.logger[method](message, null, { context: 'HTTP' })
 
-                writer.write(JSON.stringify(args, null, 2))
+                // writer.write(JSON.stringify(args, null, 2))
                 writer.write(message)
             })
 
