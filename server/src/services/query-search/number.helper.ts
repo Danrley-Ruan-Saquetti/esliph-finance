@@ -38,42 +38,42 @@ export function NumberHandlerHelper(value: ParamPayload, name: string, schema: P
 }
 
 export const NumberHandlerOperation: { [x in ParamOperationType]?: (value: any, name: string) => Result } = {
-    [ParamOperation.CONTAINS]: NumberHandlerOperationContain,
-    [ParamOperation.NOT_CONTAINS]: NumberHandlerOperationContain,
-    [ParamOperation.EQUALS]: NumberHandlerOperationEqual,
+    [ParamOperation.CONTAINS]: (value: any, name: string) => NumberHandlerOperationContain(value, name, ParamOperation.CONTAINS),
+    [ParamOperation.NOT_CONTAINS]: (value: any, name: string) => NumberHandlerOperationContain(value, name, ParamOperation.NOT_CONTAINS),
+    [ParamOperation.EQUALS]: (value: any, name: string) => NumberHandlerOperationEqual(value, name, ParamOperation.EQUALS),
     [ParamOperation.FILLED]: GeneralHandlerOperationFilled,
-    [ParamOperation.DIFFERENT]: NumberHandlerOperationEqual,
-    [ParamOperation.GREATER_THAN]: NumberHandlerOperationEqual,
-    [ParamOperation.GREATER_THAN_OR_EQUAL]: NumberHandlerOperationEqual,
-    [ParamOperation.LESS_THAN]: NumberHandlerOperationEqual,
-    [ParamOperation.LESS_THAN_OR_EQUAL]: NumberHandlerOperationEqual,
+    [ParamOperation.DIFFERENT]: (value: any, name: string) => NumberHandlerOperationEqual(value, name, ParamOperation.DIFFERENT),
+    [ParamOperation.GREATER_THAN]: (value: any, name: string) => NumberHandlerOperationEqual(value, name, ParamOperation.GREATER_THAN),
+    [ParamOperation.GREATER_THAN_OR_EQUAL]: (value: any, name: string) => NumberHandlerOperationEqual(value, name, ParamOperation.GREATER_THAN_OR_EQUAL),
+    [ParamOperation.LESS_THAN]: (value: any, name: string) => NumberHandlerOperationEqual(value, name, ParamOperation.LESS_THAN),
+    [ParamOperation.LESS_THAN_OR_EQUAL]: (value: any, name: string) => NumberHandlerOperationEqual(value, name, ParamOperation.LESS_THAN_OR_EQUAL),
 }
 
-function NumberHandlerOperationUniqueValue(value: any, name: string) {
+function NumberHandlerOperationUniqueValue(value: any, name: string, operation = '') {
     const valueJsonResult = Json.parse<number | number[]>(value)
 
     if (!valueJsonResult.isSuccess() || !isNumber(valueJsonResult.getValue())) {
-        return Result.failure<number[]>({ title: 'Param Invalid', message: `Invalid number to param "${name}"` })
+        return Result.failure<number[]>({ title: 'Param Invalid', message: `Invalid number to param "${name}${operation ? `.${operation}` : ''}"` })
     }
 
     return valueJsonResult
 }
 
-function NumberHandlerOperationContain(value: any, name: string) {
+function NumberHandlerOperationContain(value: any, name: string, operation = '') {
     const valueJsonResult = Json.parse<number | number[]>(value)
 
     if (!valueJsonResult.isSuccess() || !isArray(valueJsonResult.getValue())) {
-        return Result.failure<number[]>({ title: 'Param Invalid', message: `Invalid array number to param "${name}"` })
+        return Result.failure<number[]>({ title: 'Param Invalid', message: `Invalid array number to param "${name}${operation ? `.${operation}` : ''}"` })
     }
 
     return valueJsonResult
 }
 
-function NumberHandlerOperationEqual(value: any, name: string) {
+function NumberHandlerOperationEqual(value: any, name: string, operation = '') {
     const valueJsonResult = Json.parse<number | number[]>(value)
 
     if (!valueJsonResult.isSuccess() || !isNumber(valueJsonResult.getValue())) {
-        return Result.failure<number[]>({ title: 'Param Invalid', message: `Invalid array number to param "${name}"` })
+        return Result.failure<number[]>({ title: 'Param Invalid', message: `Invalid array number to param "${name}${operation ? `.${operation}` : ''}"` })
     }
 
     return valueJsonResult

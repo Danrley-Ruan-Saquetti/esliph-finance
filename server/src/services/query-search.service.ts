@@ -1,6 +1,6 @@
 import { Service } from '@core'
 import { BadRequestException } from '@common/exceptions'
-import { QuerySchema, QueryPayload, QueryType, ParamPayloadInput } from '@services/query-search/types'
+import { QuerySchema, QueryPayload, ParamPayloadInput } from '@services/query-search/types'
 import { HANDLER_TYPE_PARAM } from './query-search/helpers'
 import { Json } from '@util'
 
@@ -60,31 +60,3 @@ export class QuerySearchService {
         return queriesValues
     }
 }
-
-const schema: QuerySchema = {
-    limite: {
-        type: QueryType.NUMBER,
-        isOptional: true,
-        // uniqueValue: true
-    },
-    pageIndex: {
-        type: QueryType.NUMBER,
-        isOptional: true,
-        uniqueValue: true
-    },
-}
-
-const querySearch = new QuerySearchService()
-
-querySearch.setSchema(schema)
-console.log(querySearch)
-
-const searchParams: QueryPayload = {
-    limite: {
-        dif: ''
-    },
-}
-
-const search = querySearch.parseFromString(Json.toJSON(searchParams).getValue())
-
-console.log(search)

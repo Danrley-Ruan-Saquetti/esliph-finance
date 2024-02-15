@@ -38,16 +38,16 @@ export function BooleanHandlerHelper(value: ParamPayload, name: string, schema: 
 }
 
 export const BooleanHandlerOperation: { [x in ParamOperationType]?: (value: any, name: string) => Result } = {
-    [ParamOperation.EQUALS]: BooleanHandlerOperationUniqueValue,
-    [ParamOperation.DIFFERENT]: BooleanHandlerOperationUniqueValue,
+    [ParamOperation.EQUALS]: (value: any, name: string) => BooleanHandlerOperationUniqueValue(value, name, ParamOperation.EQUALS),
+    [ParamOperation.DIFFERENT]: (value: any, name: string) => BooleanHandlerOperationUniqueValue(value, name, ParamOperation.DIFFERENT),
     [ParamOperation.FILLED]: GeneralHandlerOperationFilled,
 }
 
-function BooleanHandlerOperationUniqueValue(value: any, name: string) {
+function BooleanHandlerOperationUniqueValue(value: any, name: string, operation = '') {
     const valueJsonResult = Json.parse<boolean>(value)
 
     if (!valueJsonResult.isSuccess() || !isBoolean(valueJsonResult.getValue())) {
-        return Result.failure<boolean>({ title: 'Param Invalid', message: `Invalid boolean to param "${name}"` })
+        return Result.failure<boolean>({ title: 'Param Invalid', message: `Invalid boolean to param "${name}${operation ? `.${operation}` : ''}"` })
     }
 
     return valueJsonResult
