@@ -12,7 +12,7 @@ export class StorageService {
         }
     }
 
-    async set(key: string, value: any) {
+    async set<T = any>(key: string, value: T) {
         try {
             await AsyncStorage.setItem(key, JSON.stringify(value))
 
@@ -42,7 +42,7 @@ export class StorageService {
 
             return Result.success(keys)
         } catch (err: any) {
-            return Result.failure<string[]>({ title: `Get all keys`, ...err })
+            return Result.failure<string[]>({ title: 'Get all keys', ...err })
         }
     }
 
@@ -66,14 +66,30 @@ export class StorageService {
         }
     }
 
-    static useStorage(key: string) {
+    static useStorage<T = any>(key: string) {
         const storage = new StorageService()
 
         return {
-            update: async (value: any) => storage.update(key, value),
-            set: async (value: any) => storage.set(key, value),
-            get: async () => storage.get(key),
-            delete: async () => storage.delete(key),
+            update: async (value: T) => {
+                const result = await storage.update(key, value)
+
+                return result
+            },
+            set: async (value: T) => {
+                const result = await storage.set(key, value)
+
+                return result
+            },
+            get: async () => {
+                const result = await storage.get<T>(key)
+
+                return result
+            },
+            delete: async () => {
+                const result = await storage.delete(key)
+
+                return result
+            },
         }
     }
 }
