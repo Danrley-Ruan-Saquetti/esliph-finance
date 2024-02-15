@@ -2,7 +2,6 @@ import { Injection } from '@core'
 import { Cron, Job } from '@services/job.service'
 import { CronExpression } from '@util'
 import { MailSendMailUseCase } from '@modules/notification/mail/use-case/send-mail.use-case'
-import { BadRequestException } from '../../common/exceptions'
 
 @Job({ name: 'job.mail' })
 export class MailJob {

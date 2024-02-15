@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client'
 import { Service } from '@core'
 import { Repository } from '@services/repository.service'
-import { UserModel } from '../user.model'
+import { UserModel } from '@modules/user/user.model'
 
 type CustomerGetPayloadTypes = boolean | null | undefined | { select?: Prisma.UserSelect | null }
 type CustomerGetPayload<T extends boolean | null | undefined | { select?: Prisma.UserSelect | null }> = Prisma.UserGetPayload<T>

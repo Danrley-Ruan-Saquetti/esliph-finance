@@ -8,13 +8,13 @@ import { CodeGeneratorService } from '@services/code-generator.service'
 import { WriteStreamOutputService } from '@services/write-stream-output.service'
 import { HttpLocal, HttpService } from '@services/http.service'
 import { MaskDataService } from '@services/mask-data.service'
-import { QueryBuilderService } from '@services/query-builder.service'
 import { JobService } from '@services/job.service'
 import { DateService } from '@services/date.service'
 import { FormatterItinCnpjService } from '@services/formatter-itin-cnpj.service'
 import { ApiService } from '@services/api.service'
 import { EmitterEventService } from '@services/emitter-event.service'
 import { ListenerEventService } from '@services/listener-event.service'
+import { QuerySearchService } from '@services/query-search.service'
 
 @Module({
     providers: [
@@ -27,7 +27,6 @@ import { ListenerEventService } from '@services/listener-event.service'
         WriteStreamOutputService,
         HttpService,
         MaskDataService,
-        QueryBuilderService,
         JobService,
         DateService,
         FormatterItinCnpjService,
@@ -35,6 +34,8 @@ import { ListenerEventService } from '@services/listener-event.service'
         EmitterEventService,
         ListenerEventService,
         HttpLocal,
+        QuerySearchService,
+        { whenCall: 'query-search', use: 'global.service.query-search' },
         { whenCall: 'http-local', use: 'global.service.http-local' },
         { whenCall: 'listener-event', use: 'global.service.listener-event' },
         { whenCall: 'emitter-event', use: 'global.service.emitter-event' },
@@ -42,7 +43,6 @@ import { ListenerEventService } from '@services/listener-event.service'
         { whenCall: 'formatter-itin-cnpj', use: 'global.service.formatter-itin-cnpj' },
         { whenCall: 'date', use: 'global.service.date' },
         { whenCall: 'job', use: 'global.service.job' },
-        { whenCall: 'query-builder', use: 'global.service.query-builder' },
         { whenCall: 'mask-data', use: 'global.service.mask-data' },
         { whenCall: 'http', use: 'global.service.http' },
         { whenCall: 'write-stream-output', use: 'global.service.write-stream-output' },

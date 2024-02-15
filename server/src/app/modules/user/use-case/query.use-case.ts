@@ -36,4 +36,14 @@ export class UserQueryUseCase extends UseCase {
 
         return Result.success(bankAccountResult.getValue())
     }
+
+    async queryManyWithPeopleWithoutPassword() {
+        const bankAccountResult = await this.userRepository.findMany({ where: {}, select: { ...UserModel.UserWithoutPasswordSelect, active: false, people: { select: { ...PeopleModel.PeopleSimpleSelect, active: false } } } })
+
+        if (!bankAccountResult.isSuccess()) {
+            return Result.failure({ ...bankAccountResult.getError(), title: 'Query User' })
+        }
+
+        return Result.success(bankAccountResult.getValue())
+    }
 }

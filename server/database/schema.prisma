@@ -102,13 +102,14 @@ model User {
     type      UserType
     active    Boolean  @default(true)
     code      String   @unique @db.VarChar(9)
-    login     String   @unique @db.VarChar(254)
+    login     String   @db.VarChar(254)
     password  String   @db.VarChar(120)
     createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
     updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
     people    People   @relation(fields: [peopleId], references: [id], onDelete: Restrict)
 
-    @@unique([peopleId, type])
+    @@unique(fields: [peopleId, type], map: "user_people_type")
+    @@unique(fields: [login, type], map: "user_login_type")
     @@map("user")
 }
 

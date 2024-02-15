@@ -3,7 +3,7 @@ import { ClassConstructor } from '@@types'
 import { isInstance } from '@util'
 import { GLOBAL_LOG_CONFIG } from '@global'
 import { WriteStreamOutputService } from '@services/write-stream-output.service'
-import { EmitterEventService } from './emitter-event.service'
+import { EmitterEventService } from '@services/emitter-event.service'
 export * from '@core'
 
 export function Job(options: JobOptions) {

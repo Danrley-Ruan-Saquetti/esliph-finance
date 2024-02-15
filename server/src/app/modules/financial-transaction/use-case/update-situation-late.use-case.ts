@@ -1,13 +1,13 @@
 import { Injection, Service, Result } from '@core'
+import { GLOBAL_APP } from '@global'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
+import { FinancialTransactionIncomeLatedTemplate } from '@templates/financial-transaction-lated'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { MailCreateUseCase } from '@modules/notification/mail/use-case/create.use-case'
 import { PeopleRepository } from '@modules/people/people.repository'
-import { GLOBAL_APP } from '../../../../global'
-import { FinancialTransactionIncomeLatedTemplate } from '../../../templates/financial-transaction-lated'
 
 @Service({ name: 'financial-transaction.use-case.update-situation-late' })
 export class FinancialTransactionUpdateSituationLateUseCase extends UseCase {

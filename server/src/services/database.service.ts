@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import { Injection, Service, Result } from '@core'
 import { GLOBAL_FORMATTER_CONFIG, GLOBAL_LOG_CONFIG } from '@global'
 import { WriteStreamOutputService } from '@services/write-stream-output.service'
-import { EmitterEventService } from './emitter-event.service'
+import { EmitterEventService } from '@services/emitter-event.service'
 
 @Service({ name: 'global.service.database' })
 export class DatabaseService {

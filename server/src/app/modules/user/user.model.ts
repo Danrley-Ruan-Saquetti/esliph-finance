@@ -27,26 +27,26 @@ export namespace UserModel {
     export type UserWithoutPassword = Omit<User, 'password'>
     export type UserWithoutPasswordWithPeople = Omit<User, 'password'> & { people: PeopleModel.People }
 
-    export type UpdateArgs = Partial<Pick<Model, 'password' | 'login'>>
+    export type UpdateArgs = Partial<Pick<Model, 'password' | 'login' | 'active'>>
     export const UserWithoutPasswordSelect: { [x in keyof UserWithoutPassword]: true } = {
-        code: true,
-        createdAt: true,
-        login: true,
         id: true,
-        updatedAt: true,
         peopleId: true,
+        code: true,
+        login: true,
         type: true,
-        active: true
+        active: true,
+        updatedAt: true,
+        createdAt: true,
     } as const
     export const UserWithoutPasswordSelectWithPeople: { [x in keyof UserWithoutPasswordWithPeople]: true } = {
-        code: true,
-        createdAt: true,
-        login: true,
         id: true,
-        updatedAt: true,
         peopleId: true,
+        code: true,
+        login: true,
         type: true,
+        active: true,
+        updatedAt: true,
+        createdAt: true,
         people: true,
-        active: true
     } as const
 }

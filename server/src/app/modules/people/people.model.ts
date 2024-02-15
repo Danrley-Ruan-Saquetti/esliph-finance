@@ -17,13 +17,13 @@ export namespace PeopleModel {
     export type UpdateArgs = Partial<Pick<Model, 'name' | 'active' | 'dateOfBirth' | 'gender'>>
 
     export const PeopleSimpleSelect: { [x in keyof Simple]: true } = {
-        createdAt: true,
-        dateOfBirth: true,
-        gender: true,
         id: true,
-        itinCnpj: true,
         name: true,
+        itinCnpj: true,
         type: true,
-        updatedAt: true
+        gender: true,
+        dateOfBirth: true,
+        updatedAt: true,
+        createdAt: true,
     } as const
 }

@@ -7,6 +7,7 @@ import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { UserModel } from '@modules/user/user.model'
 import { UserRepository } from '@modules/user/user.repository'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
+import { isUndefined } from '@util'
 
 const schemaDTO = ValidatorService.schema.object({
     id: GLOBAL_USER_DTO.id,
@@ -21,6 +22,9 @@ const schemaDTO = ValidatorService.schema.object({
         .trim()
         .regex(GLOBAL_USER_DTO.password.regex, { message: GLOBAL_USER_DTO.password.messageRegex })
         .optional(),
+    active: ValidatorService.schema
+        .boolean()
+        .optional(),
 })
 
 export type UserUpdateDTOArgs = SchemaValidator.input<typeof schemaDTO>
@@ -32,14 +36,14 @@ export class UserUpdateUseCase extends UseCase {
     }
 
     async perform(args: UserUpdateDTOArgs) {
-        const { id, login, password } = this.validateDTO(args, schemaDTO)
+        const { id, login, password, active } = this.validateDTO(args, schemaDTO)
 
-        if (!login && !password) {
+        if (!login && !password && isUndefined(active)) {
             return Result.success({ message: 'No data updated' })
         }
 
         await this.verifyIsExistsUser(id)
-        await this.update({ login, password }, id)
+        await this.update({ login, password, active }, id)
 
         return Result.success({ message: 'User updated successfully' })
     }
@@ -56,8 +60,8 @@ export class UserUpdateUseCase extends UseCase {
         })
     }
 
-    private async update({ login, password }: UserModel.UpdateArgs, id: ID) {
-        const updateResult = await this.userRepository.update({ where: { id }, data: { login, password } })
+    private async update({ login, password, active }: UserModel.UpdateArgs, id: ID) {
+        const updateResult = await this.userRepository.update({ where: { id }, data: { login, password, active } })
 
         if (updateResult.isSuccess()) {
             return
