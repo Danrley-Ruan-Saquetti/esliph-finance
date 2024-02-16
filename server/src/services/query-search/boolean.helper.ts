@@ -1,11 +1,11 @@
 import { Result } from '@core'
-import { Json, isBoolean, isObject, isUndefined } from '@util'
+import { Json, isArray, isBoolean, isObject, isUndefined } from '@util'
 import { GeneralHandlerOperationFilled } from '@services/query-search/general.helper'
 import { ParamPayload, ParamSchema, ParamOperation, ParamOperationType } from '@services/query-search/types'
 import { BadRequestException } from '@common/exceptions'
 
 export function BooleanHandlerHelper(value: ParamPayload, name: string, schema: ParamSchema) {
-    if (schema.uniqueValue || !isObject(value)) {
+    if (schema.uniqueValue || !isObject(value) || !isArray(value)) {
         const result = BooleanHandlerOperationUniqueValue(value, name)
 
         if (!result.isSuccess()) {
@@ -13,7 +13,7 @@ export function BooleanHandlerHelper(value: ParamPayload, name: string, schema: 
         }
 
         if (!isBoolean(result.getValue())) {
-            return Result.failure<boolean[]>({ title: 'Param Invalid', message: `Invalid boolean to param "${name}"` })
+            throw new BadRequestException({ title: 'Param Invalid', message: `Invalid boolean to param "${name}"` })
         }
 
         return result.getValue()

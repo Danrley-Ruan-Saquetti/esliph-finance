@@ -11,9 +11,9 @@ export class Json {
         }
     }
 
-    static toJSON(data: any, replacer?: ((this: any, key: string, value: any) => any) | undefined, space?: string | number | undefined) {
+    static toJSON(data: any, replacer?: (((this: any, key: string, value: any) => any) | undefined) | null, space?: string | number | undefined) {
         try {
-            const result = JSON.stringify(data, replacer, space)
+            const result = JSON.stringify(data, replacer as any, space)
 
             return Result.success<string>(result)
         } catch (err: any) {

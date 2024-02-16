@@ -1,5 +1,7 @@
 import 'dotenv/config'
 import { isString } from '@util'
+import { isArray, isObject, isUndefined } from '@util/types'
+import { isDate } from 'util/types'
 export * from '@util/types'
 export * from '@util/cron'
 export * from '@util/cnpj'
@@ -116,4 +118,44 @@ export function replaceSpecialCharacters(str: string) {
     str = str.replace(/[ç]/g, 'c')
 
     return str.replace(/[^a-z0-9]/gi, '')
+}
+
+export function clearObject<T = any>(obj: T, isParent = true) {
+    const newObj: T = {} as any
+
+    if (!isObject(obj)) {
+        if (isArray(obj)) {
+            if ((obj as any).length) {
+                return obj as T
+            } else {
+                return undefined as T
+            }
+        }
+
+        return obj as T
+    }
+
+    if (isArray(obj)) {
+        if ((obj as any).length) {
+            return obj as T
+        } else {
+            return undefined as T
+        }
+    }
+
+    if (isDate(obj)) {
+        return obj as T
+    }
+
+    for (const propName in obj) {
+        const value = obj[propName]
+
+        const newValue = clearObject(value, false)
+
+        if (!isUndefined(newValue)) {
+            newObj[propName] = newValue
+        }
+    }
+
+    return (isParent ? newObj : Object.keys(newObj as any).length ? newObj : undefined) as T
 }

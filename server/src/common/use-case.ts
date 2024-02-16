@@ -1,9 +1,10 @@
-import { z } from 'zod'
 import { Injection, Service } from '@core'
-import { ValidatorService } from '@services/validator.service'
-import { MaskDataOptions, MaskDataService } from '@services/mask-data.service'
+import { Json } from '@util'
+import { BadRequestException } from '@common/exceptions'
 import { DateService } from '@services/date.service'
 import { Repository } from '@services/repository.service'
+import { ValidatorService, SchemaValidator } from '@services/validator.service'
+import { MaskDataOptions, MaskDataService } from '@services/mask-data.service'
 
 @Service()
 export class UseCase {
@@ -19,7 +20,21 @@ export class UseCase {
         this.database = Injection.resolve(Repository)
     }
 
-    protected validateDTO<ZodSchema extends z.Schema>(args: z.input<ZodSchema>, schema: ZodSchema) {
+    protected validateDTO<ZodSchema extends SchemaValidator.Schema>(args: SchemaValidator.input<ZodSchema>, schema: ZodSchema) {
+        return this.validator.performParse(args, schema).getValue()
+    }
+
+    protected validateFilterParamsDTO<ZodSchema extends SchemaValidator.Schema>(args: SchemaValidator.input<ZodSchema>, schema: ZodSchema) {
+        for (const arg in args) {
+            const valueResult = Json.parse(args[arg])
+
+            if (!valueResult.isSuccess()) {
+                continue
+            }
+
+            args[arg] = valueResult.getValue()
+        }
+
         return this.validator.performParse(args, schema).getValue()
     }
 

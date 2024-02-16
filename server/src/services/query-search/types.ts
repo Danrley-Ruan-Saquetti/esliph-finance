@@ -30,12 +30,3 @@ export type ParamSchema = {
     uniqueValue?: boolean
 }
 export type QuerySchema = { [x: string]: ParamSchema }
-
-import { PrismaClient } from '@prisma/client'
-new PrismaClient().contact.findFirst({
-    where: {
-        id: {
-
-        }
-    }
-})

@@ -1,11 +1,11 @@
 import { Result } from '@core'
-import { Json, isDate, isObject, isUndefined } from '@util'
+import { Json, isArray, isDate, isObject, isUndefined } from '@util'
 import { GeneralHandlerOperationFilled } from '@services/query-search/general.helper'
 import { ParamPayload, ParamSchema, ParamOperation, ParamOperationType } from '@services/query-search/types'
 import { BadRequestException } from '@common/exceptions'
 
 export function DateHandlerHelper(value: ParamPayload, name: string, schema: ParamSchema) {
-    if (schema.uniqueValue || !isObject(value)) {
+    if (schema.uniqueValue || !isObject(value) || !isArray(value)) {
         const result = DateHandlerOperationUniqueValue(value, name)
 
         if (!result.isSuccess()) {
@@ -13,7 +13,7 @@ export function DateHandlerHelper(value: ParamPayload, name: string, schema: Par
         }
 
         if (!isDate(result.getValue())) {
-            return Result.failure<Date[]>({ title: 'Param Invalid', message: `Invalid date to param "${name}"` })
+            throw new BadRequestException({ title: 'Param Invalid', message: `Invalid date to param "${name}"` })
         }
 
         return result.getValue()

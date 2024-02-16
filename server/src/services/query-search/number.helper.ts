@@ -5,7 +5,7 @@ import { ParamPayload, ParamSchema, ParamOperation, ParamOperationType } from '@
 import { BadRequestException } from '@common/exceptions'
 
 export function NumberHandlerHelper(value: ParamPayload, name: string, schema: ParamSchema) {
-    if (schema.uniqueValue || !isObject(value)) {
+    if (schema.uniqueValue || (!isObject(value) && !isArray(value))) {
         const result = NumberHandlerOperationUniqueValue(value, name)
 
         if (!result.isSuccess()) {
@@ -13,7 +13,7 @@ export function NumberHandlerHelper(value: ParamPayload, name: string, schema: P
         }
 
         if (!isNumber(result.getValue())) {
-            return Result.failure<number[]>({ title: 'Param Invalid', message: `Invalid number to param "${name}"` })
+            throw new BadRequestException({ title: 'Param Invalid', message: `Invalid number to param "${name}"` })
         }
 
         return result.getValue()
@@ -34,7 +34,7 @@ export function NumberHandlerHelper(value: ParamPayload, name: string, schema: P
         values[operationName] = result.getValue()
     }
 
-    return values
+    return values || undefined
 }
 
 export const NumberHandlerOperation: { [x in ParamOperationType]?: (value: any, name: string) => Result } = {
@@ -50,7 +50,10 @@ export const NumberHandlerOperation: { [x in ParamOperationType]?: (value: any, 
 }
 
 function NumberHandlerOperationUniqueValue(value: any, name: string, operation = '') {
+    console.log(value)
     const valueJsonResult = Json.parse<number | number[]>(value)
+
+    console.log(valueJsonResult)
 
     if (!valueJsonResult.isSuccess() || !isNumber(valueJsonResult.getValue())) {
         return Result.failure<number[]>({ title: 'Param Invalid', message: `Invalid number to param "${name}${operation ? `.${operation}` : ''}"` })

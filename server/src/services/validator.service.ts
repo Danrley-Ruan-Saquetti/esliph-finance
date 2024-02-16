@@ -33,7 +33,7 @@ export class ValidatorService {
 
     private getPerformErrorIfInstanceofZodError<ZodSchema extends z.Schema>(err: z.ZodError) {
         const dataErrors = err.errors.map(_err => {
-            return { message: _err.message, origin: _err.path.join(';') }
+            return { message: _err.message, origin: _err.path.join('.') }
         })
 
         return Result.failure<z.output<ZodSchema>>({ title: 'Validate Data', message: 'Data invalid', causes: dataErrors })
