@@ -8,37 +8,25 @@ import { FinancialTransactionRepository } from '@modules/financial-transaction/f
 import { GLOBAL_FINANCIAL_TRANSACTION_DTO } from '@modules/financial-transaction/financial-transaction.global'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
-export const schemaQuery = ValidatorService.schema.object({
-    bankAccountId: GLOBAL_FINANCIAL_TRANSACTION_DTO.bankAccount.id,
+export const schemaQueryCustomer = ValidatorService.schema.object({
+    bankAccountId: QuerySearchDTO['NUMBER']['UNIQUE']('bankAccountId'),
+    id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
     limite: GLOBAL_DTO.query.pagination.limite(),
-    categoryId: ValidatorService.schema.coerce.number().optional(),
-    title: ValidatorService.schema.coerce.string().trim().optional(),
-    expiresStart: ValidatorService.schema.coerce.date().optional(),
-    expiresEnd: ValidatorService.schema.coerce.date().optional(),
-    competenceStart: ValidatorService.schema.coerce.date().optional(),
-    competenceEnd: ValidatorService.schema.coerce.date().optional(),
-    type: ValidatorService.schema
-        .enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.type.enum, {
-            errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.type.messageEnumInvalid }),
-        }).optional(),
-    situation: ValidatorService.schema
-        .enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.situation.enum, {
-            errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.situation.messageEnumInvalid }),
-        }).optional(),
-    frequency: ValidatorService.schema
-        .enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.enum, {
-            errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.messageEnumInvalid }),
-        }).optional(),
-    typeOccurrence: ValidatorService.schema
-        .enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum, {
-            errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.messageEnumInvalid }),
-        }).optional(),
+    category: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('category')).optional(),
+    categoryId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('categoryId')).optional(),
+    title: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('title')).optional(),
+    expiresAt: SchemaValidator.object(QuerySearchDTO['DATE']['SCHEMA']('expiresAt')).optional(),
+    competenceAt: SchemaValidator.object(QuerySearchDTO['DATE']['SCHEMA']('competenceAt')).optional(),
+    type: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum, 'type').optional(),
+    situation: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_FINANCIAL_TRANSACTION_DTO.situation.enum, 'situation').optional(),
+    frequency: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.enum, 'frequency').optional(),
+    typeOccurrence: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum, 'typeOccurrence').optional(),
 })
 
-export type FinancialTransactionFilterArgs = SchemaValidator.input<typeof schemaQuery>
+export type FinancialTransactionFilterArgs = SchemaValidator.input<typeof schemaQueryCustomer>
 
-const schema = SchemaValidator.object({
+const schemaQueryAdmin = SchemaValidator.object({
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     bankAccountId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('bankAccountId')).optional(),
     pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
@@ -56,7 +44,7 @@ const schema = SchemaValidator.object({
     typeOccurrence: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum, 'typeOccurrence').optional(),
 })
 
-export type SchemaQueryFiltersType = SchemaValidator.input<typeof schema>
+export type SchemaQueryFiltersType = SchemaValidator.input<typeof schemaQueryAdmin>
 
 @Service({ name: 'financial-transaction.use-case.query' })
 export class FinancialTransactionQueryUseCase extends UseCase {
@@ -67,10 +55,11 @@ export class FinancialTransactionQueryUseCase extends UseCase {
         super()
     }
 
+    // Query method main
     async query(filtersArgs: SchemaQueryFiltersType) {
-        const filters = this.validateFilterParamsDTO(filtersArgs, schema)
+        const filters = this.validateFilterParamsDTO(filtersArgs, schemaQueryAdmin)
 
-        const filtersCreate = this.querySearch.createFilter(filters, [
+        const filtersQuery = this.querySearch.createFilter(filters, [
             { field: 'id', filter: 'id', type: 'NUMBER', typeOperation: 'SCHEMA' },
             { field: 'title', filter: 'title', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'expiresIn', filter: 'expiresAt', type: 'DATE', typeOperation: 'SCHEMA' },
@@ -79,92 +68,71 @@ export class FinancialTransactionQueryUseCase extends UseCase {
             { field: 'type', filter: 'type', type: 'ENUM', typeOperation: 'MANY_VALUES' },
             { field: 'categories.some.category.name', filter: 'category', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'typeOccurrence', filter: 'typeOccurrence', type: 'ENUM', typeOperation: 'MANY_VALUES' },
+            { field: 'situation', filter: 'situation', type: 'ENUM', typeOperation: 'MANY_VALUES' },
             { field: 'frequency.in', filter: 'frequency', type: 'ENUM', typeOperation: 'MANY_VALUES' },
             { field: 'bankAccount.id', filter: 'bankAccountId', type: 'NUMBER', typeOperation: 'SCHEMA' },
             { field: 'bankAccount.people.id', filter: 'peopleId', type: 'NUMBER', typeOperation: 'SCHEMA' },
             { field: 'bankAccount.people.itinCnpj', filter: 'itinCnpj', type: 'STRING', typeOperation: 'SCHEMA' },
         ])
 
-        const totalResult = await this.transactionRepository.count({
-            where: { ...filtersCreate }
-        })
-
-        if (!totalResult.isSuccess()) {
-            return Result.failure({ ...totalResult.getError(), title: 'Count Financial Transactions' })
-        }
-
-        const financialTransactionsResult = await this.transactionRepository.findMany({
-            where: { ...filtersCreate },
-            include: { categories: { select: { category: true } } },
-            orderBy: { expiresIn: 'desc' },
-            skip: filters.pageIndex * filters.limite,
-            take: filters.limite
-        })
-
-        if (!financialTransactionsResult.isSuccess()) {
-            return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transactions' })
-        }
-
-        const result = {
-            financialTransactions: financialTransactionsResult.getValue().map(transaction => ({ ...transaction, categories: transaction.categories.map(({ category }) => category) })) || [],
-            metadata: {
-                currentPage: filters.pageIndex,
-                itemsPerPage: filters.limite,
-                totalOfItens: totalResult.getValue(),
-                totalOfPages: Math.ceil(totalResult.getValue() / filters.limite),
-            }
-        }
-
-        return Result.success(result)
-    }
-
-    // Query method main
-    async queryManyByBankAccountIdWithCategories(filtersArgs: FinancialTransactionFilterArgs) {
-        const { competenceStart, competenceEnd, bankAccountId, type, limite, pageIndex, categoryId, expiresEnd, expiresStart, situation, frequency, typeOccurrence, title } = this.validateDTO(filtersArgs, schemaQuery)
-
-        const filtersQuery = {
-            bankAccountId,
-            ...(categoryId && { categories: { some: { categoryId } } }),
-            expiresIn: { ...(expiresStart && { gte: expiresStart }), ...(expiresEnd && { lte: expiresEnd }) },
-            dateTimeCompetence: { ...(competenceStart && { gte: competenceStart }), ...(competenceEnd && { lte: competenceEnd }) },
-            ...(situation && { situation }),
-            ...(frequency && { frequency }),
-            ...(type && { type }),
-            ...(typeOccurrence && { typeOccurrence }),
-            ...(title && { title: { contains: title, mode: 'insensitive' as any } }),
-        }
-
-        const totalResult = await this.transactionRepository.count({
-            where: { ...filtersQuery }
-        })
-
-        if (!totalResult.isSuccess()) {
-            return Result.failure({ ...totalResult.getError(), title: 'Count Financial Transactions' })
-        }
-
-        const financialTransactionsResult = await this.transactionRepository.findMany({
+        const result = await this.transactionRepository.query({
             where: { ...filtersQuery },
             include: { categories: { select: { category: true } } },
             orderBy: { expiresIn: 'desc' },
-            skip: pageIndex * limite,
-            take: limite
+        }, filters)
+
+        if (!result.isSuccess()) {
+            return Result.failure({ ...result.getError() })
+        }
+
+        return Result.success({
+            ...result.getValue(),
+            financialTransactions: result.getValue()
+                .financialTransactions
+                .map(transaction => ({
+                    ...transaction,
+                    categories: transaction.categories.map(({ category }) => category)
+                })) || [],
         })
+    }
 
-        if (!financialTransactionsResult.isSuccess()) {
-            return Result.failure({ ...financialTransactionsResult.getError(), title: 'Query Financial Transactions' })
+    // Query method customer
+    async queryManyByBankAccountIdWithCategories(filtersArgs: FinancialTransactionFilterArgs) {
+        const filters = this.validateDTO(filtersArgs, schemaQueryCustomer)
+
+        const filtersQuery = this.querySearch.createFilter(filters, [
+            { field: 'id', filter: 'id', type: 'NUMBER', typeOperation: 'SCHEMA' },
+            { field: 'title', filter: 'title', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'expiresIn', filter: 'expiresAt', type: 'DATE', typeOperation: 'SCHEMA' },
+            { field: 'dateTimeCompetence', filter: 'competenceAt', type: 'DATE', typeOperation: 'SCHEMA' },
+            { field: 'categories.some.category.id', filter: 'categoryId', type: 'NUMBER', typeOperation: 'SCHEMA' },
+            { field: 'type', filter: 'type', type: 'ENUM', typeOperation: 'MANY_VALUES' },
+            { field: 'situation', filter: 'situation', type: 'ENUM', typeOperation: 'MANY_VALUES' },
+            { field: 'categories.some.category.name', filter: 'category', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'typeOccurrence', filter: 'typeOccurrence', type: 'ENUM', typeOperation: 'MANY_VALUES' },
+            { field: 'frequency.in', filter: 'frequency', type: 'ENUM', typeOperation: 'MANY_VALUES' },
+            { field: 'bankAccount.id', filter: 'bankAccountId', type: 'NUMBER', typeOperation: 'UNIQUE' },
+        ])
+
+        const result = await this.transactionRepository.query({
+            where: { ...filtersQuery },
+            include: { categories: { select: { category: true } } },
+            orderBy: { expiresIn: 'desc' },
+        }, filters)
+
+        if (!result.isSuccess()) {
+            return Result.failure({ ...result.getError() })
         }
 
-        const result = {
-            financialTransactions: financialTransactionsResult.getValue().map(transaction => ({ ...transaction, categories: transaction.categories.map(({ category }) => category) })) || [],
-            metadata: {
-                currentPage: pageIndex,
-                itemsPerPage: limite,
-                totalOfItens: totalResult.getValue(),
-                totalOfPages: Math.ceil(totalResult.getValue() / limite),
-            }
-        }
-
-        return Result.success(result)
+        return Result.success({
+            ...result.getValue(),
+            financialTransactions: result.getValue()
+                .financialTransactions
+                .map(transaction => ({
+                    ...transaction,
+                    categories: transaction.categories.map(({ category }) => category)
+                })) || [],
+        })
     }
 
     async queryByIdWithNotes(args: { id: ID }) {

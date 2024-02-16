@@ -26,7 +26,7 @@ export class QuerySearchService {
 
                 if (i == routers.length - 1) {
                     if (!isUndefined(filtersArgs[filter])) {
-                        const value = this.getFilterValuesInProp(filtersArgs[filter], { type, typeOperation, excludesOperation })
+                        const value = typeOperation == 'SCHEMA' ? this.getFilterValuesInProp(filtersArgs[filter], { type, excludesOperation }) : filtersArgs[filter]
 
                         currentObj[router] = value
                     }
@@ -43,19 +43,12 @@ export class QuerySearchService {
         return clearObject(filters)
     }
 
-    private getFilterValuesInProp(filters: any, { type, typeOperation, excludesOperation = [] }: {
+    private getFilterValuesInProp(filters: any, { type, excludesOperation = [] }: {
         type: QueryParamType | 'ENUM',
         excludesOperation?: string[],
-        typeOperation: 'SCHEMA' | 'UNIQUE' | 'MANY_VALUES'
     }) {
         switch (type) {
             case 'BOOLEAN': {
-                if (typeOperation == 'UNIQUE') {
-                    return filters
-                }
-                if (typeOperation == 'MANY_VALUES') {
-                    return filters
-                }
                 return {
                     ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
                     not: {
@@ -64,12 +57,6 @@ export class QuerySearchService {
                 }
             }
             case 'DATE': {
-                if (typeOperation == 'UNIQUE') {
-                    return filters
-                }
-                if (typeOperation == 'MANY_VALUES') {
-                    return filters
-                }
                 return {
                     ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
                     ...(!excludesOperation.includes('gt') && { gt: filters?.gt }),
@@ -80,23 +67,11 @@ export class QuerySearchService {
                 }
             }
             case 'ENUM': {
-                if (typeOperation == 'UNIQUE') {
-                    return filters
-                }
-                if (typeOperation == 'MANY_VALUES') {
-                    return filters
-                }
                 return {
                     ...(!excludesOperation.includes('in') && { in: filters })
                 }
             }
             case 'NUMBER': {
-                if (typeOperation == 'UNIQUE') {
-                    return filters
-                }
-                if (typeOperation == 'MANY_VALUES') {
-                    return filters
-                }
                 return {
                     ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
                     ...(!excludesOperation.includes('gt') && { gt: filters?.gt }),
@@ -111,12 +86,6 @@ export class QuerySearchService {
                 }
             }
             case 'STRING': {
-                if (typeOperation == 'UNIQUE') {
-                    return filters
-                }
-                if (typeOperation == 'MANY_VALUES') {
-                    return filters
-                }
                 return {
                     ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
                     ...(!excludesOperation.includes('sw') && { startsWith: filters?.sw }),

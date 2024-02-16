@@ -1,5 +1,5 @@
-import { Service } from '@core'
-import { ID } from '@@types'
+import { Result, Service } from '@core'
+import { ID, MetadataQuery } from '@@types'
 import { Prisma } from '@services/database.service'
 import { Repository } from '@services/repository.service'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
@@ -125,6 +125,48 @@ export class FinancialTransactionRepository extends Repository {
         }
     }
 
+    async query<Args extends Prisma.FinancialTransactionFindManyArgs>(args: Args, page: { pageIndex: number, limite: number }) {
+        const totalResult = await this.count({
+            where: { ...args.where }
+        })
+
+        if (!totalResult.isSuccess()) {
+            return this.handleError<{ financialTransactions: FinancialTransactionFindResponse<Args>[], metadata: MetadataQuery }>(totalResult.getError(), {
+                error: {
+                    title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title,
+                    message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed
+                }
+            })
+        }
+
+        const financialTransactionsResult = await this.findMany({
+            ...args,
+            skip: page.pageIndex * page.limite,
+            take: page.limite
+        })
+
+        if (!financialTransactionsResult.isSuccess()) {
+            return this.handleError<{ financialTransactions: FinancialTransactionFindResponse<Args>[], metadata: MetadataQuery }>(totalResult.getError(), {
+                error: {
+                    title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title,
+                    message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed
+                }
+            })
+        }
+
+        const result = {
+            financialTransactions: financialTransactionsResult.getValue() || [],
+            metadata: {
+                currentPage: page.pageIndex,
+                itemsPerPage: page.limite,
+                totalOfItens: totalResult.getValue(),
+                totalOfPages: Math.ceil(totalResult.getValue() / page.limite),
+            }
+        }
+
+        return this.handleResponse<{ financialTransactions: FinancialTransactionFindResponse<Args>[], metadata: MetadataQuery }>(result as any)
+    }
+
     async findMany<Args extends Prisma.FinancialTransactionFindManyArgs>(args: Args) {
         try {
             const financialTransaction = await this.database.instance.financialTransaction.findMany(args) as FinancialTransactionFindResponse<Args>[]
@@ -132,7 +174,7 @@ export class FinancialTransactionRepository extends Repository {
             return this.handleResponse<FinancialTransactionFindResponse<Args>[]>(financialTransaction)
         } catch (err: any) {
             return this.handleError<FinancialTransactionFindResponse<Args>[]>(err, {
-                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.failed }
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed }
             })
         }
     }
@@ -144,7 +186,7 @@ export class FinancialTransactionRepository extends Repository {
             return this.handleResponse<number>(financialTransaction)
         } catch (err: any) {
             return this.handleError<number>(err, {
-                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.find.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.find.failed }
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed }
             })
         }
     }
