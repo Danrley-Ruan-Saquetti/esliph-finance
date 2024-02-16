@@ -1,76 +1,137 @@
 import { SchemaValidator } from '@services/validator.service'
 import { Service } from '@core'
-import { Json, clearObject, isString, isUndefined } from '@util'
-import { BadRequestException } from '@common/exceptions'
-import { HANDLER_TYPE_PARAM } from '@services/query-search/helpers'
-import { QuerySchema, QueryPayload, ParamPayloadInput, ParamOperation, QueryType, QueryParamType } from '@services/query-search/types'
+import { clearObject, isString, isUndefined } from '@util'
+import { ParamOperation, QueryType, QueryParamType } from '@services/query-search/types'
 
 @Service({ name: 'global.service.query-search' })
 export class QuerySearchService {
-    protected schema: QuerySchema
-    protected paramsRequired: string[] = []
 
-    parseFromString(queries: ParamPayloadInput) {
-        return this.parseFromObject(Json.parse<QueryPayload>(queries).getValue())
-    }
+    createFilter(
+        filtersArgs: { [x: string]: any },
+        relations: {
+            field: string,
+            filter: string,
+            type: QueryParamType | 'ENUM',
+            excludesOperation?: string[],
+            typeOperation: 'SCHEMA' | 'UNIQUE' | 'MANY_VALUES'
+        }[]) {
+        const filters = {}
 
-    parseFromObject(queries: QueryPayload) {
-        const queriesFiltered = this.filterQueries(queries)
-        const queriesValues = this.checkValuesQueries(queriesFiltered)
+        for (const { field, filter, type, typeOperation, excludesOperation } of relations) {
+            const routers = field.split('.')
+            let currentObj = filters
 
-        return queriesValues
-    }
+            for (let i = 0; i < routers.length; i++) {
+                const router = routers[i]
 
-    setSchema(schema: QuerySchema) {
-        this.schema = schema
-        this.paramsRequired = Object.keys(schema).filter(key => !schema[key].isOptional)
-    }
+                if (i == routers.length - 1) {
+                    if (!isUndefined(filtersArgs[filter])) {
+                        const value = this.getFilterValuesInProp(filtersArgs[filter], { type, typeOperation, excludesOperation })
 
-    private filterQueries(queries: QueryPayload) {
-        const queriesFiltered: QueryPayload = {}
-
-        const paramIsRequiredAndNotInQueries = this.paramsRequired.find(paramName => !queries[paramName])
-
-        if (this.paramsRequired && this.paramsRequired.find(paramName => !queries[paramName])) {
-            throw new BadRequestException({ title: 'Query Param', message: `Param "${paramIsRequiredAndNotInQueries}" is required` })
-        }
-
-        for (const paramName in queries) {
-            const filter = queries[paramName] as QueryPayload[typeof paramName]
-            const filterSchema = this.schema[paramName]
-
-            if (!filterSchema) {
-                continue
-            }
-
-            let value: any = filter
-
-            if (isString(value)) {
-                const valueResult = Json.parse(value as string)
-
-                if (!valueResult.isSuccess()) {
-                    throw new BadRequestException({ title: 'Param Invalid', message: `Invalid ${filterSchema.type.toLowerCase()} to param "${paramName}}"` })
+                        currentObj[router] = value
+                    }
+                } else {
+                    currentObj[router] = {}
                 }
 
-                value = valueResult.getValue()
+                if (!isUndefined(currentObj[router])) {
+                    currentObj = currentObj[router]
+                }
             }
-
-            queriesFiltered[paramName] = value
         }
 
-        return queriesFiltered
+        return clearObject(filters)
     }
 
-    private checkValuesQueries(queries: QueryPayload) {
-        const queriesValues: QueryPayload = {}
-
-        for (const paramName in queries) {
-            const filter = this.schema[paramName]
-
-            queriesValues[paramName] = HANDLER_TYPE_PARAM[filter.type](queries[paramName], paramName, filter)
+    private getFilterValuesInProp(filters: any, { type, typeOperation, excludesOperation = [] }: {
+        type: QueryParamType | 'ENUM',
+        excludesOperation?: string[],
+        typeOperation: 'SCHEMA' | 'UNIQUE' | 'MANY_VALUES'
+    }) {
+        switch (type) {
+            case 'BOOLEAN': {
+                if (typeOperation == 'UNIQUE') {
+                    return filters
+                }
+                if (typeOperation == 'MANY_VALUES') {
+                    return filters
+                }
+                return {
+                    ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
+                    not: {
+                        ...(!excludesOperation.includes('dif') && { equals: filters?.dif })
+                    },
+                }
+            }
+            case 'DATE': {
+                if (typeOperation == 'UNIQUE') {
+                    return filters
+                }
+                if (typeOperation == 'MANY_VALUES') {
+                    return filters
+                }
+                return {
+                    ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
+                    ...(!excludesOperation.includes('gt') && { gt: filters?.gt }),
+                    ...(!excludesOperation.includes('lt') && { lt: filters?.lt }),
+                    ...(!excludesOperation.includes('gte') && { gte: filters?.gte }),
+                    ...(!excludesOperation.includes('lte') && { lte: filters?.lte }),
+                    not: { ...(!excludesOperation.includes('dif') && { equals: filters?.dif }) }
+                }
+            }
+            case 'ENUM': {
+                if (typeOperation == 'UNIQUE') {
+                    return filters
+                }
+                if (typeOperation == 'MANY_VALUES') {
+                    return filters
+                }
+                return {
+                    ...(!excludesOperation.includes('in') && { in: filters })
+                }
+            }
+            case 'NUMBER': {
+                if (typeOperation == 'UNIQUE') {
+                    return filters
+                }
+                if (typeOperation == 'MANY_VALUES') {
+                    return filters
+                }
+                return {
+                    ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
+                    ...(!excludesOperation.includes('gt') && { gt: filters?.gt }),
+                    ...(!excludesOperation.includes('lt') && { lt: filters?.lt }),
+                    ...(!excludesOperation.includes('gte') && { gte: filters?.gte }),
+                    ...(!excludesOperation.includes('lte') && { lte: filters?.lte }),
+                    ...(!excludesOperation.includes('in') && { in: filters?.in }),
+                    not: {
+                        ...(!excludesOperation.includes('nin') && { in: filters?.nin }),
+                        ...(!excludesOperation.includes('dif') && { equals: filters?.dif })
+                    }
+                }
+            }
+            case 'STRING': {
+                if (typeOperation == 'UNIQUE') {
+                    return filters
+                }
+                if (typeOperation == 'MANY_VALUES') {
+                    return filters
+                }
+                return {
+                    ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
+                    ...(!excludesOperation.includes('sw') && { startsWith: filters?.sw }),
+                    ...(!excludesOperation.includes('ew') && { endsWith: filters?.ew }),
+                    ...(!excludesOperation.includes('in') && { contains: filters?.in }),
+                    not: {
+                        ...(!excludesOperation.includes('nin') && { contains: filters?.nin }),
+                        ...(!excludesOperation.includes('dif') && { equals: filters?.dif })
+                    },
+                    mode: 'insensitive',
+                }
+            }
+            default:
+                return undefined
         }
-
-        return queriesValues
     }
 }
 
@@ -175,159 +236,3 @@ export const QuerySearchDTO = {
         }),
     },
 }
-
-export function CreateFilter(
-    filtersArgs: { [x: string]: any },
-    relations: {
-        field: string,
-        filter: string,
-        type: QueryParamType | 'ENUM',
-        excludesOperation?: string[],
-        typeOperation: 'SCHEMA' | 'UNIQUE' | 'MANY_VALUES'
-    }[]) {
-    const filters = {}
-
-    for (const { field, filter, type, typeOperation, excludesOperation } of relations) {
-        const routers = field.split('.')
-        let currentObj = filters
-
-        for (let i = 0; i < routers.length; i++) {
-            const router = routers[i]
-
-            if (i == routers.length - 1) {
-                if (!isUndefined(filtersArgs[filter])) {
-                    const value = getFilterValuesInProp(filtersArgs[filter], { type, typeOperation, excludesOperation })
-
-                    currentObj[router] = value
-                }
-            } else {
-                currentObj[router] = {}
-            }
-
-            if (!isUndefined(currentObj[router])) {
-                currentObj = currentObj[router]
-            }
-        }
-    }
-
-    return clearObject(filters)
-}
-
-function getFilterValuesInProp(filters: any, { type, typeOperation, excludesOperation = [] }: {
-    type: QueryParamType | 'ENUM',
-    excludesOperation?: string[],
-    typeOperation: 'SCHEMA' | 'UNIQUE' | 'MANY_VALUES'
-}) {
-    switch (type) {
-        case 'BOOLEAN': {
-            if (typeOperation == 'UNIQUE') {
-                return filters
-            }
-            if (typeOperation == 'MANY_VALUES') {
-                return filters
-            }
-            return {
-                ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
-                not: {
-                    ...(!excludesOperation.includes('dif') && { equals: filters?.dif })
-                },
-            }
-        }
-        case 'DATE': {
-            if (typeOperation == 'UNIQUE') {
-                return filters
-            }
-            if (typeOperation == 'MANY_VALUES') {
-                return filters
-            }
-            return {
-                ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
-                ...(!excludesOperation.includes('gt') && { gt: filters?.gt }),
-                ...(!excludesOperation.includes('lt') && { lt: filters?.lt }),
-                ...(!excludesOperation.includes('gte') && { gte: filters?.gte }),
-                ...(!excludesOperation.includes('lte') && { lte: filters?.lte }),
-                not: { ...(!excludesOperation.includes('dif') && { equals: filters?.dif }) }
-            }
-        }
-        case 'ENUM': {
-            if (typeOperation == 'UNIQUE') {
-                return filters
-            }
-            if (typeOperation == 'MANY_VALUES') {
-                return filters
-            }
-            return {
-                ...(!excludesOperation.includes('in') && { in: filters })
-            }
-        }
-        case 'NUMBER': {
-            if (typeOperation == 'UNIQUE') {
-                return filters
-            }
-            if (typeOperation == 'MANY_VALUES') {
-                return filters
-            }
-            return {
-                ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
-                ...(!excludesOperation.includes('gt') && { gt: filters?.gt }),
-                ...(!excludesOperation.includes('lt') && { lt: filters?.lt }),
-                ...(!excludesOperation.includes('gte') && { gte: filters?.gte }),
-                ...(!excludesOperation.includes('lte') && { lte: filters?.lte }),
-                ...(!excludesOperation.includes('in') && { in: filters?.in }),
-                not: {
-                    ...(!excludesOperation.includes('nin') && { in: filters?.nin }),
-                    ...(!excludesOperation.includes('dif') && { equals: filters?.dif })
-                }
-            }
-        }
-        case 'STRING': {
-            if (typeOperation == 'UNIQUE') {
-                return filters
-            }
-            if (typeOperation == 'MANY_VALUES') {
-                return filters
-            }
-            return {
-                ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
-                ...(!excludesOperation.includes('sw') && { startsWith: filters?.sw }),
-                ...(!excludesOperation.includes('ew') && { endsWith: filters?.ew }),
-                ...(!excludesOperation.includes('in') && { contains: filters?.in }),
-                not: {
-                    ...(!excludesOperation.includes('nin') && { contains: filters?.nin }),
-                    ...(!excludesOperation.includes('dif') && { equals: filters?.dif })
-                },
-                mode: 'insensitive',
-            }
-        }
-        default:
-            return undefined
-    }
-}
-
-const result = CreateFilter(
-    {
-        limite: 3,
-        pageIndex: 0,
-        bankAccountId: {},
-        categoryId: {},
-        title: { in: 'Primeira' },
-        id: { in: [4, 5] },
-        competenceAt: { gt: '2024-01-12 14:55:00' },
-        frequency: ['DAILY'],
-    },
-    [
-        { field: 'id', filter: 'id', type: 'NUMBER', typeOperation: 'SCHEMA' },
-        { field: 'expiresIn', filter: 'expiresAt', type: 'DATE', typeOperation: 'SCHEMA' },
-        { field: 'dateTimeCompetence', filter: 'competenceAt', type: 'DATE', typeOperation: 'SCHEMA' },
-        { field: 'type', filter: 'type', type: 'ENUM', typeOperation: 'MANY_VALUES' },
-        { field: 'typeOccurrence', filter: 'typeOccurrence', type: 'ENUM', typeOperation: 'MANY_VALUES' },
-        { field: 'frequency.in', filter: 'frequency', type: 'ENUM', typeOperation: 'MANY_VALUES', excludesOperation: ['in'] },
-        { field: 'categories.some.category.id', filter: 'categoryId', type: 'NUMBER', typeOperation: 'SCHEMA' },
-        { field: 'categories.some.category.name', filter: 'category', type: 'STRING', typeOperation: 'SCHEMA' },
-        { field: 'bankAccount.id', filter: 'bankAccountId', type: 'NUMBER', typeOperation: 'SCHEMA' },
-        { field: 'bankAccount.people.id', filter: 'peopleId', type: 'NUMBER', typeOperation: 'SCHEMA' },
-        { field: 'bankAccount.people.itinCnpj', filter: 'itinCnpj', type: 'STRING', typeOperation: 'SCHEMA' },
-    ]
-)
-
-console.log(result)

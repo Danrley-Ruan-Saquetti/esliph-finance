@@ -2,7 +2,7 @@ import { Injection, Service, Result } from '@core'
 import { ID } from '@@types'
 import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
-import { CreateFilter, QuerySearchDTO } from '@services/query-search.service'
+import { QuerySearchDTO, QuerySearchService } from '@services/query-search.service'
 import { ValidatorService, SchemaValidator } from '@services/validator.service'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { GLOBAL_FINANCIAL_TRANSACTION_DTO } from '@modules/financial-transaction/financial-transaction.global'
@@ -62,6 +62,7 @@ export type SchemaQueryFiltersType = SchemaValidator.input<typeof schema>
 export class FinancialTransactionQueryUseCase extends UseCase {
     constructor(
         @Injection.Inject('financial-transaction.repository') private transactionRepository: FinancialTransactionRepository,
+        @Injection.Inject('query-search') private querySearch: QuerySearchService,
     ) {
         super()
     }
@@ -69,7 +70,7 @@ export class FinancialTransactionQueryUseCase extends UseCase {
     async query(filtersArgs: SchemaQueryFiltersType) {
         const filters = this.validateFilterParamsDTO(filtersArgs, schema)
 
-        const filtersCreate = CreateFilter(filters, [
+        const filtersCreate = this.querySearch.createFilter(filters, [
             { field: 'id', filter: 'id', type: 'NUMBER', typeOperation: 'SCHEMA' },
             { field: 'title', filter: 'title', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'expiresIn', filter: 'expiresAt', type: 'DATE', typeOperation: 'SCHEMA' },
