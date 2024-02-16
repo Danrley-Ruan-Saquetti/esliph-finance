@@ -1,5 +1,5 @@
 import { Module } from '@core'
-import { UserCustomerController } from '@app/modules/user/user.customer.controller'
+import { UserCustomerController } from '@modules/user/user.customer.controller'
 import { UserAdminController } from '@modules/user/user.admin.controller'
 import { UserRepository } from '@modules/user/user.repository'
 import { UserUseCaseModule } from '@modules/user/use-case/use-case.module'

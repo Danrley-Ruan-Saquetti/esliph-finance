@@ -1,8 +1,8 @@
 import { Injection, Service, Result } from '@core'
 import { ID } from '@@types'
 import { GLOBAL_DTO } from '@global'
-import { isUndefined } from '@util'
 import { UseCase } from '@common/use-case'
+import { QuerySearchDTO, QuerySearchService } from '@services/query-search.service'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { CategoryRepository } from '@modules/category/category.repository'
 import { GLOBAL_CATEGORY_DTO } from '@modules/category/category.global'
@@ -19,10 +19,52 @@ export const schemaQuery = ValidatorService.schema.object({
 
 export type CategoryFilterArgs = SchemaValidator.input<typeof schemaQuery>
 
+export const schemaQueryAdmin = ValidatorService.schema.object({
+    pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
+    limite: GLOBAL_DTO.query.pagination.limite(),
+    id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
+    bankAccountId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('bankAccountId')).optional(),
+    name: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('name')).optional(),
+    color: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('color')).optional(),
+    isFavorite: SchemaValidator.object(QuerySearchDTO['BOOLEAN']['SCHEMA']('isFavorite')).optional(),
+    createdAt: SchemaValidator.object(QuerySearchDTO['DATE']['SCHEMA']('createdAt')).optional(),
+})
+
+export type SchemaQueryFiltersType = SchemaValidator.input<typeof schemaQueryAdmin>
+
 @Service({ name: 'category.use-case.query' })
 export class CategoryQueryUseCase extends UseCase {
-    constructor(@Injection.Inject('category.repository') private categoryRepository: CategoryRepository) {
+    constructor(
+        @Injection.Inject('category.repository') private categoryRepository: CategoryRepository,
+        @Injection.Inject('query-search') private querySearch: QuerySearchService,
+    ) {
         super()
+    }
+
+    // Query method main
+    async query(filtersArgs: SchemaQueryFiltersType) {
+        const filters = this.validateFilterParamsDTO(filtersArgs, schemaQueryAdmin)
+
+        const filtersQuery = this.querySearch.createFilter(filters, [
+            { field: 'id', filter: 'id', type: 'NUMBER', typeOperation: 'SCHEMA' },
+            { field: 'bankAccountId', filter: 'bankAccountId', type: 'NUMBER', typeOperation: 'SCHEMA' },
+            { field: 'name', filter: 'name', type: 'NUMBER', typeOperation: 'SCHEMA' },
+            { field: 'color', filter: 'color', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'isFavorite', filter: 'isFavorite', type: 'BOOLEAN', typeOperation: 'SCHEMA' },
+            { field: 'createdAt', filter: 'createdAt', type: 'DATE', typeOperation: 'SCHEMA' },
+        ])
+
+        const result = await this.categoryRepository.query({
+            where: { ...filtersQuery },
+        }, filters)
+
+        if (!result.isSuccess()) {
+            return Result.failure({ ...result.getError() })
+        }
+
+        return Result.success({
+            ...result.getValue(),
+        })
     }
 
     // Query method main

@@ -36,8 +36,8 @@ export class BlankRepository extends Repository {
             failed: 'Unable to query blanks'
         },
         count: {
-            title: 'Count Financial Transactions',
-            failed: 'Unable to count financial transactions'
+            title: 'Count Blanks',
+            failed: 'Unable to count blanks'
         }
     }
 

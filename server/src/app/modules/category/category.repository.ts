@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client'
 import { Service } from '@core'
-import { ID } from '@@types'
+import { MetadataQuery } from '@@types'
 import { Repository } from '@services/repository.service'
 
 type CategoryGetPayloadTypes = boolean | null | undefined | { select?: Prisma.CategorySelect | null }
@@ -34,6 +34,10 @@ export class CategoryRepository extends Repository {
         findMany: {
             title: 'Find Categories',
             failed: 'Unable to query categories'
+        },
+        count: {
+            title: 'Count Categories',
+            failed: 'Unable to count categories'
         }
     }
 
@@ -101,6 +105,48 @@ export class CategoryRepository extends Repository {
                 error: { title: CategoryRepository.GLOBAL_MESSAGE.find.title, message: CategoryRepository.GLOBAL_MESSAGE.find.failed }
             })
         }
+    }
+
+    async query<Args extends Prisma.CategoryFindManyArgs>(args: Args, page: { pageIndex: number, limite: number }) {
+        const totalResult = await this.count({
+            where: { ...args.where }
+        })
+
+        if (!totalResult.isSuccess()) {
+            return this.handleError<{ categories: CategoryFindResponse<Args>[], metadata: MetadataQuery }>(totalResult.getError(), {
+                error: {
+                    title: CategoryRepository.GLOBAL_MESSAGE.findMany.title,
+                    message: CategoryRepository.GLOBAL_MESSAGE.findMany.failed
+                }
+            })
+        }
+
+        const categoriesResult = await this.findMany({
+            ...args,
+            skip: page.pageIndex * page.limite,
+            take: page.limite
+        })
+
+        if (!categoriesResult.isSuccess()) {
+            return this.handleError<{ categories: CategoryFindResponse<Args>[], metadata: MetadataQuery }>(totalResult.getError(), {
+                error: {
+                    title: CategoryRepository.GLOBAL_MESSAGE.findMany.title,
+                    message: CategoryRepository.GLOBAL_MESSAGE.findMany.failed
+                }
+            })
+        }
+
+        const result = {
+            categories: categoriesResult.getValue() || [],
+            metadata: {
+                currentPage: page.pageIndex,
+                itemsPerPage: page.limite,
+                totalOfItens: totalResult.getValue(),
+                totalOfPages: Math.ceil(totalResult.getValue() / page.limite),
+            }
+        }
+
+        return this.handleResponse<{ categories: CategoryFindResponse<Args>[], metadata: MetadataQuery }>(result as any)
     }
 
     async findMany<Args extends Prisma.CategoryFindManyArgs>(args: Args) {

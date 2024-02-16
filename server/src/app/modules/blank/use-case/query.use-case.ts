@@ -1,15 +1,49 @@
 import { Injection, Service, Result } from '@core'
 import { ID } from '@@types'
+import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
-import { ValidatorService } from '@services/validator.service'
+import { QuerySearchDTO, QuerySearchService } from '@services/query-search.service'
+import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { BlankRepository } from '@modules/blank/blank.repository'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
 
+export const schemaQueryAdmin = ValidatorService.schema.object({
+    pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
+    limite: GLOBAL_DTO.query.pagination.limite(),
+    id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
+})
+
+export type SchemaQueryFiltersType = SchemaValidator.input<typeof schemaQueryAdmin>
+
 @Service({ name: 'blank.use-case.query' })
 export class BlankQueryUseCase extends UseCase {
-    constructor(@Injection.Inject('blank.repository') private blankRepository: BlankRepository) {
+    constructor(
+        @Injection.Inject('blank.repository') private blankRepository: BlankRepository,
+        @Injection.Inject('query-search') private querySearch: QuerySearchService,
+    ) {
         super()
+    }
+
+    // Query method main
+    async query(filtersArgs: SchemaQueryFiltersType) {
+        const filters = this.validateFilterParamsDTO(filtersArgs, schemaQueryAdmin)
+
+        const filtersQuery = this.querySearch.createFilter(filters, [
+            { field: 'id', filter: 'id', type: 'NUMBER', typeOperation: 'SCHEMA' },
+        ])
+
+        const result = await this.blankRepository.query({
+            where: { ...filtersQuery },
+        }, filters)
+
+        if (!result.isSuccess()) {
+            return Result.failure({ ...result.getError() })
+        }
+
+        return Result.success({
+            ...result.getValue(),
+        })
     }
 
     async queryById(args: { id: ID }) {
