@@ -27,10 +27,10 @@ export const schemaQueryCustomer = ValidatorService.schema.object({
 export type FinancialTransactionFilterArgs = SchemaValidator.input<typeof schemaQueryCustomer>
 
 const schemaQueryAdmin = SchemaValidator.object({
-    id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
-    bankAccountId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('bankAccountId')).optional(),
     pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
     limite: GLOBAL_DTO.query.pagination.limite(),
+    id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
+    bankAccountId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('bankAccountId')).optional(),
     category: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('category')).optional(),
     categoryId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('categoryId')).optional(),
     title: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('title')).optional(),

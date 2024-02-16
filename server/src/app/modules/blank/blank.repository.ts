@@ -168,7 +168,7 @@ export class BlankRepository extends Repository {
             return this.handleResponse<number>(blank)
         } catch (err: any) {
             return this.handleError<number>(err, {
-                error: { title: BlankRepository.GLOBAL_MESSAGE.findMany.title, message: BlankRepository.GLOBAL_MESSAGE.findMany.failed }
+                error: { title: BlankRepository.GLOBAL_MESSAGE.count.title, message: BlankRepository.GLOBAL_MESSAGE.count.failed }
             })
         }
     }

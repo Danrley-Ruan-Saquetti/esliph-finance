@@ -186,7 +186,7 @@ export class FinancialTransactionRepository extends Repository {
             return this.handleResponse<number>(financialTransaction)
         } catch (err: any) {
             return this.handleError<number>(err, {
-                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.findMany.failed }
+                error: { title: FinancialTransactionRepository.GLOBAL_MESSAGE.count.title, message: FinancialTransactionRepository.GLOBAL_MESSAGE.count.failed }
             })
         }
     }
