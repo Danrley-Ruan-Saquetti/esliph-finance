@@ -1,69 +1,87 @@
-import { SchemaValidator } from '@services/validator.service'
 import { Service } from '@core'
-import { clearObject, isString, isUndefined } from '@util'
+import { GenericObject } from '@@types'
+import { clearObject, createObjectByStringPath, insertValueInObjectByPath, isString, isUndefined } from '@util'
 import { ParamOperation, QueryType, QueryParamType } from '@services/query-search/types'
+import { SchemaValidator } from '@services/validator.service'
+
+export type RelationMapQuery = {
+    field: string,
+    filter: string,
+    type: QueryParamType | 'ENUM',
+    excludesOperation?: string[],
+    typeOperation: 'SCHEMA' | 'UNIQUE' | 'MANY_VALUES'
+}
 
 @Service({ name: 'global.service.query-search' })
 export class QuerySearchService {
 
-    createFilter(
-        filtersArgs: { [x: string]: any },
-        relations: {
-            field: string,
-            filter: string,
-            type: QueryParamType | 'ENUM',
-            excludesOperation?: string[],
-            typeOperation: 'SCHEMA' | 'UNIQUE' | 'MANY_VALUES'
-        }[]) {
+    createFilter(filtersArgs: GenericObject, relations: RelationMapQuery[]) {
         const filters = {}
 
-        for (const { field, filter, type, typeOperation, excludesOperation } of relations) {
-            const routers = field.split('.')
-            let currentObj = filters
+        for (const { field: fieldName, filter: filterName, type, typeOperation, excludesOperation } of relations) {
+            const filter = filtersArgs[filterName]
+            const value = typeOperation == 'SCHEMA' ? this.getFilterValuesInProp(filter, { type, excludesOperation }) : filter
 
-            for (let i = 0; i < routers.length; i++) {
-                const router = routers[i]
+            createObjectByStringPath(fieldName, filters)
 
-                if (i == routers.length - 1) {
-                    if (!isUndefined(filtersArgs[filter])) {
-                        const value = typeOperation == 'SCHEMA' ? this.getFilterValuesInProp(filtersArgs[filter], { type, excludesOperation }) : filtersArgs[filter]
+            if (typeOperation == 'SCHEMA' && type == 'STRING') {
+                if (!isUndefined(value.contains)) {
+                    const newValue = value.contains.split(' ').map(word => {
+                        const obj = createObjectByStringPath(fieldName)
 
-                        currentObj[router] = value
+                        insertValueInObjectByPath(obj, { contains: word, mode: 'insensitive' }, fieldName)
+
+                        return obj
+                    })
+
+                    insertValueInObjectByPath(filters, newValue, 'AND')
+
+                    value.contains = undefined
+
+                    if (Object.keys(value).length == 2 && value.mode) {
+                        value.mode = undefined
                     }
-                } else {
-                    currentObj[router] = {}
                 }
+                if (!isUndefined(value.not) && !isUndefined(value.not.contains)) {
+                    const newValue = value.not.contains.split(' ').map(word => {
+                        const obj = createObjectByStringPath(`NOT.${fieldName}`)
 
-                if (!isUndefined(currentObj[router])) {
-                    currentObj = currentObj[router]
+                        insertValueInObjectByPath(obj, { contains: word, mode: 'insensitive' }, `NOT.${fieldName}`)
+
+                        return obj
+                    })
+
+                    insertValueInObjectByPath(filters, newValue, 'AND')
+
+                    value.not.contains = undefined
+
+                    if (Object.keys(value).length == 2 && value.mode) {
+                        value.mode = undefined
+                    }
                 }
             }
+            insertValueInObjectByPath(filters, value, fieldName)
         }
 
         return clearObject(filters)
     }
 
-    private getFilterValuesInProp(filters: any, { type, excludesOperation = [] }: {
-        type: QueryParamType | 'ENUM',
-        excludesOperation?: string[],
-    }) {
+    private getFilterValuesInProp(filters: any, { type, excludesOperation = [] }: { type: QueryParamType | 'ENUM', excludesOperation?: string[], }) {
         switch (type) {
             case 'BOOLEAN': {
                 return {
-                    ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
-                    not: {
-                        ...(!excludesOperation.includes('dif') && { equals: filters?.dif })
-                    },
+                    ...(filters?.eq && !excludesOperation.includes('eq') && { equals: filters.eq }),
+                    ...(filters?.dif && { not: { ...(!excludesOperation.includes('dif') && { equals: filters.dif }) } }),
                 }
             }
             case 'DATE': {
                 return {
-                    ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
-                    ...(!excludesOperation.includes('gt') && { gt: filters?.gt }),
-                    ...(!excludesOperation.includes('lt') && { lt: filters?.lt }),
-                    ...(!excludesOperation.includes('gte') && { gte: filters?.gte }),
-                    ...(!excludesOperation.includes('lte') && { lte: filters?.lte }),
-                    not: { ...(!excludesOperation.includes('dif') && { equals: filters?.dif }) }
+                    ...(filters?.eq && !excludesOperation.includes('eq') && { equals: filters.eq }),
+                    ...(filters?.gt && !excludesOperation.includes('gt') && { gt: filters.gt }),
+                    ...(filters?.lt && !excludesOperation.includes('lt') && { lt: filters.lt }),
+                    ...(filters?.gte && !excludesOperation.includes('gte') && { gte: filters.gte }),
+                    ...(filters?.lte && !excludesOperation.includes('lte') && { lte: filters.lte }),
+                    ...(filters?.dif && { not: { ...(!excludesOperation.includes('dif') && { equals: filters.dif }) } })
                 }
             }
             case 'ENUM': {
@@ -73,33 +91,43 @@ export class QuerySearchService {
             }
             case 'NUMBER': {
                 return {
-                    ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
-                    ...(!excludesOperation.includes('gt') && { gt: filters?.gt }),
-                    ...(!excludesOperation.includes('lt') && { lt: filters?.lt }),
-                    ...(!excludesOperation.includes('gte') && { gte: filters?.gte }),
-                    ...(!excludesOperation.includes('lte') && { lte: filters?.lte }),
-                    ...(!excludesOperation.includes('in') && { in: filters?.in }),
-                    not: {
-                        ...(!excludesOperation.includes('nin') && { in: filters?.nin }),
-                        ...(!excludesOperation.includes('dif') && { equals: filters?.dif })
-                    }
+                    ...(filters?.eq && !excludesOperation.includes('eq') && { equals: filters.eq }),
+                    ...(filters?.gt && !excludesOperation.includes('gt') && { gt: filters.gt }),
+                    ...(filters?.lt && !excludesOperation.includes('lt') && { lt: filters.lt }),
+                    ...(filters?.gte && !excludesOperation.includes('gte') && { gte: filters.gte }),
+                    ...(filters?.lte && !excludesOperation.includes('lte') && { lte: filters.lte }),
+                    ...(filters?.in && !excludesOperation.includes('in') && { in: filters.in }),
+                    ...((filters?.nin || filters?.dif) && {
+                        not: {
+                            ...(filters?.nin && !excludesOperation.includes('nin') && { in: filters.nin }),
+                            ...(filters?.dif && !excludesOperation.includes('dif') && { equals: filters.dif })
+                        }
+                    })
                 }
             }
             case 'STRING': {
-                return {
-                    ...(!excludesOperation.includes('eq') && { equals: filters?.eq }),
-                    ...(!excludesOperation.includes('sw') && { startsWith: filters?.sw }),
-                    ...(!excludesOperation.includes('ew') && { endsWith: filters?.ew }),
-                    ...(!excludesOperation.includes('in') && { contains: filters?.in }),
-                    not: {
-                        ...(!excludesOperation.includes('nin') && { contains: filters?.nin }),
-                        ...(!excludesOperation.includes('dif') && { equals: filters?.dif })
-                    },
+                const filtersArgs = {
+                    ...(filters?.eq && !excludesOperation.includes('eq') && { equals: filters.eq }),
+                    ...(filters?.sw && !excludesOperation.includes('sw') && { startsWith: filters.sw }),
+                    ...(filters?.ew && !excludesOperation.includes('ew') && { endsWith: filters.ew }),
+                    ...(filters?.in && !excludesOperation.includes('in') && { contains: filters.in }),
+                    ...((filters?.nin || filters?.dif) && {
+                        not: {
+                            ...(filters?.nin && !excludesOperation.includes('nin') && { contains: filters.nin }),
+                            ...(filters?.dif && !excludesOperation.includes('dif') && { equals: filters.dif })
+                        }
+                    }),
                     mode: 'insensitive',
                 }
+
+                if (Object.keys(filtersArgs).length == 1) {
+                    return {}
+                }
+
+                return filtersArgs
             }
             default:
-                return undefined
+                return {}
         }
     }
 }
@@ -143,6 +171,7 @@ const QuerySearchHandlers = {
         UNIQUE_VALUE: (name: string, operator?: string) => SchemaValidator
             .coerce
             .string({ 'invalid_type_error': GLOBAL_QUERY_SEARCH_DTO.messageInvalid(name, 'string', operator) })
+            .trim()
             .transform(val => isString(val) && val.length > 0 ? val : undefined)
     },
     [QueryType.DATE]: {

@@ -1,8 +1,7 @@
 import { Prisma } from '@prisma/client'
 import { Service } from '@core'
-import { ID } from '@@types'
+import { MetadataQuery } from '@@types'
 import { Repository } from '@services/repository.service'
-import { BankAccountModel } from '@modules/bank-account/bank-account.model'
 
 type BankAccountGetPayloadTypes = boolean | null | undefined | { select?: Prisma.BankAccountSelect | null }
 type BankAccountGetPayload<T extends boolean | null | undefined | { select?: Prisma.BankAccountSelect | null }> = Prisma.BankAccountGetPayload<T>
@@ -30,6 +29,10 @@ export class BankAccountRepository extends Repository {
         findMany: {
             title: 'Find Bank Accounts',
             failed: 'Unable to query bank accounts'
+        },
+        count: {
+            title: 'Count Bank Accounts',
+            failed: 'Unable to count bank accounts'
         }
     }
 
@@ -87,6 +90,48 @@ export class BankAccountRepository extends Repository {
         }
     }
 
+    async query<Args extends Prisma.BankAccountFindManyArgs>(args: Args, page: { pageIndex: number, limite: number }) {
+        const totalResult = await this.count({
+            where: { ...args.where }
+        })
+
+        if (!totalResult.isSuccess()) {
+            return this.handleError<{ bankAccounts: BankAccountFindResponse<Args>[], metadata: MetadataQuery }>(totalResult.getError(), {
+                error: {
+                    title: BankAccountRepository.GLOBAL_MESSAGE.findMany.title,
+                    message: BankAccountRepository.GLOBAL_MESSAGE.findMany.failed
+                }
+            })
+        }
+
+        const bankAccountsResult = await this.findMany({
+            ...args,
+            skip: page.pageIndex * page.limite,
+            take: page.limite
+        })
+
+        if (!bankAccountsResult.isSuccess()) {
+            return this.handleError<{ bankAccounts: BankAccountFindResponse<Args>[], metadata: MetadataQuery }>(totalResult.getError(), {
+                error: {
+                    title: BankAccountRepository.GLOBAL_MESSAGE.findMany.title,
+                    message: BankAccountRepository.GLOBAL_MESSAGE.findMany.failed
+                }
+            })
+        }
+
+        const result = {
+            bankAccounts: bankAccountsResult.getValue() || [],
+            metadata: {
+                currentPage: page.pageIndex,
+                itemsPerPage: page.limite,
+                totalOfItens: totalResult.getValue(),
+                totalOfPages: Math.ceil(totalResult.getValue() / page.limite),
+            }
+        }
+
+        return this.handleResponse<{ bankAccounts: BankAccountFindResponse<Args>[], metadata: MetadataQuery }>(result as any)
+    }
+
     async findMany<Args extends Prisma.BankAccountFindManyArgs>(args: Args) {
         try {
             const bankAccount = await this.database.instance.bankAccount.findMany(args) as BankAccountFindResponse<Args>[]
@@ -98,6 +143,18 @@ export class BankAccountRepository extends Repository {
         } catch (err: any) {
             return this.handleError<BankAccountFindResponse<Args>[]>(err, {
                 error: { title: BankAccountRepository.GLOBAL_MESSAGE.find.title, message: BankAccountRepository.GLOBAL_MESSAGE.find.failed }
+            })
+        }
+    }
+
+    async count(args: Prisma.BankAccountCountArgs) {
+        try {
+            const bankAccount = await this.database.instance.bankAccount.count(args)
+
+            return this.handleResponse<number>(bankAccount)
+        } catch (err: any) {
+            return this.handleError<number>(err, {
+                error: { title: BankAccountRepository.GLOBAL_MESSAGE.count.title, message: BankAccountRepository.GLOBAL_MESSAGE.count.failed }
             })
         }
     }

@@ -1,12 +1,30 @@
 import { Injection, Service, Result } from '@core'
 import { ID } from '@@types'
+import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
-import { ValidatorService } from '@services/validator.service'
+import { QuerySearchDTO, QuerySearchService } from '@services/query-search.service'
+import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.global'
 import { BankAccountModel } from '@modules/bank-account/bank-account.model'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
+import { Json } from '../../../../util'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
+
+export const schemaQueryAdmin = ValidatorService.schema.object({
+    pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
+    limite: GLOBAL_DTO.query.pagination.limite(),
+    id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
+    peopleId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('peopleId')).optional(),
+    peopleName: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('peopleName')).optional(),
+    itinCnpj: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('itinCnpj')).optional(),
+    name: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('name')).optional(),
+    code: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('code')).optional(),
+    balance: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('balance')).optional(),
+    createdAt: SchemaValidator.object(QuerySearchDTO['DATE']['SCHEMA']('createdAt')).optional(),
+})
+
+export type SchemaQueryFiltersType = SchemaValidator.input<typeof schemaQueryAdmin>
 
 @Service({ name: 'bank-account.use-case.query' })
 export class BankAccountQueryUseCase extends UseCase {
@@ -15,8 +33,40 @@ export class BankAccountQueryUseCase extends UseCase {
         balance: GLOBAL_BANK_ACCOUNT_DTO.balance.maskData,
     }
 
-    constructor(@Injection.Inject('bank-account.repository') private bankAccountRepository: BankAccountRepository) {
+    constructor(
+        @Injection.Inject('bank-account.repository') private bankAccountRepository: BankAccountRepository,
+        @Injection.Inject('query-search') private querySearch: QuerySearchService,
+    ) {
         super()
+    }
+
+    // Query method main
+    async query(filtersArgs: SchemaQueryFiltersType) {
+        const filters = this.validateFilterParamsDTO(filtersArgs, schemaQueryAdmin)
+
+        const filtersQuery = this.querySearch.createFilter(filters, [
+            { field: 'id', filter: 'id', type: 'NUMBER', typeOperation: 'SCHEMA' },
+            { field: 'name', filter: 'name', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'code', filter: 'code', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'balance', filter: 'balance', type: 'NUMBER', typeOperation: 'SCHEMA' },
+            { field: 'createdAt', filter: 'createdAt', type: 'DATE', typeOperation: 'SCHEMA' },
+            { field: 'people.id', filter: 'peopleId', type: 'NUMBER', typeOperation: 'SCHEMA' },
+            { field: 'people.name', filter: 'peopleName', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'people.itinCnpj', filter: 'itinCnpj', type: 'STRING', typeOperation: 'SCHEMA' },
+        ])
+
+        const result = await this.bankAccountRepository.query({
+            where: { ...filtersQuery },
+            select: { ...BankAccountModel.BankAccountWithoutPasswordSelect, people: true }
+        }, filters)
+
+        if (!result.isSuccess()) {
+            return Result.failure({ ...result.getError() })
+        }
+
+        return Result.success({
+            ...result.getValue(),
+        })
     }
 
     async queryByIdWithoutPassword(args: { id: ID }) {

@@ -1,7 +1,6 @@
 import 'dotenv/config'
-import { isString } from '@util'
-import { isArray, isObject, isUndefined } from '@util/types'
-import { isDate } from 'util/types'
+import { isString, isArray, isObject, isUndefined, isDate } from '@util/types'
+import { GenericObject } from '@@types'
 export * from '@util/types'
 export * from '@util/cron'
 export * from '@util/cnpj'
@@ -158,4 +157,56 @@ export function clearObject<T = any>(obj: T, isParent = true) {
     }
 
     return (isParent ? newObj : Object.keys(newObj as any).length ? newObj : undefined) as T
+}
+
+export function createObjectByStringPath(path: string, parent: GenericObject = {}) {
+    const routers = path.split('.')
+    let currentObj: GenericObject = parent
+
+    for (const router of routers) {
+        if (isUndefined(currentObj[router])) {
+            currentObj[router] = {}
+        }
+        currentObj = currentObj[router]
+    }
+
+    return { ...parent }
+}
+
+export function getObjectPathByIndex(obj: GenericObject, index: number) {
+    let currentObj: GenericObject = { ...obj }
+
+    for (let i = 0; i < index; i++) {
+        currentObj = currentObj[Object.keys(currentObj)[0]]
+    }
+
+    return { ...currentObj }
+}
+
+export function getObjectPathByPath(obj: GenericObject, path: string) {
+    let currentObj: GenericObject = obj
+
+    const routers = path.split('.')
+
+    for (let i = 0; i < routers.length; i++) {
+        currentObj = currentObj[routers[i]]
+    }
+
+    return { ...currentObj }
+}
+
+export function insertValueInObjectByPath(obj: GenericObject, value: any, path: string) {
+    let currentObj: GenericObject = obj
+
+    const routers = path.split('.')
+
+    for (let i = 0; i < routers.length; i++) {
+        if (i < routers.length - 1) {
+            currentObj = currentObj[routers[i]]
+            continue
+        }
+        currentObj[routers[i]] = value
+    }
+
+    return { ...obj }
 }
