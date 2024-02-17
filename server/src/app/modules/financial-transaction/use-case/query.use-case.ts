@@ -86,8 +86,6 @@ export class FinancialTransactionQueryUseCase extends UseCase {
             { field: 'categories.some.category.id', filter: 'categoryId', type: 'NUMBER', typeOperation: 'SCHEMA' },
         ])
 
-        console.log(filtersArgs, JSON.stringify(filtersQuery, null, 2))
-
         const result = await this.transactionRepository.query({
             where: { ...filtersQuery },
             include: { categories: { select: { category: true } } },

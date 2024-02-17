@@ -1,4 +1,5 @@
 import { Service } from '@core'
+import { MetadataQuery } from '@@types'
 import { Prisma } from '@services/database.service'
 import { Repository } from '@services/repository.service'
 
@@ -24,6 +25,14 @@ export class UserRepository extends Repository {
             title: 'Find User',
             notFound: 'User not found',
             failed: 'Unable to query user'
+        },
+        findMany: {
+            title: 'Find Users',
+            failed: 'Unable to query users'
+        },
+        count: {
+            title: 'Count Users',
+            failed: 'Unable to count users'
         }
     }
 
@@ -81,6 +90,48 @@ export class UserRepository extends Repository {
         }
     }
 
+    async query<Args extends Prisma.UserFindManyArgs>(args: Args, page: { pageIndex: number, limite: number }) {
+        const totalResult = await this.count({
+            where: { ...args.where }
+        })
+
+        if (!totalResult.isSuccess()) {
+            return this.handleError<{ users: UserFindResponse<Args>[], metadata: MetadataQuery }>(totalResult.getError(), {
+                error: {
+                    title: UserRepository.GLOBAL_MESSAGE.findMany.title,
+                    message: UserRepository.GLOBAL_MESSAGE.findMany.failed
+                }
+            })
+        }
+
+        const usersResult = await this.findMany({
+            ...args,
+            skip: page.pageIndex * page.limite,
+            take: page.limite
+        })
+
+        if (!usersResult.isSuccess()) {
+            return this.handleError<{ users: UserFindResponse<Args>[], metadata: MetadataQuery }>(totalResult.getError(), {
+                error: {
+                    title: UserRepository.GLOBAL_MESSAGE.findMany.title,
+                    message: UserRepository.GLOBAL_MESSAGE.findMany.failed
+                }
+            })
+        }
+
+        const result = {
+            users: usersResult.getValue() || [],
+            metadata: {
+                currentPage: page.pageIndex,
+                itemsPerPage: page.limite,
+                totalOfItens: totalResult.getValue(),
+                totalOfPages: Math.ceil(totalResult.getValue() / page.limite),
+            }
+        }
+
+        return this.handleResponse<{ users: UserFindResponse<Args>[], metadata: MetadataQuery }>(result as any)
+    }
+
     async findMany<Args extends Prisma.UserFindManyArgs>(args: Args) {
         try {
             const user = await this.database.instance.user.findMany(args) as UserFindResponse<Args>[]
@@ -92,6 +143,18 @@ export class UserRepository extends Repository {
         } catch (err: any) {
             return this.handleError<UserFindResponse<Args>[]>(err, {
                 error: { title: UserRepository.GLOBAL_MESSAGE.find.title, message: UserRepository.GLOBAL_MESSAGE.find.failed }
+            })
+        }
+    }
+
+    async count(args: Prisma.UserCountArgs) {
+        try {
+            const user = await this.database.instance.user.count(args)
+
+            return this.handleResponse<number>(user)
+        } catch (err: any) {
+            return this.handleError<number>(err, {
+                error: { title: UserRepository.GLOBAL_MESSAGE.count.title, message: UserRepository.GLOBAL_MESSAGE.count.failed }
             })
         }
     }

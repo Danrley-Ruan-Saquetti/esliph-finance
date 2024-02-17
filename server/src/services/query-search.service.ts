@@ -83,13 +83,3 @@ export class QuerySearchService {
         return handler(filters, options)
     }
 }
-
-console.log(JSON.stringify(new QuerySearchService().createFilter(
-    {
-        receiver: { nin: 'paty', in: 'Teste' }, sender: { nin: 'paty' }
-    },
-    [
-        { field: 'receiver', filter: 'receiver', type: 'STRING', typeOperation: 'SCHEMA' },
-        { field: 'sender', filter: 'sender', type: 'STRING', typeOperation: 'SCHEMA' },
-    ]
-), null, 2))
