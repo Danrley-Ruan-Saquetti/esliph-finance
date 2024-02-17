@@ -50,9 +50,9 @@ export const GLOBAL_QUERY_SEARCH_HANDLER_VALUES = {
         ...(!isUndefined(filters?.eq) && !excludesOperation.includes('eq') && { equals: filters.eq }),
         ...(!isUndefined(filters?.dif) && { not: { ...(!excludesOperation.includes('dif') && { equals: filters.dif }) } }),
     }),
-    ['ENUM']: (filters: any, { type, excludesOperation = [] }: { type: QueryParamType | 'ENUM', excludesOperation?: string[], }) => ({
-        ...(!isUndefined(filters?.eq) && !excludesOperation.includes('eq') && { equals: filters.eq }),
-        ...(!isUndefined(filters?.dif) && { not: { ...(!excludesOperation.includes('dif') && { equals: filters.dif }) } }),
+    ENUM: (filters: any, { type, excludesOperation = [] }: { type: QueryParamType | 'ENUM', excludesOperation?: string[], }) => ({
+        ...(!isUndefined(filters?.in) && !excludesOperation.includes('in') && { in: filters.in }),
+        ...(!isUndefined(filters?.nin) && { not: { ...(!excludesOperation.includes('nin') && { in: filters.nin }) } }),
     }),
 }
 
