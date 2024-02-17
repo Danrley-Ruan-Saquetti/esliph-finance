@@ -24,6 +24,8 @@ export const schemaQueryAdmin = ValidatorService.schema.object({
     limite: GLOBAL_DTO.query.pagination.limite(),
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     bankAccountId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('bankAccountId')).optional(),
+    bankAccount: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('bankAccount')).optional(),
+    bankAccountCode: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('bankAccount')).optional(),
     name: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('name')).optional(),
     color: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('color')).optional(),
     isFavorite: SchemaValidator.object(QuerySearchDTO['BOOLEAN']['SCHEMA']('isFavorite')).optional(),
@@ -47,11 +49,13 @@ export class CategoryQueryUseCase extends UseCase {
 
         const filtersQuery = this.querySearch.createFilter(filters, [
             { field: 'id', filter: 'id', type: 'NUMBER', typeOperation: 'SCHEMA' },
-            { field: 'bankAccountId', filter: 'bankAccountId', type: 'NUMBER', typeOperation: 'SCHEMA' },
             { field: 'name', filter: 'name', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'color', filter: 'color', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'isFavorite', filter: 'isFavorite', type: 'BOOLEAN', typeOperation: 'SCHEMA' },
             { field: 'createdAt', filter: 'createdAt', type: 'DATE', typeOperation: 'SCHEMA' },
+            { field: 'bankAccount.id', filter: 'bankAccountId', type: 'NUMBER', typeOperation: 'SCHEMA' },
+            { field: 'bankAccount.name', filter: 'bankAccount', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'bankAccount.code', filter: 'bankAccountCode', type: 'STRING', typeOperation: 'SCHEMA' },
         ])
 
         const result = await this.categoryRepository.query({

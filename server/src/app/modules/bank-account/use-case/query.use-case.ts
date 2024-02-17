@@ -7,7 +7,6 @@ import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.global'
 import { BankAccountModel } from '@modules/bank-account/bank-account.model'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
-import { Json } from '../../../../util'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
 
