@@ -48,7 +48,7 @@ export class CategoryQueryUseCase extends UseCase {
         const filtersQuery = this.querySearch.createFilter(filters, [
             { field: 'id', filter: 'id', type: 'NUMBER', typeOperation: 'SCHEMA' },
             { field: 'bankAccountId', filter: 'bankAccountId', type: 'NUMBER', typeOperation: 'SCHEMA' },
-            { field: 'name', filter: 'name', type: 'NUMBER', typeOperation: 'SCHEMA' },
+            { field: 'name', filter: 'name', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'color', filter: 'color', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'isFavorite', filter: 'isFavorite', type: 'BOOLEAN', typeOperation: 'SCHEMA' },
             { field: 'createdAt', filter: 'createdAt', type: 'DATE', typeOperation: 'SCHEMA' },
