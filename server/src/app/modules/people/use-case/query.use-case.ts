@@ -1,9 +1,10 @@
 import { Injection, Result, Service } from '@core'
 import { UseCase } from '@common/use-case'
 import { GLOBAL_DTO } from '@global'
-import { PeopleRepository } from '@modules/people/people.repository'
+import { QuerySearchDTO } from '@services/query-search/global'
 import { SchemaValidator, ValidatorService } from '@services/validator.service'
-import { QuerySearchDTO, QuerySearchService } from '@services/query-search.service'
+import { PeopleRepository } from '@modules/people/people.repository'
+import { QuerySearchService } from '@services/query-search.service'
 import { GLOBAL_PEOPLE_DTO } from '@modules/people/people.global'
 
 export const schemaQueryAdmin = ValidatorService.schema.object({

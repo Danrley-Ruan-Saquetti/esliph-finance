@@ -2,7 +2,8 @@ import { Injection, Service, Result } from '@core'
 import { ID } from '@@types'
 import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
-import { QuerySearchDTO, QuerySearchService } from '@services/query-search.service'
+import { QuerySearchService } from '@services/query-search.service'
+import { QuerySearchDTO } from '@services/query-search/global'
 import { ValidatorService, SchemaValidator } from '@services/validator.service'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { GLOBAL_FINANCIAL_TRANSACTION_DTO } from '@modules/financial-transaction/financial-transaction.global'
@@ -38,6 +39,8 @@ const schemaQueryAdmin = SchemaValidator.object({
     title: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('title')).optional(),
     peopleId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('peopleId')).optional(),
     people: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('people')).optional(),
+    receiver: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('receiver')).optional(),
+    sender: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('sender')).optional(),
     itinCnpj: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('itinCnpj')).optional(),
     expiresAt: SchemaValidator.object(QuerySearchDTO['DATE']['SCHEMA']('expiresAt')).optional(),
     competenceAt: SchemaValidator.object(QuerySearchDTO['DATE']['SCHEMA']('competenceAt')).optional(),
@@ -65,6 +68,8 @@ export class FinancialTransactionQueryUseCase extends UseCase {
         const filtersQuery = this.querySearch.createFilter(filters, [
             { field: 'id', filter: 'id', type: 'NUMBER', typeOperation: 'SCHEMA' },
             { field: 'title', filter: 'title', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'receiver', filter: 'receiver', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'sender', filter: 'sender', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'expiresIn', filter: 'expiresAt', type: 'DATE', typeOperation: 'SCHEMA' },
             { field: 'dateTimeCompetence', filter: 'competenceAt', type: 'DATE', typeOperation: 'SCHEMA' },
             { field: 'type', filter: 'type', type: 'ENUM', typeOperation: 'SCHEMA' },
@@ -80,6 +85,8 @@ export class FinancialTransactionQueryUseCase extends UseCase {
             { field: 'categories.some.category.name', filter: 'category', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'categories.some.category.id', filter: 'categoryId', type: 'NUMBER', typeOperation: 'SCHEMA' },
         ])
+
+        console.log(filtersArgs, JSON.stringify(filtersQuery, null, 2))
 
         const result = await this.transactionRepository.query({
             where: { ...filtersQuery },

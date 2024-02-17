@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { isString, isArray, isObject, isUndefined, isDate } from '@util/types'
+import { isString, isArray, isObject, isUndefined, isDate, isObjectLiteral } from '@util/types'
 import { GenericObject } from '@@types'
 export * from '@util/types'
 export * from '@util/cron'
@@ -189,10 +189,13 @@ export function getObjectPathByPath(obj: GenericObject, path: string) {
     const routers = path.split('.')
 
     for (let i = 0; i < routers.length; i++) {
+        if (isUndefined(currentObj[routers[i]])) {
+            continue
+        }
         currentObj = currentObj[routers[i]]
     }
 
-    return { ...currentObj }
+    return isArray(currentObj) ? [...currentObj as any] : isObjectLiteral(currentObj) ? { ...currentObj } : currentObj
 }
 
 export function insertValueInObjectByPath(obj: GenericObject, value: any, path: string) {
@@ -205,7 +208,12 @@ export function insertValueInObjectByPath(obj: GenericObject, value: any, path: 
             currentObj = currentObj[routers[i]]
             continue
         }
-        currentObj[routers[i]] = value
+
+        if (isArray(currentObj[routers[i]])) {
+            currentObj[routers[i]].push(value)
+        } else {
+            currentObj[routers[i]] = value
+        }
     }
 
     return { ...obj }
