@@ -70,8 +70,8 @@ export class QuerySearchService {
         switch (type) {
             case 'BOOLEAN': {
                 return {
-                    ...(filters?.eq && !excludesOperation.includes('eq') && { equals: filters.eq }),
-                    ...(filters?.dif && { not: { ...(!excludesOperation.includes('dif') && { equals: filters.dif }) } }),
+                    ...(!isUndefined(filters?.eq) && !excludesOperation.includes('eq') && { equals: filters.eq }),
+                    ...(!isUndefined(filters?.dif) && { not: { ...(!excludesOperation.includes('dif') && { equals: filters.dif }) } }),
                 }
             }
             case 'DATE': {

@@ -15,6 +15,7 @@ export const schemaQueryAdmin = ValidatorService.schema.object({
     type: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_PEOPLE_DTO.type.enum, 'type').optional(),
     gender: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_PEOPLE_DTO.gender.enum, 'gender').optional(),
     dateOfBirth: SchemaValidator.object(QuerySearchDTO['DATE']['SCHEMA']('dateOfBirth')).optional(),
+    active: SchemaValidator.object(QuerySearchDTO['BOOLEAN']['SCHEMA']('active')).optional(),
     createdAt: SchemaValidator.object(QuerySearchDTO['DATE']['SCHEMA']('createdAt')).optional(),
 })
 
@@ -38,6 +39,7 @@ export class PeopleQueryUseCase extends UseCase {
             { field: 'name', filter: 'name', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'itinCnpj', filter: 'itinCnpj', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'type', filter: 'type', type: 'ENUM', typeOperation: 'MANY_VALUES' },
+            { field: 'active', filter: 'active', type: 'BOOLEAN', typeOperation: 'SCHEMA' },
             { field: 'gender', filter: 'gender', type: 'ENUM', typeOperation: 'MANY_VALUES' },
             { field: 'dateOfBirth', filter: 'dateOfBirth', type: 'DATE', typeOperation: 'SCHEMA' },
             { field: 'createdAt', filter: 'createdAt', type: 'DATE', typeOperation: 'SCHEMA' },
