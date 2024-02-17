@@ -86,7 +86,12 @@ export class QuerySearchService {
             }
             case 'ENUM': {
                 return {
-                    ...(!excludesOperation.includes('in') && { in: filters })
+                    ...(filters?.in && !excludesOperation.includes('in') && { in: filters.in }),
+                    ...((filters?.nin || filters?.dif) && {
+                        not: {
+                            ...(filters?.nin && !excludesOperation.includes('nin') && { in: filters.nin }),
+                        }
+                    }),
                 }
             }
             case 'NUMBER': {
@@ -185,6 +190,10 @@ export const QuerySearchDTO = {
     ENUM: {
         UNIQUE: <T>(values: T, name: string) => QuerySearchHandlers['ENUM'].UNIQUE_VALUE(values as any, name),
         MANY_VALUES: <T>(values: T, name: string) => QuerySearchHandlers['ENUM'].ARRAY_VALUES(values as any, name),
+        SCHEMA: <T>(values: T, name: string) => ({
+            [ParamOperation.CONTAINS]: QuerySearchHandlers['ENUM'].ARRAY_VALUES(values as any, name, ParamOperation.CONTAINS).optional(),
+            [ParamOperation.NOT_CONTAINS]: QuerySearchHandlers['ENUM'].ARRAY_VALUES(values as any, name, ParamOperation.NOT_CONTAINS).optional(),
+        }),
     },
     [QueryType.NUMBER]: {
         UNIQUE: (name: string) => QuerySearchHandlers[QueryType.NUMBER].UNIQUE_VALUE(name),

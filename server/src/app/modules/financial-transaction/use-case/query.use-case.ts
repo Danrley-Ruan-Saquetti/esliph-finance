@@ -19,9 +19,9 @@ export const schemaQueryCustomer = ValidatorService.schema.object({
     expiresAt: SchemaValidator.object(QuerySearchDTO['DATE']['SCHEMA']('expiresAt')).optional(),
     competenceAt: SchemaValidator.object(QuerySearchDTO['DATE']['SCHEMA']('competenceAt')).optional(),
     type: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum, 'type').optional(),
-    situation: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_FINANCIAL_TRANSACTION_DTO.situation.enum, 'situation').optional(),
-    frequency: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.enum, 'frequency').optional(),
-    typeOccurrence: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum, 'typeOccurrence').optional(),
+    situation: SchemaValidator.object(QuerySearchDTO['ENUM']['SCHEMA'](GLOBAL_FINANCIAL_TRANSACTION_DTO.situation.enum, 'situation')).optional(),
+    frequency: SchemaValidator.object(QuerySearchDTO['ENUM']['SCHEMA'](GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.enum, 'frequency')).optional(),
+    typeOccurrence: SchemaValidator.object(QuerySearchDTO['ENUM']['SCHEMA'](GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum, 'typeOccurrence')).optional(),
 })
 
 export type FinancialTransactionFilterArgs = SchemaValidator.input<typeof schemaQueryCustomer>
@@ -31,17 +31,20 @@ const schemaQueryAdmin = SchemaValidator.object({
     limite: GLOBAL_DTO.query.pagination.limite(),
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     bankAccountId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('bankAccountId')).optional(),
+    bankAccount: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('bankAccount')).optional(),
+    bankAccountCode: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('bankAccountCode')).optional(),
     category: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('category')).optional(),
     categoryId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('categoryId')).optional(),
     title: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('title')).optional(),
     peopleId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('peopleId')).optional(),
+    people: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('people')).optional(),
     itinCnpj: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('itinCnpj')).optional(),
     expiresAt: SchemaValidator.object(QuerySearchDTO['DATE']['SCHEMA']('expiresAt')).optional(),
     competenceAt: SchemaValidator.object(QuerySearchDTO['DATE']['SCHEMA']('competenceAt')).optional(),
-    type: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum, 'type').optional(),
-    situation: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_FINANCIAL_TRANSACTION_DTO.situation.enum, 'situation').optional(),
-    frequency: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.enum, 'frequency').optional(),
-    typeOccurrence: QuerySearchDTO['ENUM']['MANY_VALUES'](GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum, 'typeOccurrence').optional(),
+    type: SchemaValidator.object(QuerySearchDTO['ENUM']['SCHEMA'](GLOBAL_FINANCIAL_TRANSACTION_DTO.type.enum, 'type')).optional(),
+    situation: SchemaValidator.object(QuerySearchDTO['ENUM']['SCHEMA'](GLOBAL_FINANCIAL_TRANSACTION_DTO.situation.enum, 'situation')).optional(),
+    frequency: SchemaValidator.object(QuerySearchDTO['ENUM']['SCHEMA'](GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.enum, 'frequency')).optional(),
+    typeOccurrence: SchemaValidator.object(QuerySearchDTO['ENUM']['SCHEMA'](GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum, 'typeOccurrence')).optional(),
 })
 
 export type SchemaQueryFiltersType = SchemaValidator.input<typeof schemaQueryAdmin>
@@ -64,15 +67,18 @@ export class FinancialTransactionQueryUseCase extends UseCase {
             { field: 'title', filter: 'title', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'expiresIn', filter: 'expiresAt', type: 'DATE', typeOperation: 'SCHEMA' },
             { field: 'dateTimeCompetence', filter: 'competenceAt', type: 'DATE', typeOperation: 'SCHEMA' },
-            { field: 'categories.some.category.id', filter: 'categoryId', type: 'NUMBER', typeOperation: 'SCHEMA' },
-            { field: 'type', filter: 'type', type: 'ENUM', typeOperation: 'MANY_VALUES' },
-            { field: 'categories.some.category.name', filter: 'category', type: 'STRING', typeOperation: 'SCHEMA' },
-            { field: 'typeOccurrence', filter: 'typeOccurrence', type: 'ENUM', typeOperation: 'MANY_VALUES' },
-            { field: 'situation', filter: 'situation', type: 'ENUM', typeOperation: 'MANY_VALUES' },
-            { field: 'frequency.in', filter: 'frequency', type: 'ENUM', typeOperation: 'MANY_VALUES' },
+            { field: 'type', filter: 'type', type: 'ENUM', typeOperation: 'SCHEMA' },
+            { field: 'typeOccurrence', filter: 'typeOccurrence', type: 'ENUM', typeOperation: 'SCHEMA' },
+            { field: 'situation', filter: 'situation', type: 'ENUM', typeOperation: 'SCHEMA' },
+            { field: 'frequency', filter: 'frequency', type: 'ENUM', typeOperation: 'SCHEMA' },
             { field: 'bankAccount.id', filter: 'bankAccountId', type: 'NUMBER', typeOperation: 'SCHEMA' },
+            { field: 'bankAccount.name', filter: 'bankAccount', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'bankAccount.code', filter: 'bankAccountCode', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'bankAccount.people.id', filter: 'peopleId', type: 'NUMBER', typeOperation: 'SCHEMA' },
             { field: 'bankAccount.people.itinCnpj', filter: 'itinCnpj', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'bankAccount.people.name', filter: 'people', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'categories.some.category.name', filter: 'category', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'categories.some.category.id', filter: 'categoryId', type: 'NUMBER', typeOperation: 'SCHEMA' },
         ])
 
         const result = await this.transactionRepository.query({
@@ -106,11 +112,11 @@ export class FinancialTransactionQueryUseCase extends UseCase {
             { field: 'expiresIn', filter: 'expiresAt', type: 'DATE', typeOperation: 'SCHEMA' },
             { field: 'dateTimeCompetence', filter: 'competenceAt', type: 'DATE', typeOperation: 'SCHEMA' },
             { field: 'categories.some.category.id', filter: 'categoryId', type: 'NUMBER', typeOperation: 'SCHEMA' },
-            { field: 'type', filter: 'type', type: 'ENUM', typeOperation: 'MANY_VALUES' },
-            { field: 'situation', filter: 'situation', type: 'ENUM', typeOperation: 'MANY_VALUES' },
+            { field: 'type', filter: 'type', type: 'ENUM', typeOperation: 'SCHEMA' },
+            { field: 'typeOccurrence', filter: 'typeOccurrence', type: 'ENUM', typeOperation: 'SCHEMA' },
+            { field: 'situation', filter: 'situation', type: 'ENUM', typeOperation: 'SCHEMA' },
+            { field: 'frequency', filter: 'frequency', type: 'ENUM', typeOperation: 'SCHEMA' },
             { field: 'categories.some.category.name', filter: 'category', type: 'STRING', typeOperation: 'SCHEMA' },
-            { field: 'typeOccurrence', filter: 'typeOccurrence', type: 'ENUM', typeOperation: 'MANY_VALUES' },
-            { field: 'frequency.in', filter: 'frequency', type: 'ENUM', typeOperation: 'MANY_VALUES' },
             { field: 'bankAccount.id', filter: 'bankAccountId', type: 'NUMBER', typeOperation: 'UNIQUE' },
         ])
 
