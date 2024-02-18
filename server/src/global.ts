@@ -3,6 +3,7 @@ import { ValidatorService } from '@services/validator.service'
 import { getEnv, toCapitalise } from '@util'
 import { DateService } from '@services/date.service'
 import { REGEX_CNPJ } from '@util'
+import { z } from 'zod'
 
 export const GLOBAL_APP = {
     name: getEnv<string>({ name: 'APP_NAME' }),
@@ -99,18 +100,34 @@ export const GLOBAL_DTO = {
                 .number({ 'required_error': GLOBAL_DTO.required('Limite of the Registers'), 'invalid_type_error': 'Type Limite of the registers must be a number' })
                 .min(0, { message: 'The limit of the registers must be biggest than 0' })
                 .max(GLOBAL_DTO.query.limitePerPage, { message: `The limit of the registers must be less than ${GLOBAL_DTO.query.limitePerPage}` })
-                .default(10)
-        }
+                .default(10),
+            orderBy: () => ValidatorService.schema
+                .union([
+                    ValidatorService.schema.object({}),
+                    ValidatorService.schema.array(ValidatorService.schema.object({})),
+                ])
+                .default([{}])
+                .transform(val => Array.isArray(val) ? val : [val])
+        },
+        schema: () => ValidatorService.schema.object({
+            pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
+            limite: GLOBAL_DTO.query.pagination.limite(),
+            orderBy: GLOBAL_DTO.query.pagination.orderBy(),
+        })
     },
     cnpj: {
         regex: REGEX_CNPJ
-    },
-    email: {
-        mas: {
-
-        }
     }
 }
+
+const schema = ValidatorService.schema.object({
+    orderBy: GLOBAL_DTO.query.pagination.orderBy()
+})
+
+type a = z.input<typeof schema>
+type b = z.output<typeof schema>
+
+console.log(schema.parse({ orderBy: [{}] }))
 
 export const GLOBAL_RULES_BUSINESS = {
     repeatTransactionPerTime: 3

@@ -5,7 +5,7 @@ import { CategoryQueryUseCase } from '@modules/category/use-case/query.use-case'
 import { CategoryUpdateUseCase } from '@modules/category/use-case/update.use-case'
 
 @Controller({ prefix: '/categories', domain: Domain.CLIENT })
-export class CategoryCustomerController {
+export class CategoryClientController {
     constructor(
         @Injection.Inject('category.use-case.create') private createUC: CategoryCreateUseCase,
         @Injection.Inject('category.use-case.query') private queryUC: CategoryQueryUseCase,

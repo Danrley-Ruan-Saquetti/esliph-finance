@@ -101,7 +101,7 @@ export class UserCreateUseCase extends UseCase {
     }
 
     private async valUserIdLoginAlreadyExists(login: string) {
-        const userAlreadyExistsResult = await this.userRepository.findUnique({ where: { login } })
+        const userAlreadyExistsResult = await this.userRepository.findFirst({ where: { login } })
 
         if (userAlreadyExistsResult.isSuccess()) {
             throw new BadRequestException({

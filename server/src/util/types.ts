@@ -1,8 +1,10 @@
-export function isInstance(obj: any) {
+import { ClassConstructor } from '@@types'
+
+export function isInstance<T extends ClassConstructor>(obj: any): obj is InstanceType<T> {
     return !isObjectLiteral(obj)
 }
 
-export function isObjectLiteral(obj: any) {
+export function isObjectLiteral(obj: any): obj is Object {
     return obj !== null && typeof obj === 'object' && obj.constructor === Object
 }
 
@@ -54,28 +56,28 @@ export function isFalsy(value?: any) {
     return isUndefined(value) || !value
 }
 
-export function isArray(value: any) {
+export function isArray(value: any): value is any[] {
     return (isObject(value) && value instanceof Array) || Array.isArray(value)
 }
 
-export function isDate(value: any) {
+export function isDate(value: any): value is Date {
     return isObject(value) && value instanceof Date
 }
 
-export function isBoolean(value: any) {
+export function isBoolean(value: any): value is boolean {
     return getTypeNativeValue(value) == 'boolean'
 }
 
-export function isFunction(value: any) {
+export function isFunction(value: any): value is (...args: any[]) => any | void {
     return getTypeNativeValue(value) == 'function'
 }
 
 const AsyncFunction = (async () => { }).constructor
-export function isAsyncFunction(value: any) {
+export function isAsyncFunction(value: any): value is (...args: any[]) => Promise<any | void> {
     return value instanceof AsyncFunction
 }
 
-export function isNumber(value: any, coerce = false) {
+export function isNumber(value: any, coerce = false): value is number {
     if (coerce) {
         return !isUndefined(value) && !isNaN(Number(value))
     }
@@ -83,23 +85,23 @@ export function isNumber(value: any, coerce = false) {
     return getTypeNativeValue(value) == 'number'
 }
 
-export function isObject(value: any) {
+export function isObject(value: any): value is object {
     return getTypeNativeValue(value) == 'object'
 }
 
-export function isString(value: any) {
+export function isString(value: any): value is string {
     return getTypeNativeValue(value) == 'string'
 }
 
-export function isClass(value: any) {
+export function isClass(value: any): value is ClassConstructor {
     return Object.getPrototypeOf(value) !== Object.prototype
 }
 
-export function isUndefined(value: any) {
+export function isUndefined(value: any): value is undefined {
     return getTypeNativeValue(value) == 'undefined'
 }
 
-export function isNull(value: any) {
+export function isNull(value: any): value is null {
     return value == null
 }
 

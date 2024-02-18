@@ -4,7 +4,7 @@ import { UserQueryUseCase } from '@modules/user/use-case/query.use-case'
 import { UserUpdateUseCase } from '@modules/user/use-case/update.use-case'
 
 @Controller({ prefix: '/users', domain: Domain.CLIENT })
-export class UserCustomerController {
+export class UserClientController {
     constructor(
         @Injection.Inject('user.use-case.query') private queryUC: UserQueryUseCase,
         @Injection.Inject('user.use-case.update') private updateUC: UserUpdateUseCase,

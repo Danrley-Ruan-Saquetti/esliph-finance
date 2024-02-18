@@ -4,7 +4,7 @@ import { AddressCreateUseCase } from '@modules/address/use-case/create.use-case'
 import { AddressRemoveUseCase } from '@modules/address/use-case/remove.use-case'
 
 @Controller({ prefix: '/addresses', domain: Domain.CLIENT })
-export class AddressController {
+export class AddressClientController {
     constructor(
         @Injection.Inject('address.use-case.create') private createUC: AddressCreateUseCase,
         @Injection.Inject('address.use-case.query') private queryUC: AddressQueryUseCase,
