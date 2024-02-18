@@ -12,7 +12,7 @@ export class Repository {
     private static TEMPLATE_CODE_TRANSACTION: GenerateCodeOptions = {
         template: 'XXXXX',
         charactersToReplace: ['X'],
-        valuesAllowed: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        valuesAllowed: '0123456789'.split('')
     }
 
     constructor(

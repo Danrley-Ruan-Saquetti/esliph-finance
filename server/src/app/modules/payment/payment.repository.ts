@@ -1,7 +1,7 @@
 import { Service } from '@core'
 import { MetadataQuery } from '@@types'
 import { Repository } from '@services/repository.service'
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@services/database.service'
 
 type PaymentGetPayloadTypes = boolean | null | undefined | { select?: Prisma.PaymentSelect | null }
 type PaymentGetPayload<T extends boolean | null | undefined | { select?: Prisma.PaymentSelect | null }> = Prisma.PaymentGetPayload<T>

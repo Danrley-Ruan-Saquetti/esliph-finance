@@ -1,5 +1,5 @@
 import { Service } from '@core'
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@services/database.service'
 import { Repository } from '@services/repository.service'
 
 type NoteGetPayloadTypes = boolean | null | undefined | { select?: Prisma.NoteSelect | null }

@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@services/database.service'
 import { Service } from '@core'
 import { Repository } from '@services/repository.service'
 import { UserModel } from '@modules/user/user.model'

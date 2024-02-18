@@ -11,7 +11,7 @@ import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
 
-const schemaQueryAdmin = GLOBAL_DTO.query.schema().extend({
+const schemaQueryAdmin = GLOBAL_DTO.query.schema(['id', 'type', 'code', 'login', 'createdAt', 'active', 'peopleId', 'people', 'itinCnpj']).extend({
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     type: SchemaValidator.object(QuerySearchDTO['ENUM']['SCHEMA'](GLOBAL_USER_DTO.type.enum, 'type')).optional(),
     code: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('code')).optional(),
@@ -50,9 +50,22 @@ export class UserQueryUseCase extends UseCase {
             { field: 'people.itinCnpj', filter: 'itinCnpj', type: 'STRING', typeOperation: 'SCHEMA' },
         ])
 
+        const ordersByQuery = this.querySearch.createOrderBy(filters.orderBy, [
+            { field: 'id', filter: 'id' },
+            { field: 'type', filter: 'type' },
+            { field: 'code', filter: 'code' },
+            { field: 'login', filter: 'login' },
+            { field: 'createdAt', filter: 'createdAt' },
+            { field: 'active', filter: 'active' },
+            { field: 'people.name', filter: 'people' },
+            { field: 'people.id', filter: 'peopleId' },
+            { field: 'people.itinCnpj', filter: 'itinCnpj' },
+        ], [{ id: 'desc' }])
+
         const result = await this.userRepository.query({
             where: { ...filtersQuery },
-            select: { ...UserModel.UserWithoutPasswordSelect, people: { select: { ...PeopleModel.PeopleSimpleSelect } } }
+            select: { ...UserModel.UserWithoutPasswordSelect, people: { select: { ...PeopleModel.PeopleSimpleSelect } } },
+            orderBy: [...ordersByQuery]
         }, filters)
 
         if (!result.isSuccess()) {
@@ -60,7 +73,7 @@ export class UserQueryUseCase extends UseCase {
         }
 
         return Result.success({
-            ...result.getValue(),
+            ...result.getValue()
         })
     }
 

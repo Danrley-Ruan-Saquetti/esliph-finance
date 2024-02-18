@@ -218,3 +218,12 @@ export function insertValueInObjectByPath(obj: GenericObject, value: any, path: 
 
     return { ...obj }
 }
+
+export function mergeArrayObject<T extends object = any>(arr: GenericObject[]) {
+    return arr.reverse().reduce((fullObject, currentObject) => {
+        for (const key in currentObject) {
+            fullObject[key] = currentObject[key]
+        }
+        return fullObject
+    }, {}) as T
+}

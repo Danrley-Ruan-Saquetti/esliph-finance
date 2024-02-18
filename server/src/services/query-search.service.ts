@@ -1,6 +1,6 @@
 import { Service } from '@core'
 import { GenericObject } from '@@types'
-import { clearObject, createObjectByStringPath, insertValueInObjectByPath, isUndefined } from '@util'
+import { clearObject, createObjectByStringPath, insertValueInObjectByPath, isUndefined, mergeArrayObject } from '@util'
 import { QueryParamType } from '@services/query-search/types'
 import { GLOBAL_QUERY_SEARCH_HANDLER_VALUES } from '@services/query-search/global'
 
@@ -10,6 +10,11 @@ export type RelationMapQuery = {
     type: QueryParamType | 'ENUM',
     excludesOperation?: string[],
     typeOperation: 'SCHEMA' | 'UNIQUE' | 'MANY_VALUES'
+}
+
+export type RelationMapOrderBy = {
+    field: string,
+    filter: string,
 }
 
 @Service({ name: 'global.service.query-search' })
@@ -67,10 +72,28 @@ export class QuerySearchService {
                     }
                 }
             }
+
             insertValueInObjectByPath(filters, value, fieldName)
         }
 
         return clearObject({ ...filters, AND })
+    }
+
+    createOrderBy(ordersByArgs: GenericObject[], relations: RelationMapOrderBy[], defaultOrdersBy: { [x: string]: 'asc' | 'desc' }[] = []) {
+        const fullOrdersByArgs = mergeArrayObject(ordersByArgs)
+        const ordersBy: GenericObject[] = []
+
+        for (const { field: fieldName, filter: filterName } of relations) {
+            if (isUndefined(fullOrdersByArgs[filterName])) {
+                continue
+            }
+
+            const orderBy = createObjectByStringPath(filterName)
+            insertValueInObjectByPath(orderBy, fullOrdersByArgs[filterName], fieldName)
+            ordersBy.push(orderBy)
+        }
+
+        return [...ordersBy, ...defaultOrdersBy]
     }
 
     private getFilterValuesInProp(filters: any, options: { type: QueryParamType | 'ENUM', excludesOperation?: string[], }) {

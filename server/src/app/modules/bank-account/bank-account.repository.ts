@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@services/database.service'
 import { Service } from '@core'
 import { MetadataQuery } from '@@types'
 import { Repository } from '@services/repository.service'
