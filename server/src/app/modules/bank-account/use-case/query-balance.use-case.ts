@@ -8,10 +8,10 @@ import { BalanceBankAccountControl } from '@modules/bank-account/control/balance
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { GLOBAL_BANK_ACCOUNT_DTO, GLOBAL_BANK_ACCOUNT_RULES } from '@modules/bank-account/bank-account.global'
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     bankAccountId: GLOBAL_BANK_ACCOUNT_DTO.id,
-    dateStart: ValidatorService.schema.coerce.date({ 'required_error': GLOBAL_BANK_ACCOUNT_RULES.queryBalance.dateStart.messageRequired }),
-    dateEnd: ValidatorService.schema.coerce.date({ 'required_error': GLOBAL_BANK_ACCOUNT_RULES.queryBalance.dateEnd.messageRequired }),
+    dateStart: SchemaValidator.coerce.date({ 'required_error': GLOBAL_BANK_ACCOUNT_RULES.queryBalance.dateStart.messageRequired }),
+    dateEnd: SchemaValidator.coerce.date({ 'required_error': GLOBAL_BANK_ACCOUNT_RULES.queryBalance.dateEnd.messageRequired }),
 })
 
 export type BankAccountQueryBalanceDTOArgs = SchemaValidator.input<typeof schemaDTO>

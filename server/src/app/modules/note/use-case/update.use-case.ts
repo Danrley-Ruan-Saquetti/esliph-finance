@@ -2,13 +2,13 @@ import { Result, Injection, Service } from '@core'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { NoteRepository } from '@modules/note/note.repository'
 import { GLOBAL_NOTE_DTO } from '@modules/note/note.global'
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     id: GLOBAL_NOTE_DTO.financialTransaction.id,
-    description: ValidatorService.schema.string().trim().optional(),
+    description: SchemaValidator.string().trim().optional(),
 })
 
 export type NoteUpdateDTOArgs = SchemaValidator.input<typeof schemaDTO>

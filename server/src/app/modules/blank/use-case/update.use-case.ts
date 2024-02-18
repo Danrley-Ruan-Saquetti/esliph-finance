@@ -2,12 +2,12 @@ import { Result, Injection, Service } from '@core'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { BlankRepository } from '@modules/blank/blank.repository'
 import { GLOBAL_BLANK_DTO } from '@modules/blank/blank.global'
 import { BlankModel } from '@modules/blank/blank.model'
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     id: GLOBAL_BLANK_DTO.id
 })
 

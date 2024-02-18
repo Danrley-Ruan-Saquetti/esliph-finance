@@ -1,12 +1,12 @@
 import { Injection, Service, Result } from '@core'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
-import { ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 
-const schemaNumber = ValidatorService.schema.coerce.number()
-const schemaIdAndBankAccountId = ValidatorService.schema.object({
+const schemaNumber = SchemaValidator.coerce.number()
+const schemaIdAndBankAccountId = SchemaValidator.object({
     id: schemaNumber,
 })
 

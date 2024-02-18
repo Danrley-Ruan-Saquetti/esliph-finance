@@ -1,10 +1,10 @@
 import { Injection, Service, Result } from '@core'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
-import { ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { LogErrorRepository } from '@modules/log/error/error.repository'
 
-const schemaNumber = ValidatorService.schema.coerce.number()
+const schemaNumber = SchemaValidator.coerce.number()
 
 @Service({ name: 'log-error.use-case.query' })
 export class LogErrorQueryUseCase extends UseCase {

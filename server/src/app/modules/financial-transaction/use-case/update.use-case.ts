@@ -4,7 +4,7 @@ import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { getDistinctValuesInArray } from '@util'
 import { BadRequestException, } from '@common/exceptions'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { GLOBAL_CATEGORY_DTO } from '@modules/category/category.global'
@@ -12,55 +12,55 @@ import { CategoryRepository } from '@modules/category/category.repository'
 import { GLOBAL_NOTE_DTO } from '@modules/note/note.global'
 import { GLOBAL_FINANCIAL_TRANSACTION_DTO, GLOBAL_FINANCIAL_TRANSACTION_RULES } from '@modules/financial-transaction/financial-transaction.global'
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     id: GLOBAL_FINANCIAL_TRANSACTION_DTO.id,
-    title: ValidatorService.schema
+    title: SchemaValidator
         .string()
         .trim()
         .min(GLOBAL_FINANCIAL_TRANSACTION_DTO.title.minCharacters, { message: GLOBAL_FINANCIAL_TRANSACTION_DTO.title.messageRangeCharacters })
         .max(GLOBAL_FINANCIAL_TRANSACTION_DTO.title.maxCharacters, { message: GLOBAL_FINANCIAL_TRANSACTION_DTO.title.messageRangeCharacters })
         .optional(),
-    description: ValidatorService.schema
+    description: SchemaValidator
         .string()
         .trim()
         .optional(),
-    priority: ValidatorService.schema
+    priority: SchemaValidator
         .coerce
         .number()
         .nonnegative({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.priority.messageMustBePositive })
         .optional(),
-    isObservable: ValidatorService.schema
+    isObservable: SchemaValidator
         .boolean()
         .optional(),
-    isSendNotification: ValidatorService.schema
+    isSendNotification: SchemaValidator
         .boolean()
         .optional(),
-    situation: ValidatorService.schema
+    situation: SchemaValidator
         .enum(GLOBAL_FINANCIAL_TRANSACTION_RULES.update.situationsEnableToUpdate.enum, {
             errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_RULES.update.situationsEnableToUpdate.messageInvalidSituationToUpdate }),
         })
         .optional(),
-    receiver: ValidatorService.schema
+    receiver: SchemaValidator
         .string()
         .trim()
         .optional(),
-    sender: ValidatorService.schema
+    sender: SchemaValidator
         .string()
         .trim()
         .optional(),
-    expiresIn: ValidatorService.schema
+    expiresIn: SchemaValidator
         .coerce
         .date()
         .transform(GLOBAL_DTO.date.transform)
         .optional(),
-    dateTimeCompetence: ValidatorService.schema
+    dateTimeCompetence: SchemaValidator
         .coerce
         .date()
         .transform(GLOBAL_DTO.date.transform)
         .optional(),
-    notes: ValidatorService.schema.object({
-        create: ValidatorService.schema.array(ValidatorService.schema.object({
-            description: ValidatorService.schema
+    notes: SchemaValidator.object({
+        create: SchemaValidator.array(SchemaValidator.object({
+            description: SchemaValidator
                 .string()
                 .trim()
                 .max(GLOBAL_NOTE_DTO.description.maxCharacters, { message: GLOBAL_NOTE_DTO.description.messageRangeCharacters })
@@ -68,17 +68,17 @@ const schemaDTO = ValidatorService.schema.object({
         }))
             .optional()
             .default([]),
-        remove: ValidatorService.schema.array(GLOBAL_CATEGORY_DTO.id)
+        remove: SchemaValidator.array(GLOBAL_CATEGORY_DTO.id)
             .optional()
             .default([]),
     })
         .optional()
         .default({ create: [], remove: [] }),
-    category: ValidatorService.schema.object({
-        link: ValidatorService.schema.array(GLOBAL_CATEGORY_DTO.id)
+    category: SchemaValidator.object({
+        link: SchemaValidator.array(GLOBAL_CATEGORY_DTO.id)
             .optional()
             .default([]),
-        unlink: ValidatorService.schema.array(GLOBAL_CATEGORY_DTO.id)
+        unlink: SchemaValidator.array(GLOBAL_CATEGORY_DTO.id)
             .optional()
             .default([]),
     })

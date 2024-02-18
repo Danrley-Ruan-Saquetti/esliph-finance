@@ -4,11 +4,11 @@ import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { QuerySearchService } from '@services/query-search.service'
 import { QuerySearchDTO } from '@services/query-search/global'
-import { ValidatorService, SchemaValidator } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { GLOBAL_FINANCIAL_TRANSACTION_DTO } from '@modules/financial-transaction/financial-transaction.global'
 
-const schemaNumber = ValidatorService.schema.coerce.number()
+const schemaNumber = SchemaValidator.coerce.number()
 
 export const schemaQueryCustomer = GLOBAL_DTO.query.schema().extend({
     bankAccountId: QuerySearchDTO['NUMBER']['UNIQUE']('bankAccountId'),

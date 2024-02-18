@@ -5,7 +5,6 @@ export * as SchemaValidator from 'zod'
 
 @Service({ name: 'global.service.validator' })
 export class ValidatorService {
-    static schema = z
 
     performParse<ZodSchema extends z.Schema>(data: z.input<ZodSchema>, schema: ZodSchema): Result<z.output<ZodSchema>> {
         try {

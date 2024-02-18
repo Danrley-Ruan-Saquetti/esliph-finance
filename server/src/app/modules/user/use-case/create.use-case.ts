@@ -5,7 +5,7 @@ import { isValidCnpj, isValidItin } from '@util'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { CryptoService } from '@services/crypto.service'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 import { UserRepository } from '@modules/user/user.repository'
 import { UserGenerateCodeUseCase } from '@modules/user/use-case/generate-code.use-case'
@@ -14,17 +14,17 @@ import { GLOBAL_PEOPLE_DTO } from '@modules/people/people.global'
 import { PeopleModel } from '@modules/people/people.model'
 import { PeopleCreateDTOArgs, PeopleCreateUseCase } from '@modules/people/use-case/create.use-case'
 
-const baseSchemaDTO = ValidatorService.schema.object({
-    login: ValidatorService.schema
+const baseSchemaDTO = SchemaValidator.object({
+    login: SchemaValidator
         .string({ 'required_error': GLOBAL_USER_DTO.login.messageRequired })
         .email({ message: GLOBAL_USER_DTO.login.messageInvalid })
         .max(GLOBAL_USER_DTO.login.maxCharacters, { message: GLOBAL_USER_DTO.login.messageRangeCharacters })
         .trim(),
-    password: ValidatorService.schema
+    password: SchemaValidator
         .string({ 'required_error': GLOBAL_USER_DTO.password.messageRequired })
         .trim()
         .regex(GLOBAL_USER_DTO.password.regex, { message: GLOBAL_USER_DTO.password.messageRegex }),
-    userType: ValidatorService.schema
+    userType: SchemaValidator
         .enum(GLOBAL_USER_DTO.type.enum, { errorMap: () => ({ message: GLOBAL_USER_DTO.type.messageEnumInvalid }) })
         .transform(val => val.toUpperCase()),
 })
@@ -35,7 +35,7 @@ const schemaCreateUserOnlyDTO = baseSchemaDTO.extend({
 
 const schemaCreateUserAndPeopleDTO = baseSchemaDTO.extend({
     peopleId: GLOBAL_USER_DTO.people.id,
-    peopleType: ValidatorService.schema
+    peopleType: SchemaValidator
         .enum(GLOBAL_PEOPLE_DTO.type.enum, { errorMap: () => ({ message: GLOBAL_PEOPLE_DTO.type.messageEnumInvalid }) }),
 })
 

@@ -1,14 +1,14 @@
 import { Service, Injection, Result } from '@core'
 import { UseCase } from '@common/use-case'
 import { ID } from '@@types'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { BadRequestException } from '@common/exceptions/bad-request.exception'
 import { GLOBAL_BANK_ACCOUNT_DTO, GLOBAL_BANK_ACCOUNT_RULES } from '@modules/bank-account/bank-account.global'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     id: GLOBAL_BANK_ACCOUNT_DTO.id,
-    value: ValidatorService.schema
+    value: SchemaValidator
         .coerce
         .number({
             'required_error': GLOBAL_BANK_ACCOUNT_RULES.updateBalance.value.valueRequest,

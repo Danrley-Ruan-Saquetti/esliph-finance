@@ -2,12 +2,12 @@ import { Injection, Result, Service } from '@core'
 import { UseCase } from '@common/use-case'
 import { GLOBAL_DTO } from '@global'
 import { QuerySearchDTO } from '@services/query-search/global'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { PeopleRepository } from '@modules/people/people.repository'
 import { QuerySearchService } from '@services/query-search.service'
 import { GLOBAL_PEOPLE_DTO } from '@modules/people/people.global'
 
-export const schemaQueryAdmin = GLOBAL_DTO.query.schema().extend({
+export const schemaQueryAdmin = GLOBAL_DTO.query.schema(['id', 'name', 'itinCnpj', 'type', 'gender', 'dateOfBirth', 'active', 'createdAt']).extend({
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     name: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('name')).optional(),
     itinCnpj: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('itinCnpj')).optional(),
@@ -44,8 +44,20 @@ export class PeopleQueryUseCase extends UseCase {
             { field: 'createdAt', filter: 'createdAt', type: 'DATE', typeOperation: 'SCHEMA' },
         ])
 
+        const ordersByQuery = this.querySearch.createOrderBy(filters.orderBy, [
+            { field: 'id', filter: 'id' },
+            { field: 'name', filter: 'code' },
+            { field: 'itinCnpj', filter: 'itinCnpj' },
+            { field: 'type', filter: 'type' },
+            { field: 'active', filter: 'active' },
+            { field: 'gender', filter: 'gender' },
+            { field: 'dateOfBirth', filter: 'dateOfBirth' },
+            { field: 'createdAt', filter: 'createdAt' },
+        ], [{ id: 'desc' }])
+
         const result = await this.peopleRepository.query({
             where: { ...filtersQuery },
+            orderBy: [...ordersByQuery]
         }, filters)
 
         if (!result.isSuccess()) {

@@ -2,25 +2,25 @@ import { Result, Service, Injection } from '@core'
 import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { GLOBAL_CATEGORY_DTO } from '@modules/category/category.global'
 import { CategoryRepository } from '@modules/category/category.repository'
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     bankAccountId: GLOBAL_CATEGORY_DTO.bankAccount.id,
-    name: ValidatorService.schema
+    name: SchemaValidator
         .string({ 'required_error': GLOBAL_CATEGORY_DTO.name.messageRequired })
         .trim()
         .min(GLOBAL_CATEGORY_DTO.name.minCharacters, { message: GLOBAL_CATEGORY_DTO.name.messageRangeCharacters })
         .max(GLOBAL_CATEGORY_DTO.name.maxCharacters, { message: GLOBAL_CATEGORY_DTO.name.messageRangeCharacters })
         .transform(GLOBAL_DTO.text.transform),
-    color: ValidatorService.schema
+    color: SchemaValidator
         .string({ 'required_error': GLOBAL_CATEGORY_DTO.color.messageRequired })
         .trim()
         .max(GLOBAL_CATEGORY_DTO.color.maxCharacters, { message: GLOBAL_CATEGORY_DTO.color.messageRangeCharacters })
         .regex(GLOBAL_DTO.color.regex, { message: GLOBAL_DTO.color.messageRegex })
         .transform(GLOBAL_DTO.color.transform),
-    isFavorite: ValidatorService.schema.boolean().default(GLOBAL_CATEGORY_DTO.isFavorite.default),
+    isFavorite: SchemaValidator.boolean().default(GLOBAL_CATEGORY_DTO.isFavorite.default),
 })
 
 export type CategoryCreateDTOArgs = SchemaValidator.input<typeof schemaDTO>

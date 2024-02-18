@@ -1,10 +1,10 @@
 import { Injection, Service, Result } from '@core'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
-import { ValidatorService } from '@services/validator.service'
+import { SchemaValidator, SchemaValidator } from '@services/validator.service'
 import { NotificationRepository } from '@modules/notification/notification.repository'
 
-const schemaNumber = ValidatorService.schema.coerce.number()
+const schemaNumber = SchemaValidator.coerce.number()
 
 @Service({ name: 'notification.use-case.query' })
 export class NotificationQueryUseCase extends UseCase {

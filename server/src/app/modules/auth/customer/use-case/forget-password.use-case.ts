@@ -2,7 +2,7 @@ import { Injection, Result, Service } from '@core'
 import { GLOBAL_APP, GLOBAL_MAIL_CONFIG, GLOBAL_SERVER_JWT_TOKEN } from '@global'
 import { ID, PayloadJWTCustomerResetPassword } from '@@types'
 import { JWTService } from '@services/jwt.service'
-import { ValidatorService, SchemaValidator } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions/bad-request.exception'
 import { CustomerForgetPasswordTemplate } from '@templates/forget-password'
@@ -11,8 +11,8 @@ import { CustomerRepository } from '@modules/user/customer/customer.repository'
 import { MailCreateUseCase } from '@modules/notification/mail/use-case/create.use-case'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 
-const schemaDTO = ValidatorService.schema.object({
-    login: ValidatorService.schema
+const schemaDTO = SchemaValidator.object({
+    login: SchemaValidator
         .string({ 'required_error': GLOBAL_USER_DTO.login.messageRequired })
         .max(GLOBAL_USER_DTO.login.maxCharacters, { message: GLOBAL_USER_DTO.login.messageRangeCharacters })
         .trim(),

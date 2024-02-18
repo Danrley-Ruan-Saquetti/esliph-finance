@@ -5,7 +5,7 @@ import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { CustomerSignInTemplate } from '@templates/customer-account-sing-in'
 import { GLOBAL_AUTH_CLIENT_DTO } from '@modules/auth/customer/auth-customer.global'
 import { UserRepository } from '@modules/user/user.repository'
@@ -13,11 +13,11 @@ import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 import { UserModel } from '@modules/user/user.model'
 import { MailCreateUseCase } from '@modules/notification/mail/use-case/create.use-case'
 
-const schemaDTO = ValidatorService.schema.object({
-    login: ValidatorService.schema
+const schemaDTO = SchemaValidator.object({
+    login: SchemaValidator
         .string({ 'required_error': GLOBAL_AUTH_CLIENT_DTO.login.messageRequired })
         .trim(),
-    password: ValidatorService.schema
+    password: SchemaValidator
         .string({ 'required_error': GLOBAL_USER_DTO.password.messageRequired })
         .trim()
 })

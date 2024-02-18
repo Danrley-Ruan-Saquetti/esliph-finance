@@ -1,28 +1,27 @@
 import { Result, Injection, Service } from '@core'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
-import { GLOBAL_DTO } from '@global'
 import { BadRequestException } from '@common/exceptions'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { UserModel } from '@modules/user/user.model'
 import { UserRepository } from '@modules/user/user.repository'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 import { isUndefined } from '@util'
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     id: GLOBAL_USER_DTO.id,
-    login: ValidatorService.schema
+    login: SchemaValidator
         .string()
         .email({ message: GLOBAL_USER_DTO.login.messageInvalid })
         .max(GLOBAL_USER_DTO.login.maxCharacters, { message: GLOBAL_USER_DTO.login.messageRangeCharacters })
         .trim()
         .optional(),
-    password: ValidatorService.schema
+    password: SchemaValidator
         .string()
         .trim()
         .regex(GLOBAL_USER_DTO.password.regex, { message: GLOBAL_USER_DTO.password.messageRegex })
         .optional(),
-    active: ValidatorService.schema
+    active: SchemaValidator
         .boolean()
         .optional(),
 })

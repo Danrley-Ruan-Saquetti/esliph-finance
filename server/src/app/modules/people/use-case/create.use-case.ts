@@ -3,26 +3,26 @@ import { BadRequestException } from '@common/exceptions'
 import { GLOBAL_DTO } from '@global'
 import { isValidCnpj, isValidItin } from '@util'
 import { UseCase } from '@common/use-case'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { FormatterItinCnpjService } from '@services/formatter-itin-cnpj.service'
 import { GLOBAL_PEOPLE_DTO } from '@modules/people/people.global'
 import { PeopleRepository } from '@modules/people/people.repository'
 import { PeopleModel } from '@modules/people/people.model'
 
-export const schemaPeoplePeopleAndPeopleDTO = ValidatorService.schema.object({
-    name: ValidatorService.schema
+export const schemaPeoplePeopleAndPeopleDTO = SchemaValidator.object({
+    name: SchemaValidator
         .string({ 'required_error': GLOBAL_PEOPLE_DTO.name.messageRequired })
         .trim()
         .min(GLOBAL_PEOPLE_DTO.name.minCharacters, { message: GLOBAL_PEOPLE_DTO.name.messageRangeCharacters })
         .max(GLOBAL_PEOPLE_DTO.name.maxCharacters, { message: GLOBAL_PEOPLE_DTO.name.messageRangeCharacters })
         .transform(GLOBAL_DTO.text.transform)
         .refine(name => name.split(' ').length > 1, { message: GLOBAL_PEOPLE_DTO.name.messageLastNameRequired }),
-    itinCnpj: ValidatorService.schema
+    itinCnpj: SchemaValidator
         .string({ 'required_error': GLOBAL_PEOPLE_DTO.itin.messageRequired })
         .trim(),
-    type: ValidatorService.schema
+    type: SchemaValidator
         .enum(GLOBAL_PEOPLE_DTO.type.enum, { errorMap: () => ({ message: GLOBAL_PEOPLE_DTO.type.messageEnumInvalid }) }),
-    gender: ValidatorService.schema
+    gender: SchemaValidator
         .enum(GLOBAL_PEOPLE_DTO.gender.enum, { errorMap: () => ({ message: GLOBAL_PEOPLE_DTO.gender.messageEnumInvalid }) })
         .optional(),
     dateOfBirth: GLOBAL_DTO.date.schema

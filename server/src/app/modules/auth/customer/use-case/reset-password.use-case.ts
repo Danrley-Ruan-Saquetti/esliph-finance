@@ -1,7 +1,7 @@
 import { Injection, Result, Service } from '@core'
 import { ID, PayloadJWTCustomerResetPassword } from '@@types'
 import { JWTService } from '@services/jwt.service'
-import { ValidatorService, SchemaValidator } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { CryptoService } from '@services/crypto.service'
 import { UseCase } from '@common/use-case'
 import { GLOBAL_SERVER_JWT_TOKEN } from '@global'
@@ -12,12 +12,12 @@ import { MailCreateUseCase } from '@modules/notification/mail/use-case/create.us
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 import { GLOBAL_AUTH_CLIENT_DTO } from '@modules/auth/customer/auth-customer.global'
 
-const schemaDTO = ValidatorService.schema.object({
-    password: ValidatorService.schema
+const schemaDTO = SchemaValidator.object({
+    password: SchemaValidator
         .string({ 'required_error': GLOBAL_USER_DTO.password.messageRequired })
         .trim()
         .regex(GLOBAL_USER_DTO.password.regex, { message: GLOBAL_USER_DTO.password.messageRegex }),
-    token: ValidatorService.schema
+    token: SchemaValidator
         .string({ 'required_error': GLOBAL_AUTH_CLIENT_DTO.token.messageRequired })
 
 })

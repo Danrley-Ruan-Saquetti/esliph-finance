@@ -1,10 +1,10 @@
 import { Injection, Service, Result } from '@core'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
-import { ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { FinancialCategoryRepository } from '@modules/financial-transaction/category/category.repository'
 
-const schemaNumber = ValidatorService.schema.coerce.number()
+const schemaNumber = SchemaValidator.coerce.number()
 
 @Service({ name: 'financial-category.use-case.query' })
 export class FinancialCategoryQueryUseCase extends UseCase {

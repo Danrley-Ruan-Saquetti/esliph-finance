@@ -2,18 +2,18 @@ import { Result, Injection, Service } from '@core'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { NotificationRepository } from '@modules/notification/notification.repository'
 import { NotificationModel } from '@modules/notification/notification.model'
 import { GLOBAL_NOTIFICATION_DTO } from '@modules/notification/notification.global'
 
-export const schemaDTO = ValidatorService.schema.object({
+export const schemaDTO = SchemaValidator.object({
     bankAccountId: GLOBAL_NOTIFICATION_DTO.bankAccount.id.optional(),
-    content: ValidatorService.schema
+    content: SchemaValidator
         .string({ 'required_error': GLOBAL_NOTIFICATION_DTO.content.messageRequired }),
-    subject: ValidatorService.schema
+    subject: SchemaValidator
         .string({ 'required_error': GLOBAL_NOTIFICATION_DTO.subject.messageRequired }),
-    type: ValidatorService.schema
+    type: SchemaValidator
         .enum(GLOBAL_NOTIFICATION_DTO.type.enum, { errorMap: () => ({ message: GLOBAL_NOTIFICATION_DTO.type.messageEnumInvalid }) })
 })
 

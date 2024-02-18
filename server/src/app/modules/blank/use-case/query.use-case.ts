@@ -4,10 +4,10 @@ import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { QuerySearchDTO } from '@services/query-search/global'
 import { QuerySearchService } from '@services/query-search.service'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { BlankRepository } from '@modules/blank/blank.repository'
 
-const schemaNumber = ValidatorService.schema.coerce.number()
+const schemaNumber = SchemaValidator.coerce.number()
 
 export const schemaQueryAdmin = GLOBAL_DTO.query.schema().extend({
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),

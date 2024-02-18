@@ -2,57 +2,57 @@ import { Result, Injection, Service } from '@core'
 import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { GLOBAL_FINANCIAL_TRANSACTION_DTO } from '@modules/financial-transaction/financial-transaction.global'
 import { GLOBAL_NOTE_DTO } from '@modules/note/note.global'
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     bankAccountId: GLOBAL_FINANCIAL_TRANSACTION_DTO.bankAccount.id,
-    title: ValidatorService.schema
+    title: SchemaValidator
         .string({ 'required_error': GLOBAL_FINANCIAL_TRANSACTION_DTO.title.messageRequired })
         .trim()
         .min(GLOBAL_FINANCIAL_TRANSACTION_DTO.title.minCharacters, { message: GLOBAL_FINANCIAL_TRANSACTION_DTO.title.messageRangeCharacters })
         .max(GLOBAL_FINANCIAL_TRANSACTION_DTO.title.maxCharacters, { message: GLOBAL_FINANCIAL_TRANSACTION_DTO.title.messageRangeCharacters }),
-    description: ValidatorService.schema.string().trim().default(GLOBAL_FINANCIAL_TRANSACTION_DTO.description.default),
-    value: ValidatorService.schema.coerce
+    description: SchemaValidator.string().trim().default(GLOBAL_FINANCIAL_TRANSACTION_DTO.description.default),
+    value: SchemaValidator.coerce
         .number({
             'required_error': GLOBAL_FINANCIAL_TRANSACTION_DTO.value.messageRequired,
             'invalid_type_error': GLOBAL_FINANCIAL_TRANSACTION_DTO.value.messageMustBePositive,
         })
         .positive({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.value.messageMustBePositive }),
-    priority: ValidatorService.schema.coerce
+    priority: SchemaValidator.coerce
         .number({
             'required_error': GLOBAL_FINANCIAL_TRANSACTION_DTO.priority.messageRequired,
             'invalid_type_error': GLOBAL_FINANCIAL_TRANSACTION_DTO.priority.messageMustBePositive,
         })
         .nonnegative({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.priority.messageMustBePositive }),
-    isObservable: ValidatorService.schema.boolean().default(GLOBAL_FINANCIAL_TRANSACTION_DTO.isObservable.default),
-    isSendNotification: ValidatorService.schema.boolean().default(GLOBAL_FINANCIAL_TRANSACTION_DTO.isSendNotification.default),
-    timesToRepeat: ValidatorService.schema.number().default(GLOBAL_FINANCIAL_TRANSACTION_DTO.timesToRepeat.default),
-    type: ValidatorService.schema
+    isObservable: SchemaValidator.boolean().default(GLOBAL_FINANCIAL_TRANSACTION_DTO.isObservable.default),
+    isSendNotification: SchemaValidator.boolean().default(GLOBAL_FINANCIAL_TRANSACTION_DTO.isSendNotification.default),
+    timesToRepeat: SchemaValidator.number().default(GLOBAL_FINANCIAL_TRANSACTION_DTO.timesToRepeat.default),
+    type: SchemaValidator
         .enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.type.enum, { errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.type.messageEnumInvalid }) })
         .transform(val => val.toUpperCase()),
-    typeOccurrence: ValidatorService.schema.enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum, {
+    typeOccurrence: SchemaValidator.enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.enum, {
         errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.typeOccurrence.messageEnumInvalid }),
     }),
-    frequency: ValidatorService.schema
+    frequency: SchemaValidator
         .enum(GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.enum, {
             errorMap: () => ({ message: GLOBAL_FINANCIAL_TRANSACTION_DTO.frequency.messageEnumInvalid }),
         })
         .default(FinancialTransactionModel.Frequency.NULL),
-    receiver: ValidatorService.schema.string().trim().default(GLOBAL_FINANCIAL_TRANSACTION_DTO.receiver.default),
-    sender: ValidatorService.schema.string().trim().default(GLOBAL_FINANCIAL_TRANSACTION_DTO.sender.default),
-    expiresIn: ValidatorService.schema.coerce.date().default(GLOBAL_FINANCIAL_TRANSACTION_DTO.expiresIn.default()).transform(GLOBAL_DTO.date.transform),
-    dateTimeCompetence: ValidatorService.schema.coerce
+    receiver: SchemaValidator.string().trim().default(GLOBAL_FINANCIAL_TRANSACTION_DTO.receiver.default),
+    sender: SchemaValidator.string().trim().default(GLOBAL_FINANCIAL_TRANSACTION_DTO.sender.default),
+    expiresIn: SchemaValidator.coerce.date().default(GLOBAL_FINANCIAL_TRANSACTION_DTO.expiresIn.default()).transform(GLOBAL_DTO.date.transform),
+    dateTimeCompetence: SchemaValidator.coerce
         .date()
         .default(GLOBAL_FINANCIAL_TRANSACTION_DTO.dateTimeCompetence.default())
         .transform(GLOBAL_DTO.date.transform),
-    notes: ValidatorService.schema
+    notes: SchemaValidator
         .array(
-            ValidatorService.schema.object({
-                description: ValidatorService.schema
+            SchemaValidator.object({
+                description: SchemaValidator
                     .string()
                     .trim()
                     .max(GLOBAL_NOTE_DTO.description.maxCharacters, { message: GLOBAL_NOTE_DTO.description.messageRangeCharacters })
@@ -61,9 +61,9 @@ const schemaDTO = ValidatorService.schema.object({
         )
         .optional()
         .default([]),
-    categories: ValidatorService.schema
+    categories: SchemaValidator
         .array(
-            ValidatorService.schema.coerce.number(),
+            SchemaValidator.coerce.number(),
         )
         .optional()
         .default([]),

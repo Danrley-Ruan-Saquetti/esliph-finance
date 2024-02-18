@@ -1,8 +1,7 @@
 import { Injection } from '@core'
 import { getEnv, isArray, toCapitalise, REGEX_CNPJ } from '@util'
-import { ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { DateService } from '@services/date.service'
-import { array, z } from 'zod'
 
 export const GLOBAL_APP = {
     name: getEnv<string>({ name: 'APP_NAME' }),
@@ -58,7 +57,7 @@ export const GLOBAL_DTO = {
         transform: (val: string) => val.replace(/ {2,}/g, ' '),
     },
     date: {
-        schema: ValidatorService.schema
+        schema: SchemaValidator
             .coerce
             .date({ 'invalid_type_error': 'Date format invalid' })
             .transform(date => {
@@ -82,20 +81,20 @@ export const GLOBAL_DTO = {
     },
     id: {
         schema: ({ name }: { name: string }) =>
-            ValidatorService.schema.coerce
+            SchemaValidator.coerce
                 .number({ 'required_error': GLOBAL_DTO.required(`ID ${name}`), 'invalid_type_error': `Type ID ${name} must be a number` })
                 .positive({ message: `Invalid ID ${toCapitalise(name)}` }),
     },
     query: {
         limitePerPage: 100,
         pagination: {
-            pageIndex: () => ValidatorService.schema
+            pageIndex: () => SchemaValidator
                 .coerce
                 .number({ 'required_error': GLOBAL_DTO.required('Page Index'), 'invalid_type_error': 'Type Page Index must be a number' })
                 .min(1, { message: 'Page index must be biggest than 1' })
                 .default(1)
                 .transform(page => page - 1),
-            limite: () => ValidatorService.schema
+            limite: () => SchemaValidator
                 .coerce
                 .number({ 'required_error': GLOBAL_DTO.required('Limite of the Registers'), 'invalid_type_error': 'Type Limite of the registers must be a number' })
                 .min(0, { message: 'The limit of the registers must be biggest than 0' })
@@ -105,7 +104,7 @@ export const GLOBAL_DTO = {
                 const schemaOrderByObject = {}
 
                 orders.forEach(key => {
-                    schemaOrderByObject[key] = ValidatorService.schema
+                    schemaOrderByObject[key] = SchemaValidator
                         .enum(
                             ['asc', 'desc'],
                             { errorMap: () => ({ message: `Invalid enum to param "orderBy.${key}". Expect "asc, desc"` }) }
@@ -113,16 +112,16 @@ export const GLOBAL_DTO = {
                         .optional()
                 })
 
-                return ValidatorService.schema
+                return SchemaValidator
                     .union([
-                        ValidatorService.schema.object(schemaOrderByObject),
-                        ValidatorService.schema.array(ValidatorService.schema.object(schemaOrderByObject)),
+                        SchemaValidator.object(schemaOrderByObject),
+                        SchemaValidator.array(SchemaValidator.object(schemaOrderByObject)),
                     ])
                     .default([])
                     .transform(val => isArray(val) ? [...val] : [val])
             }
         },
-        schema: (orders: string[] = []) => ValidatorService.schema.object({
+        schema: (orders: string[] = []) => SchemaValidator.object({
             pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
             limite: GLOBAL_DTO.query.pagination.limite(),
             orderBy: GLOBAL_DTO.query.pagination.orderBy(orders),

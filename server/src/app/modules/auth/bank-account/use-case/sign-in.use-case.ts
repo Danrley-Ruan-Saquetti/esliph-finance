@@ -5,7 +5,7 @@ import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
 import { JWTService } from '@services/jwt.service'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { UserRepository } from '@modules/user/user.repository'
 import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.global'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
@@ -14,12 +14,12 @@ import { MailCreateUseCase } from '@modules/notification/mail/use-case/create.us
 import { UserModel } from '@modules/user/user.model'
 import { BankAccountSignInTemplate } from '@templates/bank-account-sing-in'
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     peopleId: GLOBAL_BANK_ACCOUNT_DTO.people.id,
-    code: ValidatorService.schema
+    code: SchemaValidator
         .string({ 'required_error': GLOBAL_BANK_ACCOUNT_DTO.code.messageRequired })
         .trim(),
-    password: ValidatorService.schema
+    password: SchemaValidator
         .string({ 'required_error': GLOBAL_BANK_ACCOUNT_DTO.password.messageRequired })
         .trim()
 })

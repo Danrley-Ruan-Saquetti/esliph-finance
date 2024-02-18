@@ -1,22 +1,22 @@
 import { Result, Injection, Service } from '@core'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { MailRepository } from '@modules/notification/mail/mail.repository'
 import { GLOBAL_MAIL_DTO } from '@modules/notification/mail/mail.global'
 import { GLOBAL_NOTIFICATION_DTO } from '@modules/notification/notification.global'
 import { NotificationModel } from '@modules/notification/notification.model'
 import { MailModel } from '@modules/notification/mail/mail.model'
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     bankAccountId: GLOBAL_NOTIFICATION_DTO.bankAccount.id.optional(),
-    content: ValidatorService.schema
+    content: SchemaValidator
         .string({ 'required_error': GLOBAL_NOTIFICATION_DTO.content.messageRequired }),
-    subject: ValidatorService.schema
+    subject: SchemaValidator
         .string({ 'required_error': GLOBAL_NOTIFICATION_DTO.subject.messageRequired }),
-    recipient: ValidatorService.schema
+    recipient: SchemaValidator
         .string({ 'required_error': GLOBAL_MAIL_DTO.recipient.messageRequired }),
-    sender: ValidatorService.schema
+    sender: SchemaValidator
         .string({ 'required_error': GLOBAL_MAIL_DTO.sender.messageRequired }),
 })
 

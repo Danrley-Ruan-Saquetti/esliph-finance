@@ -1,46 +1,46 @@
 import { Result, Injection, Service } from '@core'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { AddressRepository } from '@modules/address/address.repository'
 import { GLOBAL_ADDRESS_DTO } from '@modules/address/address.global'
 import { AddressModel } from '@modules/address/address.model'
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     peopleId: GLOBAL_ADDRESS_DTO.people.id,
-    addresses: ValidatorService.schema.array(ValidatorService.schema.object({
-        zipCode: ValidatorService.schema
+    addresses: SchemaValidator.array(SchemaValidator.object({
+        zipCode: SchemaValidator
             .string({ 'required_error': GLOBAL_ADDRESS_DTO.zipCode.messageRequired })
             .regex(GLOBAL_ADDRESS_DTO.zipCode.regex, { message: GLOBAL_ADDRESS_DTO.zipCode.messageInvalid })
             .trim(),
-        city: ValidatorService.schema
+        city: SchemaValidator
             .string({ 'required_error': GLOBAL_ADDRESS_DTO.city.messageRequired })
             .trim(),
-        street: ValidatorService.schema
+        street: SchemaValidator
             .string({ 'required_error': GLOBAL_ADDRESS_DTO.street.messageRequired })
             .trim(),
-        country: ValidatorService.schema
+        country: SchemaValidator
             .string({ 'required_error': GLOBAL_ADDRESS_DTO.country.messageRequired })
             .trim(),
-        state: ValidatorService.schema
+        state: SchemaValidator
             .string({ 'required_error': GLOBAL_ADDRESS_DTO.state.messageRequired })
             .trim(),
-        neighborhood: ValidatorService.schema
+        neighborhood: SchemaValidator
             .string({ 'required_error': GLOBAL_ADDRESS_DTO.neighborhood.messageRequired })
             .trim(),
-        complement: ValidatorService.schema
+        complement: SchemaValidator
             .string()
             .trim()
             .optional(),
-        type: ValidatorService.schema
+        type: SchemaValidator
             .enum(GLOBAL_ADDRESS_DTO.type.enum, { errorMap: () => ({ message: GLOBAL_ADDRESS_DTO.type.messageEnumInvalid }) })
             .default(GLOBAL_ADDRESS_DTO.type.default)
             .transform(val => val.toUpperCase()),
-        reference: ValidatorService.schema
+        reference: SchemaValidator
             .string()
             .trim()
             .optional(),
-        number: ValidatorService.schema
+        number: SchemaValidator
             .string()
             .trim()
             .optional(),

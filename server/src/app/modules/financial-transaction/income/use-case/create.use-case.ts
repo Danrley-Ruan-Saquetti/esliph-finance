@@ -1,13 +1,12 @@
 import { Injection, Service } from '@core'
 import { UseCase } from '@common/use-case'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { GLOBAL_FINANCIAL_TRANSACTION_DTO } from '@modules/financial-transaction/financial-transaction.global'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { FinancialTransactionCreateDTOArgs, FinancialTransactionCreateUseCase } from '@modules/financial-transaction/use-case/create.use-case'
 
-const schemaDTO = ValidatorService.schema.object({
-    sender: ValidatorService
-        .schema
+const schemaDTO = SchemaValidator.object({
+    sender: SchemaValidator
         .string({ 'required_error': GLOBAL_FINANCIAL_TRANSACTION_DTO.sender.messageRequired })
         .trim()
 })

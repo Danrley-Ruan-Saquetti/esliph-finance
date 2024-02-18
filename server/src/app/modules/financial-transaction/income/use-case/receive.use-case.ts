@@ -2,12 +2,12 @@ import { Result, Injection, Service } from '@core'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
-import { ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { PaymentCreateUseCase, PaymentCreateDTOArgs } from '@modules/payment/use-case/create.use-case'
 import { FinancialTransactionRepository } from '@modules/financial-transaction/financial-transaction.repository'
 import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 
-const schemaNumber = ValidatorService.schema.coerce.number()
+const schemaNumber = SchemaValidator.coerce.number()
 
 export type FinancialIncomeReceiveDTOArgs = PaymentCreateDTOArgs
 

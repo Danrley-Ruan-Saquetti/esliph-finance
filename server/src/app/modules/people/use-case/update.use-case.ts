@@ -4,26 +4,26 @@ import { isUndefined } from '@util'
 import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { PeopleRepository } from '@modules/people/people.repository'
 import { GLOBAL_PEOPLE_DTO } from '@modules/people/people.global'
 import { PeopleModel } from '@modules/people/people.model'
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     id: GLOBAL_PEOPLE_DTO.id,
-    name: ValidatorService.schema
+    name: SchemaValidator
         .string()
         .trim()
         .transform(GLOBAL_DTO.text.transform)
         .refine(name => name.split(' ').length > 1, { message: GLOBAL_PEOPLE_DTO.name.messageLastNameRequired })
         .optional(),
-    active: ValidatorService.schema
+    active: SchemaValidator
         .boolean()
         .optional(),
-    dateOfBirth: ValidatorService.schema.coerce
+    dateOfBirth: SchemaValidator.coerce
         .date()
         .optional(),
-    gender: ValidatorService.schema
+    gender: SchemaValidator
         .enum(GLOBAL_PEOPLE_DTO.gender.enum)
         .optional(),
 })

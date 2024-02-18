@@ -4,17 +4,17 @@ import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { QuerySearchDTO } from '@services/query-search/global'
 import { QuerySearchService } from '@services/query-search.service'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { CategoryRepository } from '@modules/category/category.repository'
 import { GLOBAL_CATEGORY_DTO } from '@modules/category/category.global'
 
-const schemaNumber = ValidatorService.schema.coerce.number()
+const schemaNumber = SchemaValidator.coerce.number()
 
 export const schemaQuery = GLOBAL_DTO.query.schema().extend({
     bankAccountId: GLOBAL_CATEGORY_DTO.bankAccount.id,
-    name: ValidatorService.schema.coerce.string().trim().optional(),
-    color: ValidatorService.schema.coerce.string().trim().optional(),
-    isFavorite: ValidatorService.schema.coerce.boolean().optional(),
+    name: SchemaValidator.coerce.string().trim().optional(),
+    color: SchemaValidator.coerce.string().trim().optional(),
+    isFavorite: SchemaValidator.coerce.boolean().optional(),
 })
 
 export type CategoryFilterArgs = SchemaValidator.input<typeof schemaQuery>

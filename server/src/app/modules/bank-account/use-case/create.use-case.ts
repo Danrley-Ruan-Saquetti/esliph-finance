@@ -4,7 +4,7 @@ import { GLOBAL_APP, GLOBAL_DTO, GLOBAL_MAIL_CONFIG } from '@global'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
 import { CryptoService } from '@services/crypto.service'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.global'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
 import { BankAccountGenerateCodeUseCase } from '@modules/bank-account/use-case/generate-code.use-case'
@@ -13,15 +13,15 @@ import { UserRepository } from '@modules/user/user.repository'
 import { UserModel } from '@modules/user/user.model'
 import { BankAccountCreateTemplate } from '@templates/bank-account-create'
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     peopleId: GLOBAL_BANK_ACCOUNT_DTO.people.id,
-    name: ValidatorService.schema
+    name: SchemaValidator
         .string({ 'required_error': GLOBAL_BANK_ACCOUNT_DTO.name.messageRequired })
         .trim()
         .min(GLOBAL_BANK_ACCOUNT_DTO.name.minCharacters, { message: GLOBAL_BANK_ACCOUNT_DTO.name.messageRangeCharacters })
         .max(GLOBAL_BANK_ACCOUNT_DTO.name.maxCharacters, { message: GLOBAL_BANK_ACCOUNT_DTO.name.messageRangeCharacters })
         .transform(GLOBAL_DTO.text.transform),
-    password: ValidatorService.schema
+    password: SchemaValidator
         .string({ 'required_error': GLOBAL_BANK_ACCOUNT_DTO.password.messageRequired })
         .trim()
         .regex(GLOBAL_BANK_ACCOUNT_DTO.password.regex, { message: GLOBAL_BANK_ACCOUNT_DTO.password.messageRegex }),

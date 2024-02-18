@@ -1,10 +1,10 @@
 import { Result, Injection, Service } from '@core'
 import { UseCase } from '@common/use-case'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { GLOBAL_PAYMENT_DTO } from '@modules/payment/payment.global'
 import { CompensationPaymentsControl } from '@modules/payment/control/compensation-payments.control'
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     financialTransactionId: GLOBAL_PAYMENT_DTO.financialTransaction.id
 })
 

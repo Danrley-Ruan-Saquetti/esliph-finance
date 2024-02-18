@@ -2,18 +2,18 @@ import { Result, Injection, Service } from '@core'
 import { ID } from '@@types'
 import { UseCase } from '@common/use-case'
 import { BadRequestException } from '@common/exceptions'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { AddressRepository } from '@modules/address/address.repository'
 import { GLOBAL_ADDRESS_DTO } from '@modules/address/address.global'
 import { AddressModel } from '@modules/address/address.model'
 
-const SchemaString = ValidatorService.schema
+const SchemaString = SchemaValidator
     .coerce
     .string()
     .trim()
     .optional()
 
-const schemaDTO = ValidatorService.schema.object({
+const schemaDTO = SchemaValidator.object({
     id: GLOBAL_ADDRESS_DTO.id,
     peopleId: GLOBAL_ADDRESS_DTO.people.id,
     zipCode: SchemaString,
@@ -22,7 +22,7 @@ const schemaDTO = ValidatorService.schema.object({
     state: SchemaString,
     neighborhood: SchemaString,
     complement: SchemaString,
-    type: ValidatorService.schema
+    type: SchemaValidator
         .enum(GLOBAL_ADDRESS_DTO.type.enum, { errorMap: () => ({ message: GLOBAL_ADDRESS_DTO.type.messageEnumInvalid }) })
         .optional()
         .transform(val => val ? val.toUpperCase() : undefined),

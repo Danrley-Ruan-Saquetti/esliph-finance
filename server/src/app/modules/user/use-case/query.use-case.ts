@@ -3,13 +3,13 @@ import { GLOBAL_DTO } from '@global'
 import { UseCase } from '@common/use-case'
 import { QuerySearchService } from '@services/query-search.service'
 import { QuerySearchDTO } from '@services/query-search/global'
-import { SchemaValidator, ValidatorService } from '@services/validator.service'
+import { SchemaValidator } from '@services/validator.service'
 import { PeopleModel } from '@modules/people/people.model'
 import { UserRepository } from '@modules/user/user.repository'
 import { UserModel } from '@modules/user/user.model'
 import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 
-const schemaNumber = ValidatorService.schema.coerce.number()
+const schemaNumber = SchemaValidator.coerce.number()
 
 const schemaQueryAdmin = GLOBAL_DTO.query.schema(['id', 'type', 'code', 'login', 'createdAt', 'active', 'peopleId', 'people', 'itinCnpj']).extend({
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
