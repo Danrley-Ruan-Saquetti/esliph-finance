@@ -11,9 +11,7 @@ import { GLOBAL_USER_DTO } from '@modules/user/user.global'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
 
-const schemaQueryAdmin = SchemaValidator.object({
-    pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
-    limite: GLOBAL_DTO.query.pagination.limite(),
+const schemaQueryAdmin = GLOBAL_DTO.query.schema().extend({
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     type: SchemaValidator.object(QuerySearchDTO['ENUM']['SCHEMA'](GLOBAL_USER_DTO.type.enum, 'type')).optional(),
     code: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('code')).optional(),

@@ -156,7 +156,7 @@ export class PaymentRepository extends Repository {
         const result = {
             payments: paymentsResult.getValue() || [],
             metadata: {
-                currentPage: page.pageIndex,
+                currentPage: page.pageIndex + 1,
                 itemsPerPage: page.limite,
                 totalOfItens: totalResult.getValue(),
                 totalOfPages: Math.ceil(totalResult.getValue() / page.limite),

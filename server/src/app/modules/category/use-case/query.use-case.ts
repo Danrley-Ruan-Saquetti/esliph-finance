@@ -9,10 +9,9 @@ import { CategoryRepository } from '@modules/category/category.repository'
 import { GLOBAL_CATEGORY_DTO } from '@modules/category/category.global'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
-export const schemaQuery = ValidatorService.schema.object({
+
+export const schemaQuery = GLOBAL_DTO.query.schema().extend({
     bankAccountId: GLOBAL_CATEGORY_DTO.bankAccount.id,
-    pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
-    limite: GLOBAL_DTO.query.pagination.limite(),
     name: ValidatorService.schema.coerce.string().trim().optional(),
     color: ValidatorService.schema.coerce.string().trim().optional(),
     isFavorite: ValidatorService.schema.coerce.boolean().optional(),
@@ -20,9 +19,7 @@ export const schemaQuery = ValidatorService.schema.object({
 
 export type CategoryFilterArgs = SchemaValidator.input<typeof schemaQuery>
 
-export const schemaQueryAdmin = ValidatorService.schema.object({
-    pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
-    limite: GLOBAL_DTO.query.pagination.limite(),
+export const schemaQueryAdmin = GLOBAL_DTO.query.schema().extend({
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     bankAccountId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('bankAccountId')).optional(),
     bankAccount: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('bankAccount')).optional(),

@@ -157,7 +157,7 @@ export class FinancialTransactionRepository extends Repository {
         const result = {
             financialTransactions: financialTransactionsResult.getValue() || [],
             metadata: {
-                currentPage: page.pageIndex,
+                currentPage: page.pageIndex + 1,
                 itemsPerPage: page.limite,
                 totalOfItens: totalResult.getValue(),
                 totalOfPages: Math.ceil(totalResult.getValue() / page.limite),

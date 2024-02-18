@@ -7,9 +7,7 @@ import { PeopleRepository } from '@modules/people/people.repository'
 import { QuerySearchService } from '@services/query-search.service'
 import { GLOBAL_PEOPLE_DTO } from '@modules/people/people.global'
 
-export const schemaQueryAdmin = ValidatorService.schema.object({
-    pageIndex: GLOBAL_DTO.query.pagination.pageIndex(),
-    limite: GLOBAL_DTO.query.pagination.limite(),
+export const schemaQueryAdmin = GLOBAL_DTO.query.schema().extend({
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     name: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('name')).optional(),
     itinCnpj: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('itinCnpj')).optional(),
