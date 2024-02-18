@@ -8,6 +8,7 @@ import { SchemaValidator, ValidatorService } from '@services/validator.service'
 import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/bank-account.global'
 import { BankAccountModel } from '@modules/bank-account/bank-account.model'
 import { BankAccountRepository } from '@modules/bank-account/bank-account.repository'
+import { GLOBAL_PEOPLE_DTO } from '@modules/people/people.global'
 
 const schemaNumber = ValidatorService.schema.coerce.number()
 
@@ -17,6 +18,7 @@ export const schemaQueryAdmin = ValidatorService.schema.object({
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     peopleId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('peopleId')).optional(),
     peopleName: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('peopleName')).optional(),
+    peopleType: SchemaValidator.object(QuerySearchDTO['ENUM']['SCHEMA'](GLOBAL_PEOPLE_DTO.type.enum, 'peopleType')).optional(),
     itinCnpj: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('itinCnpj')).optional(),
     name: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('name')).optional(),
     code: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('code')).optional(),
@@ -53,6 +55,7 @@ export class BankAccountQueryUseCase extends UseCase {
             { field: 'people.id', filter: 'peopleId', type: 'NUMBER', typeOperation: 'SCHEMA' },
             { field: 'people.name', filter: 'peopleName', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'people.itinCnpj', filter: 'itinCnpj', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'people.type', filter: 'peopleType', type: 'ENUM', typeOperation: 'SCHEMA' },
         ])
 
         const result = await this.bankAccountRepository.query({

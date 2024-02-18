@@ -1,8 +1,6 @@
 import { Service } from '@core'
-import { ID } from '@@types'
+import { MetadataQuery } from '@@types'
 import { Repository } from '@services/repository.service'
-import { PaymentModel } from '@modules/payment/payment.model'
-import { FinancialTransactionModel } from '@modules/financial-transaction/financial-transaction.model'
 import { Prisma } from '@prisma/client'
 
 type PaymentGetPayloadTypes = boolean | null | undefined | { select?: Prisma.PaymentSelect | null }
@@ -41,6 +39,10 @@ export class PaymentRepository extends Repository {
         findMany: {
             title: 'Find Payments',
             failed: 'Unable to query payments'
+        },
+        count: {
+            title: 'Count Payments',
+            failed: 'Unable to count payments'
         }
     }
 
@@ -122,6 +124,48 @@ export class PaymentRepository extends Repository {
         }
     }
 
+    async query<Args extends Prisma.PaymentFindManyArgs>(args: Args, page: { pageIndex: number, limite: number }) {
+        const totalResult = await this.count({
+            where: { ...args.where }
+        })
+
+        if (!totalResult.isSuccess()) {
+            return this.handleError<{ payments: PaymentFindResponse<Args>[], metadata: MetadataQuery }>(totalResult.getError(), {
+                error: {
+                    title: PaymentRepository.GLOBAL_MESSAGE.findMany.title,
+                    message: PaymentRepository.GLOBAL_MESSAGE.findMany.failed
+                }
+            })
+        }
+
+        const paymentsResult = await this.findMany({
+            ...args,
+            skip: page.pageIndex * page.limite,
+            take: page.limite
+        })
+
+        if (!paymentsResult.isSuccess()) {
+            return this.handleError<{ payments: PaymentFindResponse<Args>[], metadata: MetadataQuery }>(totalResult.getError(), {
+                error: {
+                    title: PaymentRepository.GLOBAL_MESSAGE.findMany.title,
+                    message: PaymentRepository.GLOBAL_MESSAGE.findMany.failed
+                }
+            })
+        }
+
+        const result = {
+            payments: paymentsResult.getValue() || [],
+            metadata: {
+                currentPage: page.pageIndex,
+                itemsPerPage: page.limite,
+                totalOfItens: totalResult.getValue(),
+                totalOfPages: Math.ceil(totalResult.getValue() / page.limite),
+            }
+        }
+
+        return this.handleResponse<{ payments: PaymentFindResponse<Args>[], metadata: MetadataQuery }>(result as any)
+    }
+
     async findMany<Args extends Prisma.PaymentFindManyArgs>(args: Args) {
         try {
             const payment = await this.database.instance.payment.findMany(args) as PaymentFindResponse<Args>[]
@@ -133,6 +177,18 @@ export class PaymentRepository extends Repository {
         } catch (err: any) {
             return this.handleError<PaymentFindResponse<Args>[]>(err, {
                 error: { title: PaymentRepository.GLOBAL_MESSAGE.find.title, message: PaymentRepository.GLOBAL_MESSAGE.find.failed }
+            })
+        }
+    }
+
+    async count(args: Prisma.PaymentCountArgs) {
+        try {
+            const payment = await this.database.instance.payment.count(args)
+
+            return this.handleResponse<number>(payment)
+        } catch (err: any) {
+            return this.handleError<number>(err, {
+                error: { title: PaymentRepository.GLOBAL_MESSAGE.count.title, message: PaymentRepository.GLOBAL_MESSAGE.count.failed }
             })
         }
     }
