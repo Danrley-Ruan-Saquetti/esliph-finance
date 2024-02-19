@@ -4,8 +4,8 @@ import { HttpService } from '@services/http.service'
 import { MainModule } from '@main.module'
 import { Logger } from '@services/logger.service'
 
-function App() {
-    Bootstrap(
+async function App() {
+    await Bootstrap(
         MainModule,
         {
             logger: new Logger(),

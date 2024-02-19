@@ -3,9 +3,8 @@ import { CronExpression } from '@util'
 
 @Job({ name: 'job.blank' })
 export class BlankJob {
-
     constructor() { }
 
-    @Cron({ name: 'foo', cronTime: CronExpression.EVERY_SECOND, ignore: true })
+    @Cron({ name: 'foo', cronTime: CronExpression.EVERY_SECOND, start: false })
     async foo() { }
 }

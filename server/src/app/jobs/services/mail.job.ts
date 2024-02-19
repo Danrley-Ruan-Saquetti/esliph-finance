@@ -7,7 +7,7 @@ import { MailSendMailUseCase } from '@modules/notification/mail/use-case/send-ma
 export class MailJob {
     constructor(@Injection.Inject('mail.use-case.send-mail') private sendMailUC: MailSendMailUseCase) { }
 
-    @Cron({ name: 'send-mail', cronTime: CronExpression.EVERY_10_SECONDS, ignore: true })
+    @Cron({ name: 'send-mail', cronTime: CronExpression.EVERY_10_SECONDS, start: false })
     async sendMail() {
         await this.sendMailUC.sendMailsInQueue()
     }
