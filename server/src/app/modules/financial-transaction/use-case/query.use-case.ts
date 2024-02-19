@@ -15,6 +15,8 @@ export const schemaQueryCustomer = GLOBAL_DTO.query.schema(['bankAccountId', 'id
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     category: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('category')).optional(),
     categoryId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('categoryId')).optional(),
+    receiver: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('receiver')).optional(),
+    sender: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('sender')).optional(),
     title: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('title')).optional(),
     expiresAt: SchemaValidator.object(QuerySearchDTO['DATE']['SCHEMA']('expiresAt')).optional(),
     competenceAt: SchemaValidator.object(QuerySearchDTO['DATE']['SCHEMA']('competenceAt')).optional(),
@@ -83,10 +85,31 @@ export class FinancialTransactionQueryUseCase extends UseCase {
             { field: 'categories.some.category.id', filter: 'categoryId', type: 'NUMBER', typeOperation: 'SCHEMA' },
         ])
 
+        const ordersByQuery = this.querySearch.createOrderBy(filters.orderBy, [
+            { field: 'id', filter: 'id' },
+            { field: 'bankAccount.id', filter: 'bankAccountId' },
+            { field: 'bankAccount.name', filter: 'bankAccount' },
+            { field: 'bankAccount.code', filter: 'bankAccountCode' },
+            { field: 'categories.some.category.name', filter: 'category' },
+            { field: 'categories.some.category.id', filter: 'categoryId' },
+            { field: 'title', filter: 'title' },
+            { field: 'bankAccount.people.id', filter: 'peopleId' },
+            { field: 'bankAccount.people.name', filter: 'people' },
+            { field: 'receiver', filter: 'receiver' },
+            { field: 'sender', filter: 'sender' },
+            { field: 'bankAccount.people.itinCnpj', filter: 'itinCnpj' },
+            { field: 'expiresIn', filter: 'expiresAt' },
+            { field: 'dateTimeCompetence', filter: 'competenceAt' },
+            { field: 'type', filter: 'type' },
+            { field: 'situation', filter: 'situation' },
+            { field: 'frequency', filter: 'frequency' },
+            { field: 'typeOccurrence', filter: 'typeOccurrence' },
+        ], [{ id: 'desc' }])
+
         const result = await this.transactionRepository.query({
             where: { ...filtersQuery },
             include: { categories: { select: { category: true } } },
-            orderBy: { expiresIn: 'desc' },
+            orderBy: [...ordersByQuery],
         }, filters)
 
         if (!result.isSuccess()) {
@@ -111,6 +134,8 @@ export class FinancialTransactionQueryUseCase extends UseCase {
         const filtersQuery = this.querySearch.createFilter(filters, [
             { field: 'id', filter: 'id', type: 'NUMBER', typeOperation: 'SCHEMA' },
             { field: 'title', filter: 'title', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'receiver', filter: 'receiver', type: 'STRING', typeOperation: 'SCHEMA' },
+            { field: 'sender', filter: 'sender', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'expiresIn', filter: 'expiresAt', type: 'DATE', typeOperation: 'SCHEMA' },
             { field: 'dateTimeCompetence', filter: 'competenceAt', type: 'DATE', typeOperation: 'SCHEMA' },
             { field: 'categories.some.category.id', filter: 'categoryId', type: 'NUMBER', typeOperation: 'SCHEMA' },
@@ -122,10 +147,25 @@ export class FinancialTransactionQueryUseCase extends UseCase {
             { field: 'bankAccount.id', filter: 'bankAccountId', type: 'NUMBER', typeOperation: 'UNIQUE' },
         ])
 
+        const ordersByQuery = this.querySearch.createOrderBy(filters.orderBy, [
+            { field: 'id', filter: 'id' },
+            { field: 'categories.some.category.name', filter: 'category' },
+            { field: 'categories.some.category.id', filter: 'categoryId' },
+            { field: 'title', filter: 'title' },
+            { field: 'receiver', filter: 'receiver' },
+            { field: 'sender', filter: 'sender' },
+            { field: 'expiresIn', filter: 'expiresAt' },
+            { field: 'dateTimeCompetence', filter: 'competenceAt' },
+            { field: 'type', filter: 'type' },
+            { field: 'situation', filter: 'situation' },
+            { field: 'frequency', filter: 'frequency' },
+            { field: 'typeOccurrence', filter: 'typeOccurrence' },
+        ], [{ id: 'desc' }])
+
         const result = await this.transactionRepository.query({
             where: { ...filtersQuery },
             include: { categories: { select: { category: true } } },
-            orderBy: { expiresIn: 'desc' },
+            orderBy: [...ordersByQuery],
         }, filters)
 
         if (!result.isSuccess()) {
