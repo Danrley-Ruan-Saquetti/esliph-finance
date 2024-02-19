@@ -19,7 +19,7 @@ export const schemaQuery = GLOBAL_DTO.query.schema().extend({
 
 export type CategoryFilterArgs = SchemaValidator.input<typeof schemaQuery>
 
-export const schemaQueryAdmin = GLOBAL_DTO.query.schema().extend({
+export const schemaQueryAdmin = GLOBAL_DTO.query.schema(['id', 'bankAccountId', 'bankAccount', 'bankAccountCode', 'name', 'color', 'isFavorite', 'createdAt']).extend({
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     bankAccountId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('bankAccountId')).optional(),
     bankAccount: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('bankAccount')).optional(),
@@ -56,8 +56,20 @@ export class CategoryQueryUseCase extends UseCase {
             { field: 'bankAccount.code', filter: 'bankAccountCode', type: 'STRING', typeOperation: 'SCHEMA' },
         ])
 
+        const ordersByQuery = this.querySearch.createOrderBy(filters.orderBy, [
+            { field: 'id', filter: 'id' },
+            { field: 'bankAccount.id', filter: 'bankAccountId' },
+            { field: 'bankAccount.name', filter: 'bankAccount' },
+            { field: 'bankAccount.code', filter: 'bankAccountCode' },
+            { field: 'name', filter: 'name' },
+            { field: 'color', filter: 'color' },
+            { field: 'isFavorite', filter: 'isFavorite' },
+            { field: 'createdAt', filter: 'createdAt' },
+        ], [{ id: 'desc' }])
+
         const result = await this.categoryRepository.query({
             where: { ...filtersQuery },
+            orderBy: [...ordersByQuery]
         }, filters)
 
         if (!result.isSuccess()) {
