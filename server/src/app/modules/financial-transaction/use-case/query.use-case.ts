@@ -10,7 +10,7 @@ import { GLOBAL_FINANCIAL_TRANSACTION_DTO } from '@modules/financial-transaction
 
 const schemaNumber = SchemaValidator.coerce.number()
 
-export const schemaQueryCustomer = GLOBAL_DTO.query.schema().extend({
+export const schemaQueryCustomer = GLOBAL_DTO.query.schema(['bankAccountId', 'id', 'category', 'categoryId', 'title', 'expiresAt', 'competenceAt', 'type', 'situation', 'frequency', 'typeOccurrence']).extend({
     bankAccountId: QuerySearchDTO['NUMBER']['UNIQUE']('bankAccountId'),
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     category: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('category')).optional(),
@@ -26,7 +26,7 @@ export const schemaQueryCustomer = GLOBAL_DTO.query.schema().extend({
 
 export type FinancialTransactionFilterArgs = SchemaValidator.input<typeof schemaQueryCustomer>
 
-const schemaQueryAdmin = GLOBAL_DTO.query.schema().extend({
+const schemaQueryAdmin = GLOBAL_DTO.query.schema(['id', 'bankAccountId', 'bankAccount', 'bankAccountCode', 'category', 'categoryId', 'title', 'peopleId', 'people', 'receiver', 'sender', 'itinCnpj', 'expiresAt', 'competenceAt', 'type', 'situation', 'frequency', 'typeOccurrence']).extend({
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     bankAccountId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('bankAccountId')).optional(),
     bankAccount: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('bankAccount')).optional(),

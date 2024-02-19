@@ -83,12 +83,18 @@ export class QuerySearchService {
         const fullOrdersByArgs = mergeArrayObject(ordersByArgs)
         const ordersBy: GenericObject[] = []
 
-        for (const { field: fieldName, filter: filterName } of relations) {
+        for (const key in fullOrdersByArgs) {
+            const relation = relations.find(({ filter }) => filter == key)
+
+            if (!relation) { continue }
+
+            const { field: fieldName, filter: filterName } = relation
+
             if (isUndefined(fullOrdersByArgs[filterName])) {
                 continue
             }
 
-            const orderBy = createObjectByStringPath(filterName)
+            const orderBy = createObjectByStringPath(fieldName)
             insertValueInObjectByPath(orderBy, fullOrdersByArgs[filterName], fieldName)
             ordersBy.push(orderBy)
         }

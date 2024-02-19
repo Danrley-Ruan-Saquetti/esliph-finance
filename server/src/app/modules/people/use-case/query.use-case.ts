@@ -46,7 +46,7 @@ export class PeopleQueryUseCase extends UseCase {
 
         const ordersByQuery = this.querySearch.createOrderBy(filters.orderBy, [
             { field: 'id', filter: 'id' },
-            { field: 'name', filter: 'code' },
+            { field: 'name', filter: 'name' },
             { field: 'itinCnpj', filter: 'itinCnpj' },
             { field: 'type', filter: 'type' },
             { field: 'active', filter: 'active' },

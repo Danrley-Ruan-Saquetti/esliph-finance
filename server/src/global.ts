@@ -100,7 +100,7 @@ export const GLOBAL_DTO = {
                 .min(0, { message: 'The limit of the registers must be biggest than 0' })
                 .max(GLOBAL_DTO.query.limitePerPage, { message: `The limit of the registers must be less than ${GLOBAL_DTO.query.limitePerPage}` })
                 .default(10),
-            orderBy: (orders: string[] = ['id']) => {
+            orderBy: (orders: string[] = []) => {
                 const schemaOrderByObject = {}
 
                 orders.forEach(key => {

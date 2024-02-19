@@ -11,7 +11,7 @@ import { GLOBAL_PEOPLE_DTO } from '@modules/people/people.global'
 
 const schemaNumber = SchemaValidator.coerce.number()
 
-export const schemaQueryAdmin = GLOBAL_DTO.query.schema().extend({
+export const schemaQueryAdmin = GLOBAL_DTO.query.schema(['id', 'value', 'discount', 'increase', 'paidAt', 'createdAt', 'transaction', 'transactionId', 'transactionValue', 'transactionSituation', 'peopleId', 'people', 'peopleType', 'itinCnpj']).extend({
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     value: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('value')).optional(),
     discount: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('discount')).optional(),
@@ -49,7 +49,7 @@ export class PaymentQueryUseCase extends UseCase {
             { field: 'discount', filter: 'discount', type: 'NUMBER', typeOperation: 'SCHEMA' },
             { field: 'increase', filter: 'increase', type: 'NUMBER', typeOperation: 'SCHEMA' },
             { field: 'paidAt', filter: 'paidAt', type: 'DATE', typeOperation: 'SCHEMA' },
-            { field: 'createAt', filter: 'createAt', type: 'DATE', typeOperation: 'SCHEMA' },
+            { field: 'createdAt', filter: 'createdAt', type: 'DATE', typeOperation: 'SCHEMA' },
             { field: 'financialTransaction.id', filter: 'transactionId', type: 'NUMBER', typeOperation: 'SCHEMA' },
             { field: 'financialTransaction.title', filter: 'transaction', type: 'STRING', typeOperation: 'SCHEMA' },
             { field: 'financialTransaction.value', filter: 'transactionValue', type: 'NUMBER', typeOperation: 'SCHEMA' },
@@ -60,9 +60,27 @@ export class PaymentQueryUseCase extends UseCase {
             { field: 'financialTransaction.bankAccount.people.type', filter: 'peopleType', type: 'ENUM', typeOperation: 'SCHEMA' },
         ])
 
+        const ordersByQuery = this.querySearch.createOrderBy(filters.orderBy, [
+            { field: 'id', filter: 'id' },
+            { field: 'value', filter: 'value' },
+            { field: 'discount', filter: 'discount' },
+            { field: 'increase', filter: 'increase' },
+            { field: 'paidAt', filter: 'paidAt' },
+            { field: 'createdAt', filter: 'createdAt' },
+            { field: 'financialTransaction.id', filter: 'transactionId' },
+            { field: 'financialTransaction.title', filter: 'transaction' },
+            { field: 'financialTransaction.value', filter: 'transactionValue' },
+            { field: 'financialTransaction.situation', filter: 'transactionSituation' },
+            { field: 'financialTransaction.bankAccount.people.id', filter: 'peopleId' },
+            { field: 'financialTransaction.bankAccount.people.name', filter: 'people' },
+            { field: 'financialTransaction.bankAccount.people.itinCnpj', filter: 'itinCnpj' },
+            { field: 'financialTransaction.bankAccount.people.type', filter: 'peopleType' },
+        ], [{ id: 'desc' }])
+
         const result = await this.paymentRepository.query({
             where: { ...filtersQuery },
-            include: { financialTransaction: true }
+            include: { financialTransaction: true },
+            orderBy: [...ordersByQuery]
         }, filters)
 
         if (!result.isSuccess()) {
