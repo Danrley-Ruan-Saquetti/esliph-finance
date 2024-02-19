@@ -12,7 +12,7 @@ import { GLOBAL_PEOPLE_DTO } from '@modules/people/people.global'
 
 const schemaNumber = SchemaValidator.coerce.number()
 
-export const schemaQueryAdmin = GLOBAL_DTO.query.schema().extend({
+export const schemaQueryAdmin = GLOBAL_DTO.query.schema(['id', 'peopleId', 'peopleName', 'peopleType', 'itinCnpj', 'name', 'code', 'balance', 'createdAt']).extend({
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
     peopleId: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('peopleId')).optional(),
     peopleName: SchemaValidator.object(QuerySearchDTO['STRING']['SCHEMA']('peopleName')).optional(),
@@ -56,9 +56,22 @@ export class BankAccountQueryUseCase extends UseCase {
             { field: 'people.type', filter: 'peopleType', type: 'ENUM', typeOperation: 'SCHEMA' },
         ])
 
+        const ordersByQuery = this.querySearch.createOrderBy(filters.orderBy, [
+            { field: 'id', filter: 'id' },
+            { field: 'people.id', filter: 'peopleId' },
+            { field: 'people.name', filter: 'peopleName' },
+            { field: 'people.type', filter: 'peopleType' },
+            { field: 'people.itinCnpj', filter: 'itinCnpj' },
+            { field: 'name', filter: 'name' },
+            { field: 'code', filter: 'code' },
+            { field: 'balance', filter: 'balance' },
+            { field: 'createdAt', filter: 'createdAt' },
+        ], [{ id: 'desc' }])
+
         const result = await this.bankAccountRepository.query({
             where: { ...filtersQuery },
-            select: { ...BankAccountModel.BankAccountWithoutPasswordSelect, people: true }
+            select: { ...BankAccountModel.BankAccountWithoutPasswordSelect, people: true },
+            orderBy: [...ordersByQuery]
         }, filters)
 
         if (!result.isSuccess()) {

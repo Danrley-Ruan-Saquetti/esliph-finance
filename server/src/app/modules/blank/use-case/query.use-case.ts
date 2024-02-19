@@ -9,7 +9,7 @@ import { BlankRepository } from '@modules/blank/blank.repository'
 
 const schemaNumber = SchemaValidator.coerce.number()
 
-export const schemaQueryAdmin = GLOBAL_DTO.query.schema().extend({
+export const schemaQueryAdmin = GLOBAL_DTO.query.schema(['id']).extend({
     id: SchemaValidator.object(QuerySearchDTO['NUMBER']['SCHEMA']('id')).optional(),
 })
 
@@ -32,8 +32,13 @@ export class BlankQueryUseCase extends UseCase {
             { field: 'id', filter: 'id', type: 'NUMBER', typeOperation: 'SCHEMA' },
         ])
 
+        const ordersByQuery = this.querySearch.createOrderBy(filters.orderBy, [
+            { field: 'id', filter: 'id' },
+        ], [{ id: 'desc' }])
+
         const result = await this.blankRepository.query({
             where: { ...filtersQuery },
+            orderBy: [...ordersByQuery]
         }, filters)
 
         if (!result.isSuccess()) {
