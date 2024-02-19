@@ -41,7 +41,15 @@ export class JobQueryUseCase extends UseCase {
             orderBy: { ...ordersByQuery as any }
         }, filters)
 
-        return Result.success(result)
+        return Result.success({
+            ...result.getValue(), jobs: result.getValue().jobs.map(job => ({
+                name: job.name,
+                cronTime: job.cronTime.toString(),
+                lastExecution: job.getLastExecution() as Date,
+                nextExecution: job.getNextExecution(),
+                isRunning: job.running,
+            }))
+        })
     }
 
     queryByName(nameArgs: string) {
@@ -49,6 +57,16 @@ export class JobQueryUseCase extends UseCase {
 
         const result = this.jobRepository.findFirst({ where: { name } })
 
-        return result
+        if (!result.isSuccess()) {
+            return Result.failure({ ...result.getError() })
+        }
+
+        return Result.success({
+            name: result.getValue().name,
+            cronTime: result.getValue().cronTime.toString(),
+            lastExecution: result.getValue().getLastExecution() as Date,
+            nextExecution: result.getValue().getNextExecution(),
+            isRunning: result.getValue().running,
+        })
     }
 }

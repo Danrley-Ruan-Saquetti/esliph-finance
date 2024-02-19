@@ -1,16 +1,10 @@
 import { Injection, Service, Result } from '@core'
 import { isNull } from '@util'
 import { MetadataQuery } from '@@types'
-import { JobService } from '@services/job.service'
+import { JobService, JobModel } from '@services/job.service'
 
 type JobFindQuery = { where?: { name?: string }, orderBy?: { name?: 'asc' | 'desc' }, skip?: number, take?: number }
-type JobFindResponse = {
-    name: string
-    cronTime: string
-    lastExecution: Date
-    nextExecution: Date
-    isRunning: boolean
-}
+type JobFindResponse = JobModel
 
 @Service({ name: 'job.repository' })
 export class JobRepository {
@@ -41,13 +35,7 @@ export class JobRepository {
             return Result.failure<JobFindResponse>({ title: JobRepository.GLOBAL_MESSAGE.find.title, message: JobRepository.GLOBAL_MESSAGE.find.notFound })
         }
 
-        return Result.success<JobFindResponse>({
-            name: job.name,
-            cronTime: job.cronTime.toString(),
-            lastExecution: job.getLastExecution() as Date,
-            nextExecution: job.getNextExecution(),
-            isRunning: job.running,
-        })
+        return Result.success<JobFindResponse>(job)
     }
 
     query(args: JobFindQuery, page: { pageIndex: number, limite: number }) {
@@ -56,7 +44,7 @@ export class JobRepository {
         })
 
         if (!totalResult.isSuccess()) {
-            return Result.failure<JobFindResponse[]>({ title: JobRepository.GLOBAL_MESSAGE.findMany.title, message: JobRepository.GLOBAL_MESSAGE.findMany.failed })
+            return Result.failure<{ jobs: JobFindResponse[], metadata: MetadataQuery }>({ title: JobRepository.GLOBAL_MESSAGE.findMany.title, message: JobRepository.GLOBAL_MESSAGE.findMany.failed })
         }
 
         const jobsResult = this.findMany({
@@ -66,7 +54,7 @@ export class JobRepository {
         })
 
         if (!jobsResult.isSuccess()) {
-            return Result.failure<JobFindResponse[]>({ title: JobRepository.GLOBAL_MESSAGE.findMany.title, message: JobRepository.GLOBAL_MESSAGE.findMany.failed })
+            return Result.failure<{ jobs: JobFindResponse[], metadata: MetadataQuery }>({ title: JobRepository.GLOBAL_MESSAGE.findMany.title, message: JobRepository.GLOBAL_MESSAGE.findMany.failed })
         }
 
         const result = {
@@ -88,13 +76,7 @@ export class JobRepository {
         const jobsFiltered = !args?.where?.name ? jobs : jobs.filter(({ name }) => name.toLowerCase().includes(args?.where?.name || ''))
         const jobsSorted = !args?.orderBy?.name ? jobsFiltered : jobsFiltered.sort(((a, b) => a.name.toLowerCase() < b.name.toLowerCase() ? -1 : a.name.toLowerCase() > b.name.toLowerCase() ? 1 : 0))
 
-        return Result.success<JobFindResponse[]>(jobsSorted.map(job => ({
-            name: job.name,
-            cronTime: job.cronTime.toString(),
-            lastExecution: job.getLastExecution() as any,
-            nextExecution: job.getNextExecution(),
-            isRunning: job.running,
-        })).slice(args.skip, args.take))
+        return Result.success<JobFindResponse[]>(jobsSorted.slice(args.skip, args.take))
     }
 
     count(args: JobFindQuery) {
