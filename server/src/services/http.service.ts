@@ -2,6 +2,7 @@ import Fastify, { FastifyRequest } from 'fastify'
 import fastifyCompression from '@fastify/compress'
 import fastifyCookie from '@fastify/cookie'
 import fastifyHelmet from '@fastify/helmet'
+import fastifyCors from '@fastify/cors'
 import fastifyCsrf from '@fastify/csrf-protection'
 import { ApplicationModule, Service, EventsRouter, Server, FastifyAdapter, Result, Client, Injection, Domain } from '@core'
 import { getEnv } from '@util'
@@ -26,6 +27,7 @@ export class HttpService extends FastifyAdapter {
         HttpService.instance.register(fastifyCookie, { secret: GLOBAL_SERVER.key })
         HttpService.instance.register(fastifyCsrf)
         HttpService.instance.register(fastifyHelmet)
+        HttpService.instance.register(fastifyCors)
 
         HttpService.instance.decorate('notFound', (request: FastifyRequest, reply) => {
             const result = Result.failure({ title: 'Router Not Found', message: `Router ${request.method} "${request.url}" not found` }, 404)
