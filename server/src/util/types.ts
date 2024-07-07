@@ -1,6 +1,7 @@
-import { ClassConstructor } from '@@types'
+export type ClassConstructor<T = any> = new (...args: any[]) => T
+export type GenericObject = { [x: string]: any }
 
-export function isInstance<T extends ClassConstructor>(obj: any): obj is InstanceType<T> {
+export function isInstance<T = any>(obj: any): obj is ClassConstructor<T> {
     return !isObjectLiteral(obj)
 }
 
@@ -8,28 +9,12 @@ export function isObjectLiteral(obj: any): obj is Object {
     return obj !== null && typeof obj === 'object' && obj.constructor === Object
 }
 
-export function isCodeHexadecimal(color: string) {
-    if (isFalsy(color)) {
-        return false
-    }
-
-    const colorCode = color.substring(0, 1) === '#' ? color.substring(1) : color
-
-    switch (colorCode.length) {
-        case 3: return /^[0-9A-F]{3}$/i.test(colorCode)
-        case 6: return /^[0-9A-F]{6}$/i.test(colorCode)
-        case 8: return /^[0-9A-F]{8}$/i.test(colorCode)
-    }
-
-    return false
-}
-
-export function isTruthy(value?: any) {
+export function isTruthy<T = any>(value?: T): value is NonNullable<T> {
     return !isFalsy(value)
 }
 
 export function isFalsy(value?: any) {
-    if (isNull(value)) {
+    if (isNull(value) || isUndefined(value)) {
         return true
     }
 
@@ -42,7 +27,7 @@ export function isFalsy(value?: any) {
     }
 
     if (isString(value)) {
-        return value.length == 0 || value.trim().length == 0
+        return value.trim().length == 0
     }
 
     if (isArray(value)) {
@@ -53,23 +38,23 @@ export function isFalsy(value?: any) {
         return Object.keys(value).length == 0
     }
 
-    return isUndefined(value) || !value
+    return !value
 }
 
-export function isArray(value: any): value is any[] {
-    return (isObject(value) && value instanceof Array) || Array.isArray(value)
+export function isArray<T = any>(value: any): value is T[] {
+    return Array.isArray(value) || (isObject(value) && value instanceof Array)
 }
 
 export function isDate(value: any): value is Date {
-    return isObject(value) && value instanceof Date
+    return value instanceof Date
 }
 
 export function isBoolean(value: any): value is boolean {
-    return getTypeNativeValue(value) == 'boolean'
+    return getNativeType(value) == 'boolean'
 }
 
 export function isFunction(value: any): value is (...args: any[]) => any | void {
-    return getTypeNativeValue(value) == 'function'
+    return getNativeType(value) == 'function'
 }
 
 const AsyncFunction = (async () => { }).constructor
@@ -78,19 +63,18 @@ export function isAsyncFunction(value: any): value is (...args: any[]) => Promis
 }
 
 export function isNumber(value: any, coerce = false): value is number {
-    if (coerce) {
-        return !isUndefined(value) && !isNaN(Number(value))
-    }
+    if (coerce)
+        return !isNaN(Number(value))
 
-    return getTypeNativeValue(value) == 'number'
+    return getNativeType(value) == 'number'
 }
 
 export function isObject(value: any): value is object {
-    return getTypeNativeValue(value) == 'object'
+    return getNativeType(value) == 'object'
 }
 
 export function isString(value: any): value is string {
-    return getTypeNativeValue(value) == 'string'
+    return getNativeType(value) == 'string'
 }
 
 export function isClass(value: any): value is ClassConstructor {
@@ -98,13 +82,13 @@ export function isClass(value: any): value is ClassConstructor {
 }
 
 export function isUndefined(value: any): value is undefined {
-    return getTypeNativeValue(value) == 'undefined'
+    return getNativeType(value) == 'undefined'
 }
 
 export function isNull(value: any): value is null {
     return value == null
 }
 
-export function getTypeNativeValue(value: any) {
+export function getNativeType(value: any) {
     return typeof value
 }

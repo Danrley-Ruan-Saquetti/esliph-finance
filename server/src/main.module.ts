@@ -1,13 +1,29 @@
-import { Module } from '@core'
-import { AppModule } from '@app.module'
-import { JobModule } from '@job.module'
-import { PublicModule } from '@public.module'
-import { ServiceModule } from '@services/service.module'
-import { RepositoryModule } from '@repositories/repository.module'
-import { FilterModule } from '@filters/filter.modules'
-import { ControllerModule } from '@controllers/controller.module'
+import { Database } from '@services/database'
+import { JobService } from '@services/job'
+import { Get } from '@server/components/router'
+import { Module } from '@server/components/module'
+import { Controller } from '@server/components/controller'
+import { AppModule } from '@app/app.module'
+
+@Controller()
+class MainController {
+
+    @Get('/status')
+    status() {
+        return { status: true }
+    }
+}
 
 @Module({
-    imports: [ServiceModule, RepositoryModule, FilterModule, ControllerModule, AppModule, JobModule, PublicModule],
+    imports: [
+        AppModule,
+    ],
+    controllers: [
+        MainController
+    ],
+    providers: [
+        Database,
+        JobService
+    ]
 })
 export class MainModule { }

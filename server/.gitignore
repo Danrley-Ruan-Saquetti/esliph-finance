@@ -1,0 +1,5 @@
+bunker/files/temp/*
+docker/data/*
+.vscode
+
+!**/.gitkeep

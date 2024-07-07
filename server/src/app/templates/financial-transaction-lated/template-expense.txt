@@ -1,1 +1,0 @@
-<h1>{{peopleName}}, your your income transaction <br>{{transactionName}}</br> is late</h1>

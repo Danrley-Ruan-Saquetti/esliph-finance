@@ -1,1 +1,0 @@
-export const GLOBAL_FINANCIAL_EXPENSE_DTO = {}

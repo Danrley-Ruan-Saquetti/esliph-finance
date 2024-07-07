@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+    postgres:
+        image: bitnami/postgresql:latest
+        ports:
+            - '5432:5432'
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=admin
+            - POSTGRES_DB=financial_portal
+        volumes:
+            - ./docker/data/financial_portal_pg_data:/bitnami/postgresql
+    redis:
+        image: bitnami/redis:latest
+        ports:
+            - '6379:6379'
+        environment:
+            - ALLOW_EMPTY_PASSWORD=yes
+        volumes:
+            - ./docker/data/financial_portal_redis_data:/bitnami/redis/data
+
+volumes:
+    financial_portal_pg_data:
+    financial_portal_redis_data:

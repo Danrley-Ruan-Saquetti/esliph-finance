@@ -1,1 +1,0 @@
-<h1>New Login in your bank account {{ bankAccountName }}</h1>

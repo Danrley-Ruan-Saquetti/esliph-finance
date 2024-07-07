@@ -1,7 +1,11 @@
-import { Result } from '@core'
+import { Result } from '@esliph/common'
 
 export class Json {
     static parse<T>(text: string) {
+        return JSON.parse(text) as T
+    }
+
+    static parseSafe<T>(text: string) {
         try {
             const result = JSON.parse(text)
 
@@ -12,6 +16,10 @@ export class Json {
     }
 
     static toJSON(data: any, replacer?: (((this: any, key: string, value: any) => any) | undefined) | null, space?: string | number | undefined) {
+        return JSON.stringify(data, replacer as any, space)
+    }
+
+    static toJSONSafe(data: any, replacer?: (((this: any, key: string, value: any) => any) | undefined) | null, space?: string | number | undefined) {
         try {
             const result = JSON.stringify(data, replacer as any, space)
 

@@ -53,6 +53,8 @@
 		"import/prefer-default-export": "off",
 		"@typescript-eslint/no-empty-function": "off",
 		"prefer-const": "off",
+		"no-inner-declarations": "off",
+		"curly": "off",
 		"no-empty-pattern": "off",
 		"no-prototype-builtins": "off",
 		"camelcase": "warn",

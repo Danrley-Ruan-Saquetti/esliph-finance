@@ -1,5 +1,3 @@
-// DOCS: https://pris.ly/d/prisma-schema
-
 datasource db {
     provider = "postgresql"
     url      = env("DATABASE_URL")
@@ -8,53 +6,6 @@ datasource db {
 generator client {
     provider        = "prisma-client-js"
     previewFeatures = []
-}
-
-enum ContactType {
-    EMAIL
-    PHONE
-    TELEPHONE
-
-    @@map("contect_type")
-}
-
-model Contact {
-    id        Int         @id @default(autoincrement())
-    peopleId  Int         @map("people_id")
-    type      ContactType
-    contact   String      @db.VarChar(254)
-    createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
-    updatedAt DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
-    people    People      @relation(fields: [peopleId], references: [id], onDelete: Cascade)
-
-    @@map("contact")
-}
-
-enum AddressType {
-    COMMERCIAL
-    RESIDENTIAL
-
-    @@map("address_type")
-}
-
-model Address {
-    id           Int         @id @default(autoincrement())
-    peopleId     Int         @map("people_id")
-    type         AddressType @default(RESIDENTIAL)
-    street       String      @db.VarChar(60)
-    number       String?     @db.VarChar(9)
-    neighborhood String      @db.VarChar(56)
-    country      String      @db.VarChar(56)
-    city         String      @db.VarChar(60)
-    state        String      @db.VarChar(60)
-    zipCode      String      @map("zip_code") @db.VarChar(9)
-    complement   String?     @default("")
-    reference    String?     @default("")
-    createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
-    updatedAt    DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
-    people       People      @relation(fields: [peopleId], references: [id], onDelete: Cascade)
-
-    @@map("address")
 }
 
 enum PeopleType {
@@ -86,7 +37,53 @@ model People {
     contacts     Contact[]
     bankAccounts BankAccount[]
 
-    @@map("people")
+    @@map("peoples")
+}
+
+enum ContactType {
+    EMAIL
+    TELEPHONE
+
+    @@map("contect_type")
+}
+
+model Contact {
+    id        Int         @id @default(autoincrement())
+    peopleId  Int         @map("people_id")
+    type      ContactType
+    contact   String      @db.VarChar(254)
+    createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
+    updatedAt DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+    people    People      @relation(fields: [peopleId], references: [id], onDelete: Cascade)
+
+    @@map("contacts")
+}
+
+enum AddressType {
+    COMMERCIAL
+    RESIDENTIAL
+
+    @@map("address_type")
+}
+
+model Address {
+    id           Int         @id @default(autoincrement())
+    peopleId     Int         @map("people_id")
+    type         AddressType @default(RESIDENTIAL)
+    street       String      @db.VarChar(60)
+    number       String?     @db.VarChar(9)
+    neighborhood String      @db.VarChar(56)
+    country      String      @db.VarChar(56)
+    city         String      @db.VarChar(60)
+    state        String      @db.VarChar(60)
+    zipCode      String      @map("zip_code") @db.VarChar(9)
+    complement   String?     @default("")
+    reference    String?     @default("")
+    createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
+    updatedAt    DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+    people       People      @relation(fields: [peopleId], references: [id], onDelete: Cascade)
+
+    @@map("adresses")
 }
 
 enum UserType {
@@ -104,13 +101,14 @@ model User {
     code      String   @unique @db.VarChar(9)
     login     String   @db.VarChar(254)
     password  String   @db.VarChar(120)
+    lastAcess DateTime @default(now()) @map("last_acess") @db.Timestamptz(3)
     createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
     updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
     people    People   @relation(fields: [peopleId], references: [id], onDelete: Restrict)
 
-    @@unique(fields: [peopleId, type], map: "user_people_type")
-    @@unique(fields: [login, type], map: "user_login_type")
-    @@map("user")
+    @@unique(name: "user_people_type", fields: [peopleId, type], map: "user_people_type")
+    @@unique(name: "user_login_type", fields: [login, type], map: "user_login_type")
+    @@map("users")
 }
 
 model BankAccount {
@@ -118,8 +116,10 @@ model BankAccount {
     peopleId              Int                    @map("people_id")
     code                  String                 @unique @db.VarChar(15)
     name                  String                 @db.VarChar(45)
+    slug                  String                 @db.VarChar(45)
     password              String                 @map("password") @db.VarChar(120)
-    balance               Float                  @default(0)
+    balance               Int                    @default(0)
+    active                Boolean                @default(true)
     createdAt             DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
     updatedAt             DateTime               @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
     people                People                 @relation(fields: [peopleId], references: [id], onDelete: Restrict)
@@ -127,7 +127,8 @@ model BankAccount {
     categories            Category[]
     notifications         Notification[]
 
-    @@map("bank_account")
+    @@unique(name: "bank_account_people_slug", fields: [peopleId, slug], map: "bank_account_people_slug")
+    @@map("bank_accounts")
 }
 
 enum NotificationSituation {
@@ -139,9 +140,9 @@ enum NotificationSituation {
 }
 
 enum NotificationType {
-    Push
-    Internal
-    Mail
+    PUSH
+    INTERNAL
+    EMAIL
 
     @@map("notification_type")
 }
@@ -150,28 +151,26 @@ model Notification {
     id            Int                   @id @default(autoincrement())
     bankAccountId Int?                  @map("bank_account_id")
     subject       String                @db.VarChar(45)
-    content       String
+    body          String
     type          NotificationType      @map("type")
     situation     NotificationSituation @default(IN_QUEUE)
     sendAt        DateTime?             @map("send_at") @db.Timestamptz(3)
     createdAt     DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
     updatedAt     DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
-    mail          Mail?
+    email         Email?
     bankAccount   BankAccount?          @relation(fields: [bankAccountId], references: [id], onDelete: Restrict)
 
-    @@map("notification")
+    @@map("notifications")
 }
 
-model Mail {
-    id             Int          @id @default(autoincrement())
-    notificationId Int          @unique @map("notification_id")
-    recipient      String       @db.VarChar(45)
-    sender         String       @db.VarChar(45)
-    createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
-    updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
-    notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+model Email {
+    id           Int          @id @default(autoincrement())
+    recipient    String       @db.VarChar(45)
+    sender       String       @db.VarChar(45)
+    updatedAt    DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+    notification Notification @relation(fields: [id], references: [id], onDelete: Cascade)
 
-    @@map("mail")
+    @@map("emails")
 }
 
 model Category {
@@ -185,7 +184,7 @@ model Category {
     bankAccount           BankAccount                    @relation(fields: [bankAccountId], references: [id], onDelete: Restrict)
     financialTransactions FinancialTransactionCategory[]
 
-    @@map("category")
+    @@map("categories")
 }
 
 enum FinancialTransactionType {
@@ -196,7 +195,6 @@ enum FinancialTransactionType {
 }
 
 enum FinancialTransactionFrequency {
-    NULL
     DAILY
     WEEKLY
     MONTHLY
@@ -231,28 +229,27 @@ model FinancialTransaction {
     bankAccountId            Int                                @map("bank_account_id")
     title                    String                             @db.VarChar(55)
     description              String                             @default("")
-    value                    Float
-    priority                 Int
+    value                    Int
     isObservable             Boolean                            @default(false) @map("is_observable")
     isSendNotification       Boolean                            @default(false) @map("is_send_notification")
     timesToRepeat            Int                                @default(0) @map("times_to_repeat")
     countRepeatedOccurrences Int                                @default(0) @map("count_repeated_occurrences")
     type                     FinancialTransactionType           @map("type")
-    receiver                 String                             @default("")
-    sender                   String                             @default("")
+    senderRecipient          String                             @map("sender_recipient")
     typeOccurrence           FinancialTransactionTypeOccurrence @default(SINGLE) @map("type_occurrence")
-    frequency                FinancialTransactionFrequency      @default(NULL)
+    frequency                FinancialTransactionFrequency?
     situation                FinancialTransactionSituation      @default(PENDING) @map("situation")
-    expiresIn                DateTime                           @map("expires_in") @db.Timestamptz(3)
+    expiresIn                DateTime?                          @map("expires_in") @db.Timestamptz(3)
     dateTimeCompetence       DateTime                           @default(now()) @map("date_time_competence") @db.Timestamptz(3)
     createdAt                DateTime                           @default(now()) @map("created_at") @db.Timestamptz(3)
     updatedAt                DateTime                           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
     bankAccount              BankAccount                        @relation(fields: [bankAccountId], references: [id], onDelete: Restrict)
     payments                 Payment[]
-    notes                    Note[]
+    notes                    FinancialTransactionNote[]
     categories               FinancialTransactionCategory[]
+    attachments              FinancialTransactionAttachment[]
 
-    @@map("financial_transaction")
+    @@map("financial_transactions")
 }
 
 model FinancialTransactionCategory {
@@ -263,36 +260,68 @@ model FinancialTransactionCategory {
     category               Category             @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
     @@id([financialTransactionId, categoryId])
-    @@map("financial_transaction_category")
+    @@map("financial_transaction_categories")
 }
 
 model Note {
+    id                   Int                       @id @default(autoincrement())
+    description          String                    @default("")
+    createdAt            DateTime                  @default(now()) @map("created_at") @db.Timestamptz(3)
+    updatedAt            DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+    financialTransaction FinancialTransactionNote?
+
+    @@map("notes")
+}
+
+model FinancialTransactionNote {
     id                     Int                  @id @default(autoincrement())
     financialTransactionId Int                  @map("financial_transaction_id")
-    description            String               @default("")
-    createdAt              DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
     updatedAt              DateTime             @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+    note                   Note                 @relation(fields: [id], references: [id], onDelete: Cascade)
     financialTransaction   FinancialTransaction @relation(fields: [financialTransactionId], references: [id], onDelete: Cascade)
 
-    @@map("note")
+    @@map("financial_transaction_notes")
 }
 
 model Payment {
     id                     Int                  @id @default(autoincrement())
     financialTransactionId Int                  @map("financial_transaction_id")
-    value                  Float
-    discount               Float                @default(0)
-    increase               Float                @default(0)
+    valuePaid              Int                  @map("value_paid")
+    discount               Int                  @default(0)
+    increase               Int                  @default(0)
+    observation            String               @default("")
     paidAt                 DateTime             @default(now()) @map("paid_at") @db.Timestamptz(3)
     createdAt              DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
     financialTransaction   FinancialTransaction @relation(fields: [financialTransactionId], references: [id], onDelete: Cascade)
 
-    @@map("payment")
+    @@map("payments")
 }
 
-model LogError {
+model File {
+    id                   Int                             @id @default(autoincrement())
+    filename_original    String                          @db.VarChar(255)
+    filename_stored      String                          @db.VarChar(255)
+    extension            String                          @db.VarChar(10)
+    updatedAt            DateTime                        @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+    createdAt            DateTime                        @default(now()) @map("created_at") @db.Timestamptz(3)
+    financialTransaction FinancialTransactionAttachment?
+
+    @@map("files")
+}
+
+model FinancialTransactionAttachment {
+    id                     Int                  @id @default(autoincrement())
+    updatedAt              DateTime             @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+    financialTransactionId Int                  @map("financial_transaction_id")
+    file                   File                 @relation(fields: [id], references: [id], onDelete: Cascade)
+    financialTransaction   FinancialTransaction @relation(fields: [financialTransactionId], references: [id], onDelete: Cascade)
+
+    @@map("financial_transaction_attachments")
+}
+
+model ErrorLog {
     id          Int      @id @default(autoincrement())
-    title       String
+    operation   String
     message     String
     origin      String
     description String   @default("")
@@ -301,5 +330,16 @@ model LogError {
     dateTime    DateTime @default(now()) @map("date_time") @db.Timestamptz(3)
     createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
 
-    @@map("log_error")
+    @@map("errors_log")
+}
+
+model ChangeLog {
+    id        Int      @id @default(autoincrement())
+    recordId  Int      @map("record_id")
+    entity    String
+    data      Json[]   @default([])
+    dateTime  DateTime @default(now()) @map("date_time") @db.Timestamptz(3)
+    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+    @@map("changes_log")
 }
