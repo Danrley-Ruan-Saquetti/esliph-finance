@@ -1,5 +1,5 @@
 import { DTO } from '@util/dto'
-import { isUndefined } from '@util/types'
+import { someHasValue } from '@util/types'
 import { BadRequestException } from '@exceptions/bad-request'
 import { z, Validator } from '@services/validator'
 import { validSlug } from '@modules/bank-account/use-cases/valid-slug'
@@ -29,7 +29,7 @@ export type BankAccountUpdateDTOArgs = z.input<typeof schemaUpdate>
 export async function update(args: BankAccountUpdateDTOArgs) {
     const { id, name, slug } = Validator.parseNoSafe(args, schemaUpdate)
 
-    if (isUndefined(name) && isUndefined(slug))
+    if (!someHasValue(name, slug))
         return { message: 'No data updated' }
 
     const bankAccount = await bankAccountRepository.findUniqueOrThrow({ where: { id } })

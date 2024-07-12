@@ -6,16 +6,24 @@ import { GLOBAL_LOG_DTO } from '@modules/log-change/global'
 const { changeLogRepository } = ChangeLogModel
 
 const schemaCreate = z.object({
-    recordId: z.coerce.number().int(),
-    entity: z.string().trim(),
-    dateTime: z.date().nullish().transform(date => date || new Date(Date.now())),
+    recordId: z
+        .coerce
+        .number()
+        .int(),
+    entity: z
+        .string()
+        .trim(),
+    dateTime: z
+        .date()
+        .nullish()
+        .transform(date => date || new Date(Date.now())),
     data: z.union([
         z.array(
             z.any({ 'required_error': GLOBAL_LOG_DTO.data.messageRequired })
         ),
         z.any({ 'required_error': GLOBAL_LOG_DTO.data.messageRequired })
-    ]).
-        transform(data => isArray(data) ? data : [data])
+    ])
+        .transform(data => isArray(data) ? data : [data])
 })
 
 export type ChangeLogCreateDTOArgs = z.input<typeof schemaCreate>

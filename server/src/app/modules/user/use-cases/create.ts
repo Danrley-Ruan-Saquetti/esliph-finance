@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt'
 import { toCapitalise } from '@util/geral'
+import { Hash } from '@services/hash'
 import { Transaction } from '@services/database'
 import { z, Validator } from '@services/validator'
 import { BadRequestException } from '@exceptions/bad-request'
@@ -70,8 +70,8 @@ export async function createWithPeople(args: UserCreateUserAndPeopleDTOArgs) {
 export async function create(args: UserCreateUserOnlyDTOArgs) {
     const { peopleId, login, password, userType } = await validCreate(args)
 
-    const passwordHashed = bcrypt.hashSync(password, 5)
     const { code } = await generateCode()
+    const passwordHashed = Hash.hash(password)
 
     await userRepository.create({
         data: {

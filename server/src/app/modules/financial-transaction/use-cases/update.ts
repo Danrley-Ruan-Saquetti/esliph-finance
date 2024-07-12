@@ -123,25 +123,8 @@ export async function update(args: FinancialTransactionUpdateDTOArgs) {
         dto.timesToRepeat = undefined
     }
 
-    if (dto.categories.link.length) {
-        const categories = await categoryRepository.findMany({
-            where: { id: { in: dto.categories.link } },
-            select: { id: true }
-        })
-
-        if (categories)
-            dto.categories.link = categories.map(({ id }) => id)
-    }
-
-    if (dto.categories.unlink.length) {
-        const categories = await categoryRepository.findMany({
-            where: { id: { in: dto.categories.unlink } },
-            select: { id: true }
-        })
-
-        if (categories)
-            dto.categories.unlink = categories.map(({ id }) => id)
-    }
+    dto.categories.link = await filterCategoriesToLink(dto.categories.link)
+    dto.categories.unlink = await filterCategoriesToUnlink(dto.categories.unlink)
 
     const transaction = await Transaction.begin()
 
@@ -189,4 +172,22 @@ export async function update(args: FinancialTransactionUpdateDTOArgs) {
         await transaction.rollback()
         throw err
     }
+}
+
+async function filterCategoriesToLink(categoriesToLink: number[]) {
+    const categories = await categoryRepository.findMany({
+        where: { id: { in: categoriesToLink } },
+        select: { id: true }
+    })
+
+    return categories.map(({ id }) => id)
+}
+
+async function filterCategoriesToUnlink(categoriesToUnlink: number[]) {
+    const categories = await categoryRepository.findMany({
+        where: { id: { in: categoriesToUnlink } },
+        select: { id: true }
+    })
+
+    return categories.map(({ id }) => id)
 }

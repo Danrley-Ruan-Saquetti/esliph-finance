@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt'
-import { PayloadJWTCustomerBankAccount } from '@@types'
+import { ID, PayloadJWTCustomerBankAccount } from '@@types'
+import { Hash } from '@services/hash'
 import { z, Validator } from '@services/validator'
 import { BadRequestException } from '@exceptions/bad-request'
 import { UserModel } from '@modules/user/model'
@@ -24,7 +24,23 @@ export type SignInDTOArgs = z.input<typeof schemaSignIn>
 export async function singIn(args: SignInDTOArgs) {
     const { login, password, userId } = Validator.parseNoSafe(args, schemaSignIn)
 
-    const user = await userRepository.findFirstOrThrow({
+    const user = await getUserBankAccountByLogin(userId, login)
+
+    const { people: { bankAccounts: [bankAccount], id: peopleId } } = user
+
+    if (!bankAccount)
+        throw new BadRequestException({ title: 'Sign In', message: 'Login or password invalid' })
+
+    const isSamePassword = await Hash.compare(password, bankAccount.password)
+
+    if (!isSamePassword)
+        throw new BadRequestException({ title: 'Sign In', message: 'Login or password invalid' })
+
+    return { token: generateToken({ bankAccountId: bankAccount.id, peopleId, slug: bankAccount.slug, userId }) }
+}
+
+async function getUserBankAccountByLogin(userId: ID, login: string) {
+    const user = await userRepository.findUnique({
         where: {
             id: userId,
             type: UserModel.Type.CUSTOMER,
@@ -52,22 +68,16 @@ export async function singIn(args: SignInDTOArgs) {
     if (!user)
         throw new BadRequestException({ title: 'Sign In', message: 'Login or password invalid' })
 
-    const { people: { bankAccounts: [bankAccount], id: peopleId } } = user
+    return user
+}
 
-    if (!bankAccount)
-        throw new BadRequestException({ title: 'Sign In', message: 'Login or password invalid' })
-
-    const isSamePassword = await bcrypt.compare(password, bankAccount.password)
-
-    if (!isSamePassword)
-        throw new BadRequestException({ title: 'Sign In', message: 'Login or password invalid' })
-
+function generateToken({ bankAccountId, peopleId, slug, userId }: { bankAccountId: ID, userId: ID, peopleId: ID, slug: string }) {
     const payload: PayloadJWTCustomerBankAccount = {
-        id: bankAccount.id,
+        id: bankAccountId,
         sub: userId,
         peopleId,
-        slug: bankAccount.slug,
+        slug: slug,
     }
 
-    return { token: jwtServiceBankAccount.encode(payload) }
+    return jwtServiceBankAccount.encode(payload)
 }

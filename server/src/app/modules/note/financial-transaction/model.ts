@@ -97,11 +97,11 @@ export namespace FinancialTransactionNoteModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return FinancialTransactionNote
+            return FinancialTransactionNote as FinancialTransactionNoteFindResponse<Args>
         }
         async findFirst<Args extends Prisma.FinancialTransactionNoteFindFirstArgs>(args: Args) {
             try {
-                return await this.repo.findFirst({ ...args }) as FinancialTransactionNoteFindResponse<Args>
+                return await this.repo.findFirst({ ...args }) as FinancialTransactionNoteFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -119,12 +119,12 @@ export namespace FinancialTransactionNoteModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return FinancialTransactionNote
+            return FinancialTransactionNote as FinancialTransactionNoteFindResponse<Args>
         }
 
         async findUnique<Args extends Prisma.FinancialTransactionNoteFindUniqueArgs>(args: Args) {
             try {
-                return await this.repo.findUnique({ ...args }) as FinancialTransactionNoteFindResponse<Args>
+                return await this.repo.findUnique({ ...args }) as FinancialTransactionNoteFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -143,7 +143,7 @@ export namespace FinancialTransactionNoteModel {
             })
 
             return {
-                FinancialTransactionNotes: FinancialTransactionNotes || [],
+                FinancialTransactionNotes: FinancialTransactionNotes as FinancialTransactionNoteFindResponse<Args>[] || [],
                 metadata: {
                     currentPage: page.pageIndex + 1,
                     itemsPerPage: page.limite,

@@ -1,10 +1,9 @@
-import bcrypt from 'bcrypt'
 import { DTO } from '@util/dto'
+import { Hash } from '@services/hash'
 import { z, Validator } from '@services/validator'
-import { BadRequestException } from '@exceptions/bad-request'
-import { validSlug } from '@modules/bank-account/use-cases/valid-slug'
 import { PeopleModel } from '@modules/people/model'
 import { generateCode } from '@modules/bank-account/use-cases/generate-code'
+import { checkIsValidSlug } from '@modules/bank-account/use-cases/valid-slug'
 import { BankAccountModel } from '@modules/bank-account/model'
 import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/global'
 
@@ -35,12 +34,9 @@ export async function create(args: CreateDTOArgs) {
 
     await peopleRepository.checkExistsOrTrow({ where: { id: peopleId } })
 
-    const isValidSlug = await validSlug({ peopleId, slug })
+    await checkIsValidSlug({ peopleId, slug })
 
-    if (!isValidSlug.isValid)
-        throw new BadRequestException({ title: 'Bank account slug validation', message: isValidSlug.message || 'Invalid Slug' })
-
-    const passwordHashed = bcrypt.hashSync(password, 5)
+    const passwordHashed = Hash.hash(password)
 
     const { code } = await generateCode()
 

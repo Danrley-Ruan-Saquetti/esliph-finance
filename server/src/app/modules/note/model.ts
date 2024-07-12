@@ -97,11 +97,11 @@ export namespace NoteModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return note
+            return note as NoteFindResponse<Args>
         }
         async findFirst<Args extends Prisma.NoteFindFirstArgs>(args: Args) {
             try {
-                return await this.repo.findFirst({ ...args }) as NoteFindResponse<Args>
+                return await this.repo.findFirst({ ...args }) as NoteFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -119,12 +119,12 @@ export namespace NoteModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return note
+            return note as NoteFindResponse<Args>
         }
 
         async findUnique<Args extends Prisma.NoteFindUniqueArgs>(args: Args) {
             try {
-                return await this.repo.findUnique({ ...args }) as NoteFindResponse<Args>
+                return await this.repo.findUnique({ ...args }) as NoteFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -143,7 +143,7 @@ export namespace NoteModel {
             })
 
             return {
-                notes: notes || [],
+                notes: notes as NoteFindResponse<Args>[] || [],
                 metadata: {
                     currentPage: page.pageIndex + 1,
                     itemsPerPage: page.limite,

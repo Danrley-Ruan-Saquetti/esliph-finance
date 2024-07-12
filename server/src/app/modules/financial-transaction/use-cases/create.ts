@@ -1,4 +1,5 @@
 import { DTO } from '@util/dto'
+import { ID } from '@@types'
 import { isNumber } from '@util/types'
 import { Validator, z } from '@services/validator'
 import { MonetaryValue } from '@services/monetary-value'
@@ -94,15 +95,7 @@ export async function create(args: FinancialTransactionCreateDTOArgs) {
 
     await bankAccountRepository.checkExistsOrTrow({ where: { id: dto.bankAccountId } })
 
-    if (dto.categories.length) {
-        const categories = await categoryRepository.findMany({
-            where: { id: { in: dto.categories } },
-            select: { id: true }
-        })
-
-        if (categories)
-            dto.categories = categories.map(({ id }) => id)
-    }
+    dto.categories = await filterCategoriesToLink(dto.bankAccountId, dto.categories)
 
     await financialTransactionRepository.create({
         data: {
@@ -124,4 +117,16 @@ export async function create(args: FinancialTransactionCreateDTOArgs) {
     })
 
     return { message: 'Financial transaction created successfully' }
+}
+
+async function filterCategoriesToLink(bankAccountId: ID, categoriesToLink: ID[]) {
+    const categories = await categoryRepository.findMany({
+        where: {
+            bankAccountId,
+            id: { in: categoriesToLink },
+        },
+        select: { id: true }
+    })
+
+    return categories.map(({ id }) => id)
 }

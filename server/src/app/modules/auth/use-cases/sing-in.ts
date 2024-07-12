@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt'
 import { PayloadJWTCustomer } from '@@types'
+import { Hash } from '@services/hash'
 import { z, Validator } from '@services/validator'
 import { UserModel } from '@modules/user/model'
 import { GLOBAL_AUTH_DTO } from '@modules/auth/global'
@@ -47,7 +47,7 @@ export async function singIn(args: SignInDTOArgs) {
     if (!user)
         throw new BadRequestException({ title: 'Sign In', message: 'Login or password invalid' })
 
-    const isSamePassword = await bcrypt.compare(password, user.password)
+    const isSamePassword = await Hash.compare(password, user.password)
 
     if (!isSamePassword)
         throw new BadRequestException({ title: 'Sign In', message: 'Login or password invalid' })

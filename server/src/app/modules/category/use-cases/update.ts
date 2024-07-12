@@ -1,5 +1,5 @@
 import { DTO } from '@util/dto'
-import { isUndefined } from '@util/types'
+import { someHasValue } from '@util/types'
 import { Validator, z } from '@services/validator'
 import { CategoryModel } from '@modules/category/model'
 import { GLOBAL_CATEGORY_DTO } from '@modules/category/global'
@@ -33,7 +33,7 @@ export type CategoryUpdateDTOArgs = z.input<typeof schemaUpdate>
 export async function update(args: CategoryUpdateDTOArgs) {
     const { id, bankAccountId, color, isFavorite, name } = Validator.parseNoSafe(args, schemaUpdate)
 
-    if (isUndefined(name) && isUndefined(color) && isUndefined(isFavorite))
+    if (!someHasValue(name, color, isFavorite))
         return { message: 'No data updated' }
 
     await categoryRepository.checkExistsOrTrow({ where: { id, bankAccountId: bankAccountId } })

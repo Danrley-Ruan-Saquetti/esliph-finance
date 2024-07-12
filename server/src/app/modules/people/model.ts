@@ -104,11 +104,11 @@ export namespace PeopleModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return people
+            return people as PeopleFindResponse<Args>
         }
         async findFirst<Args extends Prisma.PeopleFindFirstArgs>(args: Args) {
             try {
-                return await this.repo.findFirst({ ...args }) as PeopleFindResponse<Args>
+                return await this.repo.findFirst({ ...args }) as PeopleFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -126,12 +126,12 @@ export namespace PeopleModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return people
+            return people as PeopleFindResponse<Args>
         }
 
         async findUnique<Args extends Prisma.PeopleFindUniqueArgs>(args: Args) {
             try {
-                return await this.repo.findUnique({ ...args }) as PeopleFindResponse<Args>
+                return await this.repo.findUnique({ ...args }) as PeopleFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -150,7 +150,7 @@ export namespace PeopleModel {
             })
 
             return {
-                peoples: peoples || [],
+                peoples: peoples as PeopleFindResponse<Args>[] || [],
                 metadata: {
                     currentPage: page.pageIndex + 1,
                     itemsPerPage: page.limite,

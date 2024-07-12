@@ -9,7 +9,7 @@ import { GLOBAL_PAYMENT_DTO } from '@modules/payment/global'
 import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/global'
 import { FinancialTransactionModel } from '@modules/financial-transaction/model'
 import { CompensationPaymentManager } from '@modules/payment/financial-transaction/manager/compensation-payment'
-import { GLOBAL_FINANCIAL_TRANSACTION_RULES } from '@modules/financial-transaction/global'
+import { isSituationHasAllowedToCreatePayment } from '@modules/financial-transaction/helpers'
 
 const { financialTransactionRepository } = FinancialTransactionModel
 const { paymentRepository } = PaymentModel
@@ -65,7 +65,7 @@ export async function create(args: PaymentCreateDTOArgs) {
         include: { payments: true }
     })
 
-    if (GLOBAL_FINANCIAL_TRANSACTION_RULES.paid.situationsEnableToPaid.enum.findIndex(situation => situation == financialTransaction.situation) < 0)
+    if (!isSituationHasAllowedToCreatePayment(financialTransaction.situation))
         throw new BadRequestException({ title: 'Valid Financial Transaction', message: 'Financial transaction status does not allow new payments to be recorded' })
 
     const compensationPayment = new CompensationPaymentManager(
@@ -92,9 +92,10 @@ export async function create(args: PaymentCreateDTOArgs) {
             }
         })
 
-        if (isValidPayment.isComplete) {
-            //TODO - create uc update situation financial transaction
-        }
+        await financialTransactionRepository.update({
+            data: { situation: getNewSituation(isValidPayment.isComplete, financialTransaction.type) },
+            where: { id: financialTransactionId, bankAccountId },
+        })
 
         await updateBalance({
             bankAccountId,
@@ -109,4 +110,17 @@ export async function create(args: PaymentCreateDTOArgs) {
     }
 
     return { message: 'Payment registered successfully' }
+}
+
+function getNewSituation(isComplete: boolean, type: FinancialTransactionModel.Type) {
+    if (isComplete) {
+        if (type == FinancialTransactionModel.Type.INCOME) {
+            return FinancialTransactionModel.Situation.RECEIVED
+        }
+        return FinancialTransactionModel.Situation.PAID_OUT
+    }
+    if (type == FinancialTransactionModel.Type.INCOME) {
+        return FinancialTransactionModel.Situation.PARTIALLY_RECEIVED
+    }
+    return FinancialTransactionModel.Situation.PARTIALLY_PAID
 }

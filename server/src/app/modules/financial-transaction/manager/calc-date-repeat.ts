@@ -3,6 +3,15 @@ import { GLOBAL_FINANCIAL_TRANSACTION_RULES } from '@modules/financial-transacti
 
 export class CalcDateRepeatManager {
 
+    static isDateContainedDeadlineToRepeat(date: Date, startDate: Date, frequency: FinancialTransactionModel.Frequency, timesToRepeat = 1) {
+        const nextDate = CalcDateRepeatManager.calcNextDate(startDate, frequency, timesToRepeat)
+
+        date.setHours(0, 0, 0, 0)
+        nextDate.setHours(0, 0, 0, 0)
+
+        return nextDate <= date
+    }
+
     static calcAllNextDates(startDate: Date, frequency: FinancialTransactionModel.Frequency, timesToRepeat = 1) {
         return new Array({ length: timesToRepeat })
             .map((_, i) => CalcDateRepeatManager.calcNextDate(startDate, frequency, i))

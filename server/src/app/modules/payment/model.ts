@@ -97,11 +97,11 @@ export namespace PaymentModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return payment
+            return payment as PaymentFindResponse<Args>
         }
         async findFirst<Args extends Prisma.PaymentFindFirstArgs>(args: Args) {
             try {
-                return await this.repo.findFirst({ ...args }) as PaymentFindResponse<Args>
+                return await this.repo.findFirst({ ...args }) as PaymentFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -119,12 +119,12 @@ export namespace PaymentModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return payment
+            return payment as PaymentFindResponse<Args>
         }
 
         async findUnique<Args extends Prisma.PaymentFindUniqueArgs>(args: Args) {
             try {
-                return await this.repo.findUnique({ ...args }) as PaymentFindResponse<Args>
+                return await this.repo.findUnique({ ...args }) as PaymentFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -143,7 +143,7 @@ export namespace PaymentModel {
             })
 
             return {
-                payments: payments || [],
+                payments: payments as PaymentFindResponse<Args>[] || [],
                 metadata: {
                     currentPage: page.pageIndex + 1,
                     itemsPerPage: page.limite,

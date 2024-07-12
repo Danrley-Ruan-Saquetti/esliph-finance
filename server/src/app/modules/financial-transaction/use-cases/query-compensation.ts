@@ -16,10 +16,10 @@ export type QueryDTOArgs = z.input<typeof schemaQuery>
 export async function queryCompensation(args: QueryDTOArgs) {
     const { bankAccountId, id } = Validator.parseNoSafe(args, schemaQuery)
 
-    const financialTransactions = await financialTransactionRepository.findUnique({
+    const { payments, ...financialTransaction } = await financialTransactionRepository.findUniqueOrThrow({
         where: { bankAccountId, id },
         include: { payments: true },
     })
 
-    return new CompensationPaymentManager(financialTransactions, financialTransactions.payments).getPaymentStatementInReal()
+    return new CompensationPaymentManager(financialTransaction, payments).getPaymentStatementInReal()
 }

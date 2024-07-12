@@ -97,11 +97,11 @@ export namespace FileModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return file
+            return file as FileFindResponse<Args>
         }
         async findFirst<Args extends Prisma.FileFindFirstArgs>(args: Args) {
             try {
-                return await this.repo.findFirst({ ...args }) as FileFindResponse<Args>
+                return await this.repo.findFirst({ ...args }) as FileFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -119,12 +119,12 @@ export namespace FileModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return file
+            return file as FileFindResponse<Args>
         }
 
         async findUnique<Args extends Prisma.FileFindUniqueArgs>(args: Args) {
             try {
-                return await this.repo.findUnique({ ...args }) as FileFindResponse<Args>
+                return await this.repo.findUnique({ ...args }) as FileFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -143,7 +143,7 @@ export namespace FileModel {
             })
 
             return {
-                files: files || [],
+                files: files as FileFindResponse<Args>[] || [],
                 metadata: {
                     currentPage: page.pageIndex + 1,
                     itemsPerPage: page.limite,

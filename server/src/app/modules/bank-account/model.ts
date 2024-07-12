@@ -97,11 +97,11 @@ export namespace BankAccountModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return bankAccount
+            return bankAccount as BankAccountFindResponse<Args>
         }
         async findFirst<Args extends Prisma.BankAccountFindFirstArgs>(args: Args) {
             try {
-                return await this.repo.findFirst({ ...args }) as BankAccountFindResponse<Args>
+                return await this.repo.findFirst({ ...args }) as BankAccountFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -119,12 +119,12 @@ export namespace BankAccountModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return bankAccount
+            return bankAccount as BankAccountFindResponse<Args>
         }
 
         async findUnique<Args extends Prisma.BankAccountFindUniqueArgs>(args: Args) {
             try {
-                return await this.repo.findUnique({ ...args }) as BankAccountFindResponse<Args>
+                return await this.repo.findUnique({ ...args }) as BankAccountFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -143,7 +143,7 @@ export namespace BankAccountModel {
             })
 
             return {
-                bankAccounts: bankAccounts || [],
+                bankAccounts: bankAccounts as BankAccountFindResponse<Args>[] || [],
                 metadata: {
                     currentPage: page.pageIndex + 1,
                     itemsPerPage: page.limite,

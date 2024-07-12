@@ -97,11 +97,11 @@ export namespace CategoryModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return category
+            return category as CategoryFindResponse<Args>
         }
         async findFirst<Args extends Prisma.CategoryFindFirstArgs>(args: Args) {
             try {
-                return await this.repo.findFirst({ ...args }) as CategoryFindResponse<Args>
+                return await this.repo.findFirst({ ...args }) as CategoryFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -119,12 +119,12 @@ export namespace CategoryModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return category
+            return category as CategoryFindResponse<Args>
         }
 
         async findUnique<Args extends Prisma.CategoryFindUniqueArgs>(args: Args) {
             try {
-                return await this.repo.findUnique({ ...args }) as CategoryFindResponse<Args>
+                return await this.repo.findUnique({ ...args }) as CategoryFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -136,14 +136,14 @@ export namespace CategoryModel {
         async query<Args extends Prisma.CategoryFindManyArgs>(args: Args, page: { pageIndex: number, limite: number }) {
             const total = await this.count({ where: args.where })
 
-            const categorys = await this.findMany<Args>({
+            const categories = await this.findMany<Args>({
                 ...args,
                 skip: page.pageIndex * page.limite,
                 take: page.limite
             })
 
             return {
-                categorys: categorys || [],
+                categories: categories as CategoryFindResponse<Args>[] || [],
                 metadata: {
                     currentPage: page.pageIndex + 1,
                     itemsPerPage: page.limite,

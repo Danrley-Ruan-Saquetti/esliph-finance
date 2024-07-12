@@ -97,11 +97,11 @@ export namespace ChangeLogModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return changeLog
+            return changeLog as ChangeLogFindResponse<Args>
         }
         async findFirst<Args extends Prisma.ChangeLogFindFirstArgs>(args: Args) {
             try {
-                return await this.repo.findFirst({ ...args }) as ChangeLogFindResponse<Args>
+                return await this.repo.findFirst({ ...args }) as ChangeLogFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -119,12 +119,12 @@ export namespace ChangeLogModel {
                     message: Repository.MESSAGES.find.notFound,
                 })
 
-            return changeLog
+            return changeLog as ChangeLogFindResponse<Args>
         }
 
         async findUnique<Args extends Prisma.ChangeLogFindUniqueArgs>(args: Args) {
             try {
-                return await this.repo.findUnique({ ...args }) as ChangeLogFindResponse<Args>
+                return await this.repo.findUnique({ ...args }) as ChangeLogFindResponse<Args> | null
             } catch (err: any) {
                 throw new DatabaseException({
                     title: Repository.MESSAGES.find.title,
@@ -143,7 +143,7 @@ export namespace ChangeLogModel {
             })
 
             return {
-                changeLogs: changeLogs || [],
+                changeLogs: changeLogs as ChangeLogFindResponse<Args>[] || [],
                 metadata: {
                     currentPage: page.pageIndex + 1,
                     itemsPerPage: page.limite,

@@ -5,8 +5,8 @@ import { MonetaryValue } from '@services/monetary-value'
 import { BankAccountModel } from '@modules/bank-account/model'
 import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/global'
 import { FinancialTransactionModel } from '@modules/financial-transaction/model'
+import { getFinancialTransactionsWithPaymentsActiveByBankAccountId } from '@modules/financial-transaction/helpers'
 
-const { financialTransactionRepository } = FinancialTransactionModel
 const { bankAccountRepository } = BankAccountModel
 
 const updateBalanceSchema = z.object({
@@ -30,7 +30,7 @@ export async function updateBalance(args: BankAccountUpdateBalanceDTOArgs) {
 
     await bankAccountRepository.checkExistsOrTrow({ where: { id: bankAccountId } })
 
-    let operationUpdate = operation == 'INCOME' ? 'increment' : 'decrement'
+    const operationUpdate = operation == 'INCOME' ? 'increment' : 'decrement'
 
     await bankAccountRepository.update({
         data: { balance: { [operationUpdate]: value } },
@@ -43,38 +43,16 @@ export async function updateBalance(args: BankAccountUpdateBalanceDTOArgs) {
 export async function recalculateBalance({ id }: { id: ID }) {
     id = Validator.parseNoSafe(id, GLOBAL_BANK_ACCOUNT_DTO.id)
 
-    const financialTransactions = await financialTransactionRepository.findMany({
-        where: {
-            bankAccountId: id,
-            situation: {
-                in: [
-                    FinancialTransactionModel.Situation.PAID_OUT,
-                    FinancialTransactionModel.Situation.PARTIALLY_PAID,
-                    FinancialTransactionModel.Situation.PARTIALLY_RECEIVED,
-                    FinancialTransactionModel.Situation.RECEIVED,
-                ]
-            }
-        },
-        include: { payments: true }
-    })
+    const financialTransactions = await getFinancialTransactionsWithPaymentsActiveByBankAccountId(id)
 
-    let totalValue = 0
+    let balanceTotal = financialTransactions.reduce((totalFinancialTransactions, { payments, type }) => {
+        const alpha = type == FinancialTransactionModel.Type.INCOME ? 1 : -1
 
-    for (let i = 0; i < financialTransactions.length; i++) {
-        const financialTransaction = financialTransactions[i]
-
-        for (let j = 0; j < financialTransaction.payments.length; j++) {
-            const payment = financialTransaction.payments[j]
-
-            if (financialTransaction.type == FinancialTransactionModel.Type.INCOME)
-                totalValue += payment.valuePaid
-            else
-                totalValue -= payment.valuePaid
-        }
-    }
+        return payments.reduce((totalPayments, { valuePaid }) => totalPayments + (valuePaid * alpha), totalFinancialTransactions)
+    }, 0)
 
     await bankAccountRepository.update({
-        data: { balance: totalValue },
+        data: { balance: balanceTotal },
         where: { id }
     })
 

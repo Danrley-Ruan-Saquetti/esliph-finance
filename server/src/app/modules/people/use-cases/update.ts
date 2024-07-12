@@ -1,5 +1,5 @@
 import { DTO } from '@util/dto'
-import { isNull, isUndefined } from '@util/types'
+import { isNull, someHasValue } from '@util/types'
 import { DateService } from '@services/date'
 import { z, Validator } from '@services/validator'
 import { PeopleModel } from '@modules/people/model'
@@ -30,7 +30,7 @@ export type PeopleUpdateDTOArgs = z.input<typeof schemaUpdate>
 export async function update(args: PeopleUpdateDTOArgs) {
     const { id, name, dateOfBirth, gender } = Validator.parseNoSafe(args, schemaUpdate)
 
-    if (isUndefined(name) && isUndefined(dateOfBirth) && isUndefined(gender))
+    if (!someHasValue(name, dateOfBirth, gender))
         return { message: 'No data updated' }
 
     await peopleRepository.checkExistsOrTrow({ where: { id } })

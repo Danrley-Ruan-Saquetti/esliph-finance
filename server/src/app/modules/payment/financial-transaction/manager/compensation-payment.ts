@@ -1,3 +1,4 @@
+import { BadRequestException } from '@exceptions/bad-request'
 import { MonetaryValue } from '@services/monetary-value'
 
 type FinancialTransaction = {
@@ -26,11 +27,18 @@ export class CompensationPaymentManager {
     private totalPayments: TotalPayments = null as any
 
     constructor(
-        { value = 0, }: Partial<FinancialTransaction> = {},
+        { value = 0 }: Partial<FinancialTransaction> = {},
         payments: Partial<Payment>[] = []
     ) {
         this.payments = payments.map(({ discount = 0, increase = 0, valuePaid = 0 }) => ({ discount, increase, valuePaid }))
         this.financialTransaction = { value }
+    }
+
+    checkValidatePayment(args: Partial<Payment> = {}) {
+        const isValidPayment = this.validatePayment(args)
+
+        if (!isValidPayment.ok)
+            throw new BadRequestException({ title: 'Valid Payment', message: isValidPayment.message })
     }
 
     validatePayment({ valuePaid = 0, discount = 0, increase = 0 }: Partial<Payment> = {}) {

@@ -1,6 +1,10 @@
 export type ClassConstructor<T = any> = new (...args: any[]) => T
 export type GenericObject = { [x: string]: any }
 
+export function someHasValue(...values: any[]) {
+    return !!values.find(value => !isUndefined(value))
+}
+
 export function isInstance<T = any>(obj: any): obj is ClassConstructor<T> {
     return !isObjectLiteral(obj)
 }

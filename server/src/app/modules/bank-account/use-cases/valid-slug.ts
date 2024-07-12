@@ -1,4 +1,5 @@
 import { DTO } from '@util/dto'
+import { BadRequestException } from '@exceptions/bad-request'
 import { z, Validator } from '@services/validator'
 import { BankAccountModel } from '@modules/bank-account/model'
 import { GLOBAL_BANK_ACCOUNT_DTO } from '@modules/bank-account/global'
@@ -15,6 +16,13 @@ const schemaCreate = z.object({
 })
 
 export type CreateDTOArgs = z.input<typeof schemaCreate>
+
+export async function checkIsValidSlug(args: CreateDTOArgs) {
+    const isValidSlug = await validSlug(args)
+
+    if (!isValidSlug.isValid)
+        throw new BadRequestException({ title: 'Bank account slug validation', message: isValidSlug.message || 'Invalid Slug' })
+}
 
 export async function validSlug(args: CreateDTOArgs) {
     const { peopleId, slug, ignoreBankAccountId } = Validator.parseNoSafe(args, schemaCreate)
