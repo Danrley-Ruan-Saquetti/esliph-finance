@@ -1,3 +1,5 @@
+import { BadRequestException } from '@exceptions/bad-request'
+
 export type GenerateCodeOptions = {
     template: string
     charactersToReplace: string[]
@@ -41,7 +43,16 @@ export class CodeGenerator {
         })
     }
 
-    async generate(attempts: number = 3, validator: (code: string) => (Promise<boolean> | boolean) = () => true) {
+    async generateOrThrow(attempts = 3, validator: (code: string) => (Promise<boolean> | boolean) = () => true, error?: { title: string, message: string }) {
+        const code = await this.generate(attempts, validator)
+
+        if (!code)
+            throw new BadRequestException({ title: 'Generate Code', message: 'Unable to generate code. Please try again later', ...error })
+
+        return code
+    }
+
+    async generate(attempts = 3, validator: (code: string) => (Promise<boolean> | boolean) = () => true) {
         return CodeGenerator.generate(
             {
                 template: this.template,
@@ -53,13 +64,13 @@ export class CodeGenerator {
         )
     }
 
-    static async generate(options: GenerateCodeOptions, attempts: number = 3, validator: (code: string) => (Promise<boolean> | boolean) = () => true) {
+    static async generate(options: GenerateCodeOptions, attempts = 3, validator: (code: string) => (Promise<boolean> | boolean) = () => true) {
         let code: string = ''
 
         do {
             code = CodeGenerator.generateCode(options)
 
-            let result = await validator(code)
+            const result = await validator(code)
 
             if (result)
                 return code

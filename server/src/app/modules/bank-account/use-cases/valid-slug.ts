@@ -21,7 +21,7 @@ export async function checkIsValidSlug(args: CreateDTOArgs) {
     const isValidSlug = await validSlug(args)
 
     if (!isValidSlug.isValid)
-        throw new BadRequestException({ title: 'Bank account slug validation', message: isValidSlug.message || 'Invalid Slug' })
+        throw new BadRequestException({ title: 'Bank Account Slug Validation', message: isValidSlug.message || 'Invalid Slug' })
 }
 
 export async function validSlug(args: CreateDTOArgs) {

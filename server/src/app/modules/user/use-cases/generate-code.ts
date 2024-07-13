@@ -1,4 +1,3 @@
-import { BadRequestException } from '@exceptions/bad-request'
 import { CodeGenerator } from '@services/code-generator'
 import { UserModel } from '@modules/user/model'
 import { GLOBAL_USER_DTO } from '@modules/user/global'
@@ -12,12 +11,9 @@ const codeGenerator = new CodeGenerator(
 )
 
 export async function generateCode(attempts = 3) {
-    const code = await codeGenerator.generate(attempts, async (code) => {
+    const code = await codeGenerator.generateOrThrow(attempts, async (code) => {
         return !(await userRepository.isExists({ where: { code } }))
-    })
-
-    if (!code)
-        throw new BadRequestException({ title: 'Generate code user', message: 'Unable to generate user code. Please try again later' })
+    }, { title: 'Generate code user', message: 'Unable to generate user code. Please try again later' })
 
     return { code }
 }
