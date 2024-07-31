@@ -59,6 +59,21 @@ export class CompensationPaymentManager {
         return { ok: true, message: 'Validated payment', isComplete: netValuePayment == netValueToPaid }
     }
 
+    getPaymentStatementInReal(): PaymentStatement {
+        const paymentStatement = this.getPaymentStatement()
+
+        return {
+            valueFinancialTransaction: MonetaryValue.toReal(paymentStatement.valueFinancialTransaction),
+            totalNetValuePaid: MonetaryValue.toReal(paymentStatement.totalNetValuePaid),
+            valueToPay: MonetaryValue.toReal(paymentStatement.valueToPay),
+            totalPayments: {
+                valuePaid: MonetaryValue.toReal(paymentStatement.totalPayments.valuePaid),
+                discount: MonetaryValue.toReal(paymentStatement.totalPayments.discount),
+                increase: MonetaryValue.toReal(paymentStatement.totalPayments.increase),
+            }
+        }
+    }
+
     getPaymentStatement() {
         if (this.paymentStatement) return this.paymentStatement
 
@@ -76,21 +91,6 @@ export class CompensationPaymentManager {
             valueToPay: this.financialTransaction.value - (totalPayments.valuePaid - totalPayments.increase + totalPayments.discount),
             totalPayments,
         } as PaymentStatement
-    }
-
-    getPaymentStatementInReal(): PaymentStatement {
-        const paymentStatement = this.getPaymentStatement()
-
-        return {
-            valueFinancialTransaction: MonetaryValue.toReal(paymentStatement.valueFinancialTransaction),
-            totalNetValuePaid: MonetaryValue.toReal(paymentStatement.totalNetValuePaid),
-            valueToPay: MonetaryValue.toReal(paymentStatement.valueToPay),
-            totalPayments: {
-                valuePaid: MonetaryValue.toReal(paymentStatement.totalPayments.valuePaid),
-                discount: MonetaryValue.toReal(paymentStatement.totalPayments.discount),
-                increase: MonetaryValue.toReal(paymentStatement.totalPayments.increase),
-            }
-        }
     }
 
     getTotalPayments() {

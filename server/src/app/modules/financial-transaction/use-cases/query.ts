@@ -1,6 +1,7 @@
 import { DTO } from '@util/dto'
 import { z, Validator } from '@services/validator'
 import { QueryBuilder } from '@services/query-builder'
+import { MonetaryValue } from '@services/monetary-value'
 import { QuerySearchDTO } from '@services/query-builder/schema'
 import { FinancialTransactionModel } from '@modules/financial-transaction/model'
 import { CompensationPaymentManager } from '@modules/payment/financial-transaction/manager/compensation-payment'
@@ -26,7 +27,7 @@ const queryBuilder = new QueryBuilder(
         { field: 'bankAccount.people.itinCnpj', filter: 'itinCnpj', type: 'STRING', typeOperation: 'SCHEMA' },
         { field: 'bankAccount.people.name', filter: 'people', type: 'STRING', typeOperation: 'SCHEMA' },
         { field: 'categories.some.category.name', filter: 'category', type: 'STRING', typeOperation: 'SCHEMA' },
-        { field: 'categories.some.category.id', filter: 'categoryId', type: 'STRING', typeOperation: 'SCHEMA' },
+        { field: 'categories.some.category.id', filter: 'categoryId', type: 'NUMBER', typeOperation: 'SCHEMA' },
     ],
     [
         { field: 'id' },
@@ -81,10 +82,9 @@ export async function query(args: QueryDTOArgs) {
     const financialTransactions = await financialTransactionRepository.query({
         where: { ...filters },
         include: {
-            payments: true, categories: {
-                select: {
-                    category: true
-                },
+            payments: true,
+            categories: {
+                select: { category: true },
                 orderBy: [
                     { category: { isFavorite: 'desc' } },
                     { category: { id: 'desc' } },
@@ -97,12 +97,11 @@ export async function query(args: QueryDTOArgs) {
     return {
         ...financialTransactions,
         financialTransactions: financialTransactions.financialTransactions.map(({ payments, ...financialTransaction }) => {
-            const compensationManager = new CompensationPaymentManager(financialTransaction, payments)
-
             return {
                 ...financialTransaction,
+                value: MonetaryValue.toReal(financialTransaction.value),
                 categories: financialTransaction.categories.map(({ category }) => category),
-                compensation: compensationManager.getPaymentStatementInReal(),
+                compensation: new CompensationPaymentManager(financialTransaction, payments).getPaymentStatementInReal(),
             }
         })
     }

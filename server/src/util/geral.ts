@@ -1,9 +1,11 @@
 import { GenericObject, isArray, isObject, isObjectLiteral, isUndefined, isDate, ClassConstructor } from '@util/types'
 
 export function toCapitalise(text: string, firstOccurrenceOnly = true): string {
-    if (firstOccurrenceOnly) {
+    if (!text.trim())
+        return `${text}`
+
+    if (firstOccurrenceOnly)
         return text[0].toUpperCase() + text.substring(1)
-    }
 
     return text
         .split(' ')
@@ -24,9 +26,8 @@ export function clearObject<T = any>(obj: T, isParent = true) {
     if (isArray(obj))
         return (obj as any).length ? obj as T : undefined as T
 
-    if (isDate(obj)) {
+    if (isDate(obj))
         return obj as T
-    }
 
     for (const propName in obj) {
         const value = obj[propName]
@@ -45,9 +46,9 @@ export function createObjectByStringPath(path: string, parent: GenericObject = {
     let currentObj: GenericObject = parent
 
     for (const router of routers) {
-        if (isUndefined(currentObj[router])) {
+        if (isUndefined(currentObj[router]))
             currentObj[router] = {}
-        }
+
         currentObj = currentObj[router]
     }
 
@@ -57,9 +58,8 @@ export function createObjectByStringPath(path: string, parent: GenericObject = {
 export function getObjectPathByIndex(obj: GenericObject, index: number) {
     let currentObj: GenericObject = { ...obj }
 
-    for (let i = 0; i < index; i++) {
+    for (let i = 0; i < index; i++)
         currentObj = currentObj[Object.keys(currentObj)[0]]
-    }
 
     return { ...currentObj }
 }
@@ -70,9 +70,9 @@ export function getObjectPathByPath(obj: GenericObject, path: string) {
     const routers = path.split('.')
 
     for (let i = 0; i < routers.length; i++) {
-        if (isUndefined(currentObj[routers[i]])) {
+        if (isUndefined(currentObj[routers[i]]))
             continue
-        }
+
         currentObj = currentObj[routers[i]]
     }
 
@@ -90,11 +90,10 @@ export function insertValueInObjectByPath(obj: GenericObject, value: any, path: 
             continue
         }
 
-        if (isArray(currentObj[routers[i]])) {
+        if (isArray(currentObj[routers[i]]))
             currentObj[routers[i]].push(value)
-        } else {
+        else
             currentObj[routers[i]] = value
-        }
     }
 
     return { ...obj }
@@ -102,9 +101,9 @@ export function insertValueInObjectByPath(obj: GenericObject, value: any, path: 
 
 export function arrayToObject<T extends object = any>(arr: GenericObject[]) {
     return arr.reduce((fullObject, currentObject) => {
-        for (const key in currentObject) {
+        for (const key in currentObject)
             fullObject[key] = currentObject[key]
-        }
+
         return fullObject
     }, {}) as T
 }

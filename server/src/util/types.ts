@@ -18,29 +18,14 @@ export function isTruthy<T = any>(value?: T): value is NonNullable<T> {
 }
 
 export function isFalsy(value?: any) {
-    if (isNull(value) || isUndefined(value)) {
+    if (isNull(value) || isUndefined(value))
         return true
-    }
 
-    if (isNumber(value)) {
-        return value == 0
-    }
+    if (isArray(value))
+        return !value.length
 
-    if (isBoolean(value)) {
-        return !value
-    }
-
-    if (isString(value)) {
-        return value.trim().length == 0
-    }
-
-    if (isArray(value)) {
-        return value.length == 0
-    }
-
-    if (isObject(value)) {
+    if (isObject(value))
         return Object.keys(value).length == 0
-    }
 
     return !value
 }

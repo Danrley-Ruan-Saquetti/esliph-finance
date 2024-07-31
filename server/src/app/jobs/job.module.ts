@@ -6,6 +6,4 @@ import { FinancialTransactionJob } from '@jobs/financial-transaction'
         FinancialTransactionJob
     ]
 })
-export class JobModule {
-
-}
+export class JobModule { }

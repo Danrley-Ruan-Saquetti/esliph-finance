@@ -110,6 +110,7 @@ export namespace FinancialTransactionModel {
 
             return financialTransaction as FinancialTransactionFindResponse<Args>
         }
+
         async findFirst<Args extends Prisma.FinancialTransactionFindFirstArgs>(args: Args) {
             try {
                 return await this.repo.findFirst({ ...args }) as FinancialTransactionFindResponse<Args> | null

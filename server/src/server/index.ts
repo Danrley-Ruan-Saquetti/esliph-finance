@@ -236,7 +236,7 @@ export class Server {
                         .send({ ...Result.failure({ title: 'Error', ...result }, StatusCode.BAD_REQUEST).getResponse(), stack: undefined })
 
                 if (!isUndefined(result))
-                    res.send(Result.success(result))
+                    return res.send(Result.success(result))
             }
 
             this.app[method.toLocaleLowerCase()](path, handler)

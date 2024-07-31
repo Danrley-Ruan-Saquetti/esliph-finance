@@ -139,8 +139,8 @@ export class Transaction {
     async finish(isSuccess = true) {
         if (isSuccess)
             return await this.commit()
-        else
-            return await this.rollback()
+
+        return await this.rollback()
     }
 
     async commit() {
