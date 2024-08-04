@@ -18,12 +18,12 @@ export class CalcDateRepeatManager {
     }
 
     static calcNextDate(startDate: Date, frequency: FinancialTransactionModel.Frequency, alreadyRepeated = 0) {
-        alreadyRepeated += 1
         const daysMore = GLOBAL_FINANCIAL_TRANSACTION_RULES.frequencyInDays[frequency]
 
         const nextDate = new Date(startDate)
+        const nextDateInDays = startDate.getDate() + (daysMore * (alreadyRepeated + 1))
 
-        nextDate.setDate(startDate.getDate() + (daysMore * alreadyRepeated))
+        nextDate.setDate(nextDateInDays)
 
         return nextDate
     }
