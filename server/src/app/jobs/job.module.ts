@@ -1,5 +1,5 @@
 import { Module } from '@server/components/module'
-import { FinancialTransactionJob } from '@jobs/financial-transaction'
+import { FinancialTransactionJob } from '@jobs/services/financial-transaction'
 
 @Module({
     providers: [

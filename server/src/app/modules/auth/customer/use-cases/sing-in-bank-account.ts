@@ -26,7 +26,7 @@ export async function singIn(args: SignInDTOArgs) {
 
     const user = await getUserBankAccountByLogin(userId, login)
 
-    const { people: { bankAccounts: [bankAccount], id: peopleId } } = user
+    const { bankAccounts: [bankAccount], id: peopleId } = user.people
 
     if (!bankAccount)
         throw new BadRequestException({ title: 'Sign In', message: 'Login or password invalid' })

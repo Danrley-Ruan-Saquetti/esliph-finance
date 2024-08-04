@@ -1,4 +1,3 @@
-import { PayloadJWTCustomer } from '@@types'
 import { Hash } from '@services/hash'
 import { z, Validator } from '@services/validator'
 import { UserModel } from '@modules/user/model'
@@ -52,15 +51,10 @@ export async function singIn(args: SignInDTOArgs) {
     if (!isSamePassword)
         throw new BadRequestException({ title: 'Sign In', message: 'Login or password invalid' })
 
-    const payload: PayloadJWTCustomer = {
-        sub: user.id,
-        peopleId: user.people.id,
-    }
-
     await userRepository.update({
         data: { lastAcess: new Date(Date.now()) },
         where: { id: user.id }
     })
 
-    return { token: jwtServiceCustomer.encode(payload) }
+    return { token: jwtServiceCustomer.encode({ sub: user.id, peopleId: user.people.id, }) }
 }
