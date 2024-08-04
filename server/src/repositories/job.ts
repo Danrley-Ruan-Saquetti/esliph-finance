@@ -85,3 +85,5 @@ export class JobRepository {
         }
     }
 }
+
+export const jobRepository = new JobRepository()
